@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Scrivere meno, fare di più - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 2}
+</style>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-2>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Scrivere meno, fare di più</h1>
+
+<h2 id=_in_this_chapter>In questo capitolo</h2>
+
+<p>Abbiamo concluso l&#8217;ultimo capitolo con alcuni esempi &#8220;stuzzicanti&#8221; di codice Scala. Questo capitolo considera gli usi di Scala che promuovono codice sintetico e flessibile. Esamineremo l&#8217;organizzazione di file e package, i meccanismi per importare altri tipi, le dichiarazioni di variabile, varie convenzioni sintattiche e alcuni altri concetti. Metteremo in risalto il modo in cui la sintassi concisa di Scala vi aiuta a lavorare meglio e più velocemente.
+
+<p>La sintassi di Scala è particolarmente utile per scrivere script. Non è obbligatorio separare i passi di compilazione ed esecuzione per quei semplici programmi che hanno poche dipendenze nei confronti di librerie aggiuntive rispetto a quelle fornite da Scala. Potete compilare ed eseguire questi programmi in un unico passo con il comando <kbd>scala</kbd>. Se avete scaricato il codice di esempio del libro, molti degli esempi più piccoli possono essere eseguiti tramite il comando <kbd>scala</kbd>, invocando <code>scala <span class=var>nomefile</span>.scala</code>. Si vedano i file <span class=file>README.txt</span> negli esempi di codice del singolo capitolo per maggiori dettagli. Si veda anche la sezione <a href=cap-14.html#CommandLineTools>Gli strumenti a riga di comando</a> nel capitolo 14 per maggiori informazioni su come usare il comando <kbd>scala</kbd>.
+
+<h2 id=Semicolons>Punti e virgola</h2>
+
+<p>Potreste avere già notato che ci sono davvero pochi punti e virgola negli esempi di codice del capitolo precedente. Potete usare i punti e virgola per separare istruzioni ed espressioni, come in Java, C, PHP e simili. Nella maggior parte dei casi, tuttavia, Scala si comporta come molti linguaggi di scripting che trattano la fine di una riga come la fine di un&#8217;istruzione o di un&#8217;espressione. Quando le istruzioni o le espressioni sono troppo lunghe per stare su una sola riga, di solito Scala è in grado di dedurre se state proseguendo sulla riga successiva, come mostrato in questo esempio.
+
+<pre><code>// <a href=esempi/cap-2/semicolon-example-script.scala>esempi/cap-2/semicolon-example-script.scala</a>
+
+// Il segno di uguale al termine di una riga
+// indica altro codice nella riga successiva
+def equalsign = {
+  val reallySuperLongValueNameThatGoesOnForeverSoYouNeedANewLine =
+    "questo è un nome di valore davvero lungo"
+
+  println(reallySuperLongValueNameThatGoesOnForeverSoYouNeedANewLine)
+}
+
+// Una parentesi graffa aperta al termine di una riga
+// indica altro codice nella riga successiva
+def equalsign2(s: String) = {
+  println("equalsign2: " + s)
+}
+
+// Una virgola, un operatore, &amp;c. al termine di una riga
+// indicano altro codice nella riga successiva
+def commas(s1: String,
+           s2: String) = {
+  println("commas: " + s1 +
+          ", " + s2)
+}</code></pre>
+
+<p>Quando volete mettere più istruzioni o espressioni sulla stessa riga, potete usare i punti e virgola per separarle. Abbiamo usato questa tecnica nell&#8217;esempio di <code>ShapeDrawingActor</code> nella sezione <a href=cap-1.html#ATasteOfConcurrency>Un assaggio di concorrenza</a> del capitolo 1.
+
+<pre><code>case "exit" =&gt; println("termino..."); exit</code></pre>
+
+<p>Questo codice si potrebbe anche scrivere in questo modo
+
+<pre><code>&hellip;
+case "exit" =&gt;
+  println("termino...")
+  exit
+&hellip;</code></pre>
+
+<p>Potreste chiedervi perché non avete bisogno di parentesi graffe (<code>{&hellip;}</code>) attorno alle due istruzioni dopo la riga che contiene <code>case &hellip; =&gt;</code>. Se volete potete metterle, ma il compilatore sa che avete raggiunto la fine del &#8220;blocco&#8221; quando trova la clausola <code>case</code> successiva o la parentesi graffa (<code>}</code>) che conclude il blocco contenente tutte le clausole <code>case</code>.
+
+<p>Omettere i punti e virgola opzionali significa digitare meno caratteri e rendere meno ridondante il vostro codice. Collocare ogni istruzione sulla propria riga aumenta la leggibilità del vostro codice.
+
+<h2 id=VariableDeclarationsAndDefinitions>Dichiarazioni di variabile</h2>
+
+<p>Scala vi consente di decidere se una variabile è immutabile (a sola lettura) oppure no (a lettura e scrittura) nel momento in cui la dichiarate. Una &#8220;variabile&#8221; immutabile si dichiara con la parola chiave <code>val</code> (pensate a un <em>oggetto valore</em>).
+
+<pre><code>val array: Array[String] = new Array(5)</code></pre>
+
+<p>Per essere più precisi, il riferimento <var>array</var> non può essere modificato per puntare a un&#8217;istanza di <code>Array</code> differente, ma l&#8217;array può essere modificato, come si vede nella seguente sessione interattiva di <kbd>scala</kbd>.
+
+<pre><samp>scala&gt; val array: Array[String] = new Array(5)
+array: Array[String] = Array(null, null, null, null, null)
+
+scala&gt; array = new Array(2)
+&lt;console&gt;:5: error: reassignment to val
+       array = new Array(2)
+             ^
+
+scala&gt; array(0) = "Ciao"
+
+scala&gt; array
+res3: Array[String] = Array(Ciao, null, null, null, null)
+
+scala&gt;</samp></pre>
+
+<p>Una variabile immutabile di tipo <code>val</code> deve essere inizializzata, cioè definita, nel momento in cui viene dichiarata.
+
+<p>Una variabile mutabile si dichiara con la parola chiave <code>var</code>.
+
+<pre><samp>scala&gt; var stockPrice: Double = 100.
+stockPrice: Double = 100.0
+
+scala&gt; stockPrice = 10.
+stockPrice: Double = 10.0
+
+scala&gt;</samp></pre>
+
+<p>Scala vi obbliga a inizializzare anche le variabili di tipo <code>var</code> nel momento in cui le dichiarate. Potete assegnare un nuovo valore a una variabile di questo tipo ogni volta che volete. Sempre per essere precisi, il riferimento <var>stockPrice</var> può essere modificato per puntare a un oggetto <code>Double</code> differente (per esempio, <code>.10</code>). In questo caso, l&#8217;oggetto a cui <code>stockPrice</code> fa riferimento non può essere modificato perché in Scala le istanze di <code>Double</code> sono immutabili.
+
+<p>Ci sono alcune eccezioni alla regola che prescrive di inizializzare le variabili di tipo <code>val</code> e <code>var</code> al momento della dichiarazione. Entrambe le parole chiave possono essere usate con i parametri di un costruttore; in questo caso, le variabili mutabili o immutabili specificate saranno inizializzate quando un oggetto viene istanziato. Entrambe le parole chiave possono essere usate per dichiarare variabili &#8220;astratte&#8221; (non inizializzate) nei tipi astratti. In più, i tipi derivati possono ridefinire le variabili di tipo <code>val</code> dichiarate nei tipi genitore. Parleremo di queste eccezioni nel <a href=cap-5.html>capitolo 5</a>.
+
+<p>Scala vi incoraggia a usare valori immutabili ovunque sia possibile. Come vedrete, questo migliora la progettazione orientata agli oggetti ed è coerente con i principi della programmazione funzionale &#8220;pura&#8221;. Potreste doverci fare l&#8217;abitudine, ma scoprirete di fare affidamento sul vostro codice in un modo del tutto nuovo quando è scritto in uno stile immutabile.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Le parole chiave <code>var</code> e <code>val</code> specificano solo se il riferimento può essere modificato per puntare a un oggetto differente (<code>var</code>) oppure no (<code>val</code>). Non specificano se l&#8217;oggetto puntato è mutabile oppure no.
+</blockquote>
+
+<h2 id=MethodDeclarationsAndDefinitions>Dichiarazioni di metodo</h2>
+
+<p>Nel <a href=cap-1.html>capitolo 1</a> abbiamo visto diversi esempi di come si definisce un <em>metodo</em>, che è una funzione membro di una classe. Le <em>definizioni</em> di metodo cominciano con la parola chiave <code>def</code> seguita dal nome del metodo, da liste opzionali di argomenti, da un carattere di due punti &#8220;:&#8221; e dal tipo di ritorno del metodo, da un segno di uguale &#8220;=&#8221; e infine dal corpo del metodo. I metodi sono <em>dichiarati</em> implicitamente &#8220;astratti&#8221; se omettete il segno di uguale e il corpo del metodo. Di conseguenza, il tipo che li contiene diventa astratto. Discuteremo i tipi astratti in maggior dettaglio nel <a href=cap-5.html>capitolo 5</a>.
+
+<p>Abbiamo detto &#8220;liste opzionali di argomenti&#8221; per indicare che Scala vi permette di definire più di una lista di argomenti per un metodo. Questo è necessario per il <em>currying</em> dei metodi, che discuteremo nella sezione <a href=cap-8.html#Currying>Currying</a> del capitolo 8. &Egrave; anche molto utile per definire i vostri linguaggi <em>domain-specific</em> (<abbr>DSL</abbr>), come vedremo nel <a href=cap-11.html>capitolo 11</a>. Notate che ogni lista di argomenti è racchiusa tra parentesi e gli argomenti sono separati da virgole.
+
+<p>Se il corpo di un metodo contiene più espressioni, dovete circondarlo con una coppia di parentesi graffe <code>{&hellip;}</code>. Potete omettere le parentesi se il corpo del metodo contiene una sola espressione.
+
+<h3 id=MethodDefaultAndNamedArguments>Argomenti con nome e argomenti predefiniti per i metodi (Scala 2.8)</h3>
+
+<p>Molti linguaggi vi permettono di specificare valori predefiniti per alcuni o per tutti gli argomenti di un metodo. Considerate lo script seguente, che contiene un oggetto <code>StringUtil</code> progettato per unire le stringhe contenute in una lista tramite un separatore indicato dall&#8217;utente.
+
+<pre><code>// <a href=esempi/cap-2/string-util-v1-script.scala>esempi/cap-2/string-util-v1-script.scala</a>
+// StringUtil versione 1.
+
+object StringUtil {
+  def joiner(strings: List[String], separator: String): String =
+    strings.mkString(separator)
+
+  def joiner(strings: List[String]): String = joiner(strings, " ")
+}
+import StringUtil._  // Importa i metodi di unione.
+
+println(joiner(List("Programmare", "in", "Scala")))</code></pre>
+
+<p>In realtà ci sono due metodi <code>joiner</code> &#8220;sovraccaricati&#8221;, di cui il secondo usa un singolo spazio come separatore &#8220;predefinito&#8221;. Avere due metodi sembra uno spreco; sarebbe meglio se potessimo eliminare il secondo metodo <code>joiner</code> e dichiarare che l&#8217;argomento <code>separator</code> del primo metodo <code>joiner</code> ha un valore predefinito. Nella versione 2.8 di Scala potete farlo.
+
+<pre><code>// <a href=esempi/cap-2/string-util-v2-v28-script.scala>esempi/cap-2/string-util-v2-v28-script.scala</a>
+// StringUtil versione 2, solo per Scala v2.8.
+
+object StringUtil {
+  def joiner(strings: List[String], separator: String = " "): String =
+    strings.mkString(separator)
+}
+import StringUtil._  // Importa il metodo di unione.
+
+println(joiner(List("Programmare", "in", "Scala")))</code></pre>
+
+<p>Esiste un&#8217;altra alternativa per le versioni precedenti di Scala. Potete usare gli argomenti <em>impliciti</em>, che discuteremo nella sezione <a href=cap-8.html#ImplicitFunctionParameters>Parametri di funzione impliciti</a> del capitolo 8.
+
+<p>La versione 2.8 di Scala offre un altro miglioramento per le liste di argomenti dei metodi: gli <em>argomenti con nome</em>. Potete effettivamente scrivere l&#8217;ultima riga dell&#8217;esempio precedente in molti modi. Tutte le invocazioni di <code>println</code> che seguono sono funzionalmente equivalenti.
+
+<pre><code>println(joiner(List("Programmare", "in", "Scala")))
+println(joiner(strings=List("Programmare", "in", "Scala")))
+println(joiner(List("Programmare", "in", "Scala"), " "))  // #1
+println(joiner(List("Programmare", "in", "Scala"), separator=" "))  // #2
+println(joiner(strings=List("Programmare", "in", "Scala"), separator=" "))</code></pre>
+
+<p>Perché questo è utile? Prima di tutto, se scegliete nomi significativi per gli argomenti del metodo, tutte le invocazioni di quel metodo descrivono ogni argomento con il suo nome. Per esempio, confrontate le due righe con i commenti <code>#1</code> e <code>#2</code>. Nella prima riga lo scopo del secondo argomento <code>" "</code>  potrebbe non essere ovvio. Nel secondo caso, forniamo il nome <code>separator</code> che suggerisce lo scopo dell&#8217;argomento.
+
+<p>Il secondo vantaggio è quello di poter specificare i parametri in qualsiasi ordine quando li indicate con il loro nome. Combinando questa caratteristica con i valori predefiniti, potete scrivere codice come quello che segue.
+
+<pre><code>// <a href=esempi/cap-2/user-profile-v28-script.scala>esempi/cap-2/user-profile-v28-script.scala</a>
+// Solo per Scala v2.8.
+
+object OptionalUserProfileInfo {
+  val UnknownLocation = ""
+  val UnknownAge = -1
+  val UnknownWebSite = ""
+}
+
+class OptionalUserProfileInfo(
+  location: String = OptionalUserProfileInfo.UnknownLocation,
+  age: Int         = OptionalUserProfileInfo.UnknownAge,
+  webSite: String  = OptionalUserProfileInfo.UnknownWebSite)
+
+println(new OptionalUserProfileInfo)
+println(new OptionalUserProfileInfo(age=29))
+println(new OptionalUserProfileInfo(age=29, location="Terra"))</code></pre>
+
+<p><code>OptionalUserProfileInfo</code> rappresenta tutte le informazioni &#8220;opzionali&#8221; del profilo di un utente nella vostra prossima applicazione di rete sociale nel web 2.0. La classe definisce valori predefiniti per tutti i propri campi. Lo script crea istanze con zero o più parametri con nome. L&#8217;ordine di questi parametri è arbitrario.
+
+<p>Gli esempi che abbiamo mostrato usano valori costanti come valori predefiniti. La maggior parte dei linguaggi che supportano i valori predefiniti degli argomenti consente di usare solo costanti o altri valori che possono essere determinati durante il riconoscimento del codice sorgente. Tuttavia, in Scala, qualsiasi espressione può essere usata come valore predefinito, purché possa essere compilata nel punto in cui viene usata. Per esempio, un&#8217;espressione non potrebbe fare riferimento al campo di un&#8217;istanza che verrà calcolato nel corpo della classe o dell&#8217;oggetto, ma potrebbe invocare un metodo su un oggetto singleton.
+
+<p>Una limitazione correlata è quella per cui l&#8217;espressione predefinita di un parametro non può fare riferimento a un altro parametro nella lista, a meno che il parametro riferito non appaia prima nella lista <em>e</em> che i parametri siano <em>applicati parzialmente</em>, un concetto che discuteremo nella sezione <a href=cap-8.html#Currying>Currying</a> del capitolo 8.
+
+<p>Infine, per un altro vincolo sui parametri con nome, in una invocazione di metodo tutti i parametri che seguono un parametro di cui avete fornito il nome devono essere a loro volta parametri con nome. Per esempio, <code>new OptionalUserProfileInfo(age=29, "Terra")</code> non verrebbe compilato perché il secondo argomento non è passato con il proprio nome.
+
+<p>Vedremo un altro esempio utile di argomenti con nome e argomenti predefiniti quando discuteremo le <em>classi <code>case</code></em> nella sezione <a href=cap-6.html#CaseClasses>Classi <code>case</code></a> del capitolo 6.
+
+<h3 id=NestingMethodDefinitions>Annidare le definizioni di metodo</h3>
+
+<p>Le definizioni di metodo possono anche essere annidate. In questa implementazione della funzione fattoriale usiamo la tecnica convenzionale di invocare un secondo metodo annidato per effettuare il calcolo.
+
+<pre><code>// <a href=esempi/cap-2/factorial-script.scala>esempi/cap-2/factorial-script.scala</a>
+
+def factorial(i: Int): Int = {
+  def fact(i: Int, accumulator: Int): Int = {
+    if (i &lt;= 1)
+      accumulator
+    else
+      fact(i - 1, i * accumulator)
+  }
+
+  fact(i, 1)
+}
+
+println(factorial(0))
+println(factorial(1))
+println(factorial(2))
+println(factorial(3))
+println(factorial(4))
+println(factorial(5))</code></pre>
+
+<p>Il secondo metodo invoca sé stesso ricorsivamente, passando un parametro <var>accumulator</var> in cui viene &#8220;accumulato&#8221; il risultato del calcolo. Notate che, quando il contatore <var>i</var> raggiunge 1, restituiamo il valore accumulato. (Stiamo ignorando gli interi negativi non validi. La funzione in realtà restituisce 1 per <code>i &lt; 0</code>.) Dopo aver definito il metodo annidato, <code>factorial</code> lo invoca con il valore <var>i</var> che gli viene passato e con il valore iniziale 1 per l&#8217;accumulatore.
+
+<p>Come accade per le dichiarazioni di variabili locali in molti linguaggi, un metodo annidato è visibile solamente all&#8217;interno del metodo che lo include. Se provate a invocare <code>fact</code> al di fuori di <code>factorial</code>, otterrete un errore di compilazione.
+
+<p>Avete notato che abbiamo usato due volte <var>i</var> come nome di parametro, prima nel metodo <code>factorial</code> e poi nel metodo annidato <code>fact</code>? Come accade in molti linguaggi, l&#8217;uso di <var>i</var> come nome di parametro per <code>fact</code> &#8220;oscura&#8221; l&#8217;uso più esterno di <var>i</var> come nome di parametro per <code>factorial</code>. Questo non ci crea problemi, perché non abbiamo bisogno del valore più esterno di <var>i</var> all&#8217;interno di <code>fact</code>; lo usiamo solo la prima volta che invochiamo <code>fact</code>, alla fine di <code>factorial</code>.
+
+<p>E se abbiamo bisogno di usare una variabile che è definita al di fuori di una funzione annidata? Considerate questo esempio artificioso.
+
+<pre><code>// <a href=esempi/cap-2/count-to-script.scala>esempi/cap-2/count-to-script.scala</a>
+
+def countTo(n: Int):Unit = {
+  def count(i: Int): Unit = {
+    if (i &lt;= n) {
+      println(i)
+      count(i + 1)
+    }
+  }
+  count(1)
+}
+
+countTo(5)</code></pre>
+
+<p>Notate che il metodo <code>count</code> annidato usa il valore <var>n</var> che viene passato come parametro a <code>countTo</code>. Non c&#8217;è alcun bisogno di passare <var>n</var> come argomento a <code>count</code>; <var>n</var> è visibile perché <code>count</code> è annidato all&#8217;interno di <code>countTo</code>.
+
+<p>La dichiarazione di un campo (variabile membro) può essere qualificata con parole chiave che ne indicano la <em>visibilità</em>, esattamente come accade in Java e C#. Similmente, la dichiarazione di metodi non annidati può essere qualificata con le stesse parole chiave. Discuteremo le regole di visibilità e le relative parole chiave nella sezione <a href=cap-5.html#VisibilityRules>Regole di visibilità</a> del capitolo 5.
+
+<h2 id=InferringTypes>Inferire le informazioni di tipo</h2>
+
+<p>I linguaggi staticamente tipati possono essere piuttosto prolissi. Considerate questa tipica dichiarazione in Java.
+
+<pre><code>import java.util.Map;
+import java.util.HashMap;
+&hellip;
+Map&lt;Integer, String&gt; intToStringMap = new HashMap&lt;Integer, String&gt;();</code></pre>
+
+<p>Dobbiamo specificare i parametri di tipo <code>&lt;Integer, String&gt;</code> due volte. (Scala usa il termine <em>annotazioni di tipo</em> per le dichiarazioni di tipo esplicite come <code>HashMap&lt;Integer, String&gt;</code>.)
+
+<p>Scala supporta l&#8217;<em>inferenza di tipo</em> (si veda, per esempio, <a href=apa.html#TypeInference>[TypeInference]</a> e <a href=apa.html#Pierce2002>[Pierce2002]</a>). Il compilatore del linguaggio può dedurre una certa quantità di informazioni di tipo dal contesto, senza che vi siano annotazioni di tipo esplicite. Ecco la stessa dichiarazione riscritta in Scala, con le informazioni di tipo inferite.
+
+<pre><code>import java.util.Map
+import java.util.HashMap
+&hellip;
+val intToStringMap: Map[Integer, String] = new HashMap</code></pre>
+
+<p>Ricordatevi che, come avete visto nel <a href=cap-1.html>capitolo 1</a>, Scala usa le parentesi quadre (<code>[&hellip;]</code>) per i parametri di tipo generici. Specifichiamo <code>Map[Integer, String]</code> sul lato sinistro del segno di uguale. (Manteniamo i tipi di Java in questo esempio.) Sul lato destro istanziamo <code>HashMap</code>, il tipo che vogliamo realmente, ma non siamo obbligati a ripetere i parametri di tipo.
+
+<p>Per completezza, supponiamo che non ci interessi se l&#8217;istanza è di tipo <code>Map</code> (il tipo di interfaccia di Java). Potrebbe essere di tipo <code>HashMap</code>, per quel che ce ne importa.
+
+<pre><code>import java.util.Map
+import java.util.HashMap
+&hellip;
+val intToStringMap2 = new HashMap[Integer, String]</code></pre>
+
+<p>Questa dichiarazione non richiede alcuna annotazione di tipo sul lato sinistro perché tutte le informazioni di tipo necessarie si trovano sul lato destro. Il compilatore rende il tipo di <var>intToStringMap2</var> automaticamente uguale a <code>HashMap[Integer, String]</code>.
+
+<p>L&#8217;inferenza di tipo viene usata anche per i metodi. Nella maggior parte dei casi, il tipo di ritorno del metodo può essere inferito, quindi i due punti &#8220;:&#8221; e il tipo di ritorno si possono omettere. Tuttavia, le annotazioni di tipo sono obbligatorie per tutti i parametri dei metodi.
+
+<p>I linguaggi puramente funzionali come Haskell (si veda per esempio <a href=apa.html#OSullivan2009>[O&#8217;Sullivan2009]</a>) usano algoritmi di inferenza di tipo come l&#8217;algoritmo <em>Hindley-Milner</em> (si veda <a href=apa.html#Spiewak2008>[Spiewak2008]</a> per una spiegazione facilmente digeribile). Il codice scritto in questi linguaggi richiede le annotazioni di tipo più raramente rispetto a Scala, perché l&#8217;inferenza di tipo in Scala deve anche tenere conto della tipizzazione orientata agli oggetti. Quindi, Scala ha bisogno di più annotazioni di tipo rispetto a linguaggi come Haskell. Ecco un riepilogo delle regole che spiegano quando le annotazioni di tipo esplicite sono obbligatorie in Scala.
+
+<div class=sidebar>
+<p class=st>Quando le annotazioni di tipo sono obbligatorie
+
+<p>In termini pratici, dovete fornire annotazioni di tipo esplicite per le seguenti situazioni.
+
+<ol>
+<li>Una dichiarazione di variabile, a meno che non assegniate un valore alla variabile (per esempio, <code>val name = "Programmare in Scala"</code>).
+<li>Tutti i parametri dei metodi (per esempio, <code>def deposit(amount: Money)</code>).
+<li>I valori di ritorno dei metodi nei seguenti casi:
+<ol type=a>
+<li>quando usate esplicitamente <code>return</code> in un metodo (anche alla fine);
+<li>quando un metodo è ricorsivo;
+<li>quando un metodo è sovraccaricato e uno dei metodi invoca l&#8217;altro; in questo caso, il metodo <em>chiamante</em> ha bisogno di un&#8217;annotazione sul tipo di ritorno;
+<li>quando il tipo di ritorno inferito sarebbe più generale di quello che volete, per esempio <code>Any</code>.
+</ol>
+</ol>
+</div>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Il tipo <code>Any</code> è la radice della gerarchia di tipi di Scala (si veda la sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> nel capitolo 7 per maggiori dettagli). Se un blocco di codice restituisce un valore di tipo <code>Any</code> in maniera inaspettata, è probabile che l&#8217;algoritmo di inferenza di tipo non sia riuscito a capire quale tipo restituire e quindi abbia scelto il tipo più generico possibile.
+</blockquote>
+
+<p>Diamo un&#8217;occhiata ad alcuni esempi in cui le dichiarazioni esplicite del tipo di ritorno di un metodo sono obbligatorie. Nello script seguente, il metodo <code>upCase</code> contiene un&#8217;istruzione di ritorno condizionale per le stringhe di lunghezza zero.
+
+<pre><code>// <a href=esempi/cap-2/method-nested-return-script.scala>esempi/cap-2/method-nested-return-script.scala</a>
+// ERRORE: non verrà compilato fino a quando non mettete
+//         un tipo di ritorno uguale a String per upCase.
+
+def upCase(s: String) = {
+  if (s.length == 0)
+    return s   // ERRORE - obbliga a dichiarare il tipo di ritorno di upCase.
+  else
+    s.toUpperCase()
+}
+
+println(upCase(""))
+println(upCase("Ciao"))</code></pre>
+
+<p>L&#8217;esecuzione di questo script vi darà il seguente errore.
+
+<pre><samp>... 6: error: method upCase has return statement; needs result type
+        return s
+         ^</samp></pre>
+
+<p>Potete correggere questo errore modificando la prima riga del metodo nel modo seguente.
+
+<pre><code>def upCase(s: String): String = {</code></pre>
+
+<p>In realtà, per questo particolare script, è possibile una correzione alternativa che prevede di rimuovere la parola chiave <code>return</code> dalla riga. La parola chiave non è necessaria per il corretto funzionamento del codice, ma illustra il nostro punto.
+
+<p>Anche i metodi ricorsivi richiedono un tipo di ritorno esplicito. Ricordatevi il nostro metodo <code>factorial</code> nella sezione <a href=#NestingMethodDefinitions>Annidare le definizioni di metodo</a> di questo capitolo. Proviamo a rimuovere il tipo di ritorno <code>: Int</code> per il metodo annidato <code>fact</code>.
+
+<pre><code>// <a href=esempi/cap-2/method-recursive-return-script.scala>esempi/cap-2/method-recursive-return-script.scala</a>
+// ERRORE: non verrà compilato fino a quando non mettete
+           un tipo di ritorno uguale a Int per fact.
+
+def factorial(i: Int) = {
+  def fact(i: Int, accumulator: Int) = {
+    if (i &lt;= 1)
+      accumulator
+    else
+      fact(i - 1, i * accumulator)  // ERRORE
+  }
+
+  fact(i, 1)
+}</code></pre>
+
+<p>Ora lo script non viene compilato.
+
+<pre><samp>... 9: error: recursive method fact needs result type
+            fact(i - 1, i * accumulator)
+             ^</samp></pre>
+
+<p>I metodi <em>sovraccaricati</em> possono talvolta richiedere un tipo di ritorno esplicito. Quando uno di questi metodi ne chiama un altro, dobbiamo aggiungere un tipo di ritorno a quello che effettua la chiamata, come in questo esempio.
+
+<pre><code>// <a href=esempi/cap-2/method-overloaded-return-script.scala>esempi/cap-2/method-overloaded-return-script.scala</a>
+// StringUtil versione 1 (con un errore di compilazione).
+// ERRORE: non verrà compilato; necessita di un tipo di
+//         ritorno uguale a String per il secondo joiner.
+
+object StringUtil {
+  def joiner(strings: List[String], separator: String): String =
+    strings.mkString(separator)
+
+  def joiner(strings: List[String]) = joiner(strings, " ")  // ERRORE
+}
+import StringUtil._  // Importa i metodi di unione.
+
+println(joiner(List("Programmare", "in", "Scala")))</code></pre>
+
+<p>I due metodi <code>joiner</code> concatenano le stringhe contenute in una lista. Il primo metodo prende come argomento anche la stringa separatrice. Il secondo metodo chiama il primo con un separatore &#8220;predefinito&#8221; uguale a un singolo spazio.
+
+<p>Se eseguite questo script, ottenete l&#8217;errore seguente.
+
+<pre><samp>... 9: error: overloaded method joiner needs result type
+def joiner(strings: List[String]) = joiner(strings, " ")</samp></pre>
+
+Dato che il <em>secondo</em> metodo <code>joiner</code> chiama il primo, ha bisogno di un tipo di ritorno <code>String</code> esplicito, che dovrebbe apparire in questo modo.
+
+<pre><code>  def joiner(strings: List[String]): String = joiner(strings, " ")</code></pre>
+
+<p>L&#8217;ultimo scenario, in cui il compilatore inferisce un tipo di ritorno più generale di quello che vi aspettate, può essere astruso. Di solito vedete questo errore quando assegnate un valore restituito da una funzione a una variabile con un tipo più specifico. Per esempio, vi aspettavate <code>String</code> ma la funzione ha inferito <code>Any</code> come tipo dell&#8217;oggetto restituito. Vediamo un esempio artificioso che riflette un errore legato all&#8217;eventualità di questo scenario.
+
+<pre><code>// <a href=esempi/cap-2/method-broad-inference-return-script.scala>esempi/cap-2/method-broad-inference-return-script.scala</a>
+// ERRORE: non verrà compilato. Il metodo in realtà
+           restituisce List[Any], che è troppo "ampio".
+
+def makeList(strings: String*) = {
+  if (strings.length == 0)
+    List(0)  // #1
+  else
+    strings.toList
+}
+
+val list: List[String] = makeList()  // ERRORE</code></pre>
+
+<p>L&#8217;esecuzione di questo script restituisce l&#8217;errore seguente.</p>
+
+<pre><samp>...11: error: type mismatch;
+ found   : List[Any]
+ required: List[String]
+val list: List[String] = makeList()
+                          ^</samp></pre>
+
+<p>Volevamo che <code>makeList</code> restituisse <code>List[String]</code>, ma quando <code>strings.length</code> è uguale a zero abbiamo restituito <code>List(0)</code> &#8220;supponendo&#8221; in maniera scorretta che questa espressione fosse il modo giusto di creare una lista vuota. In effetti, abbiamo restituito un&#8217;istanza di <code>List[Int]</code> con un elemento, <code>0</code>, mentre avremmo dovuto restituire <code>List()</code>. Dato che l&#8217;espressione <code>else</code> restituisce <code>List[String]</code> come tipo del risultato di <code>strings.toList</code>, il tipo di ritorno inferito per il metodo è il supertipo comune di <code>List[Int]</code> e <code>List[String]</code> più vicino, cioè <code>List[Any]</code>. Notate che l&#8217;errore di compilazione non avviene nella definizione di funzione, ma lo vediamo solo quando cerchiamo di assegnare il valore restituito da <code>makeList</code> a una variabile di tipo <code>List[String]</code>.
+
+<p>In questo caso, la soluzione è correggere l&#8217;errore. In alternativa, quando non c&#8217;è un errore, è possibile che il compilatore abbia solo bisogno di essere aiutato con una dichiarazione esplicita del tipo di ritorno. Esaminate il metodo che sembra restituire il tipo inaspettato. La nostra esperienza ci dice che spesso scoprirete di aver modificato quel metodo (o un altro metodo nel percorso di chiamata) in un modo tale da indurre il compilatore a inferire un tipo di ritorno più generale del necessario. In questo caso, aggiungete il tipo di ritorno esplicito.
+
+<p>Un altro modo per evitare questi problemi è dichiarare sempre il tipo di ritorno dei metodi, in particolare quando definite i metodi di una <abbr>API</abbr> pubblica. Rivisitiamo il nostro esempio di <code>StringUtil</code> e vediamo perché le dichiarazioni esplicite sono una buona idea (adattato da <a href=apa.html#Smith2009a>[Smith2009a]</a>).
+
+<p>Ecco ancora la nostra &#8220;<abbr>API</abbr>&#8221; <code>StringUtil</code> con un nuovo metodo chiamato <code>toCollection</code>.
+
+<pre><code>// <a href=esempi/cap-2/string-util-v3.scala>esempi/cap-2/string-util-v3.scala</a>
+// StringUtil versione 3 (per tutte le versioni di Scala).
+
+object StringUtil {
+  def joiner(strings: List[String], separator: String): String =
+    strings.mkString(separator)
+
+  def joiner(strings: List[String]): String = strings.mkString(" ")
+
+  def toCollection(string: String) = string.split(' ')
+}</code></pre>
+
+<p>Il metodo <code>toCollection</code> divide una stringa in corrispondenza degli spazi e restituisce un <code>Array</code> contenente le sottostringhe. Il tipo di ritorno viene inferito, e come vedremo questo è un potenziale problema. Il metodo è piuttosto artificioso, ma ci servirà per illustrare il nostro punto. Ecco un cliente di <code>StringUtil</code> che usa questo metodo.
+
+<pre><code>// <a href=esempi/cap-2/string-util-client.scala>esempi/cap-2/string-util-client.scala</a>
+
+import StringUtil._
+
+object StringUtilClient {
+  def main(args: Array[String]) = {
+    args foreach { s =&gt; toCollection(s).foreach { x =&gt; println(x) } }
+  }
+}</code></pre>
+
+<p>Se compilate questi file con <kbd>scala</kbd>, potete eseguire il programma cliente come segue.
+
+<pre><samp>$ scala -cp &hellip; StringUtilClient "Programmare in Scala"
+Programmare
+in
+Scala</samp></pre>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Per l&#8217;argomento <tt>-cp &hellip;</tt> del percorso delle classi, usate la directory in cui <kbd>scalac</kbd> ha generato i file di classe, che per default è la directory corrente (cioè, usate <tt>-cp .</tt>). Se avete usato il procedimento di assemblaggio degli esempi di codice scaricati, i file di classe sono stati generati nella directory <span class=file>build</span> (usando <kbd>scalac -d build &hellip;</kbd>). In questo caso, usate <tt>-cp build</tt>.
+</blockquote>
+
+<p>A questo punto è tutto a posto, ma ora immaginate che la vostra base di codice sia cresciuta e che <code>StringUtil</code> e i suoi clienti vengano compilati separatamente e distribuiti in file <abbr>JAR</abbr> separati. Immaginate anche che i manutentori di <code>StringUtil</code> decidano di restituire una lista invece del tipo predefinito.
+
+<pre><code>object StringUtil {
+  &hellip;
+
+  def toCollection(string: String) = string.split(' ').toList  // modificato!
+}</code></pre>
+
+<p>L&#8217;unica differenza è l&#8217;invocazione finale di <code>toList</code> che converte l&#8217;istanza calcolata di <code>Array</code> in un&#8217;istanza di <code>List</code>. Ricompilate <code>StringUtil</code> e ricreatene il <abbr>JAR</abbr>, poi eseguite lo stesso cliente <em>senza</em> prima ricompilarlo.
+
+<pre><samp>$ scala -cp &hellip; StringUtilClient "Programmare in Scala"
+java.lang.NoSuchMethodError: StringUtil$.toCollection(&hellip;
+  at StringUtilClient$$anonfun$main$1.apply(string-util-client.scala:6)
+  at StringUtilClient$$anonfun$main$1.apply(string-util-client.scala:6)
+&hellip;</samp></pre>
+
+<p>Che cosa è successo? Quando il cliente è stato compilato, <code>StringUtil.toCollection</code> restituiva un <code>Array</code>. Poi, <code>toCollection</code> è stato modificato per restituire il tipo <code>List</code>. In entrambe le versioni, il valore di ritorno del metodo veniva inferito. Di conseguenza, anche il cliente avrebbe dovuto essere ricompilato.
+
+<p>Tuttavia, se fosse stato dichiarato un tipo di ritorno esplicito come <code>Seq</code>, che è un genitore sia di <code>Array</code> sia di <code>List</code>, allora la modifica all&#8217;implementazione non avrebbe costretto il cliente alla ricompilazione.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Quando sviluppate <abbr>API</abbr> compilate separatamente dai loro clienti, dichiarate esplicitamente i tipi di ritorno dei metodi e usate il tipo di ritorno più generale che potete. Questo è particolarmente importante quando le <abbr>API</abbr> dichiarano metodi <em>astratti</em> (si veda per esempio il <a href=cap-4.html>capitolo 4</a>).
+</blockquote>
+
+<p>C&#8217;è un altro scenario a cui dovete fare attenzione quando usate dichiarazioni di collezioni come <code>val map = Map()</code>, illustrato in questo esempio.
+
+<pre><code>val map = Map()
+
+map.update("libro", "Programmare in Scala")</code></pre>
+<pre><samp>... 3: error: type mismatch;
+&#160;found &#160;&#160;: java.lang.String("libro")
+&#160;required: Nothing
+map.update("libro", "Programmare in Scala")
+&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;^</samp></pre>
+
+<p>Che cosa è successo? I <em>parametri di tipo</em> del tipo generico <code>Map</code> sono stati inferiti come <code>[Nothing, Nothing]</code> quando la mappa è stata creata. (Discuteremo <code>Nothing</code> nella sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> del capitolo 7, ma il suo nome è suggestivo!) Abbiamo tentato di inserire una coppia chiave-valore incompatibile di tipo <code>String</code>-<code>String</code>. Quella mappa non porta in nessun luogo! La soluzione consiste nel parametrizzare la dichiarazione iniziale, come in <code>val map = Map[String, String]()</code>, o nello specificare i valori iniziali in modo che i parametri di tipo vengano inferiti, come in <code>val map = Map("libro" -&gt; "Programmare in Scala")</code>.
+
+<p>Infine, a volte i tipi di ritorno inferiti possono comportarsi in maniera astrusa causando risultati inaspettati e sconcertanti <a href=apa.html#ScalaTips>[ScalaTips]</a>. Considerate come esempio la sessione <kbd>scala</kbd> seguente.
+
+<pre><samp>scala&gt; def double(i: Int) { 2 * i }
+double: (Int)Unit
+
+scala&gt; println(double(2))
+()</samp></pre>
+
+<p>Perché il secondo comando ha stampato <code>()</code> invece di <code>4</code>? Esaminate attentamente ciò che l&#8217;interprete <kbd>scala</kbd> ha indicato come valore restituito dal primo comando, <code>double: (Int)Unit</code>. Abbiamo definito un metodo chiamato <code>double</code> che prende un argomento di tipo <code>Int</code> e restituisce <code>Unit</code>. Il metodo non restituisce un <code>Int</code> come ci saremmo aspettati.
+
+<p>La causa di questo comportamento inaspettato è la mancanza di un segno di uguale nella definizione di metodo. Ecco la definizione che effettivamente intendevamo.
+
+<pre><code>scala&gt; def double(i: Int) = { 2 * i }
+double: (Int)Int
+
+scala&gt; println(double(2))
+4</code></pre>
+
+<p>Notate il segno di uguale prima del corpo di <code>double</code>. Ora l&#8217;uscita ci dice che abbiamo definito <code>double</code> in modo che restituisca un <code>Int</code> e il secondo comando fa quello che ci aspettiamo.
+
+<p>C&#8217;è una ragione per questo comportamento. Scala considera un metodo con il segno di uguale prima del corpo come una definizione di funzione, e nella programmazione funzionale le funzioni restituiscono sempre un valore. D&#8217;altra parte, quando Scala vede il corpo di un metodo senza il segno di uguale a precederlo, presume che il programmatore intenda il metodo come la definizione di una &#8220;procedura&#8221;, progettata per sfruttarne solo gli effetti collaterali e per restituire <code>Unit</code>. In pratica, è più probabile che il programmatore abbia semplicemente dimenticato di inserire il segno di uguale!
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span>Quando il tipo di ritorno di un metodo viene inferito e non usate un segno di uguale prima della parentesi graffa aperta per il corpo del metodo, Scala inferisce <code>Unit</code> come tipo di ritorno, anche quando l&#8217;ultima espressione nel metodo è un valore di un altro tipo.
+</blockquote>
+
+<p>A proposito, da dove è venuta fuori quella coppia di parentesi <code>()</code> che è stata stampata prima che correggessimo l&#8217;errore? &Egrave; il vero nome dell&#8217;istanza <em>singleton</em> del tipo <code>Unit</code>! (Questo nome è una convenzione derivata dalla programmazione funzionale.)
+
+<h2 id=Literals>Letterali</h2>
+
+<p>Spesso, un nuovo oggetto viene inizializzato con un valore <em>letterale</em>, come in <code>val book = "Programmare in Scala"</code>. Ora parleremo dei tipi di valori letterali supportati da Scala, limitandoci ai letterali che sono anche lessemi. Parleremo della sintassi letterale per funzioni (usate come <em>valori</em>, non come metodi), tuple e certi tipi come liste e mappe man mano che arriveremo a parlare di quei tipi.
+
+<h3 id=IntegerLiterals>Letterali interi</h3>
+
+<p>I letterali interi possono essere espressi in decimale, esadecimale, oppure ottale. I dettagli sono riepilogati nella <a href=#integer-literals-table>tabella 2.1</a>.
+
+<div class=table id=integer-literals-table>
+<p class=tt>Tabella 2.1. Letterali interi.
+<table summary="Letterali interi." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Tipo</th>
+<th align=left valign=top>Formato</th>
+<th align=left valign=top>Esempi</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p>Decimale</p></td>
+<td align=left valign=top><p>0 <em>oppure</em> una cifra diversa da zero seguita da zero o più cifre (0-9)</p></td>
+<td align=left valign=top><p>0, 1, 321</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>Esadecimale</p></td>
+<td align=left valign=top><p>0x seguito da una o più cifre esadecimali (0-9, A-F, a-f)</p></td>
+<td align=left valign=top><p>0xFF, 0x1a3b</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>Ottale</p></td>
+<td align=left valign=top><p>0 seguito da una o più cifre ottali (0-7)</p></td>
+<td align=left valign=top><p>013, 077</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Per i letterali <code>Long</code> è necessario aggiungere il carattere <code>L</code> o <code>l</code> alla fine del letterale; altrimenti, viene usato un <code>Int</code>. I valori validi per un letterale intero sono legati al tipo della variabile a cui il valore viene assegnato. La <a href=#integer-boundaries-table>tabella 2.2</a> definisce gli estremi, che sono inclusi.
+
+<div class=table id=integer-boundaries-table>
+<p class=tt>Tabella 2.2. Intervalli di valori permessi per i letterali interi (gli estremi sono inclusi).
+<table summary="Intervalli di valori permessi per i letterali interi (gli estremi sono inclusi)." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Tipo obiettivo </th>
+<th align=left valign=top>Minimo (incluso)</th>
+<th align=left valign=top>Massimo (incluso)</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p><code>Long</code></p></td>
+<td align=left valign=top><p>&minus;2<sup>63</sup></p></td>
+<td align=left valign=top><p>2<sup>63</sup> - 1</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Int</code></p></td>
+<td align=left valign=top><p>&minus;2<sup>31</sup></p></td>
+<td align=left valign=top><p>2<sup>31</sup> - 1</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Short</code></p></td>
+<td align=left valign=top><p>&minus;2<sup>15</sup></p></td>
+<td align=left valign=top><p>2<sup>15</sup> - 1</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Char</code></p></td>
+<td align=left valign=top><p>0</p></td>
+<td align=left valign=top><p>2<sup>16</sup> - 1</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Byte</code></p></td>
+<td align=left valign=top><p>&minus;2<sup>7</sup></p></td>
+<td align=left valign=top><p>2<sup>7</sup> - 1</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>L&#8217;uso di un numero letterale intero al di fuori di questi intervalli provoca un errore a tempo di compilazione, come negli esempi seguenti.
+
+<pre><samp>scala &gt; val i = 12345678901234567890
+&lt;console&gt;:1: error: integer number too large
+       val i = 12345678901234567890
+scala&gt; val b: Byte = 128
+&lt;console&gt;:4: error: type mismatch;
+ found   : Int(128)
+ required: Byte
+       val b: Byte = 128
+                     ^
+
+scala&gt; val b: Byte = 127
+b: Byte = 127</samp></pre>
+
+<h3 id=FloatingPointLiterals>Letterali in virgola mobile</h3>
+
+<p>I letterali in virgola mobile sono espressioni con zero o più cifre, seguite da un punto <code>.</code>, seguito da zero o più cifre. Se non ci sono cifre prima del punto, e quindi il numero è minore di 1.0, allora ci deve essere almeno una cifra dopo il punto. Per i letterali <code>Float</code> è necessario aggiungere il carattere <code>F</code> o <code>f</code> alla fine del letterale; altrimenti, viene usato un <code>Double</code>. L&#8217;aggiunta di <code>D</code> o <code>d</code> per ottenere un <code>Double</code> è opzionale.
+
+<p>I letterali in virgola mobile possono essere espressi con o senza gli esponenti. Il formato della parte esponenziale è <code>e</code> o <code>E</code>, seguita da un segno <code>+</code> o <code>-</code> opzionale, seguito da una o più cifre.
+
+<p>Ecco alcuni esempi di letterali in virgola mobile.
+
+<pre><code>0.
+.0
+0.0
+3.
+3.14
+.14
+0.14
+3e5
+3E5
+3.E5
+3.e5
+3.e+5
+3.e-5
+3.14e-5
+3.14e-5f
+3.14e-5F
+3.14e-5d
+3.14e-5D</code></pre>
+
+<p>La classe <code>Float</code> comprende solo valori in virgola mobile a singola precisione (32 bit) che seguono lo standard IEEE 754. La classe <code>Double</code> comprende valori in virgola mobile a doppia precisione (64 bit) che seguono lo standard IEEE 754.
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span>Per evitare ambiguità sintattiche, deve sempre esserci almeno uno spazio dopo un letterale in virgola mobile se questo è seguito da un lessema che comincia con una lettera. In più, l&#8217;espressione <code>1.toString</code> restituisce il valore intero <code>1</code> sotto forma di stringa, mentre <code>1. toString</code> sfrutta la <em>notazione operazionale</em> per invocare <code>toString</code> sul letterale in virgola mobile <code>1.</code>.
+</blockquote>
+
+<h3 id=BooleanLiterals>Letterali booleani</h3>
+
+<p>I letterali booleani sono <code>true</code> e <code>false</code>. Il tipo della variabile a cui vengono assegnati verrà inferito come <code>Boolean</code>.
+
+<pre><samp>scala&gt; val b1 = true
+b1: Boolean = true
+
+scala&gt; val b2 = false
+b2: Boolean = false</samp></pre>
+
+<h3 id=CharacterLiterals>Letterali carattere</h3>
+
+<p>Un letterale carattere è un carattere Unicode stampabile, oppure una sequenza di escape, racchiuso tra apici. Un carattere con un valore Unicode compreso tra 0 e 255 può anche essere rappresentato come una sequenza di escape ottale, cioè come un carattere di barra inversa <code>\</code> seguito da una sequenza di non più di tre cifre ottali. In un letterale carattere o stringa, una barra inversa che non comincia una sequenza di escape valida provoca un errore di compilazione.
+
+<p>Ecco alcuni esempi.
+
+<pre><code>'A'
+'\u0041'  // 'A' in Unicode
+'\n'
+'\012'    // '\n' in ottale
+'\t'</code></pre>
+
+<p>Le sequenze di escape valide sono elencate nella <a href=#char-escape-sequences-table>tabella 2.3</a>.
+
+<div class=table id=char-escape-sequences-table>
+<p class=tt>Tabella 2.3. Sequenze di escape per i caratteri.
+<table summary="Sequenze di escape per i caratteri." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Sequenza</th>
+<th align=left valign=top>Unicode</th>
+<th align=left valign=top>Significato</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p><code>\b</code></p></td>
+<td align=left valign=top><p><code>\u0008</code></p></td>
+<td align=left valign=top><p>backspace</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>\t</code></p></td>
+<td align=left valign=top><p><code>\u0009</code></p></td>
+<td align=left valign=top><p>tabulazione orizzontale</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>\n</code></p></td>
+<td align=left valign=top><p><code>\u000a</code></p></td>
+<td align=left valign=top><p>fine riga</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>\f</code></p></td>
+<td align=left valign=top><p><code>\u000c</code></p></td>
+<td align=left valign=top><p>salto pagina</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>\r</code></p></td>
+<td align=left valign=top><p><code>\u000d</code></p></td>
+<td align=left valign=top><p>ritorno a capo</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>\&quot;</code></p></td>
+<td align=left valign=top><p><code>\u0022</code></p></td>
+<td align=left valign=top><p>virgolette (<code>&quot;</code>)</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>\'</code></p></td>
+<td align=left valign=top><p><code>\u0027</code></p></td>
+<td align=left valign=top><p>apice (<code>'</code>)</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>\\</code></p></td>
+<td align=left valign=top><p><code>\u0009</code></p></td>
+<td align=left valign=top><p>barra inversa (<code>\</code>)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<h3 id=StringLiterals>Letterali stringa</h3>
+
+<p>Un letterale stringa è una sequenza di caratteri racchiusa tra virgolette o tra <em>triple</em> di virgolette, cioè <code>"""&hellip;"""</code>.
+
+<p>Per i letterali stringa tra virgolette, i caratteri permessi sono gli stessi dei letterali carattere. Tuttavia, se nella stringa compare un carattere di virgoletta <code>&quot;</code>, ne deve essere effettuato l&#8217;escape con un carattere <code>\</code>. Ecco alcuni esempi.
+
+<pre><code>"Programmare\nin\nScala"
+"Egli esclamò: \"Scala è fantastico!\""
+"Primo\tSecondo"</code></pre>
+
+<p>I letterali stringa racchiusi tra triple di virgolette sono anche chiamati letterali stringa <em>multiriga</em>. Queste stringhe possono estendersi su più righe; i caratteri di fine riga faranno parte della stringa. Possono includere qualsiasi carattere, compresi apici e virgolette, ma non tre virgolette di seguito. Sono utili se si vogliono inserire caratteri <code>\</code> che non formano sequenze Unicode o di escape valide come quelle elencate nella <a href=#char-escape-sequences-table>tabella 2.3</a>. Le espressioni regolari sono un tipico esempio, che discuteremo nel <a href=cap-3.html>capitolo 3</a>. Comunque, le sequenze di escape che compaiono non vengono interpretate.
+
+<p>Ecco tre stringhe di esempio.
+
+<pre><code>"""Programmare\nin\nScala"""
+"""Egli esclamò: "Scala è fantastico!" """
+"""Prima riga\n
+Seconda riga\t
+
+Quarta riga"""</code></pre>
+
+<p>Notate che abbiamo dovuto aggiungere uno spazio prima delle <code>&quot;&quot;&quot;</code> conclusive nel secondo esempio per evitare un errore di sintassi. Provare a effettuare l&#8217;escape della seconda <code>&quot;</code> che termina la citazione <code>"Scala è fantastico!"</code>, cioè <code>"Scala è fantastico!\"</code>, non funziona.
+
+<p>Copiate queste stringhe e incollatele nell&#8217;interprete <kbd>scala</kbd>. Fate la stessa cosa per le stringhe di esempio precedenti. Quali sono le differenze di interpretazione?
+
+<h3 id=SymbolLiterals>Letterali simbolo</h3>
+
+<p>Scala supporta i simboli, che sono stringhe <em>internate</em> nel senso che due simboli con lo stesso &#8220;nome&#8221;, cioè con la stessa sequenza di caratteri, fanno riferimento allo stesso oggetto in memoria. I simboli sono usati meno spesso in Scala rispetto ad altri linguaggi come Ruby, Smalltalk e Lisp. Sono utili come chiavi di mappe al posto delle stringhe.
+
+<p>Un letterale simbolo è costituito da un apice <code>'</code>, seguito da una lettera, seguita da zero o più cifre e lettere. Notate che un&#8217;espressione come <code>'1</code> non è valida, perché il compilatore pensa che sia un letterale carattere incompleto.
+
+<p>Un letterale simbolo <code>'id</code> è un&#8217;abbreviazione per l&#8217;espressione <code>scala.Symbol("id")</code>.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Se volete creare un simbolo che contiene spazi bianchi, usate per esempio <code>scala.Symbol(" Programmare in Scala ")</code>. Tutto lo spazio bianco viene mantenuto.
+</blockquote>
+
+<h2 id=TheTroubleWithTuples>Tuple</h2>
+
+<p>Quante volte avreste voluto restituire <em>due</em> o più valori da un metodo? In molti linguaggi, come in Java, avete solo alcune opzioni per farlo, nessuna delle quali è particolarmente attraente. Potreste passare al metodo alcuni parametri che verranno modificati per tutti o per alcuni valori &#8220;di ritorno&#8221;, ma questa è una soluzione dozzinale. Oppure potreste dichiarare qualche piccola classe &#8220;strutturale&#8221; che contiene quei valori e poi restituire un&#8217;istanza di quella classe.
+
+<p>Scala supporta le <em>tuple</em>, cioè raggruppamenti di due o più valori, di solito create con una sintassi letterale che rappresenta una lista di oggetti separati da virgole racchiusa tra parentesi, per esempio <code>(x1, x2, &hellip;)</code>. I tipi degli elementi <code>x</code><sub>i</sub> non sono correlati tra loro, quindi potete mescolarli. Questi &#8220;raggruppamenti&#8221; letterali vengono creati come istanze di <code>scala.TupleN</code>, dove <code>N</code> è il numero di elementi nella tupla. La <abbr>API</abbr> di Scala definisce classi <code>TupleN</code> separate per <code>N</code> che va da 1 a 22 (estremi inclusi). Le tuple sono valori <em>di prima classe</em> immutabili, quindi potete assegnarle a variabili, passarle come parametri e restituirle dai metodi.
+
+<p>L&#8217;esempio seguente mostra l&#8217;uso delle tuple.
+
+<pre><code>// <a href=esempi/cap-2/tuple-example-script.scala>esempi/cap-2/tuple-example-script.scala</a>
+
+def tupleator(x1: Any, x2: Any, x3: Any) = (x1, x2, x3)
+
+val t = tupleator("Ciao", 1, 2.3)
+println("Stampa l'intera tupla:      " + t)
+println("Stampa il primo elemento:   " + t._1)
+println("Stampa il secondo elemento: " + t._2)
+println("Stampa il terzo elemento:   " + t._3)
+
+val (t1, t2, t3) = tupleator("Mondo", '!', 0x22)
+println(t1 + " " + t2 + " " + t3)</code></pre>
+
+<p>L&#8217;esecuzione di questo script con <kbd>scala</kbd> produce l&#8217;uscita seguente.
+
+<pre><samp>Stampa l'intera tupla:      (Ciao,1,2.3)
+Stampa il primo elemento:   Ciao
+Stampa il secondo elemento: 1
+Stampa il terzo elemento:   2.3
+Mondo ! 34</samp></pre>
+
+<p>Il metodo <code>tupleator</code> restituisce semplicemente una &#8220;3-tupla&#8221; con gli argomenti in ingresso. La prima istruzione che usa questo metodo assegna la tupla restituita a una singola variabile <code>t</code>. Le quattro istruzioni successive stampano <code>t</code> in diversi modi. Il primo comando di stampa invoca <code>Tuple3.toString</code>, che racchiude la lista degli elementi tra parentesi. I tre comandi successivi stampano ogni elemento di <code>t</code> separatamente. L&#8217;espressione <code>t._N</code> recupera l&#8217;elemento di posto <code>N</code>, cominciando da 1, <em>non</em> da 0 (questa scelta segue le convenzioni della programmazione funzionale).
+
+<p>Le ultime due righe mostrano come usare un&#8217;espressione tupla sul lato sinistro di un assegnamento. Dichiariamo tre variabili di tipo <code>val</code> (<code>t1</code>, <code>t2</code> e <code>t3</code>) per contenere i singoli elementi della tupla. In sostanza, gli elementi della tupla vengono estratti automaticamente.
+
+<p>Notate come abbiamo mescolato tipi diversi nella tupla. Potete vedere i tipi più chiaramente se usate la modalità interattiva del comando <kbd>scala</kbd> che abbiamo introdotto nel <a href=cap-1.html>capitolo 1</a>.
+
+<p>Invocate il comando <kbd>scala</kbd> senza passare nessuno script come argomento. Al prompt <code>scala&gt;</code> digitate <code>val t = ("Ciao", 1, 2.3)</code> e verificate di ottenere il seguente risultato che vi mostra il tipo di ogni elemento nella tupla.
+
+<pre><samp>scala&gt; val t = ("Ciao", 1, 2.3)
+t: (java.lang.String, Int, Double) = (Ciao, 1, 2.3)</samp></pre>
+
+<p>Vale la pena di notare che c&#8217;è più di un modo per definire una tupla. Finora abbiamo usato la sintassi parentetica più comune, ma potete anche usare l&#8217;operatore freccia tra due valori, così come alcuni metodi di costruzione speciali delle classi relative alle tuple.
+
+<pre><samp>scala&gt; 1 -&gt; 2
+res0: (Int, Int) = (1,2)
+
+scala&gt; Tuple2(1, 2)
+res1: (Int, Int) = (1,2)
+
+scala&gt; Pair(1, 2)
+res2: (Int, Int) = (1,2)</samp></pre>
+
+<h2 id=OptionSomeNone><code>Option</code>, <code>Some</code> e <code>None</code>: evitare i valori nulli</h2>
+
+<p>Parleremo della gerarchia standard dei tipi di Scala nella sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> del capitolo 7. Tuttavia, ci sono tre classi utili da capire subito: la classe <code>Option</code> e le sue due sottoclassi, <code>Some</code> e <code>None</code>.
+
+<p>La maggior parte dei linguaggi usa una parola chiave o un oggetto particolare per assegnare un valore alle variabili quando non c&#8217;è nient&#8217;altro a cui possono fare riferimento. Java usa <code>null</code>, Ruby usa <code>nil</code>. In Java <code>null</code> è una parola chiave, non un oggetto, e quindi è illegale invocare un qualsiasi metodo su di essa. Ma questa scelta da parte del progettista del linguaggio genera confusione: perché restituire una parola chiave quando il programmatore si aspetta un oggetto?
+
+<p>Per essere più coerenti con lo scopo di rendere ogni cosa un oggetto e per seguire le convenzioni della programmazione funzionale, Scala vi incoraggia a usare il tipo <code>Option</code> per le variabili e per i valori di ritorno delle funzioni che potrebbero o meno fare riferimento a un valore. Quando non c&#8217;è alcun valore usate <code>None</code>, un <code>object</code> che è una sottoclasse di <code>Option</code>. Quando c&#8217;è un valore usate <code>Some</code>, che racchiude il valore; anche <code>Some</code> è una sottoclasse di <code>Option</code>.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span><code>None</code> è dichiarato come un <code>object</code>, non come una classe, perché in realtà ce ne serve una sola istanza. In questo senso è come la parola chiave <code>null</code>, ma è un oggetto reale con i propri metodi.
+</blockquote>
+
+<p>Potete vedere <code>Option</code>, <code>Some</code> e <code>None</code> in azione nell&#8217;esempio seguente, dove viene creata una mappa delle capitali di stato americane.
+
+<pre><code>// <a href=esempi/cap-2/state-capitals-subset-script.scala>esempi/cap-2/state-capitals-subset-script.scala</a>
+
+val stateCapitals = Map(
+  "Alabama" -&gt; "Montgomery",
+  "Alaska"  -&gt; "Juneau",
+  // ...
+  "Wyoming" -&gt; "Cheyenne")
+
+println("Recupera le capitali in istanze di Option:")
+println("Alabama: " + stateCapitals.get("Alabama"))
+println("Wyoming: " + stateCapitals.get("Wyoming"))
+println("Ignoto:  " + stateCapitals.get("Ignoto"))
+
+println("Recupera le capitali dalle istanze di Option:")
+println("Alabama: " + stateCapitals.get("Alabama").get)
+println("Wyoming: " + stateCapitals.get("Wyoming").getOrElse("Oops!"))
+println("Ignoto:  " + stateCapitals.get("Ignoto").getOrElse("Oops2!"))</code></pre>
+
+<p>La conveniente sintassi <code>-&gt;</code> per definire coppie nome-valore e inizializzare una <code>Map</code> verrà discussa nella sezione <a href=cap-7.html#PredefObject>L&#8217;oggetto <code>Predef</code></a> del capitolo 7. Per ora, vogliamo concentrarci sui due gruppi di istruzioni <code>println</code>, che usiamo per mostrare cosa succede quando recuperate i valori dalla mappa. Se eseguite questo script con il comando <kbd>scala</kbd>, otterrete l&#8217;uscita seguente.
+
+<pre><samp>Recupera le capitali in istanze di Option:
+Alabama: Some(Montgomery)
+Wyoming: Some(Cheyenne)
+Ignoto:  None
+Recupera le capitali dalle istanze di Option:
+Alabama: Montgomery
+Wyoming: Cheyenne
+Ignoto:  Oops2!</samp></pre>
+
+<p>Il primo gruppo di istruzioni <code>println</code> invoca implicitamente <code>toString</code> sulle istanze restituite da <code>get</code>. Stiamo chiamando <code>toString</code> su istanze di <code>Some</code> o di <code>None</code>, perché i valori restituiti da <code>Map.get</code> vengono automaticamente incorporati in un&#8217;istanza di <code>Some</code> quando la mappa contiene un valore corrispondente alla chiave specificata. Notate che la libreria Scala non memorizza l&#8217;istanza di <code>Some</code> nella mappa, ma vi incorpora il valore nel momento in cui viene recuperato. Invece, quando chiediamo alla mappa una voce che non esiste, viene restituito l&#8217;oggetto <code>None</code> al posto di <code>null</code>. Questo accade nell&#8217;ultima delle prime tre istruzioni <code>println</code>.
+
+<p>Il secondo gruppo di istruzioni <code>println</code> compie un passo ulteriore. Dopo aver chiamato <code>Map.get</code>, esse invocano <code>get</code> oppure <code>getOrElse</code> su ogni istanza di <code>Option</code> per recuperare il valore che contiene. <code>Option.get</code> richiede che l&#8217;istanza non sia vuota, cioè che l&#8217;istanza di <code>Option</code> sia in realtà di tipo <code>Some</code>. In questo caso, <code>get</code> restituisce il valore racchiuso nell&#8217;istanza di <code>Some</code>, come mostra l&#8217;istruzione <code>println</code> che stampa la capitale dell&#8217;Alabama. Tuttavia, se l&#8217;istanza di <code>Option</code> in realtà è di tipo <code>None</code>, allora <code>None.get</code> lancia una eccezione <code>NoSuchElementException</code>.
+
+<p>Nelle ultime due istruzioni <code>println</code> mostriamo anche il metodo alternativo <code>getOrElse</code>. Questo metodo restituisce il valore racchiuso in <code>Option</code> se l&#8217;istanza di <code>Option</code> è di tipo <code>Some</code>, oppure restituisce l&#8217;argomento passato a <code>getOrElse</code> se l&#8217;istanza è di tipo <code>None</code>. In altre parole, l&#8217;argomento di <code>getOrElse</code> serve come valore di ritorno predefinito.
+
+<p>Quindi <code>getOrElse</code> è il più difensivo dei due metodi, poiché evita l&#8217;eventualità di lanciare una eccezione. Discuteremo i meriti di alternative come quella tra <code>get</code> e <code>getOrElse</code> nella sezione <a href=cap-13.html#ExceptionsAndTheAlternatives>Le eccezioni e le alternative</a> nel capitolo 13.
+
+<p>Notate che, restituendo un&#8217;istanza di <code>Option</code>, <code>Map.get</code> segnala in modo automatico la possibilità che non ci sia alcun elemento corrispondente alla chiave specificata. La mappa gestisce questa situazione restituendo <code>None</code>. La maggior parte dei linguaggi restituirebbe <code>null</code> (o il suo equivalente) quando non c&#8217;è nessun valore &#8220;reale&#8221; da restituire; si impara dall&#8217;esperienza ad aspettarsi un possibile <code>null</code>. Usare <code>Option</code> rende il comportamento più esplicito nella firma del metodo, quindi più autodescrittivo.
+
+<p>In più, grazie alla tipizzazione statica di Scala, non potete fare l&#8217;errore di &#8220;dimenticare&#8221; che viene restituita un&#8217;istanza di <code>Option</code> e tentare di invocare un metodo supportato dal tipo del valore racchiuso nell&#8217;istanza (se c&#8217;è un valore). In Java, quando un metodo restituisce un valore, è facile dimenticarsi di controllare se è <code>null</code> prima di invocare un metodo su di esso. Quando un metodo Scala restituisce <code>Option</code>, il controllo di tipo effettuato dal compilatore vi obbliga a estrarre il valore dall&#8217;istanza di <code>Option</code> prima di invocare un metodo su di esso. Questo vi &#8220;ricorda&#8221; di controllare se l&#8217;istanza di <code>Option</code> è in effetti un&#8217;istanza di <code>None</code>. Quindi, l&#8217;uso di <code>Option</code> vi incoraggia decisamente a programmare in maniera più resiliente.
+
+<p>Dato che Scala funziona sulla <abbr>JVM</abbr> e su .NET e deve interoperare con altre librerie, ha bisogno di supportare <code>null</code>. Tuttavia, dovreste evitare di usare <code>null</code> nel vostro codice. Tony Hoare, che ha inventato il riferimento nullo nel 1965 mentre lavorava su un linguaggio orientato agli oggetti chiamato ALGOL W, ha chiamato la sua invenzione &#8220;l&#8217;errore da un miliardo di dollari&#8221; <a href=apa.html#Hoare2009>[Hoare2009]</a>. Evitate di contribuire a quella cifra.
+
+<p>Quindi, come scrivereste un metodo che restituisce <code>Option</code>? Ecco una ragionevole implementazione di <code>get</code> che potrebbe essere usata in una sottoclasse concreta di <code>Map</code> (l&#8217;originale <code>Map.get</code> è <em>astratto</em>). Per una versione più sofisticata, si veda l&#8217;implementazione di <code>get</code> nella classe <code>scala.collection.immutable.HashMap</code> contenuta nella distribuzione del codice sorgente della libreria Scala.
+
+<pre><code>def get(key: A): Option[B] = {
+  if (contains(key))
+    new Some(getValue(key))
+  else
+    None
+}</code></pre>
+
+<p><code>Map</code> definisce anche il metodo <code>contains</code>, che restituisce <code>true</code> se la mappa contiene un valore per la chiave specificata. Il metodo <code>getValue</code> va considerato come un metodo interno deputato a recuperare il valore dalla struttura sottostante che gestisce la memorizzazione, qualunque essa sia.
+
+<p>Notate come il valore restituito da <code>getValue</code> venga racchiuso in un&#8217;istanza di <code>Some[B]</code>, dove il tipo <code>B</code> viene inferito. Tuttavia, se l&#8217;invocazione di <code>contains(key)</code> restituisce <code>false</code>, allora viene restituito l&#8217;oggetto <code>None</code>.
+
+<p>Potete usare questo stesso idioma quando i vostri metodi restituiscono <code>Option</code>. Esploreremo altri usi di <code>Option</code> nelle sezioni seguenti. Il suo uso pervasivo in Scala lo rende un concetto importante da capire.
+
+<h2 id=Packages>Organizzare il codice in file e spazi di nomi</h2>
+
+<p>Scala adotta il concetto di package usato da Java per gli spazi di nomi, ma offre una sintassi più flessibile. Proprio come i nomi di file non devono corrispondere ai nomi di tipo, la struttura dei package non deve corrispondere alla struttura delle directory. Quindi potete definire i package nei file a prescindere dalla loro ubicazione &#8220;fisica&#8221;.
+
+<p>L&#8217;esempio seguente definisce una classe <code>MyClass</code> in un package <code>com.example.mypkg</code> usando la convenzionale sintassi Java.
+
+<pre><code>// <a href=esempi/cap-2/package-example1.scala>esempi/cap-2/package-example1.scala</a>
+
+package com.example.mypkg
+
+class MyClass {
+  // ...
+}</code></pre>
+
+<p>Il prossimo è un esempio artificioso che definisce alcuni package usando la sintassi per i package annidati in Scala, che è simile alla sintassi per gli <em>spazi di nomi</em> in C# e all&#8217;uso dei <em>moduli</em> come spazi di nomi in Ruby.
+
+<pre><code>// <a href=esempi/cap-2/package-example2.scala>esempi/cap-2/package-example2.scala</a>
+
+package com {
+  package example {
+    package pkg1 {
+      class Class11 {
+        def m = "m11"
+      }
+      class Class12 {
+        def m = "m12"
+      }
+    }
+
+    package pkg2 {
+      class Class21 {
+        def m = "m21"
+        def makeClass11 = {
+          new pkg1.Class11
+        }
+        def makeClass12 = {
+          new pkg1.Class12
+        }
+      }
+    }
+
+    package pkg3.pkg31.pkg311 {
+      class Class311 {
+        def m = "m21"
+      }
+    }
+  }
+}</code></pre>
+
+<p>Due package <code>pkg1</code> e <code>pkg2</code> sono definiti all&#8217;interno del package <code>com.example</code>. Un totale di tre classi è definito nei due package. I metodi <code>makeClass11</code> e <code>makeClass12</code> nella classe <code>Class21</code> mostrano come fare riferimento a un tipo contenuto in un package &#8220;fratello&#8221;, in questo caso <code>pkg1</code>. Potete anche fare riferimento a queste classi con il loro percorso completo, <code>com.example.pkg1.Class11</code> e <code>com.example.pkg1.Class12</code> rispettivamente.
+
+<p>Il package <code>pkg3.pkg31.pkg311</code> mostra che potete &#8220;concatenare&#8221; insieme diversi package in una sola clausola. Non è necessario usare clausole <code>package</code> separate per ogni package.
+
+<p>Seguendo le convenzioni di Java, il package radice per le classi della libreria Scala è chiamato <code>scala</code>.
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span>Scala non consente di usare dichiarazioni di package negli script che vengono eseguiti direttamente con l&#8217;interprete <kbd>scala</kbd>. La ragione ha a che fare con il modo in cui l&#8217;interprete converte le istruzioni contenute negli script in codice Scala valido prima di compilarlo in bytecode. Si veda la sezione <a href=cap-14.html#CommandLineToolScala>Lo strumento <code>scala</code> a riga di comando</a> nel capitolo 14 per maggiori dettagli.
+</blockquote>
+
+<h2 id=Importing>Importare i tipi e i loro membri</h2>
+
+<p>Per usare le dichiarazioni nei package è necessario importarle, esattamente come in Java e similmente ad altri linguaggi. Tuttavia, rispetto a Java, Scala incrementa notevolmente il numero delle vostre opzioni. Gli esempi seguenti illustrano diversi modi di importare i tipi di Java.
+
+<pre><code>// <a href=esempi/cap-2/import-example1.scala>esempi/cap-2/import-example1.scala</a>
+
+import java.awt._
+import java.io.File
+import java.io.File._
+import java.util.{Map, HashMap}</code></pre>
+
+<p>Potete importare tutti i tipi contenuti in un package usando il trattino basso <code>_</code> in qualità di wildcard, come mostrato nella prima riga. Potete anche importare singoli tipi Scala o Java, come mostrato nella seconda riga.
+
+<p>Java usa il carattere di asterisco <code>*</code> come wildcard che corrisponde a tutti i tipi contenuti in un package, o a tutti i membri statici appartenenti a un tipo quando effettua una &#8220;importazione statica&#8221;. In Scala è possibile usare questo carattere nel nome dei metodi, quindi viene usato <code>_</code> in qualità di wildcard, come abbiamo visto in precedenza.
+
+<p>Come mostrato nella terza riga, potete importare tutti i metodi e i campi statici appartenenti a un tipo Java. Se <code>java.io.File</code> fosse effettivamente un <code>object</code> Scala, come discusso in precedenza, allora questa riga importerebbe i campi e i metodi dell&#8217;oggetto.
+
+<p>Infine, potete importare selettivamente solo i tipi che vi interessano. Nella quarta riga importiamo solo i tipi <code>java.util.Map</code> e <code>java.util.HashMap</code> dal package <code>java.util</code>. Confrontate questa istruzione di importazione su una sola riga con le istruzioni di importazione su due righe che abbiamo usato nel nostro primo esempio nella sezione <a href=#InferringTypes>Inferire le informazioni di tipo</a>. I due casi sono funzionalmente equivalenti.
+
+<p>L&#8217;esempio successivo mostra alcune opzioni più avanzate per le istruzioni di importazione.
+
+<pre><code>// <a href=esempi/cap-2/import-example2-script.scala>esempi/cap-2/import-example2-script.scala</a>
+
+def writeAboutBigInteger() = {
+
+  import java.math.BigInteger.{
+    ONE =&gt; _,
+    TEN,
+    ZERO =&gt; JAVAZERO }
+
+  // ONE è effettivamente indefinito
+  // println("ONE: " + ONE)
+  println("TEN: " + TEN)
+  println("ZERO: " + JAVAZERO)
+}
+
+writeAboutBigInteger()</code></pre>
+
+<p>Questo esempio mostra due caratteristiche. Primo, possiamo collocare le istruzioni di importazione quasi ovunque, non solo in cima al file come richiesto da Java. Questa caratteristica ci consente di restringere l&#8217;ambito di visibilità delle importazioni. Per esempio, non possiamo fare riferimento alle definizioni importate da <code>BigInteger</code> al di fuori dell&#8217;ambito del metodo. Un altro vantaggio di questa caratteristica è la possibilità di collocare un&#8217;istruzione di importazione più vicino al punto in cui gli elementi importati vengono effettivamente usati.
+
+<p>La seconda caratteristica mostrata è l&#8217;abilità di <em>rinominare</em> gli elementi importati. Qui, alla costante <code>java.math.BigInteger.ONE</code> viene assegnato come nome la wildcard del trattino basso. Questo la rende effettivamente invisibile e indisponibile nell&#8217;ambito di importazione. Questa tecnica è utile quando volete importare ogni cosa <em>tranne</em> alcuni elementi particolari.
+
+<p>Poi, la costante <code>java.math.BigInteger.TEN</code> viene importata senza essere rinominata, in modo da potervi fare riferimento semplicemente come <code>TEN</code>.
+
+<p>Infine, alla costante <code>java.math.BigInteger.ZERO</code> viene dato l&#8217;alias <code>JAVAZERO</code>.
+
+<p>Gli alias sono utili se volete dare un nome più conveniente all&#8217;elemento o se volete evitare ambiguità con altri elementi che hanno lo stesso nome nello stesso ambito.
+
+<h2 id=ImportsAreRelative>Le importazioni sono relative</h2>
+
+<p>C&#8217;è un&#8217;altra cosa importante da sapere sulle importazioni: sono <em>relative</em>. Notate i commenti per le importazioni che seguono.
+
+<pre><code>// <a href=esempi/cap-2/relative-imports.scala>esempi/cap-2/relative-imports.scala</a>
+
+import scala.collection.mutable._
+import collection.immutable._         // Dato che "scala" è già importato
+import _root_.scala.collection.jcl._  // Percorso completo dalla "radice" reale
+
+package scala.actors {
+  import remote._                     // Siamo nell'ambito di "scala.actors"
+}</code></pre>
+
+<p>Notate che l&#8217;ultima istruzione di importazione annidata nell&#8217;ambito del package <code>scala.actor</code> è relativa a quell&#8217;ambito.
+
+<p>Il wiki di Scala <a href=apa.html#ScalaWiki>[ScalaWiki]</a> contiene altri esempi all&#8217;indirizzo <a class=url href=http://scala.sygneca.com/faqs/language#how-do-i-import>http://scala.sygneca.com/faqs/language#how-do-i-import</a>.
+
+<p>&Egrave; piuttosto raro incontrare difficoltà con le importazioni relative, ma il problema di questa convenzione è che talvolta causa sorprese, specialmente se siete abituati a linguaggi come Java dove le importazioni sono assolute. Se il compilatore vi restituisce un errore ingannevole informandovi di non aver trovato un package, controllate che le istruzioni di importazione siano opportunamente relative o aggiungete il prefisso <code>_root_.</code>. In più, se vedete che il vostro <abbr>IDE</abbr> o un altro strumento inserisce l&#8217;istruzione <code>import _root_&hellip;</code> nel vostro codice, ora sapete cosa significa.
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span>Ricordate che le istruzioni di importazione sono relative, non assolute. Per creare un percorso assoluto, fatelo cominciare con <code>_root_</code>.
+</blockquote>
+
+<h2 id=AbstractTypesAndParameterizedTypes>Tipi astratti e tipi parametrici</h2>
+
+<p>Nella sezione <a href=cap-1.html#ATasteOfScala>Un assaggio di Scala</a> del capitolo 1 abbiamo accennato al supporto di Scala per i <em>tipi parametrici</em>, che sono molto simili ai <em>generici</em> in Java. (I due termini sono intercambiabili, ma è più comune usare &#8220;tipi parametrici&#8221; nella comunità Scala e &#8220;generici&#8221; nella comunità Java.) La differenza più ovvia è nella sintassi, dove Scala usa le parentesi quadre (<code>[&hellip;]</code>) mentre Java usa le parentesi angolari (<code>&lt;&hellip;&gt;</code>).
+
+<p>Per esempio, una lista di stringhe verrebbe dichiarata nel modo seguente.
+
+<pre><code>val languages: List[String] = &hellip;</code></pre>
+
+<p>Ci sono altre differenze importanti rispetto ai generici di Java che esploreremo nella sezione <a href=cap-12.html#ParameterizedTypes>Capire i tipi parametrici</a> del capitolo 12.
+
+<p>Per ora, menzioneremo un&#8217;altra caratteristica utile che incontrerete prima di arrivare al <a href=cap-12.html>capitolo 12</a>, dove viene spiegata nei dettagli. Se osservate la dichiarazione di <code>scala.List</code> nella documentazione <em>Scaladoc</em>, noteterete che la dichiarazione è scritta come <code>&hellip; List[+A]</code>. Il segno &#8220;+&#8221; davanti ad <code>A</code> significa che <code>List[B]</code> è un <em>sottotipo</em> di <code>List[A]</code> per qualsiasi <code>B</code> che sia sottotipo di <code>A</code>. Se trovate un &#8220;-&#8221; davanti al tipo parametrico, allora la relazione va in senso opposto: <code>Foo[B]</code> è un <em>supertipo</em> di <code>Foo[A]</code> se la dichiarazione è <code>Foo[-A]</code>.
+
+<p>Scala supporta un altro meccanismo di astrazione di tipo chiamato <em>tipi astratti</em>, usato in molti linguaggi <em>funzionali</em> come Haskell. I tipi astratti vennero anche presi in considerazione per essere inclusi in Java quando furono adottati i generici. Vogliamo presentarli ora perché ne vedrete molti esempi prima di immergervi nei loro dettagli nel <a href=cap-12.html>capitolo 12</a>. Per un confronto molto dettagliato tra questi due meccanismi, si veda <a href=apa.html#Bruce1998>[Bruce1998]</a>.
+
+<p>I tipi astratti possono essere applicati a molti degli stessi problemi di progettazione per i quali vengono impiegati i tipi parametrici. Tuttavia, sebbene i due meccanismi si sovrappongano, non sono ridondanti. Ognuno ha i propri punti di forza e di debolezza per certi problemi di progettazione.
+
+<p>Ecco un esempio che usa un tipo astratto.
+
+<pre><code>// <a href=esempi/cap-2/abstract-types-script.scala>esempi/cap-2/abstract-types-script.scala</a>
+
+import java.io._
+
+abstract class BulkReader {
+  type In
+  val source: In
+  def read: String
+}
+
+class StringBulkReader(val source: String) extends BulkReader {
+  type In = String
+  def read = source
+}
+
+class FileBulkReader(val source: File) extends BulkReader {
+  type In = File
+  def read = {
+    val in = new BufferedInputStream(new FileInputStream(source))
+    val numBytes = in.available()
+    val bytes = new Array[Byte](numBytes)
+    in.read(bytes, 0, numBytes)
+    new String(bytes)
+  }
+}
+
+println(new StringBulkReader("Ciao Scala!").read )
+println(new FileBulkReader(new File("abstract-types-script.scala")).read)</code></pre>
+
+<p>L&#8217;esecuzione di questo script con <kbd>scala</kbd> produce l&#8217;uscita seguente.
+
+<pre><samp>Ciao Scala!
+import java.io._
+
+abstract class BulkReader {
+&hellip;</samp></pre>
+
+<p>La classe <em>astratta</em> <code>BulkReader</code> dichiara tre membri astratti, un <code>type</code> chiamato <code>In</code>, un campo <code>val</code> chiamato <code>source</code> e un metodo <code>read</code>. Come in Java, anche in Scala le istanze possono essere create solo a partire da classi <em>concrete</em>, in cui tutti i membri devono avere una definizione.
+
+<p>Le classi derivate, <code>StringBulkReader</code> e <code>FileBulkReader</code>, forniscono definizioni concrete per questi membri astratti. Tratteremo i dettagli delle dichiarazioni di classe nel <a href=cap-5.html>capitolo 5</a> e i particolari relativi alla ridefinizione delle dichiarazioni dei membri nella sezione <a href=cap-6.html#OverridingMembers>Ridefinire i membri di classi e tratti</a> del capitolo 6.
+
+<p>Per ora, notate che il campo <code>type</code> funziona in modo molto simile a un parametro di tipo in un tipo parametrico. In effetti, potremmo riscrivere questo esempio come segue, mostrando solo ciò che sarebbe differente.
+
+<pre><code>abstract class BulkReader[In] {
+  val source: In
+  &hellip;
+}
+
+class StringBulkReader(val source: String) extends BulkReader[String] {&hellip;}
+
+class FileBulkReader(val source: File) extends BulkReader[File] {&hellip;}</code></pre>
+
+<p>Esattamente come per i tipi parametrici, se definiamo il tipo <code>In</code> come <code>String</code> allora anche il campo <code>source</code> deve essere definito come <code>String</code>. Notate che il metodo <code>read</code> di <code>StringBulkReader</code> restituisce semplicemente il campo <code>source</code>, mentre il metodo <code>read</code> di <code>FileBulkReader</code> legge i contenuti del file.
+
+<p>Come mostrato in <a href=apa.html#Bruce1998>[Bruce1998]</a>, i tipi parametrici tendono a essere la scelta migliore per le collezioni, che è il modo in cui sono usati più spesso nel codice Java, mentre i tipi astratti sono più utili per &#8220;famiglie&#8221; di tipi e per altri scenari.
+
+<p>Esploreremo i dettagli dei tipi astratti di Scala nel <a href=cap-12.html>capitolo 12</a>. Per esempio, vedremo come vincolare i tipi concreti accettabili che possono essere usati.
+
+<h2 id=ReservedWords>Parole riservate</h2>
+
+<p>La <a href=#reserved-words-table>tabella 2.4</a> elenca le parole riservate in Scala, a volte chiamate anche &#8220;parole chiave&#8221;, e descrive brevemente come vengono usate <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>.
+
+<div class=table id=reserved-words-table>
+<p class=tt>Tabella 2.4. Parole riservate.
+<table summary="Parole riservate." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top><code>Parola</code></th>
+<th align=left valign=top>Descrizione</th>
+<th align=left valign=top>Si veda&hellip;</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p><code>abstract</code></p></td>
+<td align=left valign=top><p>Rende astratta una dichiarazione. A differenza di Java, la parola chiave di solito non è obbligatoria per i membri astratti.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-5.html#ClassBasics>I concetti di base per classi e oggetti</a> nel <a href=cap-5.html>capitolo 5</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>case</code></p></td>
+<td align=left valign=top><p>Comincia una clausola <code>case</code> in una espressione di pattern matching.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#PatternMatching>Pattern matching</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>catch</code></p></td>
+<td align=left valign=top><p>Comincia una clausola per catturare le eccezioni lanciate.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#TryCatchFinally>Usare le clausole <code>try</code>, <code>catch</code> e <code>finally</code></a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>class</code></p></td>
+<td align=left valign=top><p>Comincia una dichiarazione di classe.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-5.html#ClassBasics>I concetti di base per classi e oggetti</a> nel <a href=cap-5.html>capitolo 5</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>def</code></p></td>
+<td align=left valign=top><p>Comincia una dichiarazione di metodo.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-2.html#MethodDeclarationsAndDefinitions>Dichiarazioni di metodo</a> in questo capitolo</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>do</code></p></td>
+<td align=left valign=top><p>Comincia un ciclo <code>do &hellip; while</code>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#OtherLoopingConstructs>Altri costrutti di ciclo</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>else</code></p></td>
+<td align=left valign=top><p>Comincia una clausola <code>else</code> per una clausola <code>if</code>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#IfStatements>Le istruzioni <code>if</code> in Scala</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>extends</code></p></td>
+<td align=left valign=top><p>Indica che la classe o il tratto che segue è il tipo genitore della classe o del tratto che viene dichiarato.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-5.html#ParentClasses>Classi genitore</a> nel <a href=cap-5.html>capitolo 5</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>false</code></p></td>
+<td align=left valign=top><p><em>Falsità</em> logica.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> nel <a href=cap-7.html>capitolo 7</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>final</code></p></td>
+<td align=left valign=top><p>Applicata a una classe o a un tratto, ne proibisce la derivazione di tipi figlio. Applicata a un membro, ne proibisce la ridefinizione in una classe o in un tratto derivato.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-6.html#FinalDeclarations>Tentare di ridefinire le dichiarazioni <code>final</code></a> nel <a href=cap-6.html>capitolo 6</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>finally</code></p></td>
+<td align=left valign=top><p>Comincia una clausola eseguita dopo la corrispondente clausola <code>try</code>, anche se la clausola <code>try</code> lancia una eccezione.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#TryCatchFinally>Usare le clausole <code>try</code>, <code>catch</code> e <code>finally</code></a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>for</code></p></td>
+<td align=left valign=top><p>Comincia una <em>espressione for</em> (ciclo).</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#ForComprehensions>Le espressioni <code>for</code> in Scala</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>forSome</code></p></td>
+<td align=left valign=top><p>Usata nelle dichiarazioni di <em>tipi esistenziali</em> per vincolare i tipi concreti consentiti che possono essere usati.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-12.html#ExistentialTypes>Tipi esistenziali</a> nel <a href=cap-12.html>capitolo 12</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>if</code></p></td>
+<td align=left valign=top><p>Comincia una clausola <code>if</code>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#IfStatements>Le istruzioni <code>if</code> in Scala</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>implicit</code></p></td>
+<td align=left valign=top><p>Segnala un metodo come un convertitore di tipo <em>implicito</em>. Segnala un parametro di un metodo come opzionale, purché un oggetto sostitutivo di tipo compatibile sia visibile nell&#8217;ambito in cui il metodo viene invocato.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-8.html#ImplicitConversions>Conversioni implicite</a> nel <a href=cap-8.html>capitolo 8</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>import</code></p></td>
+<td align=left valign=top><p>Importa uno o più tipi o membri di un tipo nell&#8217;ambito corrente.</p></td>
+<td align=left valign=top><p>la sezione <a href=#Importing>Importare i tipi e i loro membri</a> in questo capitolo</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>lazy</code></p></td>
+<td align=left valign=top><p>Posticipa la valutazione di una variabile di tipo <code>val</code>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-8.html#LazyVals>Valori ritardati</a> nel <a href=cap-8.html>capitolo 8</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>match</code></p></td>
+<td align=left valign=top><p>Comincia una clausola di pattern matching.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#PatternMatching>Pattern matching</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>new</code></p></td>
+<td align=left valign=top><p>Crea una nuova istanza di una classe.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-5.html#ClassBasics>I concetti di base per classi e oggetti</a> nel <a href=cap-5.html>capitolo 5</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>null</code></p></td>
+<td align=left valign=top><p>Il valore di una variabile a cui non è stato assegnato nessun valore.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> nel <a href=cap-7.html>capitolo 7</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>object</code></p></td>
+<td align=left valign=top><p>Comincia una dichiarazione di <em>singleton</em>, cioè una classe con una sola istanza.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-7.html#ClassesAndObjects>Classi e oggetti: dove sono i membri statici?</a> nel <a href=cap-7.html>capitolo 7</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>override</code></p></td>
+<td align=left valign=top><p>Ridefinisce un membro <em>concreto</em> di una classe o di un tratto, purché l&#8217;originale non sia qualificato come <code>final</code>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-6.html#OverridingMembers>Ridefinire i membri di classi e tratti</a> nel <a href=cap-6.html>capitolo 6</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>package</code></p></td>
+<td align=left valign=top><p>Comincia una dichiarazione di package.</p></td>
+<td align=left valign=top><p>la sezione <a href=#Packages>Organizzare il codice in file e spazi di nomi</a> in questo capitolo</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>private</code></p></td>
+<td align=left valign=top><p>Restringe la visibilità di una dichiarazione.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-5.html#VisibilityRules>Regole di visibilità</a> nel <a href=cap-5.html>capitolo 5</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>protected</code></p></td>
+<td align=left valign=top><p>Restringe la visibilità di una dichiarazione.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-5.html#VisibilityRules>Regole di visibilità</a> nel <a href=cap-5.html>capitolo 5</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>requires</code></p></td>
+<td align=left valign=top><p>Deprecata. Veniva usata per la tipizzazione della classe corrente (<em>self typing</em>).</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> nel <a href=cap-7.html>capitolo 7</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>return</code></p></td>
+<td align=left valign=top><p>Ritorna da una funzione.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-1.html#ATasteOfScala>Un assaggio di Scala</a> nel <a href=cap-1.html>capitolo 1</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>sealed</code></p></td>
+<td align=left valign=top><p>Appicata a una classe genitore per obbligare tutte le classi derivate a venire dichiarate nello stesso file sorgente.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-6.html#CaseClasses>Classi <code>case</code></a> nel <a href=cap-6.html>capitolo 6</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>super</code></p></td>
+<td align=left valign=top><p>Analogo a <code>this</code>, ma usato per fare riferimento al tipo genitore.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-6.html#OverridingMethods>Ridefinire i metodi astratti e concreti</a> nel <a href=cap-6.html>capitolo 6</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>this</code></p></td>
+<td align=left valign=top><p>Il modo in cui un oggetto fa riferimento a sé stesso. Il nome del metodo per i <em>costruttori ausiliari</em>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-5.html#ClassBasics>I concetti di base per classi e oggetti</a> nel <a href=cap-5.html>capitolo 5</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>throw</code></p></td>
+<td align=left valign=top><p>Lancia una eccezione.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#TryCatchFinally>Usare le clausole <code>try</code>, <code>catch</code> e <code>finally</code></a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>trait</code></p></td>
+<td align=left valign=top><p>Un <em>modulo mixin</em> che aggiunge stato e comportamento a una istanza di una classe.</p></td>
+<td align=left valign=top><p>il <a href=cap-4.html>capitolo 4</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>try</code></p></td>
+<td align=left valign=top><p>Comincia un blocco che potrebbe lanciare una eccezione.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#TryCatchFinally>Usare le clausole <code>try</code>, <code>catch</code> e <code>finally</code></a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>true</code></p></td>
+<td align=left valign=top><p><em>Verità</em> logica.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> nel <a href=cap-7.html>capitolo 7</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>type</code></p></td>
+<td align=left valign=top><p>Comincia una dichiarazione di <em>tipo</em>.</p></td>
+<td align=left valign=top><p>la sezione <a href=#AbstractTypesAndParameterizedTypes>Tipi astratti e tipi parametrici</a> in questo capitolo</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>val</code></p></td>
+<td align=left valign=top><p>Comincia una dichiarazione di &#8220;variabile&#8221; a sola lettura.</p></td>
+<td align=left valign=top><p>la sezione <a href=#VariableDeclarationsAndDefinitions>Dichiarazioni di variabile</a> in questo capitolo</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>var</code></p></td>
+<td align=left valign=top><p>Comincia una dichiarazione di variabile a lettura/scrittura.</p></td>
+<td align=left valign=top><p>la sezione <a href=#VariableDeclarationsAndDefinitions>Dichiarazioni di variabile</a> in questo capitolo</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>while</code></p></td>
+<td align=left valign=top><p>Comincia un ciclo <code>while</code>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#OtherLoopingConstructs>Altri costrutti di ciclo</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>with</code></p></td>
+<td align=left valign=top><p>Include il tratto che segue nella classe che viene dichiarata o nell&#8217;oggetto che viene istanziato.</p></td>
+<td align=left valign=top><p>il <a href=cap-4.html>capitolo 4</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>yield</code></p></td>
+<td align=left valign=top><p>Restituisce un elemento in una <em>espressione for</em> che diventa parte di una sequenza.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#Yielding>Produrre gli elementi in uscita</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>_</code></p></td>
+<td align=left valign=top><p>Un segnaposto usato nelle importazioni, nei letterali funzione, <i class=baa>&amp;</i>c.</p></td>
+<td align=left valign=top><p><span class="emphasis"><em>In molti punti</em></span></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>:</code></p></td>
+<td align=left valign=top><p>Separatore tra identificatori e annotazioni di tipo.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-1.html#ATasteOfScala>Un assaggio di Scala</a> nel <a href=cap-1.html>capitolo 1</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>=</code></p></td>
+<td align=left valign=top><p>Assegnamento.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-1.html#ATasteOfScala>Un assaggio di Scala</a> nel <a href=cap-1.html>capitolo 1</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>=&gt;</code></p></td>
+<td align=left valign=top><p>Usato nei <em>letterali funzione</em> per separare la lista di argomenti dal corpo della funzione.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-8.html#FunctionLiteralsAndClosures>Letterali funzione e chiusure</a> nel <a href=cap-8.html>capitolo 8</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&lt;-</code></p></td>
+<td align=left valign=top><p>Usato nelle <em>espressioni for</em> nelle espressioni <em>generatore</em>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#ForComprehensions>Le espressioni <code>for</code> in Scala</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&lt;:</code></p></td>
+<td align=left valign=top><p>Usato nelle dichiarazioni di tipi <em>parametrici</em> e <em>astratti</em> per vincolare i tipi permessi.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-12.html#TypeBounds>Limiti sui tipi</a> nel <a href=cap-12.html>capitolo 12</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&lt;%</code></p></td>
+<td align=left valign=top><p>Usato nelle dichiarazioni per i &#8220;limiti di vista&#8221; nelle dichiarazioni di tipi <em>parametrici</em> e <em>astratti</em>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-12.html#ViewsAndViewBounds>Viste e limiti di vista</a> nel <a href=cap-12.html>capitolo 12</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&gt;:</code></p></td>
+<td align=left valign=top><p>Usato nelle dichiarazioni di tipi <em>parametrici</em> e <em>astratti</em> per vincolare i tipi permessi.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-12.html#TypeBounds>Limiti sui tipi</a> nel <a href=cap-12.html>capitolo 12</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>#</code></p></td>
+<td align=left valign=top><p>Usato nelle <em>proiezioni di tipo</em>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-12.html#TypeProjections>Proiezioni di tipo</a> nel <a href=cap-12.html>capitolo 12</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>@</code></p></td>
+<td align=left valign=top><p>Segnala una <em>annotazione</em>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-13.html#Annotations>Annotazioni</a> nel <a href=cap-13.html>capitolo 13</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&#8658;</code></p></td>
+<td align=left valign=top><p>(Unicode \u21D2) uguale a <code>=&gt;</code>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-8.html#FunctionLiteralsAndClosures>Letterali funzione e chiusure</a> nel <a href=cap-8.html>capitolo 8</a></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&#8592;</code></p></td>
+<td align=left valign=top><p>(Unicode \u2190) uguale a <code>&lt;-</code>.</p></td>
+<td align=left valign=top><p>la sezione <a href=cap-3.html#ForComprehensions>Le espressioni <code>for</code> in Scala</a> nel <a href=cap-3.html>capitolo 3</a></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Notate che <code>break</code> e <code>continue</code> non sono elencate. Queste parole di controllo non esistono in Scala. Invece, Scala vi incoraggia a usare gli idiomi della programmazione funzionale che di solito sono più concisi e meno soggetti a errori. Discuteremo alcuni approcci alternativi parlando dei cicli <code>for</code> (si veda la sezione <a href=cap-3.html#GeneratorExpressions>Espressioni generatore</a> nel <a href=cap-3.html>capitolo 3</a>).
+
+<p>Alcuni metodi Java usano nomi che sono riservati in Scala, per esempio <code>java.util.Scanner.match</code>. Per evitare errori di compilazione, circondate il nome con caratteri di apice inverso, come in <code>java.util.Scanner.&#8245;match&#8245;</code>.
+
+<h2 id=_recap_and_what_8217_s_next_2>Riepilogo, e poi?</h2>
+
+<p>Abbiamo descritto i vari modi in cui la sintassi di Scala è concisa, flessibile e produttiva. Abbiamo anche descritto diverse caratteristiche di Scala. Nel prossimo capitolo completeremo la trattazione degli elementi essenziali del linguaggio prima di immergerci nel supporto di Scala per la programmazione orientata agli oggetti e per la programmazione funzionale.
+
+<p class=v><a rel=prev href=cap-1.html title='indietro a &#8220;Da zero a sessanta: una introduzione a Scala&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-3.html title='avanti a &#8220;Completare l&#8217;indispensabile&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>

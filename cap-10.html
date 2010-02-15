@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Lavorare con XML in Scala - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 10}
+</style>
+<script>_gaq=[['_setAccount','UA-10482652-1'],['_trackPageview']];(function(){var g=document.createElement('script');g.src='//www.google-analytics.com/ga.js';g.setAttribute('async','true');document.documentElement.firstChild.appendChild(g);})();</script>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-10>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Lavorare con <abbr>XML</abbr> in Scala</h1>
+
+<p><abbr>XML</abbr> è diventato da tempo la <em>lingua franca</em> nella comunicazione tra macchine attraverso la rete. La combinazione di leggibilità, standardizzazione e strumenti offerta dal formato ha reso inevitabile la diffusione di <abbr>XML</abbr> tra gli sviluppatori. Eppure, scrivere codice per manipolare documenti <abbr>XML</abbr> è un lavoro ingrato e spiacevole nella maggior parte dei linguaggi di programmazione. Scala migliora questa situazione.
+
+<p>Come nel caso degli attori, che abbiamo visto nel <a href=cap-9.html>capitolo 9</a>, Scala implementa una parte del supporto per <abbr>XML</abbr> sotto forma di libreria, a cui affianca un certo supporto nella propria sintassi. Il programmatore ha la sensazione che il supporto <abbr>XML</abbr> in Scala sia una parte completamente naturale del linguaggio. Alcuni comodi operatori addolciscono con una cucchiaiata di zucchero sintattico il compito di immergersi nelle profondità di documenti dalla struttura complessa, e il pattern matching edulcora ulteriormente il processo. Generare documenti <abbr>XML</abbr> è altrettanto piacevole.
+
+<p>Scala vi consente di inserire codice <abbr>XML</abbr> in linea, una comodità inusuale nei linguaggi di programmazione. Potete usare codice <abbr>XML</abbr> ovunque possiate usare una stringa, o quasi. Questa caratteristica rende più immediato l&#8217;impiego di modelli e di dati di configurazione, e vi permette di fare esperimenti con <abbr>XML</abbr> senza nemmeno aprire un file.
+
+<p>Ora esamineremo come si lavora con <abbr>XML</abbr> in Scala. Per prima cosa, analizzeremo come leggere un documento <abbr>XML</abbr> e navigare attraverso la sua struttura. Infine, produrremo documenti <abbr>XML</abbr> in maniera programmatica e mostreremo come usare il codice <abbr>XML</abbr> in linea.
+
+<h2 id=_reading_xml>Leggere <abbr>XML</abbr></h2>
+
+<p>Cominceremo con i concetti di base: come trasformare una stringa che contiene codice <abbr>XML</abbr> in una struttura dati con cui poter lavorare.
+
+<pre><code>// <a href=esempi/cap-10/reading/from-string-script.scala>esempi/cap-10/reading/from-string-script.scala</a>
+
+import scala.xml._
+
+val someXMLInAString = """
+&lt;sandwich&gt;
+  &lt;bread&gt;integrale&lt;/bread&gt;
+  &lt;meat&gt;salame&lt;/meat&gt;
+  &lt;condiments&gt;
+    &lt;condiment expired="true"&gt;maionese&lt;/condiment&gt;
+    &lt;condiment expired="false"&gt;mostarda&lt;/condiment&gt;
+  &lt;/condiments&gt;
+&lt;/sandwich&gt;
+"""
+
+val someXML = XML.loadString(someXMLInAString)
+assert(someXML.isInstanceOf[scala.xml.Elem])</code></pre>
+
+<p>Tutto perfetto. Abbiamo trasformato la stringa in un&#8217;istanza di <code>NodeSeq</code>, il tipo usato da Scala per memorizzare una sequenza di nodi <abbr>XML</abbr>. Se il nostro documento <abbr>XML</abbr> si fosse trovato su disco, avremmo potuto usare il metodo <code>loadFile</code> dello stesso package.
+
+<p>Dato che abbiamo fornito noi stessi i dati <abbr>XML</abbr>, possiamo saltare l&#8217;invocazione di <code>XML.loadString</code> e assegnare semplicemente un frammento di markup a una variabile <code>val</code> o <code>var</code>.
+
+<pre><code>// <a href=esempi/cap-10/reading/inline-script.scala>esempi/cap-10/reading/inline-script.scala</a>
+
+import scala.xml._
+
+val someXML =
+&lt;sandwich&gt;
+  &lt;bread&gt;integrale&lt;/bread&gt;
+  &lt;meat&gt;salame&lt;/meat&gt;
+  &lt;condiments&gt;
+    &lt;condiment expired="true"&gt;maionese&lt;/condiment&gt;
+    &lt;condiment expired="false"&gt;mostarda&lt;/condiment&gt;
+  &lt;/condiments&gt;
+&lt;/sandwich&gt;
+
+assert(someXML.isInstanceOf[scala.xml.Elem])</code></pre>
+
+<h3 id=_exploring_xml>Esplorare <abbr>XML</abbr></h3>
+
+<p>Se riportiamo l&#8217;esempio precedente nell&#8217;interprete, possiamo esplorare il nostro tramezzino usando alcuni comodi strumenti offerti da <code>NodeSeq</code>.
+
+<pre><samp>scala&gt; someXML \ "bread"
+res2: scala.xml.NodeSeq = &lt;bread&gt;integrale&lt;/bread&gt;</samp></pre>
+
+<p>Quella barra inversa&nbsp;&mdash;&nbsp;ciò che la documentazione chiama <em>funzione di proiezione</em>&nbsp;&mdash;&nbsp;dice &#8220;trovami gli elementi chiamati <code>bread</code>&#8221;. Quando usiamo una funzione di proiezione, otterremo sempre come risultato un&#8217;istanza di <code>NodeSeq</code>. Se siamo interessati soltanto a quello che si trova tra i tag, possiamo usare il metodo <code>text</code>.
+
+<pre><samp>scala&gt; (someXML \ "bread").text
+res3: String = integrale</samp></pre>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>L&#8217;espressione <code>someXML \ "bread" text</code>, senza parentesi e senza il punto prima della invocazione di <code>text</code>, è ancora valida. Otterrete sempre lo stesso risultato, ma la sintassi è più difficile da leggere. Le parentesi chiariscono le vostre intenzioni.
+</blockquote>
+
+<p>Abbiamo ispezionato solo lo strato più esterno del nostro tramezzino. Proviamo a ottenere la sequenza dei condimenti.
+
+<pre><samp>scala&gt; someXML \ "condiment"
+res4: scala.xml.NodeSeq =</samp></pre>
+
+<p>Cosa c&#8217;è che non va? La funzione <code>\</code> non discende negli elementi figli di una struttura <abbr>XML</abbr>. Per fare questo, dovete usare la funzione sorella <code>\\</code> (due barre inverse).
+
+<pre><samp>scala&gt; someXML \\ "condiment"
+res5: scala.xml.NodeSeq = &lt;condiment expired="true"&gt;maionese&lt;/condiment&gt;
+  &lt;condiment expired="false"&gt;mostarda&lt;/condiment&gt;</samp></pre>
+
+<p>Molto meglio. (Abbiamo diviso la singola riga di uscita in due righe, per adattare il testo alla pagina.) Siamo entrati nella struttura e abbiamo estratto i due elementi <code>&lt;condiment&gt;</code>. Sembra che uno dei condimenti sia andato a male, però. Possiamo scoprire se un qualsiasi condimento è scaduto estraendo il suo attributo <code>expired</code>. Tutto quello che ci vuole è il simbolo <code>@</code> prima del nome dell&#8217;attributo.
+
+<pre><samp>scala&gt; (someXML \\ "condiment")(0) \ "@expired"
+res6: scala.xml.NodeSeq = true</samp></pre>
+
+<p>Abbiamo usato <code>(0)</code> per prendere il primo dei due condimenti restituiti da <code>(someXML \\ "condiment")</code>.
+
+<h3 id=_looping_amp_matching_xml>Usare <abbr>XML</abbr> con i cicli e il pattern matching</h3>
+
+<p>Il frammento di codice precedente ha estratto il <em>valore</em> dell&#8217;attributo <code>expired</code> (<code>true</code> in questo caso), ma non ci ha detto qual è il condimento scaduto. Se stessimo maneggiando un tramezzino <abbr>XML</abbr> arbitrario, come faremmo a identificare i condimenti scaduti? Possiamo usare un ciclo per attraversare i dati <abbr>XML</abbr>.
+
+<pre><code>// <a href=esempi/cap-10/reading/for-loop-script.scala>esempi/cap-10/reading/for-loop-script.scala</a>
+
+for (condiment &lt;- (someXML \\ "condiment")) {
+  if ((condiment \ "@expired").text == "true")
+    println("la " + condiment.text + " è scaduta!")
+}</code></pre>
+
+<p>Dato che <code>NodeSeq</code> eredita gli stessi attributi ormai noti di cui è fornita la maggior parte delle collezioni in Scala, uno strumento come il ciclo <code>for</code> può essere applicato direttamente. Nell&#8217;esempio appena visto, abbiamo estratto i nodi <code>&lt;condiment&gt;</code>, abbiamo effettuato un ciclo su ognuno di essi e abbiamo controllato se il loro attributo <code>expired</code> era uguale alla stringa <code>"true"</code>. Abbiamo dovuto specificare che volevamo il testo di un certo condimento usando il campo <code>text</code> di <code>condiment</code>, altrimenti avremmo ottenuto una rappresentazione sotto forma di stringa dell&#8217;intera riga di codice <abbr>XML</abbr>.
+
+<p>Per operare sulle strutture <abbr>XML</abbr> possiamo anche usare il pattern matching. I casi del pattern matching possono essere scritti in termini di letterali <abbr>XML</abbr>; le espressioni tra parentesi graffe (<code>{}</code>) effettuano l&#8217;escape della sintassi standard del pattern matching in Scala. Per cercare una corrispondenza con tutti i nodi <abbr>XML</abbr> in una porzione di pattern matching di cui viene effettuato l&#8217;escape, usate un trattino basso seguito da un asterisco (<code>_*</code>). Per legare la corrispondenza trovata a una variabile, usate un prefisso contenente il nome della variabile e il simbolo <code>@</code>.
+
+<p>Mettiamo tutto insieme in un singolo esempio. Includeremo di nuovo il documento <abbr>XML</abbr> originale in modo che possiate seguire da vicino le operazioni di pattern matching sul codice <abbr>XML</abbr>.
+
+<pre><code>// <a href=esempi/cap-10/reading/pattern-matching-script.scala>esempi/cap-10/reading/pattern-matching-script.scala</a>
+
+import scala.xml._
+
+val someXML =
+&lt;sandwich&gt;
+  &lt;bread&gt;integrale&lt;/bread&gt;
+  &lt;meat&gt;salame&lt;/meat&gt;
+  &lt;condiments&gt;
+    &lt;condiment expired="true"&gt;maionese&lt;/condiment&gt;
+    &lt;condiment expired="false"&gt;mostarda&lt;/condiment&gt;
+  &lt;/condiments&gt;
+&lt;/sandwich&gt;
+
+someXML match {
+  case &lt;sandwich&gt;{ingredients @ _*}&lt;/sandwich&gt; =&gt; {
+    for (cond @ &lt;condiments&gt;{_*}&lt;/condiments&gt; &lt;- ingredients)
+      println("condimenti: " + cond.text)
+  }
+}</code></pre>
+
+<p>Qui abbiamo legato il contenuto della nostra struttura <code>&lt;sandwich&gt;</code> (cioè, quello che si trova tra il tag di apertura e il tag di chiusura) a una variabile chiamata <var>ingredients</var>. Poi, man mano che iteriamo attraverso gli ingredienti in un ciclo <code>for</code>, assegniamo gli elementi racchiusi tra i tag <code>&lt;condiments&gt;</code> a una variabile temporanea di nome <code>cond</code>. Ogni valore assunto da <code>cond</code> viene successivamente stampato.
+
+<p>Gli stessi strumenti di Scala che ci permettono di manipolare strutture dati complesse con facilità sono prontamente disponibili anche per elaborare dati <abbr>XML</abbr>. La libreria <abbr>XML</abbr> di Scala è un&#8217;alternativa leggibile a <abbr>XSLT</abbr> che rende la lettura e l&#8217;analisi di <abbr>XML</abbr> un gioco da ragazzi, e vi fornisce anche alcuni strumenti altrettanto potenti per scrivere codice <abbr>XML</abbr>, come vedremo nella prossima sezione.
+
+<h2 id=_writing_xml>Scrivere <abbr>XML</abbr></h2>
+
+<p>Mentre alcuni linguaggi assemblano documenti <abbr>XML</abbr> attraverso complessi meccanismi di serializzazione di oggetti, il supporto di Scala per i letterali <abbr>XML</abbr> rende molto più semplice la creazione di questi documenti. Essenzialmente, quando avete bisogno di codice <abbr>XML</abbr> vi basta scrivere codice <abbr>XML</abbr>. Per interpolare variabili ed espressioni, effettuate l&#8217;escape della sintassi Scala con le parentesi graffe, come abbiamo fatto nel pattern matching dell&#8217;esempio precedente.
+
+<pre><samp>scala&gt; var name = "Bob"
+name: java.lang.String = Bob
+
+scala&gt; val bobXML =
+     | &lt;person&gt;
+     |   &lt;name&gt;{name}&lt;/name&gt;
+     | &lt;/person&gt;
+bobXML: scala.xml.Elem =
+&lt;person&gt;
+  &lt;name&gt;Bob&lt;/name&gt;
+&lt;/person&gt;</samp></pre>
+
+<p>Come potete vedere, la variabile <var>name</var> è stata sostituita quando abbiamo costruito il documento <abbr>XML</abbr> assegnato a <var>bobXML</var>. Quella valutazione avviene solo una volta; se <var>name</var> venisse ridefinito in seguito, l&#8217;elemento <code>&lt;name&gt;</code> di <var>bobXML</var> conterrebbe ancora la stringa <code>"Bob"</code>.
+
+<h3 id=_a_real_world_example>Un esempio reale</h3>
+
+<p>Per fare un esempio più completo, supponiamo di stare progettando l&#8217;incarnazione più recente e più amata del classico programma &#8220;ciao mondo&#8221;: un sistema di pubblicazione per un blog. Cominceremo con una classe che rappresenta un articolo di un blog in un formato compatibile con Atom.
+
+<pre><code>// <a href=esempi/cap-10/writing/post.scala>esempi/cap-10/writing/post.scala</a>
+
+import java.text.SimpleDateFormat
+import java.util.Date
+
+class Post(val title: String, val body: String, val updated: Date) {
+  lazy val dashedDate = {
+    val dashed = new SimpleDateFormat("yy-MM-dd")
+    dashed.format(updated)
+  }
+
+  lazy val atomDate = {
+    val rfc3339 = new SimpleDateFormat("yyyy-MM-dd'T'h:m:ss'-05:00'")
+    rfc3339.format(updated)
+  }
+
+  lazy val slug = title.toLowerCase.replaceAll("\\W", "-")
+  lazy val atomId  = "tag:example.com," + dashedDate + ":/" + slug
+}</code></pre>
+
+<p>Oltre agli ovvi attributi <code>title</code> e <code>body</code>, nella nostra classe <code>Post</code> abbiamo definito diversi valori calcolati in maniera ritardata. Questi attributi ci torneranno comodi quando trasformeremo i nostri articoli in un feed Atom, il formato standard per la raccolta e l&#8217;aggregazione dei blog dai server web. Atom è un formato <abbr>XML</abbr>, e questa è un&#8217;applicazione perfetta per mostrare come generare documenti <abbr>XML</abbr> con Scala.
+
+<p>Definiremo una classe <code>AtomFeed</code> che prende una sequenza di oggetti <code>Post</code> come unico argomento.
+
+<pre><code>// <a href=esempi/cap-10/writing/atom-feed.scala>esempi/cap-10/writing/atom-feed.scala</a>
+
+import scala.xml.XML
+
+class AtomFeed(posts: Seq[Post]) {
+  val feed =
+  &lt;feed xmlns="http://www.w3.org/2005/Atom"&gt;
+    &lt;title&gt;Il mio blog&lt;/title&gt;
+    &lt;subtitle&gt;Un sottotitolo fantasioso.&lt;/subtitle&gt;
+    &lt;link href="http://example.com/"/&gt;
+    &lt;link href="http://example.com/atom.xml" rel="self"/&gt;
+    &lt;updated&gt;{posts(0).atomDate}&lt;/updated&gt;
+    &lt;author&gt;
+      &lt;name&gt;Mario Rossi&lt;/name&gt;
+      &lt;uri&gt;http://example.com/about.html&lt;/uri&gt;
+    &lt;/author&gt;
+    &lt;id&gt;http://example.com/&lt;/id&gt;
+    {for (post &lt;- posts) yield
+    &lt;entry&gt;
+      &lt;title&gt;{post.title}&lt;/title&gt;
+      &lt;link href={"http://example.com/" + post.slug + ".html"} rel="alternate"/&gt;
+      &lt;id&gt;{post.atomId}&lt;/id&gt;
+      &lt;updated&gt;{post.atomDate}&lt;/updated&gt;
+      &lt;content type="html"&gt;{post.body}&lt;/content&gt;
+      &lt;author&gt;
+        &lt;name&gt;Mario Rossi&lt;/name&gt;
+        &lt;uri&gt;http://example.com/about.html&lt;/uri&gt;
+      &lt;/author&gt;
+    &lt;/entry&gt;
+    }
+  &lt;/feed&gt;
+
+  def write = XML.saveFull(Config.atomPath, feed, "UTF-8", true, null)
+}</code></pre>
+
+<p>In questo esempio abbiamo pesantemente sfruttato la possibilità di effettuare l&#8217;escape delle espressioni Scala. Ovunque ci sia bisogno di un frammento di informazione dinamica&nbsp;&mdash;&nbsp;per esempio, la data del primo articolo nella sequenza, formattata secondo lo standard Atom&nbsp;&mdash;&nbsp;abbiamo semplicemente scritto normale codice Scala effettuandone l&#8217;escape. Nell&#8217;ultima metà dell&#8217;elemento <code>&lt;feed&gt;</code>, abbiamo usato un&#8217;espressione <code>for</code> per produrre blocchi successivi di codice <abbr>XML</abbr> formattato dinamicamente.
+
+<p>Il metodo <code>write</code> di <code>AtomFeed</code> mostra l&#8217;uso del metodo <code>saveFull</code> fornito dalla libreria <code>scala.xml</code>. Il metodo <code>saveFull</code> scrive un documento <abbr>XML</abbr> su disco, utilizzando opzionalmente un altro schema di codifica e una diversa dichiarazione di tipo di documento. In alternativa, il metodo <code>save</code>, contenuto nello stesso package, farà uso di una qualsiasi variante di <code>java.io.Writer</code> nel caso aveste bisogno di un buffer, di una pipe, &amp;c.
+
+<p>Scrivere documenti <abbr>XML</abbr> in Scala è un&#8217;operazione banale: costruite il documento di cui avete bisogno sfruttando il codice <abbr>XML</abbr> in linea, ricorrete all&#8217;interpolazione ovunque sia necessario sostituire il contenuto dinamico, e usate i metodi di convenienza illustrati per scrivere i vostri documenti completi su disco o su altri canali di uscita.
+
+<h2 id=_recap_and_whats_next>Riepilogo, e poi?</h2>
+
+<p><abbr>XML</abbr> è usato da applicazioni software di ogni tipo, eppure pochi linguaggi facilitano il compito di lavorare con <abbr>XML</abbr>. Abbiamo visto che Scala velocizza lo sviluppo con <abbr>XML</abbr> semplificando la lettura e la scrittura di codice <abbr>XML</abbr>.
+
+<p>Nel prossimo capitolo, vedrete il ricco supporto offerto da Scala per creare i vostri linguaggi domain-specific (<abbr>DSL</abbr>).
+
+<p class=v><a rel=prev href=cap-9.html title='indietro a &#8220;Programmazione concorrente robusta e scalabile con gli attori&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-11.html title='avanti a &#8220;Linguaggi domain-specific in Scala&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>

@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Programmazione concorrente robusta e scalabile con gli attori - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 9}
+</style>
+<script>_gaq=[['_setAccount','UA-10482652-1'],['_trackPageview']];(function(){var g=document.createElement('script');g.src='//www.google-analytics.com/ga.js';g.setAttribute('async','true');document.documentElement.firstChild.appendChild(g);})();</script>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-9>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Programmazione concorrente robusta e scalabile con gli attori</h1>
+
+<h2 id=ProblemsOfSharedSynchronizedState>I problemi dello stato condiviso e sincronizzato</h2>
+
+<p>La programmazione concorrente non è facile. Tradizionalmente, rendere un programma in grado di eseguire più di una singola attività alla volta ha sempre voluto dire faticare dietro a semafori, condizioni di corsa, contese di lock, e a tutto il resto dello sgradevole bagaglio che il multithreading si porta dietro. I modelli di concorrenza a eventi alleviano alcuni di questi problemi, ma possono trasformare programmi di grandi dimensioni in una rete intricata di funzioni di callback. Nessuna meraviglia, quindi, che la programmazione concorrente sia un compito che la maggior parte dei programmatori teme o evita del tutto ripiegando su modelli in cui una molteplicità di processi indipendenti condivide i dati esternamente (per esempio, attraverso un database o una coda di messaggi).
+
+<p>Una buona parte delle difficoltà della programmazione concorrente è causata dallo stato: come fate a sapere quello che il vostro programma multithread sta facendo e quando lo fa? Qual è il valore contenuto in una particolare variabile quando avete in esecuzione due thread, o cinque, o dieci? Come potete garantire che le diverse parti del vostro programma non lottino tra loro nel tentativo di prendere l&#8217;iniziativa? Un paradigma di concorrenza basato sui thread porta con sé più domande che risposte.
+
+<p>Per fortuna, Scala offre un approccio ragionevole e flessibile alla programmazione concorrente, che esploreremo in questo capitolo.
+
+<h2 id=_actors>Gli attori</h2>
+
+<p>Nonostante possiate aver sentito citare Scala e gli attori nella stessa frase, gli attori non sono appannaggio esclusivo di Scala. Originariamente conceptiti per essere usati nel campo dell&#8217;Intelligenza Artificiale, gli attori sono apparsi per la prima volta nel 1973 (si vedano <a href=apa.html#Hewitt1973>[Hewitt1973]</a> e <a class="xref" href="http://programming-scala.labs.oreilly.com/apa.html#Agha1987">[Agha1987]</a>). Da allora, sono comparse diverse variazioni dell&#8217;idea di attore in un certo numero di linguaggi di programmazione, in particolare Erlang e Io. Come astrazione, gli attori sono generali a sufficienza da poter essere implementati sotto forma di libreria (come in Scala) o di entità fondamentali di un sistema computazionale.
+
+<h3 id=_actors_in_abstract>Gli attori in astratto</h3>
+
+<p>Fondamentalmente, un attore è un oggetto che riceve messaggi e agisce sulla base di quei messaggi. L&#8217;ordine in cui i messaggi arrivano non è importante per un attore, sebbene in alcune implementazioni (come quella di Scala) i messaggi vengano accodati in ordine. Un attore potrebbe gestire un messaggio internamente, o potrebbe inviare un mesaggio a un altro attore, o potrebbe creare un altro attore per fargli intraprendere un&#8217;azione sulla base del messaggio. Gli attori sono un&#8217;astrazione di livello molto alto.
+
+<p>A differenza dei tradizionali sistemi a oggetti (che, potreste dire a voi stessi, posseggono molte delle stesse proprietà che abbiamo descritto), gli attori non impongono una sequenza o un ordine alle loro azioni. &Egrave; questa rinuncia intrinseca alla sequenzialità, combinata con l&#8217;indipendenza da uno stato globale condiviso, che permette agli attori di svolgere il proprio lavoro in parallelo. Come vedremo più avanti, l&#8217;uso giudizioso dei dati immutabili è particolarmente consono al modello degli attori, e contribuisce ulteriormente a rendere la programmazione concorrente sicura e comprensibile.
+
+<p>La teoria è sufficiente. Ora vediamo gli attori in pratica.
+
+<h2 id=_actors_in_scala>Gli attori in Scala</h2>
+
+<p>Nella loro essenza, gli attori in Scala sono oggetti che estendono <code>scala.actors.Actor</code>.
+
+<pre><code>// <a href=esempi/cap-9/simple-actor-script.scala>esempi/cap-9/simple-actor-script.scala</a>
+
+import scala.actors.Actor
+
+class Redford extends Actor {
+  def act() {
+    println("Recitare consiste, in buona parte, nel prestare attenzione.")
+  }
+}
+
+val robert = new Redford
+robert.start</code></pre>
+
+<p>Come possiamo vedere, un attore definito in questo modo deve essere sia istanziato sia fatto partire, in maniera simile a come Java gestisce i propri thread. Un attore deve anche implementare il metodo astratto <code>act</code>, che restituisce <code>Unit</code>. Una volta che abbiamo fatto partire questo semplice attore, sulla console viene stampato il saggio consiglio seguente.
+
+<pre><samp>Recitare consiste, in buona parte, nel prestare attenzione.</samp></pre>
+
+<p>Il package <code>scala.actors</code> contiene un metodo factory per creare attori che evitano buona parte dei preparativi dell&#8217;esempio precedente. Possiamo importare questo metodo e altri metodi di convenienza da <code>scala.actors.Actor._</code>. Ecco un attore creato con il metodo factory.
+
+<pre><code>// <a href=esempi/cap-9/factory-actor-script.scala>esempi/cap-9/factory-actor-script.scala</a>
+
+import scala.actors.Actor
+import scala.actors.Actor._
+
+val paulNewman = actor {
+  println("Per essere un attore devi rimanere bambino.")
+}</code></pre>
+
+<p>Mentre una sottoclasse che estende <code>Actor</code> deve definire <code>act</code> in modo da essere concreta, un attore costruito con il metodo factory non soffre di questa limitazione. In questo esempio più breve, il corpo del metodo passato ad <code>actor</code> viene effettivamente promosso al ruolo del metodo <code>act</code> nel nostro primo esempio. Com&#8217;è prevedibile, anche questo attore stampa un messaggio quando viene eseguito. Tutto ciò è molto interessante, ma non abbiamo ancora visto il pezzo fondamentale del puzzle degli attori: l&#8217;invio di messaggi.
+
+<h3 id=_sending_messages_to_actors>Inviare messaggi agli attori</h3>
+
+<p>Gli attori possono ricevere qualsiasi tipo di oggetto come messaggio, dalle stringhe di testo ai tipi numerici a qualsiasi classe abbiate creato nei vostri programmi. &Egrave; per questa ragione che gli attori e il pattern matching vanno a braccetto. Un attore dovrebbe agire solo in risposta a messaggi di tipi noti; l&#8217;uso del pattern matching sulla classe e/o sui contenuti di un messaggio è una buona strategia difensiva di programmazione e aumenta la leggibilità del codice dell&#8217;attore.
+
+<pre><code>// <a href=esempi/cap-9/pattern-match-actor-script.scala>esempi/cap-9/pattern-match-actor-script.scala</a>
+
+import scala.actors.Actor
+import scala.actors.Actor._
+
+val fussyActor = actor {
+  loop {
+    receive {
+      case s: String =&gt; println("Ecco una String: " + s)
+      case i: Int =&gt; println("Ecco un Int: " + i.toString)
+      case _ =&gt; println("Non ho idea di cosa mi sia arrivato.")
+    }
+  }
+}
+
+fussyActor ! "Ehilà"
+fussyActor ! 23
+fussyActor ! 3.33</code></pre>
+
+<p>Quando viene eseguito, questo esempio stampa il testo seguente.
+
+<pre><samp>Ecco una String: Ehilà
+Ecco un Int: 23
+Non ho idea di cosa mi sia arrivato.</samp></pre>
+
+<p>Il corpo di <code>fussyActor</code> è composto da un metodo <code>receive</code> racchiuso in un ciclo <code>loop</code>. In sostanza, <code>loop</code> è una gradevole abbreviazione per <code>while (true)</code>: esegue ripetutamente ciò che si trova all&#8217;interno del suo blocco. <code>receive</code> si blocca fino a quando non riceve un messaggio di un tipo che soddisferà uno dei casi del suo pattern matching interno.
+
+<p>Le ultime righe di questo esempio mostrano l&#8217;uso del metodo <code>!</code> (punto esclamativo) per inviare messaggi al nostro attore. Se avete già visto gli attori in Erlang, questa sintassi vi sarà familiare. L&#8217;attore è sempre sul lato sinistro del punto esclamativo, e il messaggio che viene inviato a quell&#8217;attore è sempre sul lato destro. Se avete bisogno di una mnemotecnica per questo granello di zucchero sintattico, immaginate di essere un regista arrabbiato che urla direttive ai propri attori.
+
+<h3 id=_the_mailbox>La mailbox</h3>
+
+<p>Ogni attore possiede una <em>mailbox</em> (letteralmente, casella di posta) in cui vengono accodati i messaggi inviati a quell&#8217;attore. Ecco un esempio in cui ispezioniamo la dimensione della mailbox di un attore.
+
+<pre><code>// <a href=esempi/cap-9/actor-mailbox-script.scala>esempi/cap-9/actor-mailbox-script.scala</a>
+
+import scala.actors.Actor
+import scala.actors.Actor._
+
+val countActor = actor {
+  loop {
+    react {
+      case "quanti?" =&gt; {
+        println("Ho " + mailboxSize.toString + " messaggi nella mia mailbox.")
+      }
+    }
+  }
+}
+
+countActor ! 1
+countActor ! 2
+countActor ! 3
+countActor ! "quanti?"
+countActor ! "quanti?"
+countActor ! 4
+countActor ! "how many?"</code></pre>
+
+<p>Questo esempio produce l&#8217;uscita seguente.
+
+<pre><samp>Ho 3 messaggi nella mia mailbox.
+Ho 3 messaggi nella mia mailbox.
+Ho 4 messaggi nella mia mailbox.</samp></pre>
+
+<p>Notate che i messaggi nella prima e nella seconda riga sono identici. Dato che il nostro attore è stato creato solamente per elaborare messaggi composti dalla stringa <code>"quanti?"</code>, quei messaggi non sono rimasti nella sua mailbox. Solo i messaggi di tipo sconosciuto&nbsp;&mdash;&nbsp;in questo caso, <code>Int</code>&nbsp;&mdash;&nbsp;rimangono nella mailbox senza essere elaborati.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Se vedete che la dimensione della mailbox di un attore cresce inaspettatamente, state probabilmente inviando messaggi di un tipo che l&#8217;attore non conosce. Potete includere nel pattern matching una clausola <code>case</code> jolly (<code>_</code>) che analizza ed elabora i messaggi per scoprire chi sta infastidendo il vostro attore.
+</blockquote>
+
+<h3 id=_actors_in_depth>Gli attori nel dettaglio</h3>
+
+<p>Ora che conosciamo le basi del concetto di attore e abbiamo visto come viene usato in Scala, mettiamolo al lavoro. Nello specifico, mettiamolo al lavoro facendogli tagliare i capelli. Il <em>problema del barbiere addormentato</em> <a href=apa.html#SleepingBarberProblem>[SleepingBarberProblem]</a> fa parte di un insieme di situazioni ipotetiche appositamente architettate dagli informatici per illustrare questioni di concorrenza e sincronizzazione.
+
+<p>Il problema è questo: un ipotetico salone in cui lavora un solo barbiere è dotato di una singola sedia da barbiere, e di tre sedie in cui i clienti possono aspettare di tagliarsi i capelli. Se non ci sono clienti, il barbiere dorme. Quando arriva un cliente, il barbiere si sveglia per tagliargli i capelli. Se il barbiere è occupato a tagliare i capelli quando un cliente arriva, il cliente si accomoda su una sedia libera. Se non ci sono sedie libere, il cliente se ne va.
+
+<p>Di solito, il problema del barbiere addormentato viene risolto con semafori e mutex, ma abbiamo strumenti migliori a nostra disposizione. Vediamo subito quali sono le diverse entità modellabili come attori: il barbiere, chiaramente, così come i clienti. Persino il negozio potrebbe essere modellato come un attore; anche se stiamo inviando messaggi, non è necessario che esista una comunicazione verbale tra due entità del mondo reale rappresentate come attori.
+
+<p>Cominciamo con i clienti del barbiere addormentato, dato che hanno le responsabilità più semplici.
+
+<pre><code>// <a href=esempi/cap-9/sleepingbarber/customer.scala>esempi/cap-9/sleepingbarber/customer.scala</a>
+
+package sleepingbarber
+
+import scala.actors.Actor
+import scala.actors.Actor._
+
+case object Haircut
+
+class Customer(val id: Int) extends Actor {
+  var shorn = false
+
+  def act() = {
+    loop {
+      react {
+        case Haircut =&gt; {
+          shorn = true
+          println("[c] il cliente " + id + " è stato servito")
+        }
+      }
+    }
+  }
+}</code></pre>
+
+<p>Per la maggior parte, questo dovrebbe sembrarvi piuttosto familiare: dichiariamo il package nel quale collocheremo il codice, importiamo codice dal package <code>scala.actors</code> e definiamo una classe che estende <code>Actor</code>. Ci sono alcuni dettagli che vale la pena di sottolineare, comunque.
+
+<p>Prima di tutto, c&#8217;è la nostra dichiarazione <code>case object Haircut</code>. Un pattern comune quando si lavora con gli attori in Scala è quello di usare un <code>case object</code> per rappresentare un messaggio senza dati interni. Se per esempio volessimo includere l&#8217;ora in cui il taglio di capelli è stato completato, useremmo una <code>case class</code>. Dichiariamo <code>Haricut</code> in questo punto del codice perché è un tipo di messaggio che verrà inviato solamente ai clienti.
+
+<p>Notate anche che stiamo memorizzando un singolo bit di stato mutabile in ogni istanza di <code>Customer</code>: se al cliente sono stati tagliati i capelli opppure no. Nel loro ciclo interno, tutti i clienti attendono un messaggio di tipo <code>Haircut</code> e, appena lo ricevono, impostano il valore booleano <var>shorn</var> a <code>true</code>. <code>Customer</code> usa il metodo asincrono <code>react</code> per rispondere ai messaggi in arrivo. Se avessimo bisogno di restituire il risultato della elaborazione del messaggio useremmo <code>receive</code>, ma questo non è necessario, perciò durante il procedimento risparmiamo thread e memoria dietro le quinte.
+
+<p>Procediamo con il barbiere, ora. Dato che c&#8217;è un solo barbiere, avremmo potuto crearlo usando il metodo factory <code>actor</code> menzionato in precedenza. Per facilitare il collaudo, invece, definiamo una nostra classe <code>Barber</code>.
+
+<pre><code>// <a href=esempi/cap-9/sleepingbarber/barber.scala>esempi/cap-9/sleepingbarber/barber.scala</a>
+
+package sleepingbarber
+
+import scala.actors.Actor
+import scala.actors.Actor._
+import scala.util.Random
+
+class Barber extends Actor {
+  private val random = new Random()
+
+  def helpCustomer(customer: Customer) {
+    if (self.mailboxSize &gt;= 3) {
+      println("[b] non ci sono abbastanza sedie, mando via il cliente " + customer.id)
+    } else {
+      println("[b] taglio i capelli al cliente " + customer.id)
+      Thread.sleep(100 + random.nextInt(400))
+      customer ! Haircut
+    }
+  }
+
+  def act() {
+    loop {
+      react {
+        case customer: Customer =&gt; helpCustomer(customer)
+      }
+    }
+  }
+}</code></pre>
+
+<p>Il cuore della classe <code>Barber</code> somiglia molto a quello della classe <code>Customer</code>. Effettuiamo un ciclo sul metodo <code>react</code>, aspettando l&#8217;arrivo di un particolare tipo di oggetto. Per mantenere il ciclo breve e leggibile, invochiamo il metodo <code>helpCustomer</code> quando un nuovo cliente arriva dal barbiere. In quel metodo, controlliamo la dimensione della mailbox, che ci serve per rappresentare le &#8220;sedie&#8221; su cui i clienti in attesa si possono accomodare; potremmo utilizzare un&#8217;istanza di <code>Queue</code> come coda interna gestita dalla classe <code>Barber</code> o dalla classe <code>Shop</code>, ma perché preoccuparci dato che la mailbox di ogni attore è già una coda?
+
+<p>Se tre o più clienti sono in coda, ignoriamo semplicemente il messaggio, che viene poi scartato dalla mailbox del barbiere. Altrimenti, simuliamo un ritardo semi-casuale (100 millisecondi come minimo) per il tempo necessario a tagliare i capelli a un cliente, poi inviamo un messaggio <code>Haricut</code> a quel cliente. (Se stessimo simulando uno scenario reale, ovviamente rimuoveremmo l&#8217;invocazione di <code>Thread.sleep()</code> e permetteremmo al nostro barbiere di lavorare il più velocemente possibile.)
+
+<p>Come prossima cosa, scriviamo una semplice classe per rappresentare il salone.
+
+<pre><code>// <a href=esempi/cap-9/sleepingbarber/shop.scala>esempi/cap-9/sleepingbarber/shop.scala</a>
+
+package sleepingbarber
+
+import scala.actors.Actor
+import scala.actors.Actor._
+
+class Shop extends Actor {
+  val barber = new Barber()
+  barber.start
+
+  def act() {
+    println("[s] il salone è aperto")
+
+    loop {
+      react {
+        case customer: Customer =&gt; barber ! customer
+      }
+    }
+  }
+}</code></pre>
+
+<p>Ora tutto questo dovrebbe sembrarvi molto familiare. Ogni negozio crea un nuovo barbiere e lo fa partire, stampa un messaggio annunciando che il negozio è aperto e attende in un ciclo che arrivino i clienti. Quando arriva un&#8217;istanza di <code>Customer</code>, il cliente viene mandato dal barbiere. Ora notiamo un beneficio inaspettato degli attori: ci permettono di descrivere la logica applicativa concorrente in termini facili da capire. &#8220;Manda il cliente dal barbiere&#8221; ha perfettamente senso, molto più senso di &#8220;avvisa il barbiere, sblocca il mutex attorno alle sedie dei clienti, incrementa il numero di sedie libere&#8221;, e così via. Gli attori ci avvicinano al nostro dominio.
+
+<p>Infine, creiamo un programma per effettuare una simulazione.
+
+<pre><code>// <a href=esempi/cap-9/sleepingbarber/barbershop-simulator.scala>esempi/cap-9/sleepingbarber/barbershop-simulator.scala</a>
+
+package sleepingbarber
+
+import scala.actors.Actor._
+import scala.collection.{immutable, mutable}
+import scala.util.Random
+
+object BarbershopSimulator {
+  private val random = new Random()
+  private val customers = new mutable.ArrayBuffer[Customer]()
+  private val shop = new Shop()
+
+  def generateCustomers {
+    for (i &lt;- 1 to 20) {
+      val customer = new Customer(i)
+      customer.start()
+      customers += customer
+    }
+
+    println("[!] genero " + customers.size + " clienti")
+  }
+
+  // i clienti arrivano a intervalli di tempo casuali
+  def trickleCustomers {
+    for (customer &lt;- customers) {
+      shop ! customer
+      Thread.sleep(random.nextInt(450))
+    }
+  }
+
+  def tallyCuts {
+    // attende la terminazione delle rimanenti azioni concorrenti
+    Thread.sleep(2000)
+
+    val shornCount = customers.filter(c =&gt; c.shorn).size
+    println("[!] oggi sono stati serviti " + shornCount + " clienti")
+  }
+
+  def main(args: Array[String]) {
+    println("[!] inizio la simulazione del salone da barbiere")
+    shop.start()
+
+    generateCustomers
+    trickleCustomers
+    tallyCuts
+
+    System.exit(0)
+  }
+}</code></pre>
+
+<p>Dopo aver &#8220;aperto il negozio&#8221;, generiamo un certo numero di oggetti <code>Customer</code>, assegnando un identificatore numerico a ognuno di loro e memorizzando il lotto in un <code>ArrayBuffer</code>. Poi facciamo &#8220;entrare uno alla volta&#8221; i clienti, inviandoli come messaggi al negozio e fermandoci per un certo periodo semi-casuale di tempo tra un passo del ciclo e l&#8217;altro. Alla fine della giornata simulata, calcoliamo il numero di clienti a cui sono stati tagliati i capelli filtrando i clienti il cui valore booleano <code>shorn</code> interno è stato impostato a <code>true</code>, poi stampiamo la dimensione della sequenza risultante.
+
+<p>Compilate il codice ed eseguitelo dalla directory <code>sleepingbarber</code> come segue:
+
+<pre><samp>fsc *.scala
+scala -classpath . sleepingbarber.BarbershopSimulator</samp></pre>
+
+<p>In tutto il codice, abbiamo usato alcuni prefissi nei messaggi a video con abbreviazioni per indicare le classi che hanno stampato i messaggi. Quando osserviamo un&#8217;esecuzione di esempio del nostro simulatore, è facile vedere da dove provengono i messaggi.
+
+<pre><code>[!] inizio la simulazione del salone da barbiere
+[s] il salone è aperto
+[!] genero 20 clienti
+[b] taglio i capelli al cliente 1
+[b] taglio i capelli al cliente 2
+[c] il cliente 1 è stato servito
+[c] il cliente 2 è stato servito
+[b] taglio i capelli al cliente 3
+[c] il cliente 3 è stato servito
+[b] taglio i capelli al cliente 4
+[b] taglio i capelli al cliente 5
+[c] il cliente 4 è stato servito
+[b] taglio i capelli al cliente 6
+[c] il cliente 5 è stato servito
+[b] taglio i capelli al cliente 7
+[c] il cliente 6 è stato servito
+[b] non ci sono abbastanza sedie, mando via il cliente 8
+[b] taglio i capelli al cliente 9
+[c] il cliente 7 è stato servito
+[b] non ci sono abbastanza sedie, mando via il cliente 10
+[c] il cliente 9 è stato servito
+[b] taglio i capelli al cliente 11
+[b] taglio i capelli al cliente 12
+[c] il cliente 11 è stato servito
+[b] taglio i capelli al cliente 13
+[c] il cliente 12 è stato servito
+[b] taglio i capelli al cliente 14
+[c] il cliente 13 è stato servito
+[b] non ci sono abbastanza sedie, mando via il cliente 15
+[b] non ci sono abbastanza sedie, mando via il cliente 16
+[b] non ci sono abbastanza sedie, mando via il cliente 17
+[b] taglio i capelli al cliente 18
+[c] il cliente 14 è stato servito
+[b] taglio i capelli al cliente 19
+[c] il cliente 18 è stato servito
+[b] taglio i capelli al cliente 20
+[c] il cliente 19 è stato servito
+[c] il cliente 20 è stato servito
+[!] oggi sono stati serviti 15 clienti</code></pre>
+
+<p>Com&#8217;è prevedibile, vedrete che l&#8217;uscita di ogni esecuzione sarà leggermente diversa. Ogni volta che il barbiere ci mette un po&#8217; di più a tagliare i capelli dando tempo a diversi clienti di entrare, le &#8220;sedie&#8221; (la mailbox del barbiere, che funziona come coda) si riempiono e i nuovi clienti se ne vanno.
+
+<p>Naturalmente, per gli esempi semplici come questo valgono le solite avvertenze. Per citarne una, è possibile che il nostro esempio non sia abbastanza casuale, in particolare se i valori casuali vengono recuperati a distanza di un millisecondo l&#8217;uno dall&#8217;altro. Questa è una conseguenza del modo in cui la <abbr>JVM</abbr> genera numeri casuali, e può servire come promemoria per ricordare di fare attenzione alla casualità nei programmi concorrenti. Potreste anche voler sostituire l&#8217;invocazione di <code>sleep</code> in <code>tallyCuts</code> con un segnale più chiaro che i vari attori nel sistema hanno finito di fare il proprio lavoro, magari trasformando <code>BarbershopSimulator</code> in un attore e inviandogli messaggi che indicano il completamento.
+
+<p>Provate a modificare il codice per introdurre più clienti, tipi di messaggio aggiuntivi, ritardi differenti, o a rimuovere completamente la casualità. Se siete programmatori multithread esperti, potreste provare a scrivere la vostra soluzione del problema, giusto per confrontarla con quella proposta. Siamo pronti a scommettere che un&#8217;implementazione con gli attori in Scala sarà più chiara e più facile da mantenere.
+
+<h3 id=_effective_actors>Attori efficaci</h3>
+
+<p>Per ottenere il massimo dagli attori, ecco alcune cose da ricordare. Prima di tutto, notate che esistono diversi metodi che potete usare per ottenere diversi tipi di comportamento dai vostri attori. La tabella seguente dovrebbe aiutarvi a comprendere quando usare ogni metodo.
+
+<div class=table id=actor-methods>
+<p class=tt>Tabella 9.1. I metodi degli attori
+<table summary="I metodi degli attori" border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Metodo</th>
+<th align=left valign=top>Valore di ritorno</th>
+<th align=left valign=top>Descrizione</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p><code>act</code></p></td>
+<td align=left valign=top><p><code>Unit</code></p></td>
+<td align=left valign=top><p>Metodo astratto a livello radice nella gerarchia di un attore. Tipicamente, contiene uno dei metodi che seguono.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>receive</code></p></td>
+<td align=left valign=top><p>Il risultato della elaborazione del messaggio</p></td>
+<td align=left valign=top><p>Si blocca fino a quando non viene ricevuto un messaggio di un tipo corrispondente.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>receiveWithin</code></p></td>
+<td align=left valign=top><p>Il risultato della elaborazione del messaggio</p></td>
+<td align=left valign=top><p>Come <code>receive</code>, ma si sblocca dopo il numero di millisecondi specificato.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>react</code></p></td>
+<td align=left valign=top><p><code>Nothing</code></p></td>
+<td align=left valign=top><p>Richiede meno costi aggiuntivi (in termini di thread) rispetto a <code>receive</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>reactWithin</code></p></td>
+<td align=left valign=top><p><code>Nothing</code></p></td>
+<td align=left valign=top><p>Come <code>react</code>, ma si sblocca dopo il numero di millisecondi specificato.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Tipicamente, vorrete usare <code>react</code> ogni volta che potete. Se avete bisogno dei risultati della elaborazione di un messaggio (cioè, avete bisogno di una risposta sincrona all&#8217;invio di un messaggio a un attore) usate la variante <code>receiveWithin</code> per ridurre le vostre possibilità di rimanere bloccati all&#8217;infinito su un attore che è rimasto incastrato.
+
+<p>Un&#8217;altra strategia per mantenere asincrono il vostro codice basato sugli attori è quella di usare i <em>futuri</em> (in inglese, <em>futures</em>). Un futuro è un oggetto segnaposto per un valore che non è ancora stato restituito da un processo asincrono. Potete inviare un messaggio a un attore con il metodo <code>!!</code>; una variante di questo metodo vi permette di passare una funzione parziale che viene applicata al valore futuro. Come potete vedere nell&#8217;esempio seguente, recuperare un valore da un&#8217;istanza di <code>Future</code> è tanto semplice quanto invocare il suo metodo <code>apply</code>. Notate che il recupero del valore da un&#8217;istanza di <code>Future</code> è un&#8217;operazione bloccante.
+
+<pre><code>// <a href=esempi/cap-9/future-script.scala>esempi/cap-9/future-script.scala</a>
+import scala.actors.Futures._
+
+val eventually = future(5 * 42)
+println(eventually())</code></pre>
+
+<p>Ogni attore nel vostro sistema dovrebbe avere responsabilità chiare. Non usate gli attori per compiti generici che fanno largo uso dello stato. Invece, ragionate come i registi: quali sono i ruoli distinti nello &#8220;script&#8221; della vostra applicazione, e qual è la minima quantità di informazione di cui ogni attore ha bisogno per fare il proprio lavoro? Date a ogni attore solo un paio di responsabilità e usate i messaggi (di solito nella forma di classi <code>case</code> o di oggetti <code>case</code>) per delegare quelle responsabilità ad altri attori.
+
+<p>Non esistate a effettuare copie di dati quando scrivete codice basato su attori. Più sfruttate l&#8217;immutabilità nel vostro progetto, meno è probabile che il vostro stato finisca per assumere valori inattesi. Più comunicate via messaggi, meno dovete preoccuparvi della sincronizzazione. L&#8217;uso di tutti quei messaggi e di tutte quelle variabili immutabili vi potrà sembrare eccessivamente costoso, ma, con l&#8217;odierna disponibilità di hardware, sostenere costi aggiuntivi di memoria in cambio di chiarezza e predicibilità sembra più che legittimo per la maggior parte delle applicazioni.
+
+<p>Infine, sappiate capire quando gli attori non sono la soluzione migliore. Solo perché gli attori sono un modo fantastico di gestire la concorrenza in Scala non significa che essi siano <em>l&#8217;unico</em> modo, come vedremo fra poco. L&#8217;impiego di strumenti tradizionali come thread e lock potrebbe essere più adatto in situazioni critiche con frequenti operazioni di scrittura, per le quali il costo aggiuntivo di un approccio a messaggi sarebbe troppo elevato. La nostra esperienza ci dice che potete creare un prototipo di soluzione concorrente progettandolo puramente in termini di attori, per poi tracciarne un profilo in modo da scoprire quali parti della vostra applicazione potrebbero beneficiare di un approccio differente.
+
+<h2 id=_traditional_concurrency_in_scala_threading_and_events>La concorrenza tradizionale in Scala: thread ed eventi</h2>
+
+<p>Sebbene gli attori siano un modo fantastico di gestire la concorrenza, non sono l&#8217;unico modo per farlo in Scala. Essendo Scala interoperabile con Java, i concetti di programmazione concorrente della <abbr>JVM</abbr> che potrebbero già esservi noti sono ancora applicabili.
+
+<h3 id=_one_off_threads>Thread una tantum</h3>
+
+<p>Per cominciare, Scala vi offre un modo comodo di eseguire un blocco di codice in un nuovo thread.
+
+<pre><code>// <a href=esempi/cap-9/threads/by-block-script.scala>esempi/cap-9/threads/by-block-script.scala</a>
+
+new Thread { println("questo verrà eseguito in un nuovo thread") }</code></pre>
+
+<p>Il package <code>scala.concurrent</code> contiene un costrutto simile, sotto forma del metodo <code>spawn</code> dell&#8217;oggetto <code>ops</code>, per eseguire un blocco in maniera asincrona.
+
+<pre><code>// <a href=esempi/cap-9/threads/spawn-script.scala>esempi/cap-9/threads/spawn-script.scala</a>
+
+import scala.concurrent.ops._
+
+object SpawnExample {
+  def main(args: Array[String]) {
+    println("questo verrà eseguito in maniera sincrona")
+
+    spawn {
+      println("questo verrà eseguito in maniera asincrona")
+    }
+  }
+}</code></pre>
+
+<h3 id=_using_literal_java_util_concurrent_literal>Usare <code>java.util.concurrent</code></h3>
+
+<p>Se avete familiarità con il venerabile package <code>java.util.concurrent</code>, lo troverete altrettanto facile (o difficile, a seconda del vostro punto di vista) da usare in Scala. Tramite <code>Executors</code> creeremo un pool di thread per eseguire una semplice classe che implementa l&#8217;interfaccia <code>Runnable</code> per rappresentare istanze eseguibili dai thread; la classe identifica il thread in cui viene eseguita.
+
+<pre><code>// <a href=esempi/cap-9/threads/util-concurrent-script.scala>esempi/cap-9/threads/util-concurrent-script.scala</a>
+
+import java.util.concurrent._
+
+class ThreadIdentifier extends Runnable {
+  def run {
+    println("ciao dal Thread " + currentThread.getId)
+  }
+}
+
+val pool = Executors.newFixedThreadPool(5)
+
+for (i &lt;- 1 to 10) {
+  pool.execute(new ThreadIdentifier)
+}</code></pre>
+
+<p>Come è prassi nella programmazione concorrente in Java, il metodo <code>run</code> è il punto di partenza per le classi eseguite da un thread. Ogni volta che il nostro <code>pool</code> esegue un nuovo <code>ThreadIdentifier</code>, il suo metodo <code>run</code> viene invocato. Un&#8217;occhiata all&#8217;uscita seguente ci dice che siamo eseguendo cinque thread nel pool, con identificatori che vanno da 9 a 13.
+
+<pre><samp>ciao dal Thread 9
+ciao dal Thread 10
+ciao dal Thread 11
+ciao dal Thread 12
+ciao dal Thread 13
+ciao dal Thread 9
+ciao dal Thread 11
+ciao dal Thread 10
+ciao dal Thread 10
+ciao dal Thread 13</samp></pre>
+
+<p>Questo, naturalmente, scalfisce solo la superficie di quanto è disponibile in <code>java.util.concurrent</code>. Scoprirete che tutto ciò che sapete sull&#8217;approccio multithread di Java si applica ancora in Scala. In più, sarete in grado di portare a termine gli stessi compiti usando meno codice, migliorandone la manutenibilità e incrementando la vostra produttività.
+
+<h3 id=_events>Eventi</h3>
+
+<p>Gli attori e i thread non sono gli unici strumenti per realizzare programmi concorrenti. La concorrenza basata su eventi, sotto forma di un particolare approccio all&#8217;I/O asincrono o <em>non bloccante</em> (<abbr>NIO</abbr>), è diventata una strategia privilegiata per implementare server che devono scalare verso migliaia di client simultanei. Evitando la tradizionale relazione uno-a-uno tra thread e client, questo modello di concorrenza espone eventi che si verificano quando hanno luogo particolari condizioni (per esempio, quando i dati di un client vengono ricevuti da una socket di rete). Tipicamente, il programmatore assocerà un metodo di callback a ogni evento rilevante per il programma.
+
+<p>Nonostante il package <code>java.nio</code> offra una varietà di primitive utili per l&#8217;I/O non bloccante (buffer, canali, <i class=baa>&amp;</i>c.), è necessario uno sforzo ulteriore per assemblare un programma concorrente basato su eventi a partire da quelle semplici primitive. Entra Apache <abbr>MINA</abbr>, realizzato su Java <abbr>NIO</abbr> e descritto sul proprio sito come &#8220;un framework per applicazioni di rete che aiuta gli utenti a sviluppare facilmente applicazioni a prestazioni e scalabilità elevate&#8221; (si veda <a href=apa.html#MINA>[MINA]</a>).
+
+<p>Sebbene <abbr>MINA</abbr> possa essere più facile da usare rispetto alle librerie <abbr>NIO</abbr> predefinite di Java, ci siamo abituati ad alcune comodità di Scala che non sono proprio disponibili in <abbr>MINA</abbr>. La libreria open source Naggati (si veda <a href=apa.html#Naggati>[Naggati]</a>) aggiunge a <abbr>MINA</abbr> uno strato progettato per agevolare i programmatori Scala e che, secondo il suo autore, &#8220;rende più facile filtrare protocolli usando uno stile sequenziale&#8221;. In sostanza, Naggati è un <abbr>DSL</abbr> per analizzare protocolli di rete sfruttando le potenti caratteristiche di I/O non bloccante di <abbr>MINA</abbr> dietro le quinte.
+
+<p>Useremo Naggati per scrivere le fondamenta di un server email <abbr>SMTP</abbr>. Per semplificare le cose, ci occuperemo solo di due comandi <abbr>SMTP</abbr>, <code>HELO</code> e <code>QUIT</code>: il primo identifica un client, il secondo chiude la sessione di comunicazione con il client.
+
+<p>Saremo onesti con noi stessi e manterremo una serie di test, facilitati dalla libreria <em>Specs</em> per lo sviluppo guidato dal comportamento (si veda la sezione <a href=cap-14.html#ScalaSpecs>Specs</a> nel capitolo 14).
+
+<pre><code>// <a href=esempi/cap-9/smtpd/src/test/scala/com/programmingscala/smtpd/SmtpDecoderSpec.scala>esempi/cap-9/smtpd/src/test/scala/com/programmingscala/smtpd/SmtpDecoderSpec.scala</a>
+
+package com.programmingscala.smtpd
+
+import java.nio.ByteOrder
+import net.lag.naggati._
+import org.apache.mina.core.buffer.IoBuffer
+import org.apache.mina.core.filterchain.IoFilter
+import org.apache.mina.core.session.{DummySession, IoSession}
+import org.apache.mina.filter.codec._
+import org.specs._
+import scala.collection.{immutable, mutable}
+
+object SmtpDecoderSpec extends Specification {
+  private var fakeSession: IoSession = null
+  private var fakeDecoderOutput: ProtocolDecoderOutput = null
+  private var written = new mutable.ListBuffer[Request]
+
+  def quickDecode(s: String): Unit = {
+    Codec.decoder.decode(fakeSession, IoBuffer.wrap(s.getBytes), fakeDecoderOutput)
+  }
+
+  "SmtpRequestDecoder" should {
+    doBefore {
+      written.clear()
+      fakeSession = new DummySession
+      fakeDecoderOutput = new ProtocolDecoderOutput {
+        override def flush(nextFilter: IoFilter.NextFilter, s: IoSession) = {}
+        override def write(obj: AnyRef) = written += obj.asInstanceOf[Request]
+      }
+    }
+
+    "riconoscere HELO" in {
+      quickDecode("HELO client.example.org\n")
+      written.size mustEqual 1
+      written(0).command mustEqual "HELO"
+      written(0).data mustEqual "client.example.org"
+    }
+
+    "riconoscere QUIT" in {
+      quickDecode("QUIT\n")
+      written.size mustEqual 1
+      written(0).command mustEqual "QUIT"
+      written(0).data mustEqual null
+    }
+  }
+}</code></pre>
+
+<p>Dopo aver preparato l&#8217;ambiente per l&#8217;esecuzione di ogni test, la nostra specifica esercita i due comandi <abbr>SMTP</abbr> che ci interessano. Il blocco <code>doBefore</code> viene eseguito prima di ogni test, garantendo che la sessione e il buffer di uscita fittizi siano correttamente inizializzati. In ogni test, passiamo una stringa di ingresso proveniente da un ipotetico client al nostro <code>Codec</code> non ancora implementato, poi verifichiamo che la richiesta risultante (<code>Request</code>, una classe <code>case</code>) contenga i campi <var>command</var> e <var>data</var> corretti. Dato che il comando <code>QUIT</code> non richiede ulteriori informazioni dal client, controlliamo semplicemente che <var>data</var> sia <code>null</code>.
+
+<p>Con i nostri test in posizione, implementiamo un codec (codificatore/decodificatore) di base per <abbr>SMTP</abbr>.
+
+<pre><code>// <a href=esempi/cap-9/smtpd/src/main/scala/com/programmingscala/smtpd/Codec.scala>esempi/cap-9/smtpd/src/main/scala/com/programmingscala/smtpd/Codec.scala</a>
+
+package com.programmingscala.smtpd
+
+import org.apache.mina.core.buffer.IoBuffer
+import org.apache.mina.core.session.{IdleStatus, IoSession}
+import org.apache.mina.filter.codec._
+import net.lag.naggati._
+import net.lag.naggati.Steps._
+
+case class Request(command: String, data: String)
+case class Response(data: IoBuffer)
+
+object Codec {
+  val encoder = new ProtocolEncoder {
+    def encode(session: IoSession, message: AnyRef, out: ProtocolEncoderOutput) = {
+      val buffer = message.asInstanceOf[Response].data
+      out.write(buffer)
+    }
+
+    def dispose(session: IoSession): Unit = {
+      // operazione nulla, richiesta dal tratto ProtocolEncoder
+    }
+  }
+
+  val decoder = new Decoder(readLine(true, "ISO-8859-1") { line =&gt;
+    line.split(' ').first match {
+      case "HELO" =&gt; state.out.write(Request("HELO", line.split(' ')(1))); End
+      case "QUIT" =&gt; state.out.write(Request("QUIT", null)); End
+      case _ =&gt; throw new ProtocolError("Riga di richiesta malformata: " + line)
+    }
+  })
+}</code></pre>
+
+<p>Per prima cosa, definiamo <code>Request</code> come una classe <code>case</code> in cui memorizzare i dati di richiesta quando arrivano. Poi specifichiamo in <var>encoder</var> la porzione di codifica del nostro codec, che si occupa semplicemente di scrivere i dati in uscita. Definiamo anche un metodo <code>dispose</code> (senza riempirlo) per rispettare il contratto del tratto <code>ProtocolEncoder</code>.
+
+<p>Il decodificatore è la parte che ci interessa veramente. <code>readRequest</code> legge una riga, prende la prima parola in quella riga e usa il pattern matching su di essa per riconoscere i comandi <abbr>SMTP</abbr>. In caso di un comando <code>HELO</code>, usiamo anche la stringa seguente su quella stessa riga. I risultati vengono messi in un oggetto <code>Request</code> e scritti in uscita su <var>state</var>. Come potete immaginare, <var>state</var> memorizza i nostri progressi durante il processo di analisi.
+
+<p>Pur essendo semplice, l&#8217;esempio appena visto mostra quanto sia facile analizzare protocolli con Naggati. Ora che abbiamo un codificatore funzionante, possiamo combinare Naggati e <abbr>MINA</abbr> con gli attori per creare un server.
+
+<p>Prima di tutto, ci serviranno alcune noiose righe di configurazione per avviare il nostro server <abbr>SMTP</abbr>.
+
+<pre><code>// <a href=esempi/cap-9/smtpd/src/main/scala/com/programmingscala/smtpd/Main.scala>esempi/cap-9/smtpd/src/main/scala/com/programmingscala/smtpd/Main.scala</a>
+
+package com.programmingscala.smtpd
+
+import net.lag.naggati.IoHandlerActorAdapter
+import org.apache.mina.filter.codec.ProtocolCodecFilter
+import org.apache.mina.transport.socket.SocketAcceptor
+import org.apache.mina.transport.socket.nio.{NioProcessor, NioSocketAcceptor}
+import java.net.InetSocketAddress
+import java.util.concurrent.{Executors, ExecutorService}
+import scala.actors.Actor._
+
+object Main {
+  val listenAddress = "0.0.0.0"
+  val listenPort = 2525
+
+  def setMaxThreads = {
+    val maxThreads = (Runtime.getRuntime.availableProcessors * 2)
+    System.setProperty("actors.maxPoolSize", maxThreads.toString)
+  }
+
+  def initializeAcceptor = {
+    var acceptorExecutor = Executors.newCachedThreadPool()
+    var acceptor =
+      new NioSocketAcceptor(acceptorExecutor, new NioProcessor(acceptorExecutor))
+    acceptor.setBacklog(1000)
+    acceptor.setReuseAddress(true)
+    acceptor.getSessionConfig.setTcpNoDelay(true)
+    acceptor.getFilterChain.addLast("codec",
+            new ProtocolCodecFilter(smtpd.Codec.encoder, smtpd.Codec.decoder))
+    acceptor.setHandler(
+            new IoHandlerActorAdapter(session =&gt; new SmtpHandler(session)))
+    acceptor.bind(new InetSocketAddress(listenAddress, listenPort))
+  }
+
+  def main(args: Array[String]) {
+    setMaxThreads
+    initializeAcceptor
+    println("smtpd: avviato e in ascolto su " + listenAddress + ":" + listenPort)
+  }
+}</code></pre>
+
+<p>Per assicurarci di sfruttare al massimo le istanze di attori nel nostro server, abbiamo impostato la proprietà di sistema <code>actors.maxPoolSize</code> al doppio del numero di processori disponibili sulla nostra macchina. Poi abbiamo inizializzato un&#8217;istanza di <code>NioSocketAcceptor</code>, un meccanismo chiave di <abbr>MINA</abbr> che viene utilizzato per accettare nuove connessioni dai client. Le ultime tre righe di questa configurazione sono critiche, dato che mettono al lavoro il nostro codificatore, dicono ad <code>acceptor</code> di gestire le richieste usando un particolare oggetto e mettono il server in attesa di nuove connessioni sulla porta 2525 (i server <abbr>SMTP</abbr> reali sono in ascolto sulla porta privilegiata 25).
+
+<p>Il particolare oggetto appena menzionato è un attore racchiuso in un&#8217;istanza di <code>IoHandlerActorAdapter</code>, uno strato di collegamento tra gli attori Scala e <abbr>MINA</abbr> fornito da Naggati. Questa è la parte del nostro server che risponde al client. Ora che sappiamo quello che il client sta dicendo, grazie al decodificatore, sappiamo anche cosa rispondere!
+
+<pre><code>// <a href=esempi/cap-9/smtpd/src/main/scala/com/programmingscala/smtpd/SmtpHandler.scala>esempi/cap-9/smtpd/src/main/scala/com/programmingscala/smtpd/SmtpHandler.scala</a>
+
+package com.programmingscala.smtpd
+
+import net.lag.naggati.{IoHandlerActorAdapter, MinaMessage, ProtocolError}
+import org.apache.mina.core.buffer.IoBuffer
+import org.apache.mina.core.session.{IdleStatus, IoSession}
+import java.io.IOException
+import scala.actors.Actor
+import scala.actors.Actor._
+import scala.collection.{immutable, mutable}
+
+class SmtpHandler(val session: IoSession) extends Actor {
+  start
+
+  def act = {
+    loop {
+      react {
+        case MinaMessage.MessageReceived(msg) =&gt;
+            handle(msg.asInstanceOf[smtpd.Request])
+        case MinaMessage.SessionClosed =&gt; exit()
+        case MinaMessage.SessionIdle(status) =&gt; session.close
+        case MinaMessage.SessionOpened =&gt; reply("220 localhost Tapir SMTPd 0.1\n")
+
+        case MinaMessage.ExceptionCaught(cause) =&gt; {
+          cause.getCause match {
+            case e: ProtocolError =&gt; reply("502 Errore: " + e.getMessage + "\n")
+            case i: IOException   =&gt; reply("502 Errore: " + i.getMessage + "\n")
+            case _                =&gt; reply("502 Errore sconosciuto\n")
+          }
+          session.close
+        }
+      }
+    }
+  }
+
+  private def handle(request: smtpd.Request) = {
+    request.command match {
+      case "HELO" =&gt; reply("250 Salve " + request.data + "\n")
+      case "QUIT" =&gt; reply("221 Hasta la vista, baby\n"); session.close
+    }
+  }
+
+  private def reply(s: String) = {
+    session.write(new smtpd.Response(IoBuffer.wrap(s.getBytes)))
+  }
+
+}</code></pre>
+
+<p>Possiamo immediatamente riconoscere lo stesso schema che abbiamo visto nei precedenti esempi di attori in questo capitolo: un ciclo attorno a un blocco <code>react</code> che usa il pattern matching con un insieme limitato di casi. In <code>SmtpHandler</code>, tutti questi casi sono <em>eventi</em> scatenati da <abbr>MINA</abbr>. Per esempio, <abbr>MINA</abbr> ci invierà <code>MinaMessage.SessionOpened</code> quando un client si connette e <code>MinaMessage.SessionClosed</code> quando un client si disconnette.
+
+<p>Il caso che ci interessa di più è quello di <code>MinaMessage.MessageReceived</code>. Ci viene passato un familiare oggetto <code>Request</code> con ogni nuovo messaggio valido ricevuto, e possiamo usare il pattern matching sul campo <code>command</code> per intraprendere l&#8217;azione appropriata. Quando il client dice <code>HELO</code>, possiamo rispondere con una breve nota di conferma. Quando il client dice <code>QUIT</code>, lo salutiamo e lo disconnettiamo.
+
+<p>Ora che abbiamo messo insieme tutti i pezzi, proviamo a intrattenere una conversazione con il nostro server.
+
+<pre><samp>[al3x@jaya ~]$ telnet localhost 2525
+Trying ::1...
+Connected to localhost.
+Escape character is '^]'.
+220 localhost Tapir SMTPd 0.1
+HELO jaya.local
+250 Salve jaya.local
+QUIT
+221 Hasta la vista, baby
+Connection closed by foreign host.</samp></pre>
+
+<p>Una conversazione breve, di sicuro, ma il nostro server funziona! Ora, cosa succede se gli inviamo qualcosa di inaspettato?
+
+<pre><samp>[al3x@jaya ~]$ telnet localhost 2525
+Trying ::1...
+Connected to localhost.
+Escape character is '^]'.
+220 localhost Tapir SMTPd 0.1
+HELO jaya.local
+250 Salve jaya.local
+BAD COMMAND
+502 Errore: Riga di richiesta malformata: BAD COMMAND
+Connection closed by foreign host.</samp></pre>
+
+<p>Ben fatto. &Egrave; stata un&#8217;ottima cosa essersi presi la briga di estrarre quelle eccezioni quando il nostro attore <code>SmtpHandler</code> riceve un evento <code>MinaMessage.ExceptionCaught</code>.
+
+<p>Naturalmente, ciò che abbiamo costruito gestisce solo l&#8217;inizio e la fine di una conversazione <abbr>SMTP</abbr> completa. Come esercizio, provate a implementare i comandi rimanenti. Oppure, per arrivare subito a qualcosa di molto simile a ciò che abbiamo realizzato qui, date un&#8217;occhiata al progetto open source Mailslot (si veda <a href=apa.html#Mailslot>[Mailslot]</a>).
+
+<h2 id=_recap_and_what_s_next>Riepilogo, e poi?</h2>
+
+<p>Abbiamo imparato come costruire applicazioni concorrenti scalabili e robuste usando la libreria di attori di Scala, che evita i problemi degli approcci tradizionali basati sull&#8217;accesso sincronizzato a uno stato mutabile condiviso. Abbiamo anche mostrato che il potente modello a thread predefinito di Java è utilizzabile in Scala. Infine, abbiamo imparato come combinare gli attori con il potente framework <abbr>NIO</abbr> Apache <abbr>MINA</abbr> e con Naggati per sviluppare da zero un server di rete asincrono e basato su eventi in poche righe di codice.
+
+<p>Il prossimo capitolo esaminerà il supporto predefinito di Scala per lavorare con <abbr>XML</abbr>.
+
+<p class=v><a rel=prev href=cap-8.html title='indietro a &#8220;La programmazione funzionale in Scala&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-10.html title='avanti a &#8220;Assemblare XML in Scala&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>
