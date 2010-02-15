@@ -29,7 +29,7 @@ The supplied simpletree module provides a python-only implementation
 of a full treebuilder and is a useful reference for the semantics of
 the various methods.
 """
-print(__path__)
+#print(__path__)
 treeBuilderCache = {}
 
 def getTreeBuilder(treeType, implementation=None, **kwargs):

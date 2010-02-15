@@ -1,4 +1,4 @@
-print(__name__)
+#print(__name__)
 from html5lib import constants 
 from ..constants import scopingElements, tableInsertModeElements
 
