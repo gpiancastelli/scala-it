@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Programmazione orientata agli oggetti in Scala: le basi - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 5}
+</style>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-5>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Programmazione orientata agli oggetti in Scala: le basi</h1>
+
+<p>Scala è un linguaggio orientato agli oggetti come Java, Python, Ruby, Smalltalk e altri. Se provenite dal mondo Java, noterete alcuni notevoli miglioramenti rispetto alle limitazioni del modello a oggetti di Java.
+
+<p>Presumiamo che abbiate una certa esperienza pregressa con la programmazione orientata agli oggetti (<abbr>OOP</abbr>), quindi qui non ne discuteremo i principi di base, nonostante il <a href=glossario.html>glossario</a> contenga alcuni termini e concetti comuni. Si veda <a href=apa.html#Meyer1997>[Meyer1997]</a> per un&#8217;introduzione dettagliata alla <abbr>OOP</abbr>, si veda <a href=apa.html#Martin2003>[Martin2003]</a> per una recente trattazione dei principi della <abbr>OOP</abbr> nel contesto dello &#8220;sviluppo agile del software&#8221;, si veda <a href=apa.html#GOF1995>[GOF1995]</a> per imparare i <em>pattern di progettazione</em> e si veda <a href=apa.html#WirfsBrock2003>[WirfsBrock2003]</a> per una discussione sui concetti della progettazione orientata agli oggetti.
+
+<h2 id=ClassBasics>I concetti di base per classi e oggetti</h2>
+
+<p>Rivediamo la terminologia <abbr>OOP</abbr> in Scala.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Abbiamo visto in precedenza che Scala possiede il concetto di dichiarazione di oggetto, rappresentato da <code>object</code>, che analizzeremo nella sezione <a href=cap-7.html#ClassesAndObjects>Classi e oggetti: dove sono i membri statici?</a> del capitolo 7. Useremo il termine <em>istanza</em> per riferirci genericamente all&#8217;istanza di una classe, indicando sia un <code>object</code> che un&#8217;istanza di una classe, per evitare la possibile confusione tra questi due concetti.
+</blockquote>
+
+<p>Le classi si dichiarano con la parola chiave <code>class</code>. Vedremo più avanti che si possono usare anche parole chiave aggiuntive, come <code>final</code> per prevenire la creazione di classi <em>derivate</em> e <code>abstract</code> per indicare che una classe non può essere istanziata, di solito perché contiene o eredita dichiarazioni di membro senza fornirne le definizioni complete.
+
+<p>Un&#8217;istanza può fare riferimento a sé stessa usando la parola chiave <code>this</code>, proprio come in Java e in linguaggi simili.
+
+<p>Seguendo la convenzione di Scala, usiamo il termine <em>metodo</em> per indicare una funzione che è legata a un&#8217;istanza. Alcuni linguaggi orientati agli oggetti usano il termine &#8220;funzione membro&#8221;. Le definizioni di metodo cominciano con la parola chiave <code>def</code>.
+
+<p>Come Java, ma a differenza di Ruby e Python, Scala ammette <em>metodi sovraccaricati</em>. Due o più metodi possono avere lo stesso nome purché le loro <em>firme</em> complete siano uniche. La <em>firma</em> include il nome del metodo, la lista dei parametri con i loro tipi e il tipo di ritorno del metodo. (Se i tipi di ritorno sono differenti, anche le liste di parametri devono essere differenti.)
+
+<p>Tuttavia, questa regola prevede un&#8217;eccezione a causa della <em>cancellazione di tipo</em> (in inglese, <em>type erasure</em>), che è una caratteristica unica della <abbr>JVM</abbr>, ma viene usata da Scala anche sulla piattaforma .NET per minimizzare le incompatibilità. Supponete che due metodi siano identici tranne per il fatto che uno accetta un parametro di tipo <code>List[String]</code> mentre l&#8217;altro accetta un parametro di tipo <code>List[Int]</code>, come nell&#8217;esempio seguente.
+
+<pre><code>// <a href=esempi/cap-5/type-erasure-wont-compile.scala>esempi/cap-5/type-erasure-wont-compile.scala</a>
+// NON verrà compilato!
+
+object Foo {
+  def bar(list: List[String]) = list.toString
+  def bar(list: List[Int]) = list.size.toString
+}</code></pre>
+
+<p>Otterrete un errore di compilazione sul secondo metodo perché i due metodi avranno una firma identica dopo la cancellazione di tipo.
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span> L&#8217;interprete <kbd>scala</kbd> vi permetterà di digitare entrambi i metodi, perché sovrascrive la prima versione. Tuttavia, se provate a caricare l&#8217;esempio precedente usando il comando <code>:load file</code> otterrete lo stesso errore sollevato da <kbd>scalac</kbd>.
+</blockquote>
+
+<p>Discuteremo la cancellazione di tipo in maggior dettaglio nel <a href=cap-12.html>capitolo 12</a>.
+
+<p>Sempre per convenzione, usiamo il termine <em>campo</em> per indicare una variabile che è legata a un&#8217;istanza. In altri linguaggi (come Ruby) viene spesso usato il termine <em>attributo</em>. Notate che lo stato di un&#8217;istanza è l&#8217;unione di tutti i valori attualmente rappresentati dai campi dell&#8217;istanza.
+
+<p>Come abbiamo discusso nella sezione <a href=cap-2.html#VariableDeclarationsAndDefinitions>Dichiarazioni di variabile</a> del capitolo 2, i campi a sola lettura (&#8220;valori&#8221;) si dichiarano usando la parola chiave <code>val</code> e i campi a lettura/scrittura si dichiarano usando la parola chiave <code>var</code>.
+
+<p>Scala permette anche di dichiarare i tipi nelle classi, come abbiamo visto nella sezione <a href=cap-2.html#AbstractTypesAndParameterizedTypes>Tipi astratti e tipi parametrici</a> del capitolo 2.
+
+<p>Usiamo il termine <em>membro</em> per fare riferimento in modo generico a un campo, un metodo, o un tipo. Notate che i membri che sono campi o metodi (ma non tipi) condividono lo stesso <em>spazio di nomi</em>, a differenza di quanto accade in Java. Riprenderemo l&#8217;argomento nella sezione <a href=cap-6.html#UniformAccessPrinciple>Quando i metodi di accesso e i campi sono indistinguibili: il principio di accesso uniforme</a> del capitolo 6.
+
+<p>Infine, le istanze dei <em>tipi riferimento</em> si creano a partire da una classe usando la parola chiave <code>new</code>, allo stesso modo di linguaggi come Java e C#. Notate che potete omettere le parentesi quando usate un costruttore <em>predefinito</em> (cioè un costruttore che non accetta argomenti). In alcuni casi, si possono usare valori letterali; per esempio, <code>val name = "Programmare in Scala"</code> è equivalente a <code>val name = new String("Programmare in Scala")</code>.
+
+<p>Le istanze dei <em>tipi valore</em>, come per esempio <code>Int</code>, <code>Double</code>, <i class=baa>&amp;</i>c., che corrispondono ai tipi primitivi in linguaggi come Java, si creano sempre usando valori letterali, come per esempio <code>1</code>, <code>3.14</code>, <i class=baa>&amp;</i>c. In effetti questi tipi non posseggono costruttori pubblici, quindi un&#8217;espressione come <code>val i = new Int(1)</code> non verrebbe compilata.
+
+<p>Discuteremo la differenza tra i tipi riferimento e i tipi valore nella sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> del capitolo 7.
+
+<h2 id=ParentClasses>Classi genitore</h2>
+
+<p>Scala supporta l&#8217;ereditarietà singola, ma non l&#8217;ereditarietà multipla. Una classe figlia (o derivata) può avere una e una sola classe genitore (o base). L&#8217;unica eccezione è la radice della gerarchia di classi di Scala, <code>Any</code>, che non ha alcun genitore.
+
+<p>Abbiamo già visto diversi esempi di classi base e derivate. Riproduciamo alcuni estratti da uno dei primi esempi che abbiamo visto, nella sezione <a href=cap-2.html#AbstractTypesAndParameterizedTypes>Tipi astratti e tipi parametrici</a> del capitolo 2.
+
+<pre><code>// <a href=esempi/cap-2/abstract-types-script.scala>esempi/cap-2/abstract-types-script.scala</a>
+
+import java.io._
+
+abstract class BulkReader {
+  // &hellip;
+}
+
+class StringBulkReader(val source: String) extends BulkReader {
+  // &hellip;
+}
+
+class FileBulkReader(val source: File) extends BulkReader {
+  // &hellip;
+}</code></pre>
+
+<p>Come in Java, la parola chiave <code>extends</code> indica la classe genitore, in questo caso <code>BulkReader</code>. In Scala, <code>extends</code> viene anche usata quando una classe estende un tratto come suo genitore (e anche quando mescola altri tratti usando la parola chiave <code>with</code>). In più, <code>extends</code> viene usata quando un tratto è figlio di un altro tratto o di una classe. Sì, i tratti possono estendere le classi.
+
+<p>Se non estendete una classe genitore, il genitore predefinito è <code>AnyRef</code>, una classe figlia diretta di <code>Any</code>. (Discuteremo la differenza tra <code>Any</code> e <code>AnyRef</code> quando parleremo della gerarchia dei tipi di Scala nel <a href=cap-7.html>capitolo 7</a>.)
+
+<h2 id=Constructors>I costruttori in Scala</h2>
+
+<p>Scala distingue tra un <em>costruttore principale</em> e zero o più <em>costruttori ausiliari</em>. In Scala, il costruttore principale è l&#8217;intero corpo della classe. Qualsiasi parametro richiesto dal costruttore viene elencato dopo il nome della classe. Abbiamo già visto molti esempi di questo tipo, come la classe <code>ButtonWithCallbacks</code> che abbiamo usato nel <a href=cap-4.html>capitolo 4</a>.
+
+<pre><code>// <a href=esempi/cap-4/ui/button-callbacks.scala>esempi/cap-4/ui/button-callbacks.scala</a>
+
+package ui
+
+class ButtonWithCallbacks(val label: String,
+    val clickedCallbacks: List[() =&gt; Unit]) extends Widget {
+
+  require(clickedCallbacks != null, "La lista di callback non può essere nulla!")
+
+  def this(label: String, clickedCallback: () =&gt; Unit) =
+    this(label, List(clickedCallback))
+
+  def this(label: String) = {
+    this(label, Nil)
+    println("Attenzione: il pulsante non ha callback per i clic!")
+  }
+
+  def click() = {
+    // ... logica per mostrare visivamente il clic sul pulsante ...
+    clickedCallbacks.foreach(f =&gt; f())
+  }
+}</code></pre>
+
+<p>La classe <code>ButtonWithCallbacks</code> rappresenta un pulsante in un&#8217;interfaccia grafica. Possiede un&#8217;etichetta e una lista di funzioni di callback che vengono invocate quando il pulsante viene cliccato. Tutte le funzioni di callback non accettano argomenti e restituiscono <code>Unit</code>. Il metodo <code>click</code> itera attraverso la lista delle callback e le invoca una per una.
+
+<p><code>ButtonWithCallbacks</code> definisce tre costruttori. Il costruttore principale, che è il corpo dell&#8217;intera classe, ha una lista di parametri che contiene una stringa per l&#8217;etichetta e una lista di funzioni di callback. Per ogni parametro dichiarato come <code>val</code>, il compilatore genera un campo privato corrispondente a quel parametro (usando un nome interno differente) e un metodo pubblico di lettura che ha lo stesso nome del parametro. &#8220;Privato&#8221; e &#8220;pubblico&#8221; hanno qui lo stesso significato che assumono nella maggior parte dei linguaggi orientati agli oggetti. Discuteremo le varie regole di visibilità e le parole chiave che le controllano nella sezione <a href=#VisibilityRules>Regole di visibilità</a> più avanti in questo capitolo.
+
+<p>Se un parametro è dichiarato con la parola chiave <code>var</code>, il compilatore genera anche un metodo pubblico di scrittura con il nome del parametro come prefisso seguito da <code>_=</code>. Per esempio, se <var>label</var> fosse dichiarato come <code>var</code>, il metodo di scrittura verrebbe chiamato <code>label_=</code> e accetterebbe un singolo argomento di tipo <code>String</code>.
+
+<p>Ci sono casi in cui non volete che i metodi di accesso vengano generati automaticamente. In altre parole, volete che il campo sia <em>privato</em>. Aggiungete la parola chiave <code>private</code> prima della parola chiave <code>val</code> o <code>var</code> e i metodi di accesso non verranno generati. (Si veda la sezione <a href=cap-5.html#VisibilityRules>Regole di visibilità</a> più avanti in questo capitolo per maggiori dettagli.)
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>I programmatori Java noteranno che Scala non segue la convenzione delle <em>proprietà</em> <a href=apa.html#JavaBeansSpec>[JavaBeansSpec]</a> per cui i metodi di lettura e scrittura dei campi cominciano con <code>get</code> e <code>set</code>, rispettivamente, seguiti dal nome del campo con la prima lettera scritta in maiuscolo. Vedremo perché parlando del <em>principio di accesso uniforme</em> nella sezione <a href=cap-6.html#UniformAccessPrinciple>Quando i metodi di accesso e i campi sono indistinguibili: il principio di accesso uniforme</a> del capitolo 6. Tuttavia, quando ne avete bisogno, potete ottenere i metodi di lettura e scrittura nello stile JavaBeans usando l&#8217;annotazione <code>scala.reflect.BeanProperty</code>, come vedremo nella sezione <a href=cap-14.html#JavaBeanProperties>Proprietà JavaBeans</a> del capitolo 14.
+</blockquote>
+
+<p>Quando viene creata un&#8217;istanza di una classe, ogni campo che corrisponde a un parametro nella lista dei parametri verrà inizializzato automaticamente al valore dell&#8217;argomento passato. Non è richiesta nessuna logica nel costruttore per inizializzare questi campi, a differenza di quanto accade nella maggior parte degli altri linguaggi orientati agli oggetti.
+
+<p>La prima istruzione nel corpo della classe <code>ButtonWithCallbacks</code> (cioè nel costruttore) è un test per verificare che il costruttore riceva una lista non nulla. (Una lista <code>Nil</code> vuota è ammessa, comunque.) Il test usa la comoda funzione <code>require</code> che viene importata automaticamente nell&#8217;ambito corrente (come discuteremo nella sezione <a href=cap-7.html#PredefObject>L&#8217;oggetto <code>Predef</code></a> del capitolo 7). Se la lista è nulla, <code>require</code> lancerà un&#8217;eccezione. La funzione <code>require</code> e la sua compagna <code>assume</code> sono molto utili nella <em>progettazione per contratto</em> (in inglese, <em>design by contract</em>), come discusso nella sezione <a href=cap-13.html#DesignByContractExample>Una progettazione migliore con la progettazione per contratto</a> del capitolo 13.
+
+<p>Ecco parte di una specifica completa per <code>ButtonWithCallbacks</code> che mostra come agisce l&#8217;istruzione <code>require</code>.
+
+<pre><code>// <a href=esempi/cap-4/ui/button-callbacks-spec.scala>esempi/cap-4/ui/button-callbacks-spec.scala</a>
+package ui
+import org.specs._
+
+object ButtonWithCallbacksSpec extends Specification {
+  "Un pulsante con callback" should {
+    // ...
+    "non essere costruibile con una lista di callback nulla" in {
+      val nullList:List[() =&gt; Unit] = null
+      val errorMessage =
+        "requisito violato: la lista di callback non può essere nulla!"
+      (new ButtonWithCallbacks("pulsante1", nullList)) must throwA(
+        new IllegalArgumentException(errorMessage))
+    }
+  }
+}</code></pre>
+
+<p>Scala rende difficile persino passare direttamente <code>null</code> come secondo parametro al costruttore, perché non riuscirà a verificarne il tipo durante la compilazione. Tuttavia, potete assegnare <code>null</code> a un valore, come mostrato. Se la clausola <code>must throwA(&hellip;)</code> non ci fosse, vedremmo comparire la seguente eccezione.
+
+<pre><code>java.lang.IllegalArgumentException: requisito violato: la lista di callback non può essere nulla!
+        at scala.Predef$.require(Predef.scala:112)
+        at ui.ButtonWithCallbacks.&lt;init&gt;(button-callbacks.scala:7)
+&hellip;</code></pre>
+
+<p><code>ButtonWithCallbacks</code> definisce due costruttori ausiliari per la comodità dell&#8217;utente. Il primo costruttore ausiliario accetta un&#8217;etichetta e una singola callback, poi invoca il costruttore principale passandogli l&#8217;etichetta e una nuova istanza di <code>List</code> che racchiude la singola callback.
+
+<p>Il secondo costruttore ausiliario accetta solo un&#8217;etichetta e invoca il costruttore principale con <code>Nil</code> (che rappresenta un&#8217;istanza di <code>List</code> vuota). Il costruttore poi stampa un messaggio di avvertimento segnalando che non sono presenti callback, dato che le liste sono immutabili e non c&#8217;è modo di sostituire la lista di callback dichiarata come <code>val</code> con una nuova lista.
+
+<p>Per evitare una ricorsione infinita, Scala obbliga ogni costruttore ausiliario a invocare un altro costruttore la cui definizione lo preceda <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>. Il costruttore invocato può essere un altro costruttore ausiliario o il costruttore principale, e l&#8217;invocazione deve essere la prima istruzione nel corpo del costruttore ausiliario. Dopo questa invocazione possono avere luogo ulteriori operazioni, come la stampa del messaggio di avvertimento nel nostro esempio.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Dato che tutti i costruttori ausiliari finiscono per invocare il costruttore principale, i controlli di logica e le altre inizializzazioni effettuate nel corpo della classe verranno eseguite in maniera consistente per tutte le istanze create.
+</blockquote>
+
+<p>I vincoli che Scala impone sui costruttori portano alcuni vantaggi.
+
+<dl>
+<dt>Eliminazione della duplicazione
+<dd>Dato che i costruttori ausiliari invocano il costruttore principale, la potenziale duplicazione della logica di costruzione viene in larga misura eliminata.
+<dt>Riduzione della dimensione del codice
+<dd>Come mostrato negli esempi, quando uno o più parametri del costruttore principale vengono dichiarati come <code>val</code> o <code>var</code>, Scala genera automaticamente un campo, i metodi di accesso appropriati (a meno che i parametri non siano dichiarati <code>private</code>) e la logica di inizializzazione da eseguire quando le istanze vengono create.
+</dl>
+
+<p>I vincoli imposti da Scala sui costruttori hanno almeno uno svantaggio.
+
+<dl>
+<dt>Minore flessibilità
+<dd>A volte non è proprio conveniente obbligare tutti i costruttori a usare il corpo di un altro costruttore. Tuttavia, troviamo che queste circostanze siano rare. In questi casi, può darsi che la classe abbia troppe responsabilità e che sia preferibile suddividerla in classi più piccole.
+</dl>
+
+<h3 id=CallingParentClassConstructors>Invocare i costruttori della classe genitore</h3>
+
+<p>Il costruttore principale di una classe derivata deve invocare uno dei costruttori della classe genitore. Nell&#8217;esempio seguente, la classe <code>RadioButtonWithCallbacks</code> derivata da <code>ButtonWithCallbacks</code> invoca il costruttore principale <code>ButtonWithCallbacks</code>. I pulsanti &#8220;radio&#8221; possono essere attivi (<em>on</em>) o disattivi (<em>off</em>).
+
+<pre><code>// <a href=esempi/cap-5/ui/radio-button-callbacks.scala>esempi/cap-5/ui/radio-button-callbacks.scala</a>
+
+package ui
+
+/**
+ * Pulsante con due stati, attivo (on) o disattivo (off), come
+ * il pulsante di selezione del canale sulle radio vecchio stile.
+ */
+class RadioButtonWithCallbacks(
+  var on: Boolean, label: String, clickedCallbacks: List[() =&gt; Unit])
+      extends ButtonWithCallbacks(label, clickedCallbacks) {
+
+  def this(on: Boolean, label: String, clickedCallback: () =&gt; Unit) =
+      this(on, label, List(clickedCallback))
+
+  def this(on: Boolean, label: String) = this(on, label, Nil)
+}</code></pre>
+
+<p>Il costruttore principale di <code>RadioButtonWithCallbacks</code> accetta tre parametri: uno stato <var>on</var> (<code>true</code> o <code>false</code>), un&#8217;etichetta e una lista di callback. Poi, il costruttore passa l&#8217;etichetta e la lista di callback alla propria classe genitore <code>ButtonWithCallbacks</code>. Il parametro <code>on</code> è dichiarato come <code>var</code>, quindi è mutabile. <code>on</code> è anche il parametro di costruzione specifico per un pulsante radio, quindi viene memorizzato come attributo di <code>RadioButtonWithCallbacks</code>.
+
+<p>Per consistenza con la propria classe genitore, <code>RadioButtonWithCallbacks</code> dichiara anche due costruttori ausiliari. Notate che essi devono invocare un costruttore che li precede in <code>RadioButtonWithCallbacks</code>, come prima; non possono invocare direttamente un costruttore di <code>ButtonWithCallbacks</code>. Dichiarare tutti questi costruttori in una classe può diventare fastidioso dopo un po&#8217;, ma nel <a href=cap-4.html>capitolo 4</a> abbiamo esplorato alcune tecniche che possono eliminare la ripetizione.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Sebbene <code>super</code> sia usato per invocare i metodi ridefiniti, come in Java, non può essere usato per invocare un costruttore di una superclasse.
+</blockquote>
+
+<h2 id=NestedClasses>Classi annidate</h2>
+
+<p>Come molti linguaggi orientati agli oggetti, Scala vi permette di annidare le dichiarazioni di classe. Supponete di voler dotare tutte le classi <code>Widget</code> di una mappa di proprietà. Queste proprietà potrebbero essere dimensione, colore, visibilità, <i class=baa>&amp;</i>c. Potremmo usare una semplice istanza di <code>Map</code> per memorizzare le proprietà, ma supponiamo anche di voler controllare l&#8217;accesso alle proprietà e di voler effettuare altre operazioni quando il valore delle proprietà cambia.
+
+<p>Ecco un modo in cui potremmo estendere la nostra classe <code>Widget</code> originale, proveniente da un esempio nella sezione <a href=cap-4.html#TraitsAsMixins>Tratti come mixin</a> del capitolo 4, per aggiungere questa funzione.
+
+<pre><code>// <a href=esempi/cap-5/ui/widget.scala>esempi/cap-5/ui/widget.scala</a>
+
+package ui
+
+abstract class Widget {
+  class Properties {
+    import scala.collection.immutable.HashMap
+
+    private var values: Map[String, Any] = new HashMap
+
+    def size = values.size
+
+    def get(key: String) = values.get(key)
+
+    def update(key: String, value: Any) = {
+      // Effettua alcune pre-elaborazioni, per esempio il filtraggio
+      values = values.update(key, value)
+      // Effettua alcune post-elaborazioni
+    }
+  }
+
+  val properties = new Properties
+}</code></pre>
+
+<p>Abbiamo aggiunto una classe <code>Properties</code> che mantiene un riferimento privato e mutabile a un&#8217;istanza immutabile di <code>HashMap</code>. Abbiamo anche aggiunto tre metodi pubblici per ottenere la dimensione (cioè il numero di proprietà definite), per recuperare un singolo elemento della mappa e per aggiornare la mappa con un nuovo elemento, rispettivamente. Potremmo aver bisogno di effettuare ulteriori operazioni nel metodo <code>update</code>, qui indicate con i commenti.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Da questo esempio potete vedere che Scala consente di dichiarare le classi una dentro l&#8217;altra, cioè in maniera &#8220;annidata&#8221;. Una classe annidata ha senso quando volete radunare in una classe alcune funzioni correlate tra loro che però verranno usate solamente dalla classe &#8220;esterna&#8221;.
+</blockquote>
+
+<p>Finora abbiamo parlato di come dichiarare e istanziare le classi, e di alcune nozioni basilari di ereditarietà. Nella prossima sezione discuteremo le regole di visibilità all&#8217;interno di classi e oggetti.
+
+<h2 id=VisibilityRules>Regole di visibilità</h2>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Per convenienza, in questa sezione useremo la parola &#8220;tipo&#8221; per riferirci genericamente a classi e tratti, ma non alle dichiarazioni di membro <code>type</code>. Queste ultime si considerano incluse quando usiamo genericamente il termine &#8220;membro&#8221;, a meno che non sia indicato altrimenti.
+</blockquote>
+
+<p>La maggior parte dei linguaggi orientati agli oggetti è dotata di costrutti per limitare la visibilità (o l&#8217;ambito) delle dichiarazioni dei tipi e dei membri tipo. Questi costrutti supportano la forma di incapsulamento orientata agli oggetti che espone solo le astrazioni pubbliche essenziali di una classe o di un tratto e nasconde alla vista le informazioni di implementazione.
+
+<p>Vorrete rendere pubblicamente visibile tutto quello che gli utenti delle vostre classi e dei vostri oggetti dovrebbero vedere e usare. Ricordatevi che l&#8217;astrazione esposta dal tipo è formata dall&#8217;insieme dei membri a visibilità pubblica unitamente al nome del tipo stesso.
+
+<p>&Egrave; opinione diffusa nella progettazione orientata agli oggetti che i campi debbano essere privati o protetti. L&#8217;accesso ai campi, se necessario, dovrebbe avvenire attraverso i metodi, ma non tutto dovrebbe essere accessibile per default. Il vantaggio del <em>principio di accesso uniforme</em> (si veda la sezione <a href=cap-6.html#UniformAccessPrinciple>Quando i metodi di accesso e i campi sono indistinguibili: il principio di accesso uniforme</a> nel capitolo 6) consiste nel poter fornire all&#8217;utente la semantica di accesso ai campi pubblici attraverso un metodo o attraverso l&#8217;accesso diretto al campo, a seconda di ciò che è più opportuno in una data circostanza.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>L&#8217;arte della buona progettazione orientata agli oggetti prescrive di definire astrazioni pubbliche minimali, chiare e coese.
+</blockquote>
+
+<p>Ci sono due categorie di &#8220;utenti&#8221; di un tipo: i tipi derivati e il codice che lavora con le istanze del tipo. I tipi derivati di solito hanno bisogno di accedere ai membri dei propri tipi genitore più di quanto ne abbiano gli utenti delle istanze.
+
+<p>Le regole di visibilità di Scala sono simili a quelle di Java, ma tendono a venire applicate in maniera più consistente e a essere più flessibili. Per esempio, in Java, se una classe interna possiede un membro privato, la classe che la racchiude può vederlo. In Scala la classe esterna non può vedere questo membro privato, ma Scala fornisce un modo alternativo per dichiararlo visibile alla classe esterna.
+
+<p>Come in Java e C#, le parole chiave che modificano la visibilità, per esempio <code>private</code> e <code>protected</code>, compaiono all&#8217;inizio delle dichiarazioni. Le troverete prima delle parole chiave <code>class</code> o <code>trait</code> per i tipi, prima di <code>val</code> o <code>var</code> per i campi e prima di <code>def</code> per i metodi.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span> Potete anche usare una parola chiave per modificare l&#8217;accesso al costruttore principale di una classe. Ponetela dopo il nome del tipo e dopo i parametri del tipo, se ce ne sono, e prima della lista degli argomenti, come in questo esempio: <code>class Restricted[+A] private (name: String) {&#8230;}</code>
+</blockquote>
+
+<p>La <a href=#visibility-scopes-table>tabella 5.1</a> riepiloga gli ambiti di visibilità.
+
+<div class=table id=visibility-scopes-table>
+<p class=tt>Tabella 5.1. Ambiti di visibilità.
+<table summary="Ambiti di visibilità." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Nome</th>
+<th align=left valign=top>Parola chiave </th>
+<th align=left valign=top>Descrizione</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p>pubblico</p></td>
+<td align=left valign=top><p><em>nessuna</em></p></td>
+<td align=left valign=top><p>I membri e i tipi pubblici sono visibili ovunque, senza alcuna limitazione.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>protetto</p></td>
+<td align=left valign=top><p><code>protected</code></p></td>
+<td align=left valign=top><p>I membri protetti sono visibili nel tipo che li definisce, nei tipi derivati e nei tipi annidati. I tipi protetti sono visibili solo all&#8217;interno dello stesso package e dei sottopackage.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>privato</p></td>
+<td align=left valign=top><p><code>private</code></p></td>
+<td align=left valign=top><p>I membri privati sono visibili solo nel tipo che li definisce e nei tipi annidati. I tipi privati sono visibili solo all&#8217;interno dello stesso package.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>protetto ristretto</p></td>
+<td align=left valign=top><p><code>protected[scope]</code></p></td>
+<td align=left valign=top><p>La visibilità è limitata a <code>scope</code>, che può essere un package, un tipo, o <code>this</code> (cioè la stessa istanza se applicato ai membri, o il package che li include se applicato ai tipi). Si veda più avanti per i dettagli.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>privato ristretto</p></td>
+<td align=left valign=top><p><code class="literal">private[scope]</code></p></td>
+<td align=left valign=top><p>Sinonimo di visibilità protetta ristretta, tranne in caso di ereditarietà (come discusso più avanti).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Analizziamo queste opzioni di visibilità nel dettaglio. Per semplificare le cose, useremo i campi come esempio di membri. I metodi e le dichiarazioni <code>type</code> si comportano allo stesso modo.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Sfortunatamente, non potete applicare nessun modificatore di visibilità ai package. Di conseguenza, un package è sempre pubblico, anche quando non contiene alcun tipo pubblicamente visibile.
+</blockquote>
+
+<h3 id=PublicVisibility>Visibilità pubblica</h3>
+
+<p>Qualsiasi dichiarazione priva di una parola chiave di visibilità è &#8220;pubblica&#8221;, nel senso che è visibile ovunque. La parola chiave <code>public</code> non esiste in Scala. Questo è in contrasto con Java, dove la visibilità predefinita di un elemento è pubblica solo nell&#8217;ambito del package che lo contiene (cioè, &#8220;privata per il package&#8221;). Anche in altri linguaggi orientati agli oggetti, come Ruby, la visibilità predefinita è quella pubblica.
+
+<pre><code>// <a href=esempi/cap-5/scoping/public.scala>esempi/cap-5/scoping/public.scala</a>
+
+package scopeA {
+  class PublicClass1 {
+    val publicField = 1
+
+    class Nested {
+      val nestedField = 1
+    }
+
+    val nested = new Nested
+  }
+
+  class PublicClass2 extends PublicClass1 {
+    val field2  = publicField + 1
+    val nField2 = new Nested().nestedField
+  }
+}
+
+package scopeB {
+  class PublicClass1B extends scopeA.PublicClass1
+
+  class UsingClass(val publicClass: scopeA.PublicClass1) {
+    def method = "UsingClass:" +
+      " campo: " + publicClass.publicField +
+      " campo annidato: " + publicClass.nested.nestedField
+  }
+}</code></pre>
+
+<p>Potete compilare questo file con <kbd>scalac</kbd>. La compilazione non dovrebbe generare errori.
+
+<p>In questi package e in queste classi è tutto pubblico. Notate che <code>scopeB.UsingClass</code> può accedere a <code>scopeA.PublicClass1</code> e ai suoi membri, inclusa l&#8217;istanza di <code>Nested</code> e i suoi campi pubblici.
+
+<h3 id=ProtectedVisibility>Visibilità protetta</h3>
+
+<p>La visibilità protetta va a beneficio di chi implementa tipi derivati, che hanno bisogno di un accesso più ampio ai dettagli dei loro tipi genitore. Qualsiasi membro dichiarato con la parola chiave <code>protected</code> è visibile solo nel tipo che lo definisce, incluse altre istanze dello stesso tipo e di tutti i tipi derivati. Quando è applicata a un tipo, <code>protected</code> ne limita la visibilità al package che lo contiene.
+
+<p>In Java, al contrario, i membri protetti sono visibili solo nel package che li contiene. Scala gestisce questo caso con l&#8217;accesso ristretto privato e protetto.
+
+<pre><code>// <a href=esempi/cap-5/scoping/protected-wont-compile.scala>esempi/cap-5/scoping/protected-wont-compile.scala</a>
+// NON verrà compilato!
+
+package scopeA {
+  class ProtectedClass1(protected val protectedField1: Int) {
+    protected val protectedField2 = 1
+
+    def equalFields(other: ProtectedClass1) =
+      (protectedField1 == other.protectedField1) &amp;&amp;
+      (protectedField1 == other.protectedField1) &amp;&amp;
+      (nested == other.nested)
+
+    class Nested {
+      protected val nestedField = 1
+    }
+
+    protected val nested = new Nested
+  }
+
+  class ProtectedClass2 extends ProtectedClass1(1) {
+    val field1 = protectedField1
+    val field2 = protectedField2
+    val nField = new Nested().nestedField // ERRORE
+  }
+
+  class ProtectedClass3 {
+    val protectedClass1 = new ProtectedClass1(1)
+    val protectedField1 = protectedClass1.protectedField1 // ERRORE
+    val protectedField2 = protectedClass1.protectedField2 // ERRORE
+    val protectedNField = protectedClass1.nested.nestedField // ERRORE
+  }
+
+  protected class ProtectedClass4
+
+  class ProtectedClass5 extends ProtectedClass4
+  protected class ProtectedClass6 extends ProtectedClass4
+}
+
+package scopeB {
+  class ProtectedClass4B extends scopeA.ProtectedClass4 // ERRORE
+}</code></pre>
+
+<p>Quando compilate questo file con <kbd>scalac</kbd>, ottenete l&#8217;uscita seguente. (Il nome del file prima dei numeri di riga <code>N:</code> è stato rimosso per adattare meglio il testo allo spazio disponibile.)
+
+<pre><samp>16: error: value nestedField cannot be accessed in ProtectedClass2.this.Nested
+        val nField = new Nested().nestedField
+                                  ^
+20: error: value protectedField1 cannot be accessed in scopeA.ProtectedClass1
+        val protectedField1 = protectedClass1.protectedField1
+                                              ^
+21: error: value protectedField2 cannot be accessed in scopeA.ProtectedClass1
+        val protectedField2 = protectedClass1.protectedField2
+                                              ^
+22: error: value nested cannot be accessed in scopeA.ProtectedClass1
+        val protectedNField = protectedClass1.nested.nestedField
+                                              ^
+32: error: class ProtectedClass4 cannot be accessed in package scopeA
+    class ProtectedClass4B extends scopeA.ProtectedClass4
+                                          ^
+5 errors found</samp></pre>
+
+<p>I commenti <code>// ERRORE</code> nel codice indicano le righe che generano errori di compilazione.
+
+<p><code>ProtectedClass2</code> può accedere ai membri protetti di <code>ProtectedClass1</code>, dato che la estende. Tuttavia, non può accedere al campo <code>nestedField</code> protetto in <code>ProtectedClass1.Nested</code>. In più, <code>ProtectedClass3</code> usa un&#8217;istanza di <code>ProtectedClass1</code> ma non può accedere ai suoi membri protetti.
+
+<p>Infine, dato che <code>ProtectedClass4</code> è dichiarata <code>protected</code>, non è visibile nel package <code>scopeB</code>.
+
+<h3 id=PrivateVisibility>Visibilità privata</h3>
+
+<p>La visibilità privata nasconde completamente i dettagli di implementazione, anche alle classi derivate. Qualsiasi membro dichiarato con la parola chiave <code>private</code> è visibile solo nel tipo in cui è definito, incluse altre istanze dello stesso tipo. Quando è applicata a un tipo, <code>private</code> ne limita la visibilità al package che lo contiene.
+
+<pre><code>// <a href=esempi/cap-5/scoping/private-wont-compile.scala>esempi/cap-5/scoping/private-wont-compile.scala</a>
+// NON verrà compilato!
+
+package scopeA {
+  class PrivateClass1(private val privateField1: Int) {
+    private val privateField2 = 1
+
+    def equalFields(other: PrivateClass1) =
+      (privateField1 == other.privateField1) &amp;&amp;
+      (privateField2 == other.privateField2) &amp;&amp;
+      (nested == other.nested)
+
+    class Nested {
+      private val nestedField = 1
+    }
+
+    private val nested = new Nested
+  }
+
+  class PrivateClass2 extends PrivateClass1(1) {
+    val field1 = privateField1 // ERRORE
+    val field2 = privateField2 // ERRORE
+    val nField = new Nested().nestedField // ERRORE
+  }
+
+  class PrivateClass3 {
+    val privateClass1 = new PrivateClass1(1)
+    val privateField1 = privateClass1.privateField1 // ERRORE
+    val privateField2 = privateClass1.privateField2 // ERRORE
+    val privateNField = privateClass1.nested.nestedField // ERRORE
+  }
+
+  private class PrivateClass4
+
+  class PrivateClass5 extends PrivateClass4 // ERRORE
+  protected class PrivateClass6 extends PrivateClass4 // ERRORE
+  private class PrivateClass7 extends PrivateClass4
+}
+
+package scopeB {
+  class PrivateClass4B extends scopeA.PrivateClass4 // ERRORE
+}</code></pre>
+
+<p>Il tentativo di compilare questo file produce l&#8217;uscita seguente.
+
+<pre><samp>14: error: not found: value privateField1
+        val field1 = privateField1
+                     ^
+15: error: not found: value privateField2
+        val field2 = privateField2
+                     ^
+16: error: value nestedField cannot be accessed in PrivateClass2.this.Nested
+        val nField = new Nested().nestedField
+                                  ^
+20: error: value privateField1 cannot be accessed in scopeA.PrivateClass1
+        val privateField1 = privateClass1.privateField1
+                                          ^
+21: error: value privateField2 cannot be accessed in scopeA.PrivateClass1
+        val privateField2 = privateClass1.privateField2
+                                          ^
+22: error: value nested cannot be accessed in scopeA.PrivateClass1
+        val privateNField = privateClass1.nested.nestedField
+                                          ^
+27: error: private class PrivateClass4 escapes its defining scope as part
+of type scopeA.PrivateClass4
+    class PrivateClass5 extends PrivateClass4
+                                ^
+28: error: private class PrivateClass4 escapes its defining scope as part
+of type scopeA.PrivateClass4
+    protected class PrivateClass6 extends PrivateClass4
+                                          ^
+33: error: class PrivateClass4 cannot be accessed in package scopeA
+    class PrivateClass4B extends scopeA.PrivateClass4
+                                        ^
+9 errors found</samp></pre>
+
+<p>Ora <code>PrivateClass2</code> non può accedere ai membri privati della propria classe genitore <code>PrivateClass1</code>. Essi sono completamente invisibili nella sottoclasse, come indicato dai messaggi di errore. E la sottoclasse non può nemmeno accedere ai campi privati della classe annidata <code>Nested</code>.
+
+<p>Proprio come nel caso dell&#8217;accesso protetto, <code>PrivateClass3</code> usa un&#8217;istanza di <code>PrivateClass1</code> ma non può accedere ai suoi membri privati. Notate tuttavia che il metodo <code>equalFields</code> può accedere ai membri privati dell&#8217;istanza <var>other</var>.
+
+<p>La compilazione di <code>PrivateClass5</code> e <code>PrivateClass6</code> fallisce, perché altrimenti le dichiarazioni delle due classi permetterebbero a <code>PrivateClass4</code> di &#8220;uscire dal suo ambito di definizione&#8221;. Tuttavia la compilazione di <code>PrivateClass7</code> ha successo, perché questa classe è dichiarata anch&#8217;essa come privata. Curiosamente, nel nostro esempio precedente eravamo stati in grado di dichiarare una classe pubblica che estendeva una classe protetta senza generare un simile errore.
+
+<p>Infine, proprio come per le dichiarazioni di tipo <code>protected</code>, i tipi <code>private</code> non possono essere estesi al di fuori del package che li contiene.
+
+<h3 id=ScopedPrivateAndProtectedVisibility>Visibilità ristretta privata e protetta</h3>
+
+<p>Scala vi consente di calibrare l&#8217;ambito di visibilità con le dichiarazioni di visibilità ristretta <code>private</code> e <code>protected</code>. Notate che l&#8217;uso di <code>private</code> o <code>protected</code> in una dichiarazione ristretta è intercambiabile perché il loro comportamento è identico, tranne quando i membri coinvolti vengono ereditati.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Sebbene entrambe le dichiarazioni si comportino allo stesso modo nella maggior parte degli scenari, nel codice è più comune vedere usato <code>private[X]</code> che <code>protected[X]</code>. Nella libreria standard di Scala, il rapporto è circa di cinque a uno.
+</blockquote>
+
+<p>Cominciamo considerando l&#8217;unica differenza tra l&#8217;ambito privato ristretto e quello protetto ristretto, cioè il comportamento assunto dai membri dichiarati con questa visibilità in caso di ereditarietà.
+
+<pre><code>// <a href=esempi/cap-5/scoping/scope-inheritance-wont-compile.scala>esempi/cap-5/scoping/scope-inheritance-wont-compile.scala</a>
+// NON verrà compilato!
+
+package scopeA {
+  class Class1 {
+    private[scopeA]   val scopeA_privateField = 1
+    protected[scopeA] val scopeA_protectedField = 2
+    private[Class1]   val class1_privateField = 3
+    protected[Class1] val class1_protectedField = 4
+    private[this]     val this_privateField = 5
+    protected[this]   val this_protectedField = 6
+  }
+
+  class Class2 extends Class1 {
+    val field1 = scopeA_privateField
+    val field2 = scopeA_protectedField
+    val field3 = class1_privateField     // ERRORE
+    val field4 = class1_protectedField
+    val field5 = this_privateField       // ERRORE
+    val field6 = this_protectedField
+  }
+}
+
+package scopeB {
+  class Class2B extends scopeA.Class1 {
+    val field1 = scopeA_privateField     // ERRORE
+    val field2 = scopeA_protectedField
+    val field3 = class1_privateField     // ERRORE
+    val field4 = class1_protectedField
+    val field5 = this_privateField       // ERRORE
+    val field6 = this_protectedField
+  }
+}</code></pre>
+
+<p>La compilazione di questo file produrrà l&#8217;uscita seguente
+
+<pre><samp>17: error: not found: value class1_privateField
+    val field3 = class1_privateField
+                 ^
+19: error: not found: value this_privateField
+    val field5 = this_privateField
+                 ^
+26: error: not found: value scopeA_privateField
+    val field1 = scopeA_privateField
+                 ^
+28: error: not found: value class1_privateField
+    val field3 = class1_privateField
+                 ^
+30: error: not found: value this_privateField
+    val field5 = this_privateField
+                 ^
+5 errors found</samp></pre>
+
+<p>I primi due errori in <code>Class2</code> ci mostrano che, all&#8217;interno di uno stesso package, una classe derivata non può fare riferimento a un membro privato ristretto alla classe genitore o a <code>this</code>, ma può fare riferimento a un membro privato ristretto al package (o tipo) che contiene sia <code>Class1</code> che <code>Class2</code>.
+
+<p>Al contrario, una classe derivata da <code>Class1</code> al di fuori del package in cui è definita <code>Class1</code> non può accedere a nessun membro privato ristretto di <code>Class1</code>.
+
+<p>Tuttavia, tutti i membri protetti ristretti sono visibili in entrambe le classi derivate.
+
+<p>Useremo dichiarazioni private ristrette per il resto della discussione e dei nostri esempi, dato che nella libreria Scala l&#8217;ambito privato ristretto viene usato un po&#8217; più comunemente di quello protetto ristretto, quando l&#8217;ereditarietà non è un fattore rilevante.
+
+<p>Cominciamo con la visibilità più restrittiva, <code>private[this]</code>, in quanto coinvolge i membri di un tipo.
+
+<pre><code>// <a href=esempi/cap-5/scoping/private-this-wont-compile.scala>esempi/cap-5/scoping/private-this-wont-compile.scala</a>
+// NON verrà compilato!
+
+package scopeA {
+  class PrivateClass1(private[this] val privateField1: Int) {
+    private[this] val privateField2 = 1
+
+    def equalFields(other: PrivateClass1) =
+      (privateField1 == other.privateField1) &amp;&amp; // ERRORE
+      (privateField2 == other.privateField2) &amp;&amp;
+      (nested == other.nested)
+
+    class Nested {
+      private[this] val nestedField = 1
+    }
+
+    private[this] val nested = new Nested
+  }
+
+  class PrivateClass2 extends PrivateClass1(1) {
+    val field1 = privateField1 // ERRORE
+    val field2 = privateField2 // ERRORE
+    val nField = new Nested().nestedField // ERRORE
+  }
+
+  class PrivateClass3 {
+    val privateClass1 = new PrivateClass1(1)
+    val privateField1 = privateClass1.privateField1 // ERRORE
+    val privateField2 = privateClass1.privateField2 // ERRORE
+    val privateNField = privateClass1.nested.nestedField // ERRORE
+  }
+}</code></pre>
+
+<p>La compilazione di questo file produce l&#8217;uscita seguente.
+
+<pre><samp>5: error: value privateField1 is not a member of scopeA.PrivateClass1
+            (privateField1 == other.privateField1) &amp;&amp;
+                                    ^
+14: error: not found: value privateField1
+        val field1 = privateField1
+                     ^
+15: error: not found: value privateField2
+        val field2 = privateField2
+                     ^
+16: error: value nestedField is not a member of PrivateClass2.this.Nested
+        val nField = new Nested().nestedField
+                                  ^
+20: error: value privateField1 is not a member of scopeA.PrivateClass1
+        val privateField1 = privateClass1.privateField1
+                                          ^
+21: error: value privateField2 is not a member of scopeA.PrivateClass1
+        val privateField2 = privateClass1.privateField2
+                                          ^
+22: error: value nested is not a member of scopeA.PrivateClass1
+        val privateNField = privateClass1.nested.nestedField
+                                          ^
+7 errors found</samp></pre>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Anche le righe 6-8 non verranno compilate, ma dato che l&#8217;espressione di cui fanno parte comincia sulla riga 5, il compilatore si è fermato dopo il primo errore.
+</blockquote>
+
+<p>I membri <code>private[this]</code> sono visibili solo nella stessa istanza. Un&#8217;istanza della stessa classe non può vedere i membri <code>private[this]</code> di un&#8217;altra istanza, quindi il metodo <code>equalFields</code> non viene compilato.
+
+<p>Per il resto, la visibilità di questi membri è la stessa di <code>private</code> senza uno specificatore d&#8217;ambito.
+
+<p>Quando dichiarate un tipo con <code>private[this]</code>, l&#8217;uso di <code>this</code> in realtà si lega al package che lo contiene, come mostrato qui di seguito.
+
+<pre><code>// <a href=esempi/cap-5/scoping/private-this-pkg-wont-compile.scala>esempi/cap-5/scoping/private-this-pkg-wont-compile.scala</a>
+// NON verrà compilato!
+
+package scopeA {
+  private[this] class PrivateClass1
+
+  package scopeA2 {
+    private[this] class PrivateClass2
+  }
+
+  class PrivateClass3 extends PrivateClass1 // ERRORE
+  protected class PrivateClass4 extends PrivateClass1 // ERRORE
+  private class PrivateClass5 extends PrivateClass1
+  private[this] class PrivateClass6 extends PrivateClass1
+
+  private[this] class PrivateClass7 extends scopeA2.PrivateClass2 // ERRORE
+}
+
+package scopeB {
+  class PrivateClass1B extends scopeA.PrivateClass1 // ERRORE
+}</code></pre>
+
+<p>La compilazione di questo file produce l&#8217;uscita seguente.
+
+<pre><samp>8: error: private class PrivateClass1 escapes its defining scope as part
+of type scopeA.PrivateClass1
+    class PrivateClass3 extends PrivateClass1
+                                ^
+9: error: private class PrivateClass1 escapes its defining scope as part
+of type scopeA.PrivateClass1
+    protected class PrivateClass4 extends PrivateClass1
+                                          ^
+13: error: type PrivateClass2 is not a member of package scopeA.scopeA2
+    private[this] class PrivateClass7 extends scopeA2.PrivateClass2
+                                                      ^
+17: error: type PrivateClass1 is not a member of package scopeA
+    class PrivateClass1B extends scopeA.PrivateClass1
+                                        ^
+four errors found</samp></pre>
+
+<p>Il tentativo di dichiarare una sottoclasse <code>public</code> o <code>protected</code> nello stesso package fallisce. Solo le sottoclassi <code>private</code> e <code>private[this]</code> sono permesse. In più, <code>PrivateClass2</code> è ristretta a <code>scopeA2</code>, così non potete utilizzarla al di fuori di <code>scopeA2</code>. Similmente, anche il tentativo di dichiarare una classe che estende <code>PrivateClass1</code> nell&#8217;ambito <code>scopeB</code> non correlato fallisce.
+
+<p>Quindi, quando viene applicata ai tipi, <code>private[this]</code> è equivalente alla visibilità package di Java.
+
+<p>Esaminiamo ora la visibilità a livello di tipo, <code>private[T]</code>, quando <code>T</code> è un tipo.
+
+<pre><code>// <a href=esempi/cap-5/scoping/private-type-wont-compile.scala>esempi/cap-5/scoping/private-type-wont-compile.scala</a>
+// NON verrà compilato!
+
+package scopeA {
+  class PrivateClass1(private[PrivateClass1] val privateField1: Int) {
+    private[PrivateClass1] val privateField2 = 1
+
+    def equalFields(other: PrivateClass1) =
+      (privateField1 == other.privateField1) &amp;&amp;
+      (privateField2 == other.privateField2) &amp;&amp;
+      (nested  == other.nested)
+
+    class Nested {
+      private[Nested] val nestedField = 1
+    }
+
+    private[PrivateClass1] val nested = new Nested
+    val nestedNested = nested.nestedField // ERRORE
+  }
+
+  class PrivateClass2 extends PrivateClass1(1) {
+    val field1 = privateField1 // ERRORE
+    val field2 = privateField2 // ERRORE
+    val nField = new Nested().nestedField // ERRORE
+  }
+
+  class PrivateClass3 {
+    val privateClass1 = new PrivateClass1(1)
+    val privateField1 = privateClass1.privateField1 // ERRORE
+    val privateField2 = privateClass1.privateField2 // ERRORE
+    val privateNField = privateClass1.nested.nestedField // ERRORE
+  }
+}</code></pre>
+
+<p>La compilazione di questo file produce l&#8217;uscita seguente.
+
+<pre><samp>12: error: value nestedField cannot be accessed in PrivateClass1.this.Nested
+        val nestedNested = nested.nestedField
+                                  ^
+15: error: not found: value privateField1
+        val field1 = privateField1
+                     ^
+16: error: not found: value privateField2
+        val field2 = privateField2
+                     ^
+17: error: value nestedField cannot be accessed in PrivateClass2.this.Nested
+        val nField = new Nested().nestedField
+                                  ^
+21: error: value privateField1 cannot be accessed in scopeA.PrivateClass1
+        val privateField1 = privateClass1.privateField1
+                                          ^
+22: error: value privateField2 cannot be accessed in scopeA.PrivateClass1
+        val privateField2 = privateClass1.privateField2
+                                          ^
+23: error: value nested cannot be accessed in scopeA.PrivateClass1
+        val privateNField = privateClass1.nested.nestedField
+                                          ^
+7 errors found</samp></pre>
+
+<p>Un membro <code>private[PrivateClass1]</code> è visibile ad altre istanze, quindi il metodo <code>equalFields</code> ora viene compilato. Dunque, <code>private[T]</code> non è altrettanto restrittiva di <code>private[this]</code>. Notate che <code>PrivateClass1</code> non può vedere <code>Nested.nestedField</code> perché quel campo è dichiarato <code>private[Nested]</code>.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span> Quando i membri di <code>T</code> sono dichiarati <code>private[T]</code>, la loro visibilità è uguale a <code>private</code>. La dichiarazione non è equivalente a <code>private[this]</code>, che è più restrittiva.
+</blockquote>
+
+<p>Cosa succede se cambiamo la visibilità di <code>Nested.nestedField</code> in <code>private[PrivateClass1]</code>? Vediamo in che modo <code>private[T]</code> influenza i tipi annidati.
+
+<pre><code>// <a href=esempi/cap-5/scoping/private-type-nested-wont-compile.scala>esempi/cap-5/scoping/private-type-nested-wont-compile.scala</a>
+// NON verrà compilato!
+
+package scopeA {
+  class PrivateClass1 {
+    class Nested {
+      private[PrivateClass1] val nestedField = 1
+    }
+
+    private[PrivateClass1] val nested = new Nested
+    val nestedNested = nested.nestedField
+  }
+
+  class PrivateClass2 extends PrivateClass1 {
+    val nField = new Nested().nestedField // ERRORE
+  }
+
+  class PrivateClass3 {
+    val privateClass1 = new PrivateClass1
+    val privateNField = privateClass1.nested.nestedField // ERRORE
+  }
+}</code></pre>
+
+<p>La compilazione di questo file produce l&#8217;uscita seguente.
+
+<pre><samp>10: error: value nestedField cannot be accessed in PrivateClass2.this.Nested
+        def nField = new Nested().nestedField
+                                  ^
+14: error: value nested cannot be accessed in scopeA.PrivateClass1
+        val privateNField = privateClass1.nested.nestedField
+                                          ^
+two errors found</samp></pre>
+
+<p>Qui <code>nestedField</code> è visibile in <code>PrivateClass1</code>, ma è ancora invisibile al di fuori di <code>PrivateClass1</code>. Questo è esattamente il funzionamento di <code>private</code> in Java.
+
+<p>Ora esaminiamo la restrizione usando un nome di package.
+
+<pre><code>// <a href=esempi/cap-5/scoping/private-pkg-type-wont-compile.scala>esempi/cap-5/scoping/private-pkg-type-wont-compile.scala</a>
+// NON verrà compilato!
+
+package scopeA {
+  private[scopeA] class PrivateClass1
+
+  package scopeA2 {
+    private [scopeA2] class PrivateClass2
+    private [scopeA]  class PrivateClass3
+  }
+
+  class PrivateClass4 extends PrivateClass1
+  protected class PrivateClass5 extends PrivateClass1
+  private class PrivateClass6 extends PrivateClass1
+  private[this] class PrivateClass7 extends PrivateClass1
+
+  private[this] class PrivateClass8 extends scopeA2.PrivateClass2 // ERRORE
+  private[this] class PrivateClass9 extends scopeA2.PrivateClass3
+}
+
+package scopeB {
+  class PrivateClass1B extends scopeA.PrivateClass1 // ERRORE
+}</code></pre>
+
+<p>La compilazione di questo file produce l&#8217;uscita seguente.
+
+<pre><samp>14: error: class PrivateClass2 cannot be accessed in package scopeA.scopeA2
+    private[this] class PrivateClass8 extends scopeA2.PrivateClass2
+                                                      ^
+19: error: class PrivateClass1 cannot be accessed in package scopeA
+    class PrivateClass1B extends scopeA.PrivateClass1
+                                        ^
+two errors found</samp></pre>
+
+<p>Notate che <code>PrivateClass2</code> non può essere estesa al di fuori di <code>scopeA2</code>, ma <code>PrivateClass3</code> può essere estesa in <code>scopeA</code> perché è stata dichiarata <code>private[scopeA]</code>.
+
+<p>Infine, diamo un&#8217;occhiata agli effetti della restrizione a livello di package sui membri di un tipo.
+
+<pre><code>// <a href=esempi/cap-5/scoping/private-pkg-wont-compile.scala>esempi/cap-5/scoping/private-pkg-wont-compile.scala</a>
+// NON verrà compilato!
+
+package scopeA {
+  class PrivateClass1 {
+    private[scopeA] val privateField = 1
+
+    class Nested {
+      private[scopeA] val nestedField = 1
+    }
+
+    private[scopeA] val nested = new Nested
+  }
+
+  class PrivateClass2 extends PrivateClass1 {
+    val field  = privateField
+    val nField = new Nested().nestedField
+  }
+
+  class PrivateClass3 {
+    val privateClass1 = new PrivateClass1
+    val privateField  = privateClass1.privateField
+    val privateNField = privateClass1.nested.nestedField
+  }
+
+  package scopeA2 {
+    class PrivateClass4 {
+      private[scopeA2] val field1 = 1
+      private[scopeA]  val field2 = 2
+    }
+  }
+
+  class PrivateClass5 {
+    val privateClass4 = new scopeA2.PrivateClass4
+    val field1 = privateClass4.field1 // ERRORE
+    val field2 = privateClass4.field2
+  }
+}
+
+package scopeB {
+  class PrivateClass1B extends scopeA.PrivateClass1 {
+    val field1 = privateField // ERRORE
+    val privateClass1 = new scopeA.PrivateClass1
+    val field2 = privateClass1.privateField // ERRORE
+  }
+}</code></pre>
+
+<p>La compilazione di questo file produce l&#8217;uscita seguente.
+
+<pre><samp>28: error: value field1 cannot be accessed in scopeA.scopeA2.PrivateClass4
+        val field1 = privateClass4.field1
+                                   ^
+35: error: not found: value privateField
+        val field1 = privateField
+                     ^
+37: error: value privateField cannot be accessed in scopeA.PrivateClass1
+        val field2 = privateClass1.privateField
+                                   ^
+three errors found</samp></pre>
+
+<p>Gli unici errori avvengono quando tentiamo di accedere ai membri ristretti a <code>scopeA</code> dal package <code>scopeB</code> non correlato e quando tentiamo di accedere a un membro di un package annidato <code>scopeA2</code> che è ristretto a quel package.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Quando un tipo o un membro è dichiarato <code>private[P]</code>, dove <code>P</code> è il package che lo contiene, allora la sua visibilità è equivalente alla visibilità package di Java.
+</blockquote>
+
+<h3 id=FinalThoughtsVisibility>Considerazioni conclusive sulla visibilità</h3>
+
+<p>Le dichiarazioni di visibilità in Scala sono molto flessibili e si comportano in maniera coerente. Offrono un controllo a grana fine sulla visibilità in tutti gli ambiti possibili, a partire dal livello di singola istanza (<code>private[this]</code>) fino al livello di package (<code>private[P]</code>, per un package <code>P</code>). In questo modo, per esempio, facilitano la creazione di &#8220;componenti&#8221; che possono esporre alcuni tipi all&#8217;esterno del package radice del componente, pur nascondendo i tipi di implementazione e i membri dei tipi all&#8217;interno degli altri package del componente.
+
+<p>Infine, abbiamo osservato una potenziale &#8220;sorpresa&#8221; tenuta in serbo dai membri nascosti di un tratto.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Fate attenzione quando scegliete i nomi dei membri di un tratto. Se due tratti hanno un membro con lo stesso nome e i tratti vengono usati nella stessa istanza, i nomi collideranno tra loro anche se entrambi i membri sono privati.
+</blockquote>
+
+<p>Fortunatamente, il compilatore è in grado di accorgersi di questo problema.
+
+<h2 id=BasicOOPRecapAndWhatsNext>Riepilogo, e poi?</h2>
+
+<p>Abbiamo introdotto i concetti di base del modello a oggetti di Scala, compresi costruttori, ereditarietà, classi annidate e regole di visibilità.
+
+<p>Nel prossimo capitolo esploreremo le caratteristiche <abbr>OOP</abbr> più avanzate di Scala, comprese ridefinizione, <em>oggetti associati</em>, <em>classi <code>case</code></em> e regole per l&#8217;uguaglianza tra oggetti.
+
+<p class=v><a rel=prev href=cap-4.html title='indietro a &#8220;Tratti&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-6.html title='avanti a &#8220;Programmazione orientata agli oggetti in Scala: elementi avanzati&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>

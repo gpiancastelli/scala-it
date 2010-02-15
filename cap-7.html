@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Il sistema a oggetti di Scala - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 7}
+</style>
+<script>_gaq=[['_setAccount','UA-10482652-1'],['_trackPageview']];(function(){var g=document.createElement('script');g.src='//www.google-analytics.com/ga.js';g.setAttribute('async','true');document.documentElement.firstChild.appendChild(g);})();</script>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-7>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Il sistema a oggetti di Scala</h1>
+
+<h2 id=PredefObject>L&#8217;oggetto <code>Predef</code></h2>
+
+<p>Per vostra comodità, ogni volta che compilate un programma, il compilatore Scala importa automaticamente le definizioni contenute nel package <code>java.lang</code> (anche <kbd>javac</kbd> lo fa); sulla piattaforma .NET, importa il package <code>system</code>. Il compilatore importa anche le definizioni dell&#8217;analogo package di Scala, <code>scala</code>. Quindi, è possibile usare i tipi ordinari di Java e .NET senza importarli esplicitamente, e senza qualificarli completamente con il prefisso <code>java.lang</code> nel caso di Java. Similmente, un certo numero di tipi comuni specifici di Scala vengono resi disponibili senza qualificazione, come <code>String</code>. Quando i nomi di tipo in Java e in Scala si sovrappongono, come nel caso di <code>List</code>, la versione di Scala viene importata per ultima, quindi &#8220;prevale&#8221; sull&#8217;altra.
+
+<p>Il compilatore importa automaticamente anche l&#8217;oggetto <code>Predef</code>, che definisce o importa diversi tipi, oggetti e funzioni utili.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Potete imparare molte cose su Scala analizzando il codice sorgente di <code>Predef</code>, che si può trovare nella pagina <em>Scaladoc</em> di <code>Predef</code> cliccando sul link &#8220;source&#8221;, oppure nel pacchetto completo dei sorgenti di Scala scaricabile dal sito del linguaggio <a href=apa.html#Scala>[Scala]</a>.
+</blockquote>
+
+<p>Ecco una lista parziale degli elementi importati o definiti da <code>Predef</code> sulla piattaforma Java.
+
+<div class=table id=id1751953>
+<p class=tt>Tabella 7.1. Elementi importati o definiti da <code>Predef</code>.
+<table summary="Elementi importati o definiti da Predef." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+</colgroup>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p><strong>Tipi</strong></p></td>
+<td align=left valign=top><p><code>Character</code>, <code>Class</code>, <code>Error</code>, <code>Function</code>, <code>Integer</code>, <code>Map</code>, <code>Pair</code>, <code>Runnable</code>, <code>Set</code>, <code>String</code>, <code>Throwable</code>, <code>Triple</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><strong>Eccezioni</strong></p></td>
+<td align=left valign=top><p><code>Exception</code>, <code>ArrayIndexOutOfBoundsException</code>, <code>ClassCastException</code>, <code>IllegalArgumentException</code>, <code>IndexOutOfBoundsException</code>, <code>NoSuchElementException</code>, <code>NullPointerException</code>, <code>NumberFormatException</code>, <code>RuntimeException</code>, <code>StringIndexOutOfBoundsException</code>, <code>UnsupportedOperationException</code></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><strong>Valori</strong></p></td>
+<td align=left valign=top><p><code>Map</code>, <code>Set</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><strong>Oggetti</strong></p></td>
+<td align=left valign=top><p><code>Pair</code>, <code>Triple</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><strong>Classi</strong></p></td>
+<td align=left valign=top><p><code>Ensuring</code>, <code>ArrowAssoc</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><strong>Metodi</strong></p></td>
+<td align=left valign=top><p>Metodi <em>factory</em> per creare <em>tuple</em>; versioni sovraccaricate di <code>exit</code>, <code>error</code>, <code>assert</code>, <code>assume</code> e <code>require</code>; metodi di conversione di tipo <em>implicita</em>; metodi di I/O come <code>readLine</code>, <code>println</code> e <code>format</code>; un metodo <code>currentThread</code> che invoca <code>java.lang.Thread.currentThread</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p><code>Predef</code> dichiara i tipi e le eccezioni elencate nella tabella usando la parola chiave <code>type</code>. Queste definizioni assegnano a quegli elementi le classi <code>scala.&lt;Tipo&gt;</code> o <code>java.lang.&lt;Tipo&gt;</code> corrispondenti, quindi si comportano come &#8220;alias&#8221; o importazioni delle classi corrispondenti. Per esempio, <code>String</code> è dichiarata in questo modo.
+
+<pre><code>type String = java.lang.String</code></pre>
+
+<p>In questo caso, la dichiarazione ottiene lo stesso risultato finale di un&#8217;istruzione <code>import java.lang.String</code>.
+
+<p>Ma non abbiamo appena detto che le definizioni contenute in <code>java.lang</code> vengono importate automaticamente, come <code>String</code>? Qui, il motivo della ridefinizione è la volontà di offrire un tipo stringa uniforme per tutti gli ambienti di esecuzione. La ridefinizione è ridondante solo sulla <abbr>JVM</abbr>.
+
+<p>Il tipo <code>Pair</code> è un &#8220;alias&#8221; per <code>Tuple2</code>.
+
+<pre><code>type Pair[+A, +B] = Tuple2[A, B]</code></pre>
+
+<p>Ci sono due parametri di tipo, <code>A</code> e <code>B</code>, uno per ogni elemento nella coppia. Se ricordate, abbiamo spiegato il significato del segno <code>+</code> davanti a ogni parametro di tipo nella sezione <a href=cap-2.html#AbstractTypesAndParameterizedTypes>Tipi astratti e tipi parametrici</a> del capitolo 2.
+
+<p>In breve, <code>Pair[A2, B2]</code>, per un qualche <code>A2</code> e un qualche <code>B2</code>, è una <em>sottoclasse</em> di <code>Pair[A1, B1]</code>, per un qualche <code>A1</code> e un qualche <code>B1</code>, se <code>A2</code> è un sottotipo di <code>A1</code> e <code>B2</code> è un sottotipo di <code>B1</code>. Nella sezione <a href=cap-12.html#ParameterizedTypes>Capire i tipi parametrici</a> del capitolo 12 discuteremo <code>+</code> e altri qualificatori di tipo in maggior dettaglio.
+
+<p>La classe <code>Pair</code> è anche dotata di un <em>oggetto associato</em> <code>Pair</code> con un metodo factory <code>apply</code>, come discusso nella sezione <a href=cap-6.html#CompanionObjects>Oggetti associati</a> del capitolo 6. Quindi, possiamo creare istanze di <code>Pair</code> come in questo esempio.
+
+<pre><samp>scala&gt; val p = Pair(1, "uno")</samp></pre>
+
+<p><code>Pair.apply</code> viene invocato con due argomenti. I tipi <code>A</code> e <code>B</code>, mostrati nella definizione di <code>Pair</code>, vengono inferiti. Una nuova istanza di <code>Tuple2</code> viene restituita.
+
+<p><code>Map</code> e <code>Set</code> compaiono sia nell&#8217;elenco dei tipi che in quello dei valori. Nell&#8217;elenco dei valori, rappresentano gli <em>oggetti associati</em> <code>scala.collection.immutable.Map</code> e <code>scala.collection.immutable.Set</code>, rispettivamente. Quindi <code>Map</code> e <code>Set</code> sono <em>valori</em> in <code>Predef</code>, non definizioni di oggetto, perché fanno riferimento a oggetti definiti da qualche altra parte, mentre <code>Pair</code> e <code>Triple</code> sono proprio definiti in <code>Predef</code>. I tipi <code>Map</code> e <code>Set</code> rappresentano le corrispondenti classi immutabili.
+
+<p>La classe <code>ArrowAssoc</code> definisce due metodi, <code>-&gt;</code> e il suo equivalente Unicode <code>&#8594;</code>. L&#8217;utilità di questi metodi è stata già dimostrata nella sezione <a href=cap-2.html#OptionSomeNone><code>Option</code>, <code>Some</code> e <code>None</code>: evitare i valori nulli</a> del capitolo 2, dove abbiamo creato una mappa delle capitali di stato americane.
+
+<pre><code>val stateCapitals = Map(
+  "Alabama" -&gt; "Montgomery",
+  "Alaska"  -&gt; "Juneau",
+  // &hellip;
+  "Wyoming" -&gt; "Cheyenne")
+// &hellip;</code></pre>
+
+<p>Le definizioni della classe <code>ArrowAssoc</code> e dei valori <code>Map</code> e <code>Set</code> in <code>Predef</code> rendono possibile la comoda sintassi di inizializzazione per <code>Map</code>. Prima di tutto, quando Scala vede <code>Map(&hellip;)</code>, invoca il metodo <code>apply</code> sull&#8217;oggetto associato <code>Map</code>, proprio come nel caso di <code>Pair</code> appena visto.
+
+<p><code>Map.apply</code> si aspetta zero o più istanze di <code>Pair</code> (per esempio, <code>(a1, b2), (a2, b2), &hellip;</code>) in cui ogni tupla contiene un nome e un valore. Nell&#8217;esempio, i tipi delle tuple vengono tutti inferiti come <code>Pair[String, String]</code>. La dichiarazione di <code>Map.apply</code> è come segue.
+
+<pre><code>object Map {
+  &hellip;
+  def apply[A, B](elems : (A, B)*) : Map[A, B] = &hellip;
+}</code></pre>
+
+<p>Ricordatevi che non ci può essere nessun parametro di tipo sull&#8217;oggetto associato <code>Map</code>, perché ne può esistere una sola istanza. Tuttavia, <code>apply</code> può avere parametri di tipo.
+
+<p>Il metodo <code>apply</code> accetta una <em>lista di argomenti a lunghezza variabile</em>. Internamente, la lista sarà un sottotipo di <code>Array[X]</code>. Così, per <code>Map.apply</code>, <code>elems</code> è di tipo <code>Array[(A, B)]</code>, o <code>Array[Tuple[A, B]]</code> se preferite.
+
+<p>Quindi, ora che sapete cosa si aspetta <code>Map.apply</code>, come passiamo da <code>a -&gt; b</code> ad <code>(a, b)</code>?
+
+<p><code>Predef</code> definisce anche un metodo di conversione di tipo <em>implicita</em> chiamato <code>any2ArrowAssoc</code>. Il compilatore sa che <code>String</code> non definisce un metodo <code>-&gt;</code>, quindi cerca <em>nell&#8217;ambito di visibilità</em> una conversione <em>implicita</em> verso un tipo che definisce un tale metodo, come <code>ArrowAssoc</code>. Il metodo <code>any2ArrowAssoc</code> effettua quella conversione. Questo metodo ha la seguente implementazione.
+
+<pre><code>implicit def any2ArrowAssoc[A](x: A): ArrowAssoc[A] = new ArrowAssoc(x)</code></pre>
+
+<p>Esso viene applicato a ogni elemento alla sinistra di una freccia <code>-&gt;</code>, per esempio la stringa <code>"Alabama"</code>. Queste stringhe vengono racchiuse in istanze di <code>ArrowAssoc</code>, sulle quali viene poi invocato il metodo <code>-&gt;</code>. Questo metodo ha la seguente implementazione.
+
+<pre><code>class ArrowAssoc[A](x: A) {
+    &hellip;
+    def -&gt; [B](y: B): Tuple2[A, B] = Tuple2(x, y)
+}</code></pre>
+
+<p>Quando viene invocato, il metodo riceve la stringa sul lato destro della freccia <code>-&gt;</code> e restituisce una tupla con il valore, per esempio <code>("Alabama", "Montgomery")</code>. In questo modo, ogni coppia <code>chiave -&gt; valore</code> viene convertita in una tupla e la lista risultante di tuple separate da una virgola viene passata al metodo factory <code>Map.apply</code>.
+
+<p>A prima vista la descrizione potrebbe sembrare complicata, ma la bellezza di Scala è che questa sintassi di inizializzazione per le mappe non è una caratteristica <em>ad hoc</em> del linguaggio, come sarebbe se <code>-&gt;</code> fosse un operatore definito nella grammatica del linguaggio per uno scopo specifico. Invece, questa sintassi è il risultato delle normali definizioni di tipi e metodi, combinate con alcune convenzioni generali di compilazione come il supporto per gli <em>impliciti</em>. Inoltre, è tutto <em>type-safe</em>. Potete usare le stesse tecniche per creare i vostri &#8220;operatori&#8221; di convenienza da usare in piccoli <em>linguaggi domain-specific</em> (si veda il <a href=cap-11.html>capitolo 11</a>).
+
+<p>Le conversioni di tipo <em>implicite</em> sono discusse più dettagliatamente nella sezione <a href=cap-8.html#ImplicitConversions>Conversioni implicite</a> del capitolo 8.
+
+<p>Poi, se ricordate, nel capitolo 1 siamo stati in grado di sostituire le invocazioni di <code>Console.println(&hellip;)</code> con <code>println(&hellip;)</code>. Questo metodo <code>println</code> &#8220;semplice&#8221; è definito in <code>Predef</code> e importato automaticamente dal compilatore. La definizione invoca il metodo corrispondente di <code>Console</code>. Similmente, tutti gli altri metodi di I/O definiti da <code>Predef</code>, come per esempio <code>readLine</code> e <code>format</code>, invocano i metodi corrispondenti di <code>Console</code>.
+
+<p>Infine, ognuno dei metodi <code>assert</code>, <code>assume</code> e <code>require</code> è sovraccaricato con diverse opzioni per la lista di argomenti. Questi metodi vengono usati per verificare condizioni logiche durante l&#8217;esecuzione. Se una condizione risulta falsa, viene lanciata un&#8217;eccezione. La classe <code>Ensuring</code> serve a uno scopo simile. Potete usare queste caratteristiche nella <em>progettazione per contratto</em>, come discusso nella sezione <a href=cap-13.html#DesignByContractExample>Una progettazione migliore con la progettazione per contratto</a> del capitolo 13.
+
+<p>Per la lista completa delle definizioni contenute in <code>Predef</code>, si veda la voce <em>Scaladoc</em> corrispondente nella documentazione <a href=apa.html#ScalaAPI2008>[ScalaAPI2008]</a>.
+
+<div class=sidebar>
+<p class=st>Quattro modi di creare una tupla di due elementi
+
+<p>Ora conosciamo quatto modi per creare una tupla di due elementi (<em>dupla</em>?):
+
+<ol>
+<li><code>("Ciao", 3.14)</code>
+<li><code>Pair("Ciao", 3.14)</code>
+<li><code>Tuple2("Ciao", 3.14)</code>
+<li><code>"Ciao" -&gt; 3.14</code>
+</ol>
+</div>
+
+<h2 id=ClassesAndObjects>Classi e oggetti: dove sono i membri statici?</h2>
+
+<p>Molti linguaggi orientati agli oggetti consentono alle classi di avere costanti, campi e metodi a livello di classe. Questi elementi, che in Java, C# e C++ vengono chiamati membri &#8220;statici&#8221;, non sono associati con alcuna <em>istanza</em> della classe.
+
+<p>Un esempio di campo a livello di classe è un oggetto <em>log</em> che viene usato da tutte le istanze di una classe per la registrazione cronologica delle operazioni. Un esempio di costante a livello di classe è il grado di &#8220;dettaglio&#8221; predefinito per la registrazione.
+
+<p>Un esempio di metodo a livello di classe è un metodo &#8220;di ricerca&#8221; che trova tutte le istanze della classe contenute in un deposito che corrisponde a certi criteri specificati dall&#8217;utente. Un altro esempio è un metodo <em>factory</em>, nel modo in cui viene usato da uno dei pattern di progettazione relativi alla costruzione degli oggetti <a href=apa.html#GOF1995>[GOF1995]</a>.
+
+<p>Per rimanere coerente con il principio secondo cui &#8220;ogni cosa è un oggetto&#8221;, Scala non supporta i campi e i metodi a livello di classe. Al loro posto, Scala supporta le dichiarazioni di classi <em>singleton</em>, che usano la parola chiave <code>object</code> al posto della parola chiave <code>class</code>. Gli <code>object</code> permettono di rappresentare dati e metodi &#8220;statici&#8221; seguendo un approccio orientato agli oggetti. Quindi, Scala non possiede nemmeno una parola chiave <code>static</code>.
+
+<p>Gli <code>object</code> vengono istanziati automaticamente e in maniera ritardata dalla macchina virtuale (si veda la sezione 5.4 della specifica <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>). Proprio come per le classi e i tratti, il corpo di un <code>object</code> è il suo costruttore, ma dato che è il sistema a istanziare l&#8217;oggetto, l&#8217;utente non ha modo di specificare una lista di parametri per il costruttore, che quindi non viene supportata. Qualsiasi dato definito nell&#8217;oggetto deve essere inizializzato a un valore predefinito. Per lo stesso motivo, i costruttori ausiliari non possono essere usati e non sono supportati.
+
+<p>Abbiamo già visto alcuni esempi di <code>object</code>, come gli oggetti &#8220;di specifica&#8221; usati in precedenza per i test, e anche il tipo <code>Pair</code> con il suo <em>oggetto associato</em>, che abbiamo esplorato nella sezione <a href=#PredefObject>L&#8217;oggetto <code>Predef</code></a> all&#8217;inizio di questo capitolo.
+
+<pre><code>type Pair[+A, +B] = Tuple2[A, B]
+object Pair {
+  def apply[A, B](x: A, y: B) = Tuple2(x, y)
+  def unapply[A, B](x: Tuple2[A, B]): Option[Tuple2[A, B]] = Some(x)
+}</code></pre>
+
+<p>Per fare riferimento a un campo o a un metodo dell&#8217;oggetto, si usa la sintassi <code>nome_oggetto.campo</code> oppure <code>nome_oggetto.metodo(&hellip;)</code>, rispettivamente; per esempio, <code>Pair.apply(&hellip;)</code>. Notate che questa è la stessa sintassi comunemente usata nei linguaggi che supportano i campi e i metodi statici.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Quando un oggetto chiamato <code>MyObject</code> viene compilato in un file di classe, il nome del file sarà <code>MyObject$.class</code>.
+</blockquote>
+
+<p>In Java e in C#, la convenzione per definire le costanti prevede di usare campi <code>final static</code>. (C# ha anche una parola chiave <code>constant</code> per campi semplici come quelli di tipo <code>int</code> e <code>string</code>.) In Scala, la convenzione prevede di usare campi <code>val</code> negli oggetti.
+
+<p>Infine, come abbiamo visto nella sezione <a href=cap-5.html#NestedClasses>Classi annidate</a> del capitolo 5, ricordate che le definizioni di classe possono essere annidate in altre definizioni di classe. Questa proprietà è generalizzabile agli oggetti: potete definire oggetti, tratti e classi annidate dentro altri oggetti, tratti e classi.
+
+<h3 id=PackageObjects>Oggetti package</h3>
+
+<p>Scala 2.8 introduce un costrutto chiamato <em>oggetto package</em> che specifica un nuovo ambito di visibilità. Questo costrutto viene usato per definire tipi, variabili e metodi che sono visibili al livello del package corrispondente. Per capire la sua utilità, vediamone un esempio che proviene proprio da Scala 2.8. La libreria delle collezioni è stata riorganizzata per ritoccare la struttura dei package e per usarla in maniera più coerente (tra le altre cose). Il gruppo di sviluppo di Scala ha dovuto affrontare un dilemma: voleva spostare alcuni tipi in un nuovo package, evitando nel contempo di perdere la compatibilità all&#8217;indietro. Il costrutto <em>oggetto package</em> ha offerto una soluzione, insieme ad altri vantaggi.
+
+<p>Per esempio, nella versione 2.7 il tipo immutabile <code>List</code> è definito nel package <code>scala</code>, ma nella versione 2.8 è stato spostato nel package <code>scala.collection.immutable</code>. Nonostante il cambiamento, <code>List</code> è stato reso visibile nel package <code>scala</code> usando l&#8217;oggetto <code>package object scala</code>, reperibile nel file <span class=file>src/library/scala/package.scala</span> compreso nella distribuzione del codice sorgente di Scala 2.8. Notate che il nome del file segue una convenzione utile, non obbligatoria, per gli oggetti package. Ecco la definizione completa dell&#8217;oggetto package al momento della scrittura (potrebbe essere cambiata prima della versione 2.8 definitiva).
+
+<pre><code>package object scala {
+  type Iterable[+A] = scala.collection.Iterable[A]
+  val Iterable = scala.collection.Iterable
+
+  @deprecated("al suo posto usate Iterable") type Collection[+A] = Iterable[A]
+  @deprecated("al suo posto usate Iterable") val Collection = Iterable
+
+  type Seq[+A] = scala.collection.Sequence[A]
+  val Seq = scala.collection.Sequence
+
+  type RandomAccessSeq[+A] = scala.collection.Vector[A]
+  val RandomAccessSeq = scala.collection.Vector
+
+  type Iterator[+A] = scala.collection.Iterator[A]
+  val Iterator = scala.collection.Iterator
+
+  type BufferedIterator[+A] = scala.collection.BufferedIterator[A]
+
+  type List[+A] = scala.collection.immutable.List[A]
+  val List = scala.collection.immutable.List
+
+  val Nil = scala.collection.immutable.Nil
+
+  type ::[A] = scala.collection.immutable.::[A]
+  val :: = scala.collection.immutable.::
+
+  type Stream[+A] = scala.collection.immutable.Stream[A]
+  val Stream = scala.collection.immutable.Stream
+
+  type StringBuilder = scala.collection.mutable.StringBuilder
+  val StringBuilder = scala.collection.mutable.StringBuilder
+}</code></pre>
+
+<p>Notate che le coppie di dichiarazioni come <code>type List[+] = &hellip;</code> e <code>val List = &hellip;</code> sono effettivamente &#8220;alias&#8221; per la classe associata e per l&#8217;oggetto associato, rispettivamente. Dato che il contenuto del package <code>scala</code> viene automaticamente importato dal compilatore, potete ancora fare riferimento a tutte le definizioni in questo oggetto da qualsiasi ambito senza importare in maniera esplicita i nomi completamente qualificati.
+
+<p>A parte il modo in cui i membri degli oggetti package vengono resi visibili, questi oggetti si comportano esattamente come le altre dichiarazioni di oggetto. Sebbene questo esempio contenga solo dichiarazioni <code>val</code> e <code>type</code>, potete anche definire metodi, estendere un&#8217;altra classe o un tratto e mescolare altri tratti.
+
+<p>Gli oggetti package sono vantaggiosi anche perché offrono un&#8217;implementazione più concisa di quello che prima era un idioma scomodo. Se non ci fossero gli oggetti package, dovreste mettere le definizioni in un oggetto <em>ad hoc</em> dentro il package desiderato e poi importarle dall&#8217;oggetto. Per esempio, ecco come si sarebbe dovuto gestire il tipo <code>List</code> senza un oggetto package.
+
+<pre><code>package scala {
+  object toplevel {
+    &hellip;
+    type List[+A] = scala.collection.immutable.List[A]
+    val List = scala.collection.immutable.List
+    &hellip;
+  }
+}
+
+&hellip;
+import scala.toplevel._
+&hellip;</code></pre>
+
+<p>Infine, un altro vantaggio degli oggetti package è il modo chiaro in cui separano le astrazioni che un package espone dalle implementazioni che dovrebbero rimanere nascoste al suo interno. In un&#8217;applicazione di grandi dimensioni, un oggetto package potrebbe essere usato per esporre tutti i tipi, i valori e i metodi pubblici di un &#8220;componente&#8221;, mentre il contenuto rimanente del package e dei package annidati potrebbe essere trattato come un dettaglio interno di implementazione.
+
+<h2 id=SealedClassHierarchies>Gerarchie di classi sigillate</h2>
+
+<p>Se ricordate, nella sezione <a href=cap-6.html#CaseClasses>Classi <code>case</code></a> del capitolo 6 abbiamo sperimentato il pattern matching con la nostra gerarchia di forme geometriche che adoperava le classi <code>case</code>. Usavamo una clausola jolly <code>case _ =&gt; &hellip;</code>. Di solito è meglio averne una; altrimenti, se qualcuno definisce un nuovo sottotipo di <code>Shape</code> e lo passa all&#8217;istruzione <code>match</code>, provocherà un errore <code>scala.MatchError</code> perché la nuova forma geometrica non corrisponde alle forme incluse nell&#8217;istruzione <code>match</code>. Tuttavia, non è sempre possibile definire un comportamento ragionevole per la clausola jolly.
+
+<p>Esiste una soluzione alternativa alla clausola jolly, se sapete con una certa sicurezza che la gerarchia di classi <code>case</code> non cambierà e potete definire l&#8217;intera gerarchia in un <em>unico file</em>. In questa situazione, potete aggiungere la parola chiave <code>sealed</code> alla dichiarazione della classe base comune. Sigillando la gerarchia in questo modo, consentite al compilatore di individuare tutte le classi che potrebbero apparire nell&#8217;espressione <code>match</code>, perché devono essere tutte definite nello stesso file sorgente. Così, se includete tutti quei casi nelle espressioni <code>case</code> (esplicitamente o attraverso classi genitore condivise), allora potete tranquillamente eliminare la clausola <code>case</code> di default.
+
+<p>Ecco un esempio che usa i metodi di <abbr>HTTP</abbr> 1.1 <a href=apa.html#HTTP11>[HTTP1.1]</a>; è improbabile che questi metodi cambino molto spesso, quindi dichiareremo un insieme &#8220;sigillato&#8221; di classi <code>case</code> per rappresentarli.
+
+<pre><code>// <a href=esempi/cap-7/sealed/http-script.scala>esempi/cap-7/sealed/http-script.scala</a>
+
+sealed abstract class HttpMethod()
+case class Connect(body: String) extends HttpMethod
+case class Delete (body: String) extends HttpMethod
+case class Get    (body: String) extends HttpMethod
+case class Head   (body: String) extends HttpMethod
+case class Options(body: String) extends HttpMethod
+case class Post   (body: String) extends HttpMethod
+case class Put    (body: String) extends HttpMethod
+case class Trace  (body: String) extends HttpMethod
+
+def handle (method: HttpMethod) = method match {
+  case Connect (body) =&gt; println("connect: " + body)
+  case Delete  (body) =&gt; println("delete: "  + body)
+  case Get     (body) =&gt; println("get: "     + body)
+  case Head    (body) =&gt; println("head: "    + body)
+  case Options (body) =&gt; println("options: " + body)
+  case Post    (body) =&gt; println("post: "    + body)
+  case Put     (body) =&gt; println("put: "     + body)
+  case Trace   (body) =&gt; println("trace: "   + body)
+}
+
+val methods = List(
+  Connect("corpo di connect..."),
+  Delete ("corpo di delete..."),
+  Get    ("corpo di get..."),
+  Head   ("corpo di head..."),
+  Options("corpo di options..."),
+  Post   ("corpo di post..."),
+  Put    ("corpo di put..."),
+  Trace  ("corpo di trace..."))
+
+methods.foreach { method =&gt; handle(method) }</code></pre>
+
+<p>Questo script produce l&#8217;uscita seguente.
+
+<pre><samp>connect: corpo di connect...
+delete: corpo di delete...
+get: corpo di get...
+head: corpo di head...
+options: corpo di options...
+post: corpo di post...
+put: corpo di put...
+trace: corpo di trace...</samp></pre>
+
+<p>Nessuna clausola jolly è necessaria, dato che trattiamo tutte le possibilità. Al contrario, se omettete una delle classi e non fornite un caso di default o un caso per una classe genitore condivisa, il compilatore vi segnalerà che &#8220;la corrispondenza non è esauriente&#8221;. Per esempio, se nascondete la clausola per <code>Put</code> in un commento, ottenete questo messaggio.
+
+<pre><samp>warning: match is not exhaustive!
+missing combination            Put
+
+def handle (method: HttpMethod) = method match {
+&hellip;</samp></pre>
+
+<p>Se passate un&#8217;istanza di <code>Put</code> all&#8217;espressione <code>match</code>, provocherete anche un errore <code>MatchError</code>.
+
+<p>Usare <code>sealed</code> ha uno svantaggio. Ogni volta che aggiungete o rimuovete una classe dalla gerarchia dovete modificare il file, dato che l&#8217;intera gerarchia deve essere dichiarata nello stesso file. Questa è una violazione del <em>principio aperto-chiuso</em> (<a href=apa.html#Meyer1997>[Meyer1997]</a> e <a href=apa.html#Martin2003>[Martin2003]</a>), che risolve il problema pratico dei &#8220;costi&#8221; sostenuti per modificare il codice esistente, collaudarlo di nuovo (nonché collaudare altro codice che lo utilizza) e rimetterlo in produzione. Tali costi sono molto inferiori se potete estendere il sistema aggiungendo nuovi tipi derivati in file sorgenti <em>separati</em>. Questo è il motivo per cui abbiamo utilizzato la gerarchia dei metodi <abbr>HTTP</abbr> per il nostro esempio; questo insieme di metodi è molto stabile.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Evitate le gerarchie <code>sealed</code> di classi <code>case</code> se la gerarchia cambia frequentemente (per una definizione appropriata di &#8220;frequentemente&#8221;).
+</blockquote>
+
+<p>Infine, potreste aver notato un certo grado di duplicazione nell&#8217;esempio. Tutte le classi concrete hanno un campo <code>body</code>. Perché non abbiamo messo quel campo nella classe genitore <code>HttpMethod</code>? Dato che abbiamo deciso di usare le classi <code>case</code> come classi concrete, incorreremmo negli stessi problemi di ereditarietà tra classi <code>case</code> che abbiamo incontrato in precedenza nella sezione <a href=cap-6.html#CaseClassInheritance>L&#8217;ereditarietà nelle classi <code>case</code></a> del capitolo 6, dove avevamo aggiunto un campo <code>id</code> condiviso nella gerarchia di <code>Shape</code>. Abbiamo bisogno dell&#8217;argomento <code>body</code> per il costruttore di ogni metodo <abbr>HTTP</abbr>, ma questo argomento verrà trasformato automaticamente in un campo per ogni tipo di metodo; quindi, dovremmo usare la tecnica <code>override val</code> già vista in precedenza.
+
+<p>Potremmo rimuovere le parole chiave <code>case</code> e implementare i metodi e gli oggetti associati che ci servono. Tuttavia, nel nostro caso, la duplicazione è minima e tollerabile.
+
+<p>E se volessimo usare le classi <code>case</code>, facendo però riferimento al campo <code>body</code> anche in <code>HttpMethod</code>? Fortunatamente, sappiamo che Scala genererà un metodo di lettura <code>body</code> in ogni sottoclasse concreta (purché usiamo il nome <code>body</code> in maniera consistente!). Quindi, possiamo dichiarare astratto quel metodo in <code>HttpMethod</code>, poi usarlo come preferiamo. L&#8217;esempio seguente sperimenta questa tecnica.
+
+<pre><code>// <a href=esempi/cap-7/sealed/http-body-script.scala>esempi/cap-7/sealed/http-body-script.scala</a>
+
+sealed abstract class HttpMethod() {
+    def body: String
+    def bodyLength = body.length
+}
+
+case class Connect(body: String) extends HttpMethod
+case class Delete (body: String) extends HttpMethod
+case class Get    (body: String) extends HttpMethod
+case class Head   (body: String) extends HttpMethod
+case class Options(body: String) extends HttpMethod
+case class Post   (body: String) extends HttpMethod
+case class Put    (body: String) extends HttpMethod
+case class Trace  (body: String) extends HttpMethod
+
+def handle (method: HttpMethod) = method match {
+  case Connect (body) =&gt; println("connect: " + body)
+  case Delete  (body) =&gt; println("delete: "  + body)
+  case Get     (body) =&gt; println("get: "     + body)
+  case Head    (body) =&gt; println("head: "    + body)
+  case Options (body) =&gt; println("options: " + body)
+  case Post    (body) =&gt; println("post: "    + body)
+  case Put     (body) =&gt; println("put: "     + body)
+  case Trace   (body) =&gt; println("trace: "   + body)
+}
+
+val methods = List(
+  Connect("corpo di connect..."),
+  Delete ("corpo di delete..."),
+  Get    ("corpo di get..."),
+  Head   ("corpo di head..."),
+  Options("corpo di options..."),
+  Post   ("corpo di post..."),
+  Put    ("corpo di put..."),
+  Trace  ("corpo di trace..."))
+
+methods.foreach { method =&gt;
+  handle(method)
+  println("lunghezza del corpo? " + method.bodyLength)
+}</code></pre>
+
+<p>Abbiamo dichiarato <code>body</code> come astratto in <code>HttpMethod</code>. Abbiamo aggiunto un semplice metodo <code>bodyLength</code> che invoca <code>body</code>. Il ciclo al termine dello script invoca <code>bodyLength</code>. L&#8217;esecuzione dello script produce l&#8217;uscita seguente.
+
+<pre><samp>connect: corpo di connect...
+lunghezza del corpo? 19
+delete: corpo di delete...
+lunghezza del corpo? 18
+get: corpo di get...
+lunghezza del corpo? 15
+head: corpo di head...
+lunghezza del corpo? 16
+options: corpo di options...
+lunghezza del corpo? 19
+post: corpo di post...
+lunghezza del corpo? 16
+put: corpo di put...
+lunghezza del corpo? 15
+trace: corpo di trace...
+lunghezza del corpo? 17</samp></pre>
+
+<p>Come sempre, ogni caratteristica ha vantaggi e svantaggi. Le classi <code>case</code> e le gerarchie di classi sigillate hanno proprietà molto utili, ma non sono adatte in tutte le situazioni.
+
+<h2 id=ScalaTypeHierarchy>La gerarchia di tipi di Scala</h2>
+
+<p>Abbiamo già menzionato un certo numero di tipi nella gerarchia di tipi di Scala. Diamo un&#8217;occhiata alla struttura generale della gerarchia, illustrata nella <a href=#scalas-type-hierarchy>figura 7.1</a>.
+
+<div class=figure id=scalas-type-hierarchy>
+<p class=ft>Figura 7.1. La gerarchia di tipi di Scala.
+<p><img src="i/TypeHierarchy.png" alt="" width="432">
+</div>
+
+<p>Le tabelle seguenti descrivono sia i tipi illustrati nella <a href=#scalas-type-hierarchy>figura 7.1</a> sia altri tipi importanti non mostrati in figura. Alcuni dettagli vengono omessi per chiarezza. Quando si parla di &#8220;macchina virtuale&#8221; sottostante, le considerazioni fatte si applicano ugualmente alla <abbr>JVM</abbr> e al <abbr>CLR</abbr>, a meno che non sia indicato altrimenti.
+
+<div class=table id=any-anyval-anyref>
+<p class=tt>Tabella 7.2. <code>Any</code>, <code>AnyVal</code> e <code>AnyRef</code>
+<table summary="Any, AnyVal e AnyRef." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Nome</th>
+<th align=left valign=top>Genitore</th>
+<th align=left valign=top>Descrizione</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p><code>Any</code></p></td>
+<td align=left valign=top><p><em>nessuno</em></p></td>
+<td align=left valign=top><p>La radice della gerarchia. Definisce alcuni metodi <code>final</code> come <code>==</code>, <code>!=</code>, <code>isInstanceOf[T]</code> (per il controllo di tipo) e <code>asInstanceOf[T]</code> (per la conversione di tipo), e anche le versioni predefinite di <code>equals</code>, <code>hashCode</code> e <code>toString</code>, che sono progettate per essere ridefinite dalle sottoclassi.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>AnyVal</code></p></td>
+<td align=left valign=top><p><code>Any</code></p></td>
+<td align=left valign=top><p>Il genitore di tutti i tipi <em>valore</em>, che corrispondono ai tipi <em>primitivi</em> della macchina virtuale sottostante, più <code>Unit</code>. Tutte le istanze di <code>AnyVal</code> sono <em>istanze valore</em> immutabili e tutti i tipi <code>AnyVal</code> sono <code>abstract final</code>. Quindi, nessuno di loro può essere istanziato con <code>new</code>. Invece, le nuove istanze vengono create con valori <em>letterali</em> (come <code>3.14</code> per un <code>Double</code>) o invocando metodi su istanze che restituiscono nuovi valori.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>AnyRef</code></p></td>
+<td align=left valign=top><p><code>Any</code></p></td>
+<td align=left valign=top><p>Il genitore di tutti i tipi <em>riferimento</em>, compresi tutti i tipi <code>java.*</code> e <code>scala.*</code>. &Egrave; equivalente a <code>java.lang.Object</code> per la <abbr>JVM</abbr> e a <code>object</code> (<code>System.Object</code>) per il <abbr>CLR</abbr>. Le istanze dei tipi riferimento si creano con <code>new</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>I <em>tipi valore</em> sono figli di <code>AnyVal</code>.
+
+<div class=table id=AnyVal-value-types>
+<p class=tt>Tabella 7.3. Sottotipi diretti di <code>AnyVal</code>, i <em>tipi valore</em>.
+<table summary="Sottotipi diretti di Anyval, i tipi valore." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Nome</th>
+<th align=left valign=top>Tipo primitivo corrispondente</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p><code>Boolean</code></p></td>
+<td align=left valign=top><p><code>boolean</code> (<code>true</code> e <code>false</code>)</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Byte</code></p></td>
+<td align=left valign=top><p><code>byte</code></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Char</code></p></td>
+<td align=left valign=top><p><code>char</code></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Short</code></p></td>
+<td align=left valign=top><p><code>short</code></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Int</code></p></td>
+<td align=left valign=top><p><code>int</code></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Long</code></p></td>
+<td align=left valign=top><p><code>long</code></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Float</code></p></td>
+<td align=left valign=top><p><code>float</code></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Double</code></p></td>
+<td align=left valign=top><p><code>double</code></p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Unit</code></p></td>
+<td align=left valign=top><p>Gioca lo stesso ruolo assunto da <code>void</code> nella maggior parte dei linguaggi imperativi. Viene usato principalmente come valore di ritorno dei metodi. Esiste una sola istanza di <code>Unit</code>, chiamata <code>()</code>; potete pensarla come una tupla con zero elementi.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Tutti gli altri tipi, cioè i <em>tipi riferimento</em>, sono figli di <code>AnyRef</code>. Di seguito, descriviamo alcuni dei tipi riferimento usati più comunemente. Notate che ci sono alcune differenze significative nelle collezioni tra le versioni 2.7.X e la versione 2.8 di Scala.
+
+<div class=table id=AnyRef-reference-types>
+<p class=tt>Tabella 7.4. Sottotipi diretti e indiretti di <code>AnyRef</code>, i <em>tipi riferimento</em>.
+<table summary="Sottotipi diretti e indiretti di AnyRef, i tipi riferimento." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Nome</th>
+<th align=left valign=top>Genitore</th>
+<th align=left valign=top>Descrizione</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p><code>Collection[+T]</code></p></td>
+<td align=left valign=top><p><code>Iterable[T]</code></p></td>
+<td align=left valign=top><p>Tratto per le collezioni di dimensione nota.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Either[+T1, +T2]</code></p></td>
+<td align=left valign=top><p><code>AnyRef</code></p></td>
+<td align=left valign=top><p>Usato soprattutto come tipo di ritorno quando un metodo potrebbe restituire un&#8217;istanza di uno di due tipi non correlati. Per esempio, un&#8217;eccezione o un risultato &#8220;di successo&#8221;. Nel pattern matching, <code>Either</code> può corrispondere ai suoi due sottotipi <code>Left</code> e <code>Right</code>. (&Egrave; analogo a <code>Option</code>, con <code>Some</code> e <code>None</code>.) Per gestire le eccezioni con questo idioma, la convenzione prevede di usare <code>Left</code> per l&#8217;eccezione.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>FunctionN[-T<sub>1</sub>, -T<sub>2</sub>, &hellip;, -T<sub>N</sub>, +R]</code></p></td>
+<td align=left valign=top><p><code>AnyRef</code></p></td>
+<td align=left valign=top><p>Tratto che rappresenta una funzione che accetta <code>N</code> argomenti, ognuno dei quali può avere il proprio tipo, e restituisce un valore di tipo <code>R</code>. (Sono definiti tratti per <code>N</code> che va da 0 a 22.) Le <em>annotazioni di varianza</em> (<code>+</code> e <code>-</code>) davanti ai tipi verranno spiegate nella sezione <a href=cap-12.html#VarianceUnderInheritance>Varianza in caso di ereditarietà</a> del capitolo 12.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Iterable[+T]</code></p></td>
+<td align=left valign=top><p><code>AnyRef</code></p></td>
+<td align=left valign=top><p>Tratto che contiene metodi per operare su collezioni di istanze. Gli utenti implementano il metodo astratto <code>elements</code> per restituire un&#8217;istanza di <code>Iterable</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>List[+T]</code></p></td>
+<td align=left valign=top><p><code>Seq[T]</code></p></td>
+<td align=left valign=top><p>Classe <code>sealed abstract</code> per collezioni ordinate con una semantica di lista nello stile della programmazione funzionale. &Egrave; la collezione di gran lunga più usata in Scala, quindi è definita nel package <code>scala</code> piuttosto che in uno dei package delle collezioni. (In Scala 2.8, in realtà, è definita in <code>scala.collection.immutable</code>, e il <code>package object scala</code> ne contiene un &#8220;alias&#8221;.) Ha due sottoclassi: <code>case object Nil</code>, che estende <code>List[Nothing]</code> e rappresenta una lista vuota, e <code>case final class ::[T]</code>, che rappresenta una lista non vuota caratterizzata da un elemento come testa e una lista come coda; la coda è <code>Nil</code> se la lista contiene un solo elemento.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Nothing</code></p></td>
+<td align=left valign=top><p><em>tutti gli altri tipi</em></p></td>
+<td align=left valign=top><p><code>Nothing</code> è il sottotipo di <em>tutti</em> gli altri tipi. Non ne esistono istanze. Viene usato principalmente per definire altri tipi in maniera type-safe, come lo speciale sottotipo <code>Nil</code> di <code>List</code>. Si veda anche la sezione <a href=cap-12.html#NothingAndNull><code>Nothing</code> e <code>Null</code></a> nel capitolo 12.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Null</code></p></td>
+<td align=left valign=top><p><em>tutti i tipi riferimento</em></p></td>
+<td align=left valign=top><p><code>Null</code> ha una sola istanza, <code>null</code>, che corrisponde al concetto di <code>null</code> della macchina virtuale sottostante.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Option[T]</code></p></td>
+<td align=left valign=top><p><code>Product</code></p></td>
+<td align=left valign=top><p>Racchiude un elemento opzionale. &Egrave; un tipo <code>sealed abstract</code> e le uniche istanze permesse sono quelle dei suoi tipi derivati: <code>case class Some[T]</code>, che racchiude un&#8217;istanza di <code>T</code>, e <code>case object None</code>, che estende <code>Option[Nothing]</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Predef</code></p></td>
+<td align=left valign=top><p><code>AnyRef</code></p></td>
+<td align=left valign=top><p>Un <code>object</code> che definisce e importa molti tipi e metodi di uso comune. Si veda la sezione <a href=#PredefObject>L&#8217;oggetto <code>Predef</code></a> all&#8217;inizio di questo capitolo per i dettagli.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Product</code></p></td>
+<td align=left valign=top><p><code>AnyRef</code></p></td>
+<td align=left valign=top><p>Tratto che contiene metodi per determinare l&#8217;arità e ottenere l&#8217;elemento di posto <code>n</code> in un &#8220;prodotto cartesiano&#8221;. Sono definiti sottotratti di <code>Product</code>, chiamati <code>ProductN</code>, per la dimensione <code>N</code> che va da 1 a 22.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>ScalaObject</code></p></td>
+<td align=left valign=top><p><code>AnyRef</code></p></td>
+<td align=left valign=top><p>Tratto usato come <em>mixin</em> e aggiunto a tutte le istanze dei tipi riferimento di Scala.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>Seq[+T]</code></p></td>
+<td align=left valign=top><p><code>Collection[T]</code></p></td>
+<td align=left valign=top><p>Tratto per le collezioni ordinate.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>TupleN</code></p></td>
+<td align=left valign=top><p><code>ProductN</code></p></td>
+<td align=left valign=top><p>Classi <code>case</code> separate per l&#8217;arità <code>N</code> che va da 1 a 22. Le tuple supportano la sintassi <em>letterale</em> <code>(x1, x2, &hellip;, xN)</code>.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Oltre a <code>List</code>, la libreria Scala include anche le collezioni <code>Map</code>, <code>Set</code>, <code>Queue</code> e <code>Stack</code>. Queste altre collezioni sono disponibili in due varietà, mutabile e immutabile. Le collezioni immutabili si trovano nel package <code>scala.collection.immutable</code>, mentre le collezioni mutabili si trovano nel package <code>scala.collection.mutable</code>. Di <code>List</code> viene fornita solo la versione immutabile; se vi serve una lista mutabile usate <code>ListBuffer</code>, che può restituire un&#8217;istanza di <code>List</code> attraverso il metodo <code>toList</code>. In Scala 2.8, l&#8217;implementazione delle collezioni riutilizza codice da <code>scala.collection.generic</code>; gli utenti delle collezioni normalmente non userebbero i tipi definiti in questo package. Esploreremo alcune di queste collezioni molto dettagliatamente nella sezione <a href=cap-8.html#FunctionalDataStructures>Strutture dati funzionali</a> del capitolo 8.
+
+<p>In maniera coerente con la sua enfasi sulla <em>programmazione funzionale</em> (si veda il <a href=cap-8.html>capitolo 8</a>), Scala vi incoraggia a usare le collezioni immutabili, dato che <code>List</code> viene automaticamente importata e che <code>Predef</code> definisce i tipi <code>Map</code> e <code>Set</code> in modo che facciano riferimento alle versioni immutabili di queste collezioni. Tutte le altre collezioni devono essere importate esplicitamente.
+
+<p><code>Predef</code> definisce un certo numero di metodi di conversione implicita per i tipi valore (escluso <code>Unit</code>). Esistono conversioni implicite verso i tipi <code>scala.runtime.RichX</code> corrispondenti. Per esempio, il metodo <code>byteWrapper</code> converte un&#8217;istanza di <code>Byte</code> in un&#8217;istanza di <code>scala.runtime.RichByte</code>. Esistono conversioni implicite tra i tipi &#8220;numerici&#8221; <code>Byte</code>, <code>Short</code>, <code>Int</code>, <code>Long</code> e <code>Float</code> nella direzione dei tipi che sono più &#8220;ampi&#8221; del tipo di partenza. Per esempio, <code>Byte</code> verso <code>Int</code>, <code>Int</code> verso <code>Long</code>, <code>Int</code> verso <code>Double</code>, <i class=baa>&amp;</i>c. Infine, esistono conversioni verso i tipi avvolgenti Java corrispondenti; per esempio, <code>Int</code> verso <code>java.lang.Integer</code>. Discuteremo le conversioni implicite in maggior dettaglio nella sezione <a href=cap-8.html#ImplicitConversions>Conversioni implicite</a> del capitolo 8.
+
+<p>Ci sono diversi esempi di <code>Option</code> in altre parti del libro come la sezione <a href=cap-2.html#OptionSomeNone><code>Option</code>, <code>Some</code> e <code>None</code>: evitare i valori nulli</a> del capitolo 2. Qui presentiamo uno script che mostra come usare il valore di ritorno <code>Either</code> per gestire un&#8217;eccezione lanciata o un risultato di successo (adattato da <a class=url href=http://dcsobral.blogspot.com/2009/06/catching-exceptions.html>http://dcsobral.blogspot.com/2009/06/catching-exceptions.html</a>).
+
+<pre><code>// <a href=esempi/cap-7/typehierarchy/either-script.scala>esempi/cap-7/typehierarchy/either-script.scala</a>
+
+def exceptionToLeft[T](f: =&gt; T): Either[java.lang.Throwable, T] = try {
+  Right(f)
+} catch {
+  case ex =&gt; Left(ex)
+}
+
+def throwsOnOddInt(i: Int) = i % 2 match {
+  case 0 =&gt; i
+  case 1 =&gt; throw new RuntimeException(i + " è dispari!")
+}
+
+for(i &lt;- 0 to 3)
+  exceptionToLeft(throwsOnOddInt(i)) match {
+    case Left(ex) =&gt; println("Oops, ho catturato l'eccezione " + ex.toString)
+    case Right(x) =&gt; println(x)
+  }</code></pre>
+
+<p>Il metodo <code>exceptionToLeft</code> valuta <code>f</code>. Cattura un&#8217;istanza di <code>Throwable</code> e la restituisce come il valore <code>Left</code> o restituisce il normale risultato come il valore <code>Right</code>. Il ciclo <code>for</code> usa questo metodo per invocare <code>throwsOnOddInt</code>, poi usa il pattern matching sul risultato e stampa un messaggio appropriato. L&#8217;uscita dello script è la seguente.
+
+<pre><samp>0
+Oops, ho catturato l&#8217;eccezione java.lang.RuntimeException: 1 è dispari!
+2
+Oops, ho catturato l&#8217;eccezione java.lang.RuntimeException: 3 è dispari!</samp></pre>
+
+<p>Una funzione anonima con <code>N</code> argomenti viene istanziata come un tratto <code>FunctionN</code>, dove <code>N</code> va da 0 a 22. Considerate la funzione anonima seguente.
+
+<pre><code>(t1: T1, &hellip;, tN: TN) =&gt; new R(&hellip;)</code></pre>
+
+<p>Questo è zucchero sintattico per la creazione di una classe anonima come quella che segue.
+
+<pre><code>new FunctionN {
+  def apply(t1: T1, &hellip;, tN: TN): R = new R(&hellip;)
+
+  // altri metodi
+}</code></pre>
+
+<p>Rivisiteremo <code>FunctionN</code> nelle sezioni <a href=cap-12.html#VarianceUnderInheritance>Varianza in caso di ereditarietà</a> e <a href=cap-12.html#FunctionTypes>Tipi funzione</a> del capitolo 12.
+
+<h2 id=Linearization>Linearizzare la gerarchia di un oggetto</h2>
+
+<p>A causa della ereditarietà singola, la gerarchia di ereditarietà sarebbe lineare se ignorassimo i tratti mescolati. Quando consideriamo i tratti, ognuno dei quali potrebbe essere derivato da altri tratti e classi, la gerarchia di ereditarietà forma un grafo aciclico diretto <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>. Il termine <em>linearizzazione</em> si riferisce all&#8217;algoritmo usato per &#8220;appiattire&#8221; questo grafo allo scopo di risolvere le priorità nella ricerca dei metodi, nell&#8217;ordine di invocazione dei costruttori, nel legame di <code>super</code>, <i class=baa>&amp;</i>c.
+
+<p>Nella sezione <a href=cap-4.html#StackableTraits>Tratti impilabili</a> del capitolo 4 abbiamo visto in maniera informale che, quando un&#8217;istanza possiede più di un tratto, i tratti legano da destra a sinistra, seguendo la dichiarazione. Considerate il seguente esempio di linearizzazione.
+
+<pre><code>// <a href=esempi/cap-7/linearization/linearization1-script.scala>esempi/cap-7/linearization/linearization1-script.scala</a>
+
+class C1 {
+  def m = List("C1")
+}
+
+trait T1 extends C1 {
+  override def m = { "T1" :: super.m }
+}
+
+trait T2 extends C1 {
+  override def m = { "T2" :: super.m }
+}
+
+trait T3 extends C1 {
+  override def m = { "T3" :: super.m }
+}
+
+class C2 extends T1 with T2 with T3 {
+  override def m = { "C2" :: super.m }
+}
+
+val c2 = new C2
+println(c2.m)</code></pre>
+
+<p>L&#8217;esecuzione di questo script produce il risultato seguente.
+
+<pre><samp>List(C2, T3, T2, T1, C1)</samp></pre>
+
+<p>Questa lista di stringhe costruita dai metodi <code>m</code> riflette la <em>linearizzazione</em> della gerarchia di ereditarietà, con alcune parti mancanti che discuteremo tra breve. Vedremo anche perché <code>C1</code> è alla fine della lista. Prima di tutto, vediamo qual è la sequenza di invocazione dei costruttori.
+
+<pre><code>// <a href=esempi/cap-7/linearization/linearization2-script.scala>esempi/cap-7/linearization/linearization2-script.scala</a>
+
+var clist = List[String]()
+
+class C1 {
+  clist ::= "C1"
+}
+
+trait T1 extends C1 {
+  clist ::= "T1"
+}
+
+trait T2 extends C1 {
+  clist ::= "T2"
+}
+
+trait T3 extends C1 {
+  clist ::= "T3"
+}
+
+class C2 extends T1 with T2 with T3 {
+  clist ::= "C2"
+}
+
+val c2 = new C2
+println(clist.reverse)</code></pre>
+
+<p>L&#8217;esecuzione di questo script produce il risultato seguente.
+
+<pre><samp>List(C1, T1, T2, T3, C2)</samp></pre>
+
+<p>Quindi, la sequenza di costruzione è in ordine inverso. (Abbiamo dovuto invertire la lista nell&#8217;ultima riga perché è stata costruita in modo tale da sistemare gli elementi in ordine inverso.) Questo ordine di invocazione ha senso. Per ottenere un processo di costruzione adeguato, i tipi genitore devono essere costruiti prima dei tipi derivati dato che, durante questo processo, un tipo derivato usa spesso campi e metodi definiti nei tipi genitore.
+
+<p>In fondo al risultato del primo script di linearizzazione, in realtà, mancano tre tipi. In effetti, la linearizzazione completa per i tipi riferimento termina con <code>ScalaObject</code>, <code>AnyRef</code> e <code>Any</code>. Quindi, la linearizzazione corretta di <code>C2</code> è questa.
+
+<pre><samp>List(C2, T3, T2, T1, C1, ScalaObject, AnyRef, Any)</samp></pre>
+
+<p>Scala inserisce il tratto <code>ScalaObject</code> come ultimo mixin, appena prima di <code>AnyRef</code> e <code>Any</code>, che sono la penultima e l&#8217;ultima classe genitore di tutti i tipi riferimento. Naturalmente, questi tre tipi non compaiono nell&#8217;uscita degli script perché abbiamo usato un metodo <code>m</code> <em>ad hoc</em> per scoprire il comportamento tramite la costruzione di una stringa di uscita.
+
+<p>I tipi valore, sottoclassi di <code>AnyVal</code>, sono tutti dichiarati come <code>abstract final</code>. &Egrave; il compilatore a gestirne l&#8217;istanziazione. Dato che non possiamo estenderli, la loro linearizzazione è semplice e chiara.
+
+<p>La linearizzazione definisce l&#8217;ordine in cui avviene la ricerca dei metodi. Esaminiamo questo aspetto più da vicino.
+
+<p>Tutte le nostre classi e i nostri tratti definiscono il metodo <code>m</code>. Il metodo in <code>C2</code> viene chiamato per primo, dato che l&#8217;istanza è di quel tipo. <code>C2.m</code> invoca <code>super.m</code>, che viene risolto come <code>T3.m</code>. La ricerca sembra essere &#8220;in ampiezza&#8221; piuttosto che &#8220;in profondità&#8221;. Se fosse in profondità, dopo <code>T3.m</code> verrebbe invocato <code>C1.m</code>; invece, dopo <code>T3.m</code> vengono invocati <code>T2.m</code>, <code>T1.m</code> e infine <code>C1.m</code>. <code>C1</code> è il genitore dei tre tratti. Da quale tratto siamo passati per arrivare a <code>C1</code>? In realtà, la ricerca è in ampiezza con valutazione &#8220;ritardata&#8221;, come abbiamo visto. Modifichiamo il nostro primo esempio e vediamo come siamo arrivati a <code>C1</code>.
+
+<pre><code>// <a href=esempi/cap-7/linearization/linearization3-script.scala>esempi/cap-7/linearization/linearization3-script.scala</a>
+
+class C1 {
+  def m(previous: String) = List("C1(" + previous + ")")
+}
+
+trait T1 extends C1 {
+  override def m(p: String) = { "T1" :: super.m("T1") }
+}
+
+trait T2 extends C1 {
+  override def m(p: String) = { "T2" :: super.m("T2") }
+}
+
+trait T3 extends C1 {
+  override def m(p: String) = { "T3" :: super.m("T3") }
+}
+
+class C2 extends T1 with T2 with T3 {
+  override def m(p: String) = { "C2" :: super.m("C2") }
+}
+
+val c2 = new C2
+println(c2.m(""))</code></pre>
+
+<p>Ora passiamo il nome del chiamante a <code>super.m</code> come parametro, così <code>C1</code> stamperà chi lo ha chiamato. L&#8217;esecuzione di questo script produce il risultato seguente.
+
+<pre><samp>List(C2, T3, T2, T1, C1(T1))</samp></pre>
+
+<p>Arriviamo a <code>C1</code> attraverso <code>T1</code>, l&#8217;ultimo tratto. Avremmo potuto aspettarci <code>T3</code> come risultato di un&#8217;applicazione &#8220;ingenua&#8221; dell&#8217;attraversamento in ampiezza.
+
+<p>Ecco l&#8217;algoritmo completo per il calcolo della linearizzazione. Ne viene data una definizione più formale in <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>.
+
+<div class=sidebar>
+<p class=st>Algoritmo di linearizzazione per i tipi riferimento
+
+<ol>
+<li>Mettete il tipo reale dell&#8217;istanza come primo elemento.
+<li>Cominciando dal tipo genitore <em>più a destra</em> e procedendo verso <em>sinistra</em>, calcolate la linearizzazione di ogni tipo, aggiungendola in coda alla linearizzazione cumulativa. (Ignorate <code>ScalaObject</code>, <code>AnyRef</code> e <code>Any</code> per ora.)
+<li>Procedendo <em>da sinistra a destra</em>, rimuovete qualsiasi tipo nel caso in cui appaia di nuovo alla <em>destra</em> della posizione corrente.
+<li>Aggiungete <code>ScalaObject</code>, <code>AnyRef</code> e <code>Any</code> alla fine.
+</ol>
+</div>
+
+<p>Questo spiega come siamo arrivati a <code>C1</code> da <code>T1</code> nell&#8217;esempio precedente. <code>C1</code> è presente anche nella linearizzazione di <code>T3</code> e <code>T2</code>, ma questi tratti vengono prima di <code>T1</code>, quindi i termini <code>C1</code> che hanno contribuito sono stati cancellati.
+
+<p>Procediamo attraverso l&#8217;algoritmo usando un esempio leggermente più complicato.
+
+<pre><code>// <a href=esempi/cap-7/linearization/linearization4-script.scala>esempi/cap-7/linearization/linearization4-script.scala</a>
+
+class C1 {
+  def m = List("C1")
+}
+
+trait T1 extends C1 {
+  override def m = { "T1" :: super.m }
+}
+
+trait T2 extends C1 {
+  override def m = { "T2" :: super.m }
+}
+
+trait T3 extends C1 {
+  override def m = { "T3" :: super.m }
+}
+
+class C2A extends T2 {
+  override def m = { "C2A" :: super.m }
+}
+
+class C2 extends C2A with T1 with T2 with T3 {
+  override def m = { "C2" :: super.m }
+}
+
+def calcLinearization(obj: C1, name: String) = {
+  val lin = obj.m ::: List("ScalaObject", "AnyRef", "Any")
+  println(name + ":  " + lin)
+}
+
+calcLinearization(new C2, "C2 ")
+println("")
+calcLinearization(new T3 {}, "T3 ")
+calcLinearization(new T2 {}, "T2 ")
+calcLinearization(new T1 {}, "T1 ")
+calcLinearization(new C2A, "C2A")
+calcLinearization(new C1, "C1 ")</code></pre>
+
+<p>Il risultato è il seguente.
+
+<pre><code>C2 :  List(C2, T3, T1, C2A, T2, C1, ScalaObject, AnyRef, Any)
+
+T3 :  List(T3, C1, ScalaObject, AnyRef, Any)
+T2 :  List(T2, C1, ScalaObject, AnyRef, Any)
+T1 :  List(T1, C1, ScalaObject, AnyRef, Any)
+C2A:  List(C2A, T2, C1, ScalaObject, AnyRef, Any)
+C1 :  List(C1, ScalaObject, AnyRef, Any)</code></pre>
+
+<p>Per aiutarci, abbiamo calcolato la linearizzazione degli altri tipi, e abbiamo anche aggiunto <code>ScalaObject</code>, <code>AnyRef</code> e <code>Any</code> per ricordarci che dovrebbero essere presenti. Abbiamo anche rimosso la logica per passare il nome del chiamante a <code>m</code>. Il chiamante di <code>C1</code> sarà <em>sempre</em> l&#8217;elemento immediatamente alla sua sinistra.
+
+<p>Quindi, procediamo attraverso l&#8217;algoritmo e confermiamo i risultati ottenuti per <code>C2</code>. Per chiarezza, considereremo <code>ScalaObject</code>, <code>AnyRef</code> e <code>Any</code> solo alla fine.
+
+<div class=table id=id1755102>
+<p class=tt>Tabella 7.5. Calcolo a mano della linearizzazione di <code>C2</code>: <code>C2 extends C2A with T1 with T2 with T3 {&hellip;}</code>.
+<table summary="Calcolo a mano della linearizzazione di C2: C2 extends C2A with T1 with T2 with T3 {&hellip;}." border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Passo</th>
+<th align=left valign=top>Linearizzazione </th>
+<th align=left valign=top>Descrizione</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p>1</p></td>
+<td align=left valign=top><p><code>C2</code></p></td>
+<td align=left valign=top><p>Aggiungiamo il tipo dell&#8217;istanza.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>2</p></td>
+<td align=left valign=top><p><code>C2, T3, C1</code></p></td>
+<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>T3</code> (il più lontano sulla destra).</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>3</p></td>
+<td align=left valign=top><p><code>C2, T3, C1, T2, C1</code></p></td>
+<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>T2</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>4</p></td>
+<td align=left valign=top><p><code>C2, T3, C1, T2, C1, T1, C1</code></p></td>
+<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>T1</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>5</p></td>
+<td align=left valign=top><p><code>C2, T3, C1, T2, C1, T1, C1, C2A, T2, C1</code></p></td>
+<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>C2A</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>6</p></td>
+<td align=left valign=top><p><code>C2, T3, T2, T1, C2A, T2, C1</code></p></td>
+<td align=left valign=top><p>Rimuoviamo i duplicati di <code>C1</code>, tutti tranne <em>l&#8217;ultimo</em> <code>C1</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>7</p></td>
+<td align=left valign=top><p><code>C2, T3, T1, C2A, T2, C1</code></p></td>
+<td align=left valign=top><p>Rimuoviamo i duplicati di <code>T2</code>, tutti tranne <em>l&#8217;ultimo</em> <code>T2</code>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p>8</p></td>
+<td align=left valign=top><p><code>C2, T3, T1, C2A, T2, C1, ScalaObject, AnyRef, Any</code></p></td>
+<td align=left valign=top><p>Abbiamo finito!</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>L&#8217;algoritmo opera facendo scorrere sulla destra qualunque tipo condiviso fino a quando non viene dopo <em>tutti</em> i tipi che derivano da esso.
+
+<p>Provate a modificare le gerarchie nell&#8217;ultimo script e controllate se riuscite a riprodurre i risultati usando l&#8217;algoritmo.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Gerarchie di tipi eccessivamente complesse possono risultare in &#8220;sorprese&#8221; nella ricerca dei metodi. Se dovete procedere attraverso questo algoritmo per capire cosa sta succedendo, provate a semplificare il vostro codice.
+</blockquote>
+
+<h2 id=_recap_and_whats_next_4>Riepilogo, e poi?</h2>
+
+<p>Abbiamo concluso la nostra rassegna del modello a oggetti di Scala. Se vi siete formati su altro linguaggio orientato agli oggetti, ora conoscete Scala quanto basta per sostituirlo.
+
+<p>Tuttavia, c&#8217;è molto altro da imparare. Scala supporta la <em>programmazione funzionale</em>, che offre potenti meccanismi per affrontare un certo numero di problemi di progettazione, come la concorrenza. Vedremo che la programmazione funzionale sembra contraddire la programmazione orientata agli oggetti, almeno in superficie. Ma lo sviluppo di Scala è stato guidato dal principio secondo cui questi due paradigmi sono complementari più di quanto siano in conflitto tra loro. Combinati, essi vi offrono più alternative per costruire software robusto e scalabile. Scala vi permette di scegliere le tecniche più adatte per le vostre necessità.
+
+<p class=v><a rel=prev href=cap-6.html title='indietro a &#8220;Programmazione orientata agli oggetti in Scala: elementi avanzati&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-8.html title='avanti a &#8220;La programmazione funzionale in Scala&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>

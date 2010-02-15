@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Da zero a sessanta: una introduzione a Scala - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 1}
+</style>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-1>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Da zero a sessanta: una introduzione a Scala</h1>
+
+<h2 id=_why_scala>Perché Scala?</h2>
+
+<p>Le moderne applicazioni industriali e di rete devono conciliare un certo numero di interessi. Devono essere implementate velocemente e in maniera affidabile; devono supportare l&#8217;aggiunta di nuove funzioni in cicli di sviluppo brevi e incrementali; oltre a fornire la logica applicativa, devono offrire un accesso sicuro, un modello di persistenza dei dati, un comportamento transazionale e altre caratteristiche avanzate. Le applicazioni devono garantire un&#8217;alta disponibilità e un&#8217;elevata scalabilità, per le quali è necessaria una progettazione che supporti concorrenza e distribuzione. Le applicazioni sono collegate in rete e forniscono interfacce per essere usate sia da persone sia da altre applicazioni.
+
+<p>Per affrontare queste sfide, molti sviluppatori stanno cercando nuovi linguaggi e nuovi strumenti. I venerabili pilastri come Java, C# e C++ non sono più ottimali per sviluppare la prossima generazione di applicazioni.
+
+<h3 id=_if_you_are_a_java_programmer_8230>Se siete programmatori Java&hellip;</h3>
+
+<p>Java è stato ufficialmente presentato da Sun Microsystems nel maggio del 1995, proprio mentre l&#8217;interesse per Internet si stava diffondendo. Java venne immediatamente accolto come un linguaggio ideale per scrivere applicazioni basate sul browser, una piattaforma che aveva bisogno di un linguaggio applicativo sicuro, portabile e facile da usare per gli sviluppatori. Il linguaggio regnante in quel momento, C++, non era adatto a questo dominio.
+
+<p>Oggi Java viene spesso usato per applicazioni lato server ed è uno dei linguaggi più popolari attualmente in uso per lo sviluppo di applicazioni web e di tipo industriale.
+
+<p>Tuttavia, Java è figlio del suo tempo e ora comincia a sentire il peso degli anni. Nel 1995 Java forniva una sintassi abbastanza simile al C++ da attirarne gli sviluppatori, evitando nel contempo molte delle mancanze e delle caratteristiche &#8220;spigolose&#8221; di quel linguaggio. Java adottò le idee più utili per i problemi di sviluppo della sua epoca, come la programmazione orientata agli oggetti (<abbr>OOP</abbr>), scartando alcune tecniche problematiche, come la gestione manuale della memoria. Queste scelte di progettazione trovarono un equilibrio eccellente che minimizzava la complessità e massimizzava la produttività degli sviluppatori, sacrificando in cambio le prestazioni nel confronto con il codice compilato nativamente. Nonostante Java si sia evoluto dalla sua nascita, molte persone ritengono che sia diventato troppo complesso senza affrontare adeguatamente alcune delle sfide di sviluppo più recenti.
+
+<p>Gli sviluppatori vogliono linguaggi che siano più sintetici e flessibili per migliorare la propria produttività. Questa è una delle ragioni per cui i cosiddetti linguaggi &#8220;di scripting&#8221; come Ruby e Python sono recentemente diventati più popolari.
+
+<p>L&#8217;infinito bisogno di scalabilità sta guidando le architetture verso la concorrenza pervasiva. Tuttavia, il modello di concorrenza di Java, che si basa sull&#8217;accesso sincronizzato a uno stato condiviso e mutabile, genera programmi complessi e soggetti a errori.
+
+<p>Sebbene il linguaggio Java senta il peso degli anni, la Java Virtual Machine (<abbr>JVM</abbr>) che lo esegue continua a brillare. Le ottimizzazioni effettuate dall&#8217;odierna <abbr>JVM</abbr> sono straordinarie e in molti casi permettono al bytecode di superare le prestazioni del codice compilato nativamente. Oggi molti sviluppatori credono che usare la <abbr>JVM</abbr> con nuovi linguaggi sia la strada da percorrere. Sun sta assecondando questa tendenza dando lavoro a molti degli sviluppatori principali di JRuby e Jython,<sup id=fnn-1><a href=#fn-1>1</a></sup> che sono rispettivamente conversioni di Ruby e Python per la <abbr>JVM</abbr>.
+
+<p>L&#8217;attrattiva di Scala per lo sviluppatore Java è quella di un nuovo linguaggio più moderno capace di sfruttare le prestazioni incredibili della <abbr>JVM</abbr> e la ricchezza delle librerie Java che sono state sviluppate per oltre una decade.
+
+<h3 id=_if_you_are_a_ruby_python_etc_programmer_8230>Se siete programmatori Ruby, Python, <span class=baa>&amp;</span>c&hellip;</h3>
+
+<p>Linguaggi <em>dinamicamente tipati</em> come Ruby, Python, Groovy, JavaScript e Smalltalk offrono una produttività molto alta grazie a una potente metaprogrammazione e a caratteristiche come eleganza e flessibilità.
+
+<div class=sidebar>
+<p class=st>Linguaggi staticamente tipati vs. dinamicamente tipati
+
+<p>Una delle scelte fondamentali nella progettazione di un linguaggio è quella che oppone la tipizzazione <em>statica</em> alla tipizzazione <em>dinamica</em>.
+
+<p>La parola &#8220;tipizzazione&#8221; è usata in molti contesti legati al software. Pierce ci offre la seguente definizione &#8220;ragionevole&#8221; del termine, utile per i nostri scopi.
+
+<blockquote>
+<p>Un sistema di tipi è un metodo sintattico trattabile per preservare l&#8217;assenza di certi comportamenti di un programma classificando le frasi in base ai tipi di valori che calcolano.
+<p style="text-align:right">&mdash;Benjamin C. Pierce, <cite>Types and Programming Languages</cite> (2002)
+</blockquote>
+
+<p>Notate l&#8217;enfasi su come un sistema di tipi permetta di ragionare sui comportamenti che un sistema <em>non ammette</em>. Questo è generalmente più facile che provare a determinare l&#8217;insieme di tutte le possibilità consentite. Un sistema di tipi viene usato per catturare diversi errori, come l&#8217;uso di operazioni non supportate per una particolare struttura dati, il tentativo di combinare i dati in un modo non definito (per esempio, provando ad aggiungere un intero a una stringa), la violazione delle astrazioni, <span class=baa>&amp;</span>c.
+
+<p>In maniera informale, possiamo dire che nella tipizzazione statica una <em>variabile</em> è legata a un particolare tipo per tutto il proprio tempo di vita. Il tipo della variabile non può essere cambiato e la variabile può fare riferimento solo a istanze di tipo compatibile con il proprio; cioè, se una variabile fa riferimento a un valore di tipo <code>A</code>, non potete assegnarle un valore di un tipo <code>B</code> differente a meno che <code>B</code> non sia un sottotipo di <code>A</code> per una qualche definizione ragionevole di &#8220;sottotipo&#8221;.
+
+<p>Nella tipizzazione dinamica il tipo è legato al <em>valore</em>, non alla <em>variabile</em>. Quindi, una variabile può fare riferimento a un valore di tipo <code>A</code> e successivamente vedersi assegnare un valore di tipo <code>X</code> non correlato ad <code>A</code>.
+
+<p>Si usa il termine <em>dinamicamente tipato</em> perché il tipo di una <em>variabile</em> viene valutato quando essa viene usata durante l&#8217;esecuzione, mentre in un linguaggio staticamente tipato il tipo viene valutato durante la compilazione.
+
+<p>Questa potrebbe sembrare una piccola differenza, ma ha un impatto profondo sulla filosofia, sulla progettazione e sulla implementazione di un linguaggio. Esploreremo alcune di queste implicazioni nel corso del libro.
+
+<p>Scala e Java sono linguaggi staticamente tipati, mentre Ruby, Python, Groovy, JavaScript e Smalltalk sono linguaggi dinamicamente tipati.
+
+<p>Per semplicità, useremo spesso i termini <em>linguaggio statico</em> e <em>linguaggio dinamico</em> come abbreviazioni di <em>linguaggio staticamente tipato</em> e <em>linguaggio dinamicamente tipato</em> rispettivamente.
+
+<p>Una considerazione di progetto <em>ortogonale</em> è la distinzione tra tipizzazione <em>forte</em> e tipizzazione <em>debole</em>. Nella tipizzazione forte ogni variabile (per la tipizzazione statica) o valore (per la tipizzazione dinamica) deve avere un tipo non ambiguo. Nella tipizzazione debole non è richiesto un tipo specifico. Sebbene molti linguaggi consentano di mescolare le tipizzazioni forte e debole in qualche misura, Scala, Java e Ruby sono <em>in prevalenza</em> linguaggi fortemente tipati. Alcuni linguaggi come C e Perl sono tipati più debolmente.
+</div>
+
+<p>Nonostante i loro vantaggi di produttività, i linguaggi <em>dinamici</em> potrebbero non essere la scelta migliore per tutte le applicazioni, in particolare per basi di codice molto grandi e applicazioni a prestazioni elevate. Nelle comunità di programmazione, i meriti relativi della tipizzazione dinamica nei confronti di quella statica sono dibattuti animatamente da lungo tempo. Molti punti di confronto sono abbastanza soggettivi. Non tratteremo tutte le argomentazioni in questa sede, ma offriremo alcune osservazioni degne di considerazione.
+
+<p>Ottimizzare le prestazioni di un linguaggio dinamico è più difficile che per un linguaggio statico. In un linguaggio statico, è possibile sfruttare le informazioni di tipo per decidere come ottimizzare. In un linguaggio dinamico, la scarsa disponibilità di questa sorta di informazioni rende le scelte di ottimizzazione più difficili. Sebbene i recenti progressi nella ottimizzazione di linguaggi dinamici siano promettenti, questi linguaggi rimangono comunque indietro rispetto allo stato dell&#8217;arte per i linguaggi statici. Quindi, se avete bisogno di prestazioni molto elevate, i linguaggi statici sono probabilmente una scelta più sicura.
+
+<p>I linguaggi statici possono anche portare benefici al processo di sviluppo. Alcune caratteristiche degli <abbr>IDE</abbr> come l&#8217;<em>autocompletamento</em> (a volte chiamato <em>code sense</em>) sono più facili da implementare per i linguaggi statici, sempre a causa delle informazioni di tipo aggiuntive disponibili. Le informazioni di tipo più esplicite nel codice statico promuovono una migliore &#8220;auto-documentazione&#8221;, che può essere importante per la comunicazione delle intenzioni tra gli sviluppatori, in particolar modo durante l&#8217;evoluzione di un progetto.
+
+<p>Quando usate un linguaggio statico, dovete pensare più spesso a scegliere i tipi appropriati, cosa che vi obbliga a pesare più attentamente le scelte di progettazione. Sebbene questo possa rallentare le decisioni di progettazione quotidiane, dal ragionamento sui tipi in un&#8217;applicazione può risultare una progettazione più coerente a lungo termine.
+
+<p>Un altro piccolo vantaggio dei linguaggi statici è il controllo aggiuntivo effettuato dal compilatore. Riteniamo che questo vantaggio sia spesso esageratamente lodato, in quanto gli errori che coinvolgono tipi male assortiti sono una piccola frazione degli errori a tempo di esecuzione che si vedono di solito. Il compilatore non è in grado di trovare gli errori di <em>logica</em>, che sono di gran lunga più significativi. Solo una serie di test completa e automatica può trovare gli errori di logica. Per i linguaggi dinamicamente tipati, i test devono anche coprire i possibili errori di tipo. Se provenite da un linguaggio dinamicamente tipato, potreste scoprire che le vostre serie di test sono un po&#8217; più piccole, ma non <em>tanto</em> più piccole.
+
+<p>Molti sviluppatori che considerano i linguaggi statici troppo prolissi accusano spesso la tipizzazione statica per la prolissità mentre il problema reale è la mancanza della <em>inferenza di tipo</em>. Nell&#8217;inferenza di tipo, il compilatore ricava il tipo dei valori sulla base del contesto. Per esempio, il compilatore riconoscerà che <code>x = 1 + 3</code> significa che <code>x</code> deve essere un intero. L&#8217;inferenza di tipo riduce significativamente la prolissità, rendendo il codice più simile a quello scritto in un linguaggio dinamico.
+
+<p>Abbiamo lavorato molte volte sia con linguaggi statici che con linguaggi dinamici. Abbiamo trovato interessanti entrambi i tipi di linguaggio, per ragioni differenti. Crediamo che il moderno sviluppatore di software debba padroneggiare un&#8217;ampia varietà di linguaggi e strumenti. A volte un linguaggio dinamico sarà lo strumento giusto per il vostro lavoro; altre volte, un linguaggio statico come Scala è esattamente quello che vi serve.
+
+<h3 id=_introducing_scala>Una introduzione a Scala</h3>
+
+<p><em>Scala</em> è un linguaggio che si rivolge ai bisogni principali dello sviluppatore moderno. &Egrave; un linguaggio per la <abbr>JVM</abbr> staticamente tipato, a paradigma misto, con una sintassi concisa, elegante e flessibile, un sistema di tipi sofisticato e idiomi che promuovono la scalabilità dai piccoli programmi interpretati fino ad applicazioni sofisticate di grandi dimensioni. Questa è una definizione notevole, quindi esaminiamo ognuna di queste idee nel dettaglio.
+
+<dl>
+<dt>Staticamente tipato
+<dd><p>Come abbiamo detto nella sezione precedente, un linguaggio staticamente tipato lega il tipo a una <em>variabile</em> per il tempo di vita di quella variabile. Al contrario, i linguaggi <em>dinamicamente tipati</em> legano il tipo all&#8217;effettivo <em>valore</em> riferito da una variabile, permettendo quindi al tipo di una <em>variabile</em> di cambiare insieme al valore a cui fa riferimento.
+<p>Nel gruppo di nuovi linguaggi per la <abbr>JVM</abbr>, Scala è uno dei pochi a essere staticamente tipato e tra questi è quello più noto.
+<dt>Paradigma misto &ndash; programmazione orientata agli oggetti
+<dd><p>Scala supporta appieno la <em>programmazione orientata agli oggetti</em> (<abbr>OOP</abbr>). Scala migliora il supporto <abbr>OOP</abbr> di Java con l&#8217;aggiunta dei <em>tratti</em>, un modo pulito di implementare le classi usando la <em>composizione dei mixin</em>. I tratti di Scala funzionano in modo molto simile ai <em>moduli</em> di Ruby. Se siete programmatori Java, potete pensare ai tratti come all&#8217;unificazione delle interfacce con la loro implementazione.
+<p>In Scala, ogni cosa è <em>davvero</em> un oggetto. Scala non ha tipi primitivi come Java. Invece, tutti i tipi numerici sono veri oggetti. Tuttavia, per ottimizzare le prestazioni, Scala usa i tipi primitivi della macchina virtuale sottostante ogni volta che è possibile. In più, Scala non supporta membri &#8220;statici&#8221; o a livello di classe per i tipi, dato che non sono effettivamente associati a un&#8217;istanza. Invece, Scala supporta un costrutto di oggetto <em>singleton</em> per i casi in cui è necessaria una sola istanza di un tipo.
+<dt>Paradigma misto &ndash; programmazione funzionale
+<dd><p>Scala supporta appieno la <em>programmazione funzionale</em> (<abbr>FP</abbr>). La <abbr>FP</abbr> è un paradigma di programmazione più vecchio della <abbr>OOP</abbr>, ma è rimasta custodita nelle torri d&#8217;avorio delle università fino a poco tempo fa. L&#8217;interesse per la <abbr>FP</abbr> sta aumentando a causa del modo in cui semplifica certi problemi di progettazione, in particolare quelli legati alla concorrenza. I linguaggi funzionali &#8220;puri&#8221; non permettono alcuno stato mutabile, evitando di conseguenza il bisogno di sincronizzazione sull&#8217;accesso condiviso allo stato mutabile. Invece, i programmi scritti in linguaggi puramente funzionali comunicano scambiando messaggi tra processi autonomi e concorrenti. Scala supporta questo modello con la sua libreria di <em>attori</em>, ma consente di usare variabili mutabili e immutabili.
+<p>Le funzioni sono cittadini &#8220;di prima classe&#8221; nella <abbr>FP</abbr>, nel senso che possono essere assegnate a variabili, passate ad altre funzioni, <span class=baa>&amp;</span>c., esattamente come gli altri valori. Questa caratteristica promuove la composizione di comportamenti avanzati usando operazioni primitive. Dato che Scala aderisce al principio per cui <em>ogni cosa è un oggetto</em>, in Scala anche le funzioni sono oggetti.
+<p>Scala offre anche le <em>chiusure</em>, una caratteristica che i linguaggi dinamici come Python e Ruby hanno adottato dal mondo della programmazione funzionale e che è tristemente assente nelle versioni recenti di Java. Le chiusure sono funzioni che fanno riferimento a variabili contenute nell&#8217;ambito che racchiude la definizione di funzione; le variabili non vengono passate come argomenti né definite come variabili locali all&#8217;interno della funzione. Una chiusura si &#8220;chiude attorno&#8221; a questi riferimenti, in modo che l&#8217;invocazione della funzione possa tranquillamente fare riferimento alle variabili anche quando le variabili sono uscite dall&#8217;ambito di visibilità! Le chiusure sono un&#8217;astrazione così potente da venire usate per implementare sistemi a oggetti e strutture di controllo fondamentali.
+<dt>Un linguaggio per la <abbr>JVM</abbr> e per .NET
+<dd><p>Sebbene Scala sia principalmente conosciuto come linguaggio per la <abbr>JVM</abbr>, nel senso che Scala genera bytecode per la <abbr>JVM</abbr>, una versione .NET di Scala che genera bytecode per il <abbr>CLR</abbr> è in fase di sviluppo. Quando parliamo della &#8220;macchina virtuale&#8221; sottostante di solito ci riferiamo alla <abbr>JVM</abbr>, ma la maggior parte di quello che diremo si applica ugualmente al <abbr>CLR</abbr>. Quando discutiamo i dettagli specifici per la <abbr>JVM</abbr>, essi possono venire generalizzati alla versione .NET, a parte alcuni casi che verranno esplicitamente indicati.
+<p>Il compilatore Scala usa tecniche ingegnose per correlare le estensioni di Scala a idiomi validi in bytecode. Da Scala potete facilmente invocare il bytecode creato a partire da codice sorgente Java (per la <abbr>JVM</abbr>) o C# (per .NET). Specularmente, potete invocare codice Scala da Java, C#, <span class=baa>&amp;</span>c. Il fatto che Scala funzioni sulla <abbr>JVM</abbr> e sul <abbr>CLR</abbr> permette agli sviluppatori di sfruttare le librerie disponibili e interoperare con altri linguaggi ospitati su quelle macchine virtuali.
+<dt>Una sintassi concisa, elegante e flessibile
+<dd><p>La sintassi Java può essere prolissa. Scala usa un certo numero di tecniche per minimizzare la sintassi superflua, rendendo il codice Scala tanto conciso quanto il codice scritto nella maggior parte dei linguaggi dinamicamente tipati. <em>L&#8217;inferenza di tipo</em> minimizza il bisogno di esplicite informazioni di tipo in molti contesti. Le dichiarazioni di tipo e di funzione sono molto succinte.
+<p>Scala permette ai nomi di funzione di includere caratteri non alfanumerici. Combinata con un pizzico di zucchero sintattico, questa caratteristica permette all&#8217;utente di definire metodi che sembrano operatori e che si comportano come tali. Come risultato, le librerie esterne al nucleo del linguaggio possono sembrare &#8220;native&#8221; a chi le usa.
+<dt>Un sistema di tipi sofisticato
+<dd><p>Scala estende il sistema di tipi di Java con generici più flessibili e un numero di costrutti di tipo più avanzati. Il sistema di tipi può incutere timore all&#8217;inizio, ma per la maggior parte del tempo non avrete bisogno di preoccuparvi dei costrutti avanzati. L&#8217;inferenza di tipo aiuta a ricavare automaticamente i tipi nelle firme dei metodi e delle funzioni, in modo che l&#8217;utente non debba fornire manualmente informazioni di tipo banali. Quando ne avete bisogno, comunque, le caratteristiche di tipo avanzate vi forniscono una maggiore flessibilità per risolvere problemi di progettazione in modo type-safe.
+<dt>Scalabilità &ndash; architetture
+<dd><p>Scala è progettato per scalare da piccoli programmi interpretati a grandi applicazioni distribuite. Scala fornisce quattro meccanismi linguistici che promuovono la composizione scalabile dei sistemi: 1) tipi espliciti per la classe corrente (chiamati <em>selftype</em>); 2) generici e membri di tipo astratto; 3) classi annidate; e 4) composizione di <em>mixin</em> tramite <em>tratti</em>.
+<p>Nessun altro linguaggio fornisce tutti questi meccanismi, che insieme consentono di costruire applicazioni in maniera concisa e type-safe attraverso &#8220;componenti&#8221; riusabili. Come vedremo, molti modelli di progettazione e tecniche architetturali come l&#8217;iniezione di dipendenza (<em>dependency injection</em>) sono facili da implementare in Scala, evitando quel codice ridondante o quei lunghi file <abbr>XML</abbr> di configurazione che rendono fastidioso lo sviluppo in Java.
+<dt>Scalabilità &ndash; prestazioni
+<dd><p>Dato che il codice Scala può essere eseguito sulla <abbr>JVM</abbr> e sul <abbr>CLR</abbr>, i programmi traggono beneficio da tutte le ottimizzazioni di prestazione presenti in quelle macchine virtuali e da tutti gli strumenti di terze parti che sono di ausilio a efficienza e scalabilità, come analizzatori di codice, librerie di cache distribuita, meccanismi di clustering, <span class=baa>&amp;</span>c. Se fate affidamento sulle prestazioni di Java e C#, potete fare affidamento sulle prestazioni di Scala. Naturalmente, alcuni costrutti particolari del linguaggio e alcune parti della libreria potrebbero funzionare significativamente meglio o peggio delle opzioni alternative in altri linguaggi. Come sempre, dovreste analizzare il vostro codice e ottimizzarlo quando è necessario.
+</dl>
+
+<p>Potrebbe sembrare che <abbr>OOP</abbr> e <abbr>FP</abbr> siano incompatibili tra loro. In effetti, una delle filosofie di progettazione di Scala è che <abbr>OOP</abbr> e <abbr>FP</abbr> siano più sinergiche che opposte. Le caratteristiche di un approccio possono migliorare l&#8217;altro.
+
+<p>Nella <abbr>FP</abbr> le funzioni non hanno effetti collaterali e le variabili sono immutabili, mentre nella <abbr>OOP</abbr> lo stato mutabile e gli effetti collaterali sono comuni, persino incoraggiati. Scala vi permette di scegliere l&#8217;approccio più adatto ai vostri problemi di progettazione. La programmazione funzionale è particolarmente utile per la concorrenza, dato che elimina il bisogno di sincronizzare l&#8217;accesso allo stato mutabile. Tuttavia, la <abbr>FP</abbr> &#8220;pura&#8221; può risultare restrittiva. Alcuni problemi di progettazione sono più facili da risolvere con gli oggetti mutabili.
+
+<p>Il nome <em>Scala</em> è una contrazione delle parole <em>scalable language</em> (linguaggio scalabile). Sebbene questo suggerisca che la pronuncia debba essere <em>scale-ah</em>, i creatori di Scala in realtà lo pronunciano <em>scah-lah</em>, proprio come la parola italiana. Le due &#8220;a&#8221; vengono pronunciate allo stesso modo.
+
+<p>Scala è stato concepito da Martin Odersky nel 2001. Martin è un professore della School of Computer and Communication Sciences alla Ecole Polytechnique Fédérale de Lausanne (<abbr>EPFL</abbr>). Ha trascorso i suoi anni di dottorato lavorando nel gruppo guidato da Niklaus Wirth, famoso per il linguaggio Pascal. Martin ha lavorato su Pizza, un primo linguaggio funzionale per la <abbr>JVM</abbr>. Più tardi ha lavorato su <abbr>GJ</abbr>, un prototipo di quello che è poi diventato il progetto Generics in Java, con Philip Walder, famoso per il linguaggio Haskell. Martin è stato assunto da Sun Microsystems per produrre l&#8217;implementazione di riferimento di <kbd>javac</kbd>, il compilatore Java oggi incluso nel Java Development Kit (<abbr>JDK</abbr>).
+
+<p>La formazione e l&#8217;esperienza di Martin Odersky sono evidenti nel linguaggio. Man mano che imparerete Scala, finirete per capire come esso sia il prodotto di decisioni di progetto attentamente ponderate che sfruttano lo stato dell&#8217;arte nella teoria dei tipi, nella <abbr>OOP</abbr> e nella <abbr>FP</abbr>. L&#8217;esperienza di Martin con la <abbr>JVM</abbr> è evidente nell&#8217;eleganza con cui Scala è integrato con quella piattaforma. La sintesi creata tra <abbr>OOP</abbr> e <abbr>FP</abbr> è una soluzione eccellente che contiene &#8220;il meglio dei due mondi&#8221;.
+
+<h3 id=_the_seductions_of_scala>Le seduzioni di Scala</h3>
+
+<p>Oggi la nostra industria è fortunata ad avere un&#8217;ampia varietà di scelta per i linguaggi di programmazione. La potenza, la flessibilità e l&#8217;eleganza dei linguaggi dinamicamente tipati li ha resi di nuovo popolari. Tuttavia, la ricchezza delle librerie Java e .NET e le prestazioni di <abbr>JVM</abbr> e <abbr>CLR</abbr> soddisfano molte delle necessità pratiche di progetti industriali e di rete.
+
+<p>Scala è attraente perché sembra un linguaggio di scripting dinamicamente tipato grazie alla sua sintassi concisa e all&#8217;inferenza di tipo. Però Scala vi offre tutti i vantaggi della tipizzazione statica, di un modello a oggetti moderno, della programmazione funzionale e di un sistema di tipi avanzato. Questi strumenti vi permettono di costruire applicazioni scalabili e modulari che possono riutilizzare <abbr>API</abbr> legacy in Java e .NET e sfruttare le prestazioni di <abbr>JVM</abbr> e <abbr>CLR</abbr>.
+
+<p>Scala è un linguaggio per sviluppatori <em>professionali</em>. Paragonato a linguaggi come Java e Ruby, Scala è un linguaggio più difficile da padroneggiare, perché richiede competenze di <abbr>OOP</abbr>, <abbr>FP</abbr> e tipizzazione statica per essere usato nella maniera più efficace. La relativa semplicità dei linguaggi dinamicamente tipati è allettante, ma questa semplicità può essere ingannevole. In un linguaggio dinamicamente tipato, è spesso necessario usare tecniche di metaprogrammazione per realizzare progetti avanzati. Sebbene la metaprogrammazione sia potente, usarla bene richiede esperienza e il codice risultante tende a essere difficile da capire, mantenere e correggere. In Scala, molti degli stessi obiettivi di progettazione possono essere raggiunti in maniera type-safe sfruttando il suo sistema di tipi e la composizione dei mixin tramite i <em>tratti</em>.
+
+<p>Crediamo che lo sforzo aggiuntivo richiesto quotidianamente per usare Scala vi aiuterà a riflettere attentamente sui vostri progetti. Nel tempo, questa disciplina produrrà applicazioni coerenti, modulari e mantenibili. Fortunatamente, non dovete usare sempre tutte le caratteristiche più sofisticate di Scala. Buona parte del vostro codice sarà semplice e chiara come il codice scritto nel vostro linguaggio dinamicamente tipato preferito.
+
+<p>Una strategia alternativa è quella di combinare diversi linguaggi più semplici, come per esempio Java per il codice orientato agli oggetti ed Erlang per il codice funzionale e concorrente. Una decomposizione simile può funzionare, ma solo se il vostro sistema si può scindere in più parti separate in maniera pulita e se il vostro gruppo è in grado di gestire un ambiente eterogeneo. Scala è una soluzione attraente quando un singolo linguaggio &#8220;tutto compreso&#8221; è preferibile. Detto questo, il codice Scala può tranquillamente coesistere con altri linguaggi, in particolare sulla <abbr>JVM</abbr> o in .NET.
+
+<h2 id=InstallingScala>Installare Scala</h2>
+
+<p>Per cominciare il più velocemente possibile, questa sezione descrive come installare gli strumenti a riga di comando di Scala, che sono tutto ciò che vi serve per lavorare con gli esempi di questo libro. Per i dettagli su come usare Scala in vari editor e <abbr>IDE</abbr> fate riferimento alla sezione <a href=cap-14.html#IntegrationWithIDEs>Integrazione con gli <abbr>IDE</abbr></a> nel capitolo 14. Gli esempi usati in questo libro sono stati scritti e compilati usando sia la versione 2.7.5 di Scala, l&#8217;ultima rilasciata al momento della scrittura, sia gli &#8220;assemblaggi notturni&#8221; di Scala 2.8.0, che potrebbe essere già stata rilasciata nel momento in cui state leggendo queste pagine.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>La versione 2.8 introduce molte nuove caratteristiche che sottolineeremo nel corso del libro.
+</blockquote>
+
+<p>In questo libro lavoreremo con la versione di Scala per la <abbr>JVM</abbr>. Come prima cosa, dovete avere installato Java 1.4 o superiore (viene raccomandata la versione 1.5 o superiore). Se avete bisogno di installare Java, andate alla pagina web <a class=url href=http://www.java.com/en/download/manual.jsp>http://www.java.com/en/download/manual.jsp</a> e seguite le istruzioni per installare Java sul vostro computer.
+
+<p>Il sito web ufficiale di Scala è <a class=url href=http://www.scala-lang.org>http://www.scala-lang.org</a>. Per installare Scala, andate alla pagina <a class=url href=http://www.scala-lang.org/downloads>http://www.scala-lang.org/downloads</a>, scaricate il programma di installazione per il vostro ambiente e seguite le istruzioni su quella pagina.
+
+<p>Il programma di installazione indipendente dalla piattaforma e più semplice da usare è il pacchetto <em>IzPack</em>. Scaricate il file <abbr>JAR</abbr> di Scala, <span class=file>scala-2.7.5.final-installer.jar</span> oppure <span class=file>scala-2.8.0.N-installer.jar</span>, dove <em>N</em> indica il numero di revisione della versione 2.8.0. Tramite una finestra di terminale posizionatevi nella directory dove avete scaricato il file e installate Scala con il comando <kbd>java</kbd>. Supponendo che abbiate scaricato <span class=file>scala-2.8.0.final-installer.jar</span>, eseguite il comando seguente, che vi guiderà attraverso il processo di installazione.
+
+<pre><samp>java -jar scala-2.8.0.final-installer.jar</samp></pre>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Su Mac OS X la strada più facile per arrivare a una installazione funzionante di Scala è quella di usare MacPorts. Seguite le istruzioni di installazione su <a class=url href=http://www.macports.org>http://www.macports.org</a>, poi eseguite <code>sudo port install scala</code>. Potrete cominciare a lavorare entro pochi minuti.
+</blockquote>
+
+<p>In tutto il libro useremo il simbolo <code class=var>scala-home</code> per fare riferimento alla directory &#8220;radice&#8221; della vostra installazione di Scala.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Sui sistemi Unix, Linux e Mac OS X dovrete eseguire questo comando come utente <code>root</code> o usando il comando <code>sudo</code> se volete installare Scala in una directory di sistema, in modo che, per esempio, sia <code class=var>scala-home</code> = <span class=file>/usr/local/scala-2.8.0.final</span>.
+</blockquote>
+
+<p>Come alternativa, sui sistemi Unix potete scaricare il file compresso tar (per esempio, <span class=file>scala-2.8.0.final.tgz</span>) o zip (per esempio, <span class=file>scala-2.8.0.final.zip</span>) ed estrarne i contenuti in una directory di vostra scelta. Dopodiché aggiungete la sottodirectory <code class=var>scala-home</code><span class=file>/bin</span> alla vostra variabile d&#8217;ambiente <code>PATH</code>. Per esempio, se avete installato Scala in <span class=file>/usr/local/scala-2.8.0.final</span>, allora aggiungete <span class=file>/usr/local/scala-2.8.0.final/bin</span> alla vostra variabile d&#8217;ambiente <code>PATH</code>.
+
+<p>Per collaudare la vostra installazione, lanciate il comando seguente sulla riga di comando:
+
+<pre><samp>scala -version</samp></pre>
+
+<p>Impareremo di più sullo strumento a riga di comando <kbd>scala</kbd> più avanti. Dovreste ottenere un messaggio simile al seguente:
+
+<pre><samp>Scala code runner version 2.8.0.final -- Copyright 2002-2009, LAMP/EPFL</samp></pre>
+
+<p>Naturalmente, il numero che vedrete sarà differente se avete installato una versione differente. D&#8217;ora in poi, quando mostreremo messaggi a riga di comando che contengono il numero di versione, li mostreremo come <code>version 2.8.0.final</code>.
+
+<p>Congratulazioni, avete installato Scala! Se ottenete un messaggio di errore del tipo <code>scala: command not found</code> assicuratevi che la vostra variabile d&#8217;ambiente <code>PATH</code> sia opportunamente impostata per includere la directory <code>bin</code> corretta.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Le versioni 2.7.X di Scala e quelle precedenti sono compatibili con il <abbr>JDK</abbr> 1.4 o successivo. La versione 2.8 di Scala rinuncia alla compatibilità con la versione 1.4. Notate che Scala usa molte classi del <abbr>JDK</abbr>, per esempio la classe <code>String</code>. Su .NET Scala usa le classi corrispondenti per .NET.
+</blockquote>
+
+<p>Potete anche scaricare la documentazione delle <abbr>API</abbr> e i sorgenti di Scala dalla stessa pagina che avete usato per scaricare Scala.
+
+<h2 id=ForMoreInformation>Per maggiori informazioni</h2>
+
+<p>Man mano che esplorate Scala, troverete altre utili risorse che sono disponibili su <a class=url href=http://scala-lang.org>http://scala-lang.org</a>. Troverete link a strumenti di supporto per lo sviluppo e a librerie, a tutorial, alla specifica del linguaggio <a href=fixme.html#ScalaSpec2009>[ScalaSpec2009]</a> e ad articoli scientifici che descrivono alcune caratteristiche del linguaggio.
+
+<p>La documentazione per gli strumenti e per le <abbr>API</abbr> di Scala è particolarmente utile. Potete navigare la documentazione delle <abbr>API</abbr> all&#8217;indirizzo <a class=url href=http://www.scala-lang.org/docu/files/api/index.html>http://www.scala-lang.org/docu/files/api/index.html</a>. Questa documentazione è stata generata usando lo strumento <kbd>scaladoc</kbd>, analogo allo strumento <kbd>javadoc</kbd> di Java. Leggete la sezione <a href=cap-14.html#CommandLineToolScaladoc>Lo strumento <kbd>scaladoc</kbd> a riga di comando</a> nel capitolo 14 per maggiori informazioni.
+
+<p>Potete anche scaricare un file compresso contenente la documentazione delle <abbr>API</abbr> per leggerla in locale usando il link appropriato sulla pagina <a class=url href=http://www.scala-lang.org/downloads>http://www.scala-lang.org/downloads</a>, oppure potete installare la documentazione usando lo strumento di impacchettamento <kbd>sbaz</kbd> nel modo seguente.
+
+<pre><samp>sbaz install scala-devel-docs</samp></pre>
+
+<p><kbd>sbaz</kbd> viene installato nella stessa directory <code>bin</code> dove si trovano gli strumenti a riga di comando <kbd>scala</kbd> e <kbd>scalac</kbd>. La documentazione installata comprende anche dettagli su tutti gli strumenti inclusi in Scala (compreso <kbd>sbaz</kbd>) e diversi esempi di codice. Per maggiori informazioni sugli strumenti a riga di comando di Scala e su ulteriori risorse, si veda il <a href=cap-14.html>capitolo 14</a>.
+
+<h2 id=ATasteOfScala>Un assaggio di Scala</h2>
+
+<p>&Egrave; il momento di stuzzicare il vostro appetito con un po&#8217; di vero codice Scala. Negli esempi che seguono descriveremo i particolari sufficienti a farvi capire cosa sta succedendo, per darvi un&#8217;idea di come sono fatti i programmi Scala. Esploreremo i dettagli delle caratteristiche del linguaggio nei prossimi capitoli.
+
+<p>Potete eseguire il nostro primo esempio in due modi: interattivamente o come uno &#8220;script&#8221;.
+
+<p>Cominciamo con la modalità interattiva. Lanciate l&#8217;interprete Scala digitando <kbd>scala</kbd> e premendo il tasto di invio sulla vostra riga di comando. Vedrete la seguente uscita. (Alcuni numeri di versione potrebbero variare.)
+
+<pre><samp>Welcome to Scala version 2.8.0.final (Java &hellip;).
+Type in expressions to have them evaluated.
+Type :help for more information.
+
+scala&gt;</samp></pre>
+
+<p>L&#8217;ultima riga è il prompt che attende le vostre istruzioni in ingresso. La modalità interattiva di <kbd>scala</kbd> è molto conveniente per fare esperimenti (si veda la sezione <a href=cap-14.html#CommandLineToolScala>Lo strumento <kbd>scala</kbd> a riga di comando</a> nel capitolo 14 per i dettagli). Un interprete interattivo come questo viene chiamato <abbr>REPL</abbr>: <em>Read-Evaluate-Print Loop</em> (letteralmente, ciclo di lettura-valutazione-stampa).
+
+<p>Digitate le due righe di codice seguenti.
+
+<pre>
+val book = "Programmare in Scala"
+println(book)
+</pre>
+
+<p>Gli effettivi ingressi e uscite dovrebbero somigliare a quanto segue.
+
+<pre><samp>scala&gt; val book = "Programmare in Scala"
+book: java.lang.String = Programmare in Scala
+
+scala&gt; println(book)
+Programmare in Scala
+
+scala&gt;</samp></pre>
+
+<p>La prima riga usa la parola chiave <code>val</code> per dichiarare una variabile a sola lettura chiamata <var>book</var>. Notate che il risultato restituito dall&#8217;interprete vi mostra il tipo e il valore di <var>book</var>. Questo può essere molto comodo per capire dichiarazioni complesse. La seconda riga stampa il valore di <var>book</var>, che è &#8220;Programmare in Scala&#8221;.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Fare esperimenti con il comando <kbd>scala</kbd> nella modalità interattiva (<abbr>REPL</abbr>) è un ottimo modo per imparare i dettagli di Scala.
+</blockquote>
+
+<p>Molti degli esempi in questo libro possono essere eseguiti nell&#8217;interprete in questo modo. Tuttavia, spesso è più conveniente usare la seconda opzione che abbiamo menzionato, cioè scrivere gli script Scala in un editor di testo o in un <abbr>IDE</abbr> ed eseguirli con lo stesso comando <kbd>scala</kbd>. Faremo così per gli esempi rimanenti in questo capitolo.
+
+<p>Dal vostro editor di testo preferito, salvate il codice Scala dell&#8217;esempio seguente in un file chiamato <span class=file>upper1-script.scala</span> in una directory di vostra scelta.
+
+<pre><code>// <a href=esempi/cap-1/upper1-script.scala>esempi/cap-1/upper1-script.scala</a>
+
+class Upper {
+  def upper(strings: String*): Seq[String] = {
+    strings.map((s: String) => s.toUpperCase())
+  }
+}
+
+val up = new Upper
+Console.println(up.upper("Un", "Primo", "Programma", "Scala"))
+</code></pre>
+
+<p>Questo programma Scala converte stringhe in maiuscolo.
+
+<p>A proposito, quello sulla prima riga è un commento (con il nome del file sorgente che contiene l&#8217;esempio di codice). Per i commenti, Scala segue le stesse convenzioni di Java, C#, C++, <span class=baa>&amp;</span>c. Un <code>// commento</code> prosegue fino alla fine di una riga, mentre un <code>/* commento */</code> può occupare più righe.
+
+<p>Per eseguire questo programma, aprite una finestra di terminale, entrate nella stessa directory e lanciate il comando seguente.
+
+<pre><samp>scala upper1-script.scala</samp></pre>
+
+<p>Il file viene interpretato, nel senso che viene compilato ed eseguito in un unico passo. Dovreste ottenere il seguente risultato:
+
+<pre><samp>Array(UN, PRIMO, PROGRAMMA, SCALA)</samp></pre>
+
+<div class=sidebar>
+<p class=st>Interpretare vs. compilare codice Scala ed eseguirlo
+
+<p>Per riassumere, se digitate <kbd>scala</kbd> sulla riga di comando senza passare un file come argomento, l&#8217;interprete viene eseguito in modalità interattiva, nella quale potete digitare definizioni e istruzioni che vengono valutate sul momento. Se passate un file sorgente Scala come argomento, il comando lo compilerà ed eseguirà il file come uno script, come nel nostro esempio <kbd>scala upper1-script.scala</kbd>. Infine, potete compilare i file Scala separatamente ed eseguire il file <code>class</code> purché contenga un metodo <code>main</code>, proprio come fareste normalmente con il comando <kbd>java</kbd>. (Vedremo un esempio tra breve.)
+
+<p>Ci sono alcune sottigliezze che avrete bisogno di capire sui limiti e le differenze tra usare le modalità dell&#8217;interprete ed effettuare passi separati di compilazione ed esecuzione. Discuteremo di queste sottigliezze nella sezione <a href=cap-14.html#CommandLineTools>Strumenti a riga di comando</a> del capitolo 14.
+
+<p>Ogni volta che parliamo di <em>eseguire uno script</em> ci riferiamo all&#8217;esecuzione di un file sorgente Scala tramite il comando <kbd>scala</kbd>.
+</div>
+
+<p>In questo esempio, il metodo <code>upper</code> della classe <code>Upper</code> (nessun gioco di parole intenzionale) converte le stringhe in ingresso in maiuscolo e le restituisce in un array. L&#8217;ultima riga dell&#8217;esempio converte quattro stringhe e stampa l&#8217;array risultante.
+
+<p>Esaminiamo il codice nel dettaglio, così possiamo cominciare a imparare la sintassi di Scala. Ci sono molti dettagli in sole sei righe di codice! Qui illustreremo le idee generali. Tutte le idee usate in questo esempio verranno spiegate in maniera più esauriente nelle prossime sezioni del libro.
+
+<p>In questo esempio, la classe <code>Upper</code> comincia con la parola chiave <code>class</code>. Il corpo della classe si trova all&#8217;interno della coppia più esterna di parentesi graffe <code>{&hellip;}</code>.
+
+<p>La definizione del metodo <code>upper</code> comincia nella seconda riga con la parola chiave <code>def</code> seguita dal nome del metodo e da una lista di argomenti, dal tipo di ritorno del metodo, da un segno di uguale &#8220;=&#8221; e poi dal corpo del metodo.
+
+<p>La lista di argomenti tra parentesi è in realtà una <em>lista di argomenti a lunghezza variabile</em> composta da stringhe, come indicato dal tipo <code>String*</code> che segue i due punti. Questo significa che potete passare tante stringhe separate da una virgola quante ne volete (compresa una lista vuota). Queste stringhe vengono memorizzate in un parametro chiamato <code>strings</code>. All&#8217;interno del metodo, <code>strings</code> è in realtà un&#8217;istanza di <code>Array</code>.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Quando il codice contiene un&#8217;informazione di tipo esplicita per le variabili, queste <em>annotazioni di tipo</em> seguono i due punti dopo il nome dell&#8217;elemento (cioè secondo una sintassi simile al Pascal). Perché Scala non segue le convenzioni Java? Ricordatevi che l&#8217;informazione di tipo è spesso <em>inferita</em> in Scala (a differenza di Java), quindi non dobbiamo mostrare sempre le annotazioni di tipo in maniera esplicita. Rispetto alla convenzione <code>tipo elemento</code> di Java, la convenzione <code>elemento: tipo</code> è più facile da analizzare in maniera univoca per il compilatore quando omettete i due punti e l&#8217;annotazione di tipo scrivendo semplicemente <code>elemento</code>.
+</blockquote>
+
+<p>Il tipo di ritorno del metodo compare dopo la lista degli argomenti. In questo caso, il tipo di ritorno è <code>Seq[String]</code>, dove <code>Seq</code> (che sta per &#8220;sequenza&#8221;) è un tipo particolare di collezione. Questo è un <em>tipo parametrico</em> (simile a un tipo <em>generico</em> in Java), in questo caso parametrizzato con <code>String</code>. Notate che Scala usa le parentesi quadre <code>[&hellip;]</code> per i tipi parametrici, mentre Java usa le parentesi angolari <code>&lt;&hellip;&gt;</code>.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Scala consente di usare parentesi angolari nei nomi dei metodi; per esempio, è pratica comune chiamare un metodo &#8220;minore di&#8221; con il nome <code>&lt;</code>. Quindi, in modo da evitare ambiguità, Scala usa le parentesi quadre per i tipi parametrici perché non possono essere usate nel nome dei metodi. Scala non segue la convenzione Java per le parentesi angolari perché consente di usare <code>&lt;</code> e <code>&gt;</code> nei nomi dei metodi.
+</blockquote>
+
+<p>Il corpo del metodo <code>upper</code> si trova dopo il segno di uguale &#8220;=&#8221;. Perché un segno di uguale? Perché non semplicemente una coppia di parentesi graffe <code>{&hellip;}</code> come in Java? Dato che i punti e virgola, i tipi di ritorno delle funzioni, le liste di argomenti per i metodi e persino le parentesi graffe vengono talvolta omesse, usare un segno di uguale evita diverse possibili ambiguità nella sintassi del linguaggio. Il segno di uguale ci ricorda anche che persino le funzioni sono valori in Scala, una caratteristica coerente con il supporto offerto da Scala per la <em>programmazione funzionale</em>, descritto in maggiore dettaglio nel <a href=cap-8.html>capitolo 8</a>.
+
+<p>Il corpo del metodo invoca il metodo <code>map</code> sull&#8217;array <code>strings</code> passandogli un <em>letterale funzione</em> come argomento. I letterali funzione sono funzioni &#8220;anonime&#8221;, simili alle funzioni <em>lambda</em>, alle <em>chiusure</em>, ai <em>blocchi</em>, o alle <em>proc</em> che si possono trovare in altri linguaggi. In Java, qui dovreste usare una classe annidata anonima che implementa un metodo definito da un&#8217;interfaccia, <span class=baa>&amp;</span>c.
+
+<p>In questo caso, abbiamo passato il seguente letterale funzione.
+
+<pre><code>(s: String) =&gt; s.toUpperCase()</code></pre>
+
+<p>Questo letterale prende una lista di argomenti con un singolo argomento di tipo <code>String</code> chiamato <code>s</code>. Il corpo del letterale funzione si trova dopo la &#8220;freccia&#8221; <code>=&gt;</code> e invoca <code>toUpperCase()</code> su <code>s</code>. Il letterale funzione restituisce il risultato di questa invocazione. In Scala, l&#8217;ultima <em>espressione</em> contenuta in una funzione è il valore di ritorno, sebbene possiate anche avere istruzioni <code>return</code> in altri punti. La parola chiave <code>return</code> è opzionale e viene raramente usata, a parte quando si ritorna da un punto che si trova in mezzo a un blocco (per esempio in una istruzione <code>if</code>).
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Il valore dell&#8217;ultima espressione è il valore di ritorno predefinito di una funzione. L&#8217;istruzione <code>return</code> non è obbligatoria.
+</blockquote>
+
+<p>Quindi, <code>map</code> passa ogni stringa contenuta in <code>strings</code> al letterale funzione e assembla una nuova collezione con i risultati restituiti dal letterale funzione.
+
+<p>Per provare il codice, creiamo una nuova istanza di <code>Upper</code> e la assegniamo a una variabile chiamata <code>up</code>. Come in Java, C# e linguaggi simili, la sintassi <code>new Upper</code> crea una nuova istanza. La variabile <code>up</code> è dichiarata come un &#8220;valore&#8221; a sola lettura usando la parola chiave <code>val</code>.
+
+<p>Infine, invochiamo il metodo <code>upper</code> su una lista di stringhe e stampiamo il risultato con <code>Console.println(&hellip;)</code>, che è equivalente al <code>System.out.println(&hellip;)</code> di Java.
+
+<p>In realtà possiamo semplificare ulteriormente il nostro programma. Considerate questa versione semplificata del programma.
+
+<pre><code>// <a href=esempi/cap-1/upper2-script.scala>esempi/cap-1/upper2-script.scala</a>
+
+object Upper {
+  def upper(strings: String*) = strings.map(_.toUpperCase())
+}
+
+println(Upper.upper("Un", "Primo", "Programma", "Scala"))</code></pre>
+
+<p>Questo codice fa esattamente la stessa cosa, ma usando un terzo di caratteri in meno.
+
+<p>Nella prima riga <code>Upper</code> ora è dichiarata come un <code>object</code>, che è un <em>singleton</em>. Stiamo dichiarando una classe, ma l&#8217;interprete Scala creerà una sola istanza di <code>Upper</code>. (Non potete scrivere <code>new Upper</code>, per esempio.) Scala usa gli <code>object</code> per situazioni in cui altri linguaggi userebbero membri &#8220;a livello di classe&#8221;, come i membri <code>static</code> in Java. In questo caso non abbiamo bisogno di più di una <em>istanza</em>, quindi un singleton va bene.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Perché Scala non supporta i membri statici? Dato che <em>ogni cosa</em> è un oggetto in Scala, il costrutto <code>object</code> è coerente con questa politica. I metodi e i campi statici in Java non sono legati ad alcuna istanza.
+</blockquote>
+
+<p>Notate che questo codice è completamente thread-safe. Non stiamo dichiarando alcuna variabile che potrebbe causare problemi di sicurezza dei thread; anche i metodi di <abbr>API</abbr> che usiamo sono thread-safe. Di conseguenza, non ci servono molteplici istanze. Ci basta un singolo <code>object</code>.
+
+<p>Anche l&#8217;implementazione di <code>upper</code> nella seconda riga è più semplice. Di solito Scala è in grado di inferire il tipo di ritorno del metodo (ma non i tipi degli argomenti del metodo), quindi evitiamo di dichiararlo esplicitamente. In più, dato che il corpo del metodo contiene una sola espressione, omettiamo le parentesi e collochiamo l&#8217;intera definizione di metodo su una riga. Il segno di uguale prima del corpo del metodo indica al compilatore, così come al lettore umano, il punto in cui comincia il corpo del metodo.
+
+<p>Abbiamo anche sfruttato un&#8217;abbreviazione per il letterale funzione. In precedenza lo avevamo scritto in questo modo.
+
+<pre><code>(s: String) =&gt; s.toUpperCase()</code></pre>
+
+<p>Possiamo abbreviarlo nella seguente espressione.
+
+<pre><code>_.toUpperCase()</code></pre>
+
+<p>Dato che <code>map</code> accetta un unico argomento (una funzione) possiamo usare l&#8217;indicatore &#8220;segnaposto&#8221; <code>_</code> invece di un parametro con nome. L&#8217;indicatore <code>_</code> agisce come una variabile anonima a cui viene assegnata ogni stringa prima di invocare <code>toUpperCase</code>. Notate anche che il tipo <code>String</code> viene inferito. Come vedremo, Scala usa <code>_</code> come una &#8220;wildcard&#8221; in diversi contesti.
+
+<p>Potete anche usare questa sintassi abbreviata in alcuni letterali funzione più complessi, come vedremo nel <a href=cap-3.html>capitolo 3</a>.
+
+<p>Nell&#8217;ultima riga, l&#8217;uso di un <code>object</code> al posto di una classe semplifica il codice. Invece di creare un&#8217;istanza con <code>new Upper</code>, possiamo limitarci a invocare il metodo <code>upper</code> direttamente sull&#8217;oggetto <code>Upper</code> (notate come questo somigli alla sintassi che usereste per invocare un metodo statico di una classe Java).
+
+<p>Infine, Scala importa automaticamente molti metodi di I/O come <code>println</code>, quindi non abbiamo bisogno di invocare <code>Console.println()</code>; possiamo semplicemente usare <code>println</code>. (Si veda la sezione <a href=ch07.html#PredefObject>L&#8217;oggetto predefinito</a> nel capitolo 7 per i dettagli sui tipi e sui metodi che vengono importati o definiti automaticamente.)
+
+<p>Effettuiamo un ultimo <em>refactoring</em>: convertiamo lo script in uno strumento compilato a riga di comando.
+
+<pre><code>// <a href=esempi/cap-1/upper3.scala>esempi/cap-1/upper3.scala</a>
+
+object Upper {
+  def main(args: Array[String]) = {
+    args.map(_.toUpperCase()).foreach(printf("%s ",_))
+    println("")
+  }
+}</code></pre>
+
+<p>Ora il metodo <code>upper</code> è stato rinominato <code>main</code>. Dato che <code>Upper</code> è un <code>object</code>, questo metodo <code>main</code> funziona esattamente come un metodo <code>static main</code> di una classe Java. &Egrave; il punto di ingresso per l&#8217;<em>applicazione</em> <code>Upper</code>.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>In Scala, <code>main</code> deve essere un metodo di un <code>object</code>. (In Java, <code>main</code> deve essere un metodo <code>static</code> di una classe.) Gli argomenti sulla riga di comando vengono passati a <code>main</code> in un array di stringhe, per esempio <code>args: Array[String]</code>.
+</blockquote>
+
+<p>La prima riga nel metodo <code>main</code> usa la stessa notazione abbreviata per <code>map</code> che abbiamo appena esaminato.
+
+<pre><code>args.map(_.toUpperCase())&hellip;</code></pre>
+
+<p>L&#8217;invocazione di <code>map</code> restituisce una nuova collezione. Iteriamo attraverso di essa con <code>foreach</code>, usando ancora il segnaposto <code>_</code> in un nuovo <em>letterale funzione</em> che passiamo a <code>foreach</code>. In questo caso, ogni stringa contenuta nella collezione viene passata come argomento a <code>printf</code>.
+
+<pre><code>&hellip;foreach(printf("%s ",_))</code></pre>
+
+<p>Per essere chiari, questi due usi di <code>_</code> sono completamente indipendenti tra loro. La concatenazione dei metodi e le abbreviazioni dei letterali funzione, come in questo esempio, possono richiedere un po&#8217; di abitudine per essere usati in maniera efficace, ma una volta che vi trovate a vostro agio producono codice molto leggibile con un impiego minimo di variabili temporanee.
+
+<p>L&#8217;ultima riga del metodo <code>main</code> aggiunge un ritorno a capo conclusivo all&#8217;uscita.
+
+<p>Questa volta, dovete prima compilare il codice in un file <code>.class</code> per la <abbr>JVM</abbr> usando <kbd>scalac</kbd>.
+
+<pre><samp>scalac upper3.scala</samp></pre>
+
+<p>Ora dovreste avere un file chiamato <span class=file>Upper.class</span>, esattamente come se aveste appena compilato una classe Java.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Potreste aver notato che il compilatore non si è lamentato quando ha visto che il file è chiamato <span class=file>upper3.scala</span> e l&#8217;<code>object</code> è chiamato <code>Upper</code>. A differenza di Java, il nome del file non deve corrispondere al nome del tipo dichiarato come <code>public</code>. (Esploreremo le regole di visibilità nella sezione <a href=cap-5.html#VisibilityRules>Regole di visibilità</a> del capitolo 5.) In effetti, a differenza di Java, potete mettere tutti i tipi pubblici che volete in un singolo file. In più, la directory in cui si trova un file non deve corrispondere alla dichiarazione del package. Tuttavia, potete certamente seguire le convenzioni Java se volete farlo.
+</blockquote>
+
+<p>Ora potete eseguire questo comando su qualunque lista di stringhe. Ecco un esempio.
+
+<pre><samp>scala -cp . Upper Ciao Mondo!</samp></pre>
+
+<p>L&#8217;opzione <kbd>-cp .</kbd> aggiunge la directory corrente al <em>class path</em>, il percorso di ricerca delle classi. Dovreste ottenere la seguente uscita.
+
+<pre>CIAO MONDO!</pre>
+
+<p>Abbiamo dunque soddisfatto il requisito per cui un libro che parla di un linguaggio di programmazione deve cominciare con un programma &#8220;ciao mondo&#8221;.
+
+<h2 id=ATasteOfConcurrency>Un assaggio di concorrenza</h2>
+
+<p>Ci sono molte ragioni per lasciarsi sedurre da Scala. Una ragione è la <abbr>API</abbr> <code>Actors</code> inclusa nella libreria Scala, basata sul robusto modello di concorrenza <code>Actors</code> implementato in Erlang <a href=apa.html#Haller2007>[Haller2007]</a>. In questa sezione vi presenteremo un esempio per stuzzicarvi l&#8217;appetito.
+
+<p>Il modello di concorrenza ad attori <a href=apa.html#Agha1987>[Agha1987]</a> si basa su entità software indipendenti chiamate <em>attori</em> che non condividono tra loro alcuna informazione di stato e comunicano scambiandosi messaggi. Eliminando il bisogno di sincronizzare l&#8217;accesso a uno stato mutabile condiviso, è molto più facile scrivere applicazioni concorrenti robuste.
+
+<p>In questo esempio, alcune istanze di una gerarchia di forme geometriche vengono inviate a un attore per essere disegnate su uno schermo. Immaginate uno scenario in cui una <em>rendering farm</em> genera le scene di un&#8217;animazione. Man mano che il rendering di una scena viene completato, le forme &#8220;primitive&#8221; che fanno parte della scena vengono inviate a un attore di un sottosistema di visualizzazione.
+
+<p>Per cominciare, definiamo una gerarchia di forme a partire dalla classe <code>Shape</code>.
+
+<pre><code>// <a href=esempi/cap-1/shapes.scala>esempi/cap-1/shapes.scala</a>
+
+package shapes {
+  class Point(val x: Double, val y: Double) {
+    override def toString() = "Point(" + x + "," + y + ")"
+  }
+
+  abstract class Shape() {
+    def draw(): Unit
+  }
+
+  class Circle(val center: Point, val radius: Double) extends Shape {
+    def draw() = println("Circle.draw: " + this)
+    override def toString() = "Circle(" + center + "," + radius + ")"
+  }
+
+  class Rectangle(val lowerLeft: Point, val height: Double, val width: Double)
+        extends Shape {
+    def draw() = println("Rectangle.draw: " + this)
+    override def toString() =
+      "Rectangle(" + lowerLeft + "," + height + "," + width + ")"
+  }
+
+  class Triangle(val point1: Point, val point2: Point, val point3: Point)
+        extends Shape {
+    def draw() = println("Triangle.draw: " + this)
+    override def toString() =
+      "Triangle(" + point1 + "," + point2 + "," + point3 + ")"
+  }
+}</code></pre>
+
+<p>La gerarchia della classe <code>Shape</code> è definita in un package <code>shapes</code>. Potete dichiarare il package usando la sintassi Java, ma Scala supporta anche una sintassi simile a quella degli &#8220;spazi di nomi&#8221; in C#, dove l&#8217;intera dichiarazione è racchiusa tra parentesi graffe, come in questo caso. Tuttavia, essendo sia compatta che leggibile, la sintassi Java per la dichiarazione dei package viene usata molto più spesso.
+
+<p>La classe <code>Point</code> rappresenta un punto bidimensionale su un piano. Notate la lista di argomenti dopo il nome della classe. Quelli sono i parametri di un costruttore. In Scala, l&#8217;<em>intero</em> corpo della classe è il costruttore, quindi gli argomenti per il costruttore <em>principale</em> vanno elencati dopo il nome della classe e prima del corpo della classe. (Vedremo come definire costruttori ausiliari nella sezione <a href=cap-5.html#Constructors>Costruttori in Scala</a> del capitolo 5.) Dato che abbiamo messo la parola chiave <code>val</code> prima di ogni dichiarazione di parametro, i parametri vengono automaticamente convertiti in campi a sola lettura con lo stesso nome associati a metodi pubblici di lettura che hanno lo stesso nome; cioè, quando create un&#8217;istanza della classe <code>Point</code>, per esempio <code>punto</code>, potete leggere i campi usando <code>punto.x</code> e <code>punto.y</code>. Se volete campi <em>mutabili</em>, allora usate la parola chiave <code>var</code>. Esploreremo le dichiarazioni di variabile e le parole chiave <code>val</code> e <code>var</code> nella sezione <a href=cap-2.html#VariableDeclarationsAndDefinitions>Dichiarazioni di variabile</a> del capitolo 2.
+
+<p>Il corpo di <code>Point</code> definisce un metodo che è la <em>ridefinizione</em> del metodo <code>toString</code> comune in Java (come <code>ToString</code> in C#). Notate che Scala, come C#, richiede la parola chiave <code>override</code> ogni volta che ridefinite un metodo concreto. A differenza di C#, non dovete usare la parola chiave <code>virtual</code> sul metodo concreto originale. In effetti, non c&#8217;è alcuna parola chiave <code>virtual</code> in Scala. Come prima, omettiamo le parentesi graffe <code>{&hellip;}</code> attorno al corpo di <code>toString()</code> dato che contiene solo una singola espressione.
+
+<p><code>Shape</code> è una classe astratta. Le classi astratte di Scala sono simili a quelle di Java e C#. Non possiamo istanziare una classe astratta, anche quando tutti i suoi campi e i suoi metodi sono concreti.
+
+<p>In questo caso, <code>Shape</code> dichiara un metodo <em>astratto</em> <code>draw</code>. Sappiamo che è astratto perché non ha un corpo. La parola chiave <code>abstract</code> sul metodo non è obbligatoria. I metodi astratti di Scala sono esattamente come i metodi astratti di Java e C#. (Si veda la sezione <a href=cap-6.html#OverridingMembers>Ridefinire i membri di classi e tratti</a> nel capitolo 6 per maggiori dettagli.)
+
+<p>Il metodo <code>draw</code> restituisce il tipo <code>Unit</code>, pressoché equivalente al tipo <code>void</code> dei linguaggi derivati dal C come Java <span class=baa>&amp;</span>c. (Si veda la sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> nel capitolo 7 per maggiori dettagli.)
+
+<p><code>Circle</code> è dichiarata come una sottoclasse concreta di <code>Shape</code>. Definisce il metodo <code>draw</code> in modo che stampi semplicemente un messaggio sulla console. <code>Circle</code> ridefinisce anche il metodo <code>toString</code>.
+
+<p>Anche <code>Rectangle</code> è una sottoclasse concreta di <code>Shape</code> che definisce <code>draw</code> e ridefinisce <code>toString</code>. Per semplicità, supporremo che il rettangolo non sia ruotato in relazione agli assi X e Y, quindi tutto ciò di cui abbiamo bisogno è un punto (il vertice in basso a sinistra andrà bene) insieme alle dimensioni di altezza e larghezza.
+
+<p><code>Triangle</code> segue lo stesso schema. Prende tre istanze di <code>Point</code> come argomenti del proprio costruttore.
+
+<p>Tutti i metodi <code>draw</code> nelle classi <code>Circle</code>, <code>Rectangle</code> e <code>Triangle</code> usano <code>this</code>. Come in Java e C#, <code>this</code> è il modo in cui un&#8217;istanza fa riferimento a sé stessa. In questo contesto, dove <code>this</code> è la parte destra di un&#8217;espressione che concatena stringhe (usando il segno più), <code>this.toString</code> viene invocato implicitamente.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Naturalmente, in un&#8217;applicazione reale non implementereste le operazioni di disegno nelle classi che fanno parte del &#8220;modello del dominio&#8221; in questo modo, dato che l&#8217;implementazione dipenderebbe da dettagli come la piattaforma del sistema operativo, le <abbr>API</abbr> grafiche, <span class=baa>&amp;</span>c. Vedremo un approccio di progettazione migliore quando discuteremo i <em>tratti</em> nel <a href=cap-4.html>capitolo 4</a>.
+</blockquote>
+
+<p>Ora che abbiamo definito i nostri tipi di forme, torniamo agli attori. Definiamo un <code>Actor</code> che riceve &#8220;messaggi&#8221; che sono forme da disegnare.
+
+<pre><code>// <a href=esempi/cap-1/shapes-actor.scala>esempi/cap-1/shapes-actor.scala</a>
+
+package shapes {
+  import scala.actors._
+  import scala.actors.Actor._
+
+  object ShapeDrawingActor extends Actor {
+    def act() {
+      loop {
+        receive {
+          case s: Shape =&gt; s.draw()
+          case "exit"   =&gt; println("termino..."); exit
+          case x: Any   =&gt; println("Errore: messaggio sconosciuto! " + x)
+        }
+      }
+    }
+  }
+}</code></pre>
+
+<p>L&#8217;attore viene dichiarato come parte del package <code>shapes</code>. Subito dopo, troviamo due istruzioni di importazione.
+
+<p>La prima istruzione importa tutti i tipi dal package <code>scala.actors</code>. In Scala, il trattino basso <code>_</code> è usato nel modo in cui l&#8217;asterisco <code>*</code> viene usato in Java.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Dato che <code>*</code> è un carattere valido per un nome di funzione, non può essere usato come wildcard in una istruzione <code>import</code>. Al suo posto, viene riservato <code>_</code> per questo scopo.
+</blockquote>
+
+<p>Tutti i metodi e i campi pubblici di <code>Actor</code> vengono importati. Queste non sono importazioni statiche dal tipo <code>Actor</code> come sarebbero in Java. Piuttosto, metodi e campi sono importati da un <code>object</code> chiamato anch&#8217;esso <code>Actor</code>. La classe e l&#8217;oggetto hanno lo stesso nome, come vedremo nella sezione <a href=cap-6.html#CompanionObjects>Oggetti associati</a> del capitolo 6.
+
+<p>La classe <code>ShapeDrawingActor</code> che definisce il nostro attore è un <code>object</code> che estende <code>Actor</code> (il tipo, non l&#8217;oggetto). Il metodo <code>act</code> viene ridefinito per svolgere la particolare operazione dell&#8217;attore. Dato che <code>act</code> è un metodo astratto, non abbiamo bisogno di ridefinirlo esplicitamente con la parola chiave <code>override</code>. Il nostro attore aspetta i messaggi in arrivo in un ciclo infinito.
+
+<p>Durante ogni passo del ciclo viene invocato il <em>metodo</em> <code>receive</code>, che si blocca fino a quando non arriva un nuovo messaggio. Perché il codice che segue <code>receive</code> è racchiuso tra parentesi graffe (<code>{&hellip;}</code>) e non tra parentesi tonde (<code>(&hellip;)</code>)? Impareremo più avanti che ci sono casi in cui questa sostituzione è permessa ed è piuttosto utile (si veda il <a href=cap-3.html>capitolo 3</a>). Per ora, vi basterà sapere che le espressioni all&#8217;interno delle parentesi costituiscono un singolo <em>letterale funzione</em> che viene passato a <code>receive</code>. Questo letterale funzione esegue un&#8217;operazione di <em>pattern matching</em> (corrispondenza di pattern) sull&#8217;istanza del messaggio per decidere come gestirlo. Grazie alle clausole <code>case</code> questa sembra una tipica istruzione <code>switch</code> di Java, e in effetti il suo comportamento è molto simile.
+
+<p>La prima clausola <code>case</code> effettua un confronto di tipo con il messaggio. (Non c&#8217;è alcuna variabile esplicita per l&#8217;istanza del messaggio nel codice, perché viene inferita.) Se il messaggio è di tipo <code>Shape</code>, la prima clausola <code>case</code> corrisponde. L&#8217;istanza del messaggio viene convertita in un&#8217;istanza di <code>Shape</code> e assegnata alla variabile <code>s</code>, sulla quale viene poi invocato il metodo <code>draw</code>.
+
+<p>Se il messaggio non è di tipo <code>Shape</code>, viene provata la seconda clausola <code>case</code>. Se il messaggio è la stringa <code>"exit"</code>, l&#8217;attore stampa un messaggio e termina la propria esecuzione. Di solito bisognerebbe dare agli attori la possibilità di terminare normalmente!
+
+<p>L&#8217;ultima clausola <code>case</code> gestisce tutti gli altri messaggi, assumendo il ruolo di caso <em>predefinito</em>. L&#8217;attore riporta un errore e poi scarta il messaggio. <code>Any</code> è il genitore di tutti i tipi nella gerarchia di tipi di Scala, così come <code>Object</code> è il tipo radice in Java e in altri linguaggi. Quindi, questa clausola <code>case</code> corrisponderà a qualsiasi messaggio di qualsiasi tipo. Il pattern matching è avido; dobbiamo mettere questa clausola alla fine per evitare che consumi anche i messaggi che stiamo aspettando!
+
+<p>Ricordatevi che abbiamo dichiarato <code>draw</code> come un metodo astratto in <code>Shape</code> e abbiamo implementato <code>draw</code> nelle sottoclassi concrete. Quindi il codice nella prima istruzione <code>case</code> invoca un&#8217;operazione polimorfica.
+
+<div class=sidebar>
+<p class=st>Pattern matching vs. polimorfismo
+
+<p>Il <em>pattern matching</em> gioca un ruolo centrale nella programmazione funzionale, esattamente come il polimorfismo gioca un ruolo centrale nella programmazione orientata agli oggetti. Il pattern matching funzionale è molto più importante e sofisticato delle corrispondenti istruzioni <code>switch</code>/<code>case</code> che trovate nella maggior parte dei linguaggi <em>imperativi</em> come Java. Esamineremo il supporto di Scala per il pattern matching in maggior dettaglio nel <a href=cap-8.html>capitolo 8</a>. In questo nostro esempio, possiamo cominciare a vedere che l&#8217;unione del pattern matching funzionale con il polimorfismo orientato agli oggetti è una combinazione potente a favore dei linguaggi multiparadigma come Scala.
+</div>
+
+<p>Infine, ecco uno script che usa l&#8217;attore <code>ShapeDrawingActor</code>.
+
+<pre><code>// <a href=esempi/cap-1/shapes-actor-script.scala>esempi/cap-1/shapes-actor-script.scala</a>
+
+import shapes._
+
+ShapeDrawingActor.start()
+
+ShapeDrawingActor ! new Circle(new Point(0.0, 0.0), 1.0)
+ShapeDrawingActor ! new Rectangle(new Point(0.0, 0.0), 2, 5)
+ShapeDrawingActor ! new Triangle(new Point(0.0, 0.0),
+                                 new Point(1.0, 0.0),
+                                 new Point(0.0, 1.0))
+ShapeDrawingActor ! 3.14159
+
+ShapeDrawingActor ! "exit"</code></pre>
+
+<p>Le forme nel package <code>shape</code> vengono importate.
+
+<p>L&#8217;attore <code>ShapeDrawingActor</code> viene fatto partire e si mette in attesa di messaggi in arrivo. Per default, viene eseguito in un proprio thread (ci sono alternative che discuteremo nel <a href=cap-9.html>capitolo 9</a>).
+
+<p>Vengono inviati cinque messaggi all&#8217;attore, usando la sintassi <code>attore ! messaggio</code>. Il primo messaggio è un&#8217;istanza di <code>Circle</code>; l&#8217;attore &#8220;disegna&#8221; il cerchio. Il secondo messaggio è un oggetto <code>Rectangle</code>; l&#8217;attore &#8220;disegna&#8221; il rettangolo. In risposta al terzo messaggio, l&#8217;attore fa la stessa cosa per un triangolo. Il quarto messaggio è un numero <code>Double</code> approssimativamente uguale a &pi;. Questo è un messaggio sconosciuto per l&#8217;attore, che quindi si limita a stampare un messaggio di errore. Il messaggio finale è la stringa <code>"exit"</code>, che provoca la terminazione dell&#8217;attore.
+
+<p>Per provare l&#8217;esempio con gli attori, cominciate a compilare i primi due file. Potete scaricare i sorgenti dal sito di O&#8217;Reilly (si veda la sezione <a href=prefazione.html#GettingCodeExamples>Ottenere gli esempi di codice</a> nella Prefazione per i dettagli) o potete crearli voi stessi.
+
+<p>Usate il comando seguente per compilare i file.
+
+<pre><samp>scalac shapes.scala shapes-actor.scala</samp></pre>
+
+<p>Sebbene il nome dei file sorgente e le directory non debbano corrispondere al contenuto dei file, noterete che i file di classe vengono generati in una directory <code>shapes</code> e che c&#8217;è un file di classe per ogni classe che abbiamo definito. I nomi dei file di classe e le directory devono essere conformi ai requisiti della <abbr>JVM</abbr>.
+
+<p>Ora potete eseguire lo script e vedere l&#8217;attore in azione.
+
+<pre><samp>scala -cp . shapes-actor-script.scala</samp></pre>
+
+<p>Dovreste vedere l&#8217;uscita seguente.
+
+<pre>Circle.draw: Circle(Point(0.0,0.0),1.0)
+Rectangle.draw: Rectangle(Point(0.0,0.0),2.0,5.0)
+Triangle.draw: Triangle(Point(0.0,0.0),Point(1.0,0.0),Point(0.0,1.0))
+Errore: messaggio sconosciuto! 3.14159
+termino...</pre>
+
+<p>Per maggiori informazioni sugli attori, si veda il <a href=cap-9.html>capitolo 9</a>.
+
+<h2 id=_recap_and_what_8217_s_next>Riepilogo, e poi?</h2>
+
+<p>Abbiamo sostenuto la causa di Scala e vi abbiamo mostrato due primi esempi di programmi in Scala, uno dei quali vi ha permesso di farvi un&#8217;idea della libreria di <em>attori</em> usata da Scala per la concorrenza. Nel prossimo capitolo approfondiremo la sintassi di Scala, evidenziando diversi modi per sbrigare molto lavoro risparmiando caratteri.
+
+<hr style="border-color: black; height: 1px; width: 8em; margin-left: 0px; margin-top: 2em;">
+
+<ol id=fns>
+<li id=fn-1>[NdT] Nel corso del 2009, tuttavia, i tre sviluppatori di JRuby e lo sviluppatore principale di Jython che Sun aveva assunto hanno lasciato la compagnia. <a href=#fnn-1>&#8617;</a>
+</ol>
+
+<p class=v><a rel=prev href=prefazione.html title='indietro a &#8220;Prefazione&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-2.html title='avanti a &#8220;Scrivere meno, fare di più&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>

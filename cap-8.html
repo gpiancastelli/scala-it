@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>La programmazione funzionale in Scala - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 8}
+</style>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-8>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>La programmazione funzionale in Scala</h1>
+
+<p>Ogni decade o due, un&#8217;idea importante nel campo dell&#8217;informatica viene adottata dal mainstream. Queste idee possono essere rimaste nascoste nelle retrovie della ricerca accademica, o forse in qualche settore industriale poco conosciuto. L&#8217;adozione nel mainstream arriva in risposta alla percezione di un problema per il quale l&#8217;idea rappresenta una soluzione particolarmente adatta. La programmazione orientata agli oggetti, che è stata inventata negli anni &#8217;60, è diventata popolare negli anni &#8217;80, presumibilmente in risposta alla diffusione delle interfacce grafiche, con le quali il paradigma <abbr>OOP</abbr> ha una naturale affinità.
+
+<p>Sembra che la programmazione funzionale stia vivendo una simile esplosione. A lungo argomento di ricerca nel campo dell&#8217;informatica, e persino anteriore alla programmazione orientata agli oggetti, il paradigma funzionale offre tecniche efficaci per la programmazione concorrente, che sta diventando sempre più importante.
+
+<p>Dato che la programmazione funzionale è meno conosciuta della programmazione orientata agli oggetti, eviteremo di presumere che ne abbiate già avuto esperienza e cominceremo questo capitolo con un&#8217;ampia introduzione. Come vedrete, il paradigma funzionale non è solo un modo molto efficace di affrontare la programmazione concorrente, che esploreremo in profondità nel <a href=cap-9.html>capitolo 9</a>, ma può anche migliorare i vostri oggetti.
+
+<p>Naturalmente, non possiamo offrirvi una trattazione esaustiva della programmazione funzionale. Per saperne di più, <a href=apa.html#OSullivan2009>[O&#8217;Sullivan2009]</a> contiene un&#8217;introduzione particolareggiata nel contesto del linguaggio Haskell. <a href=apa.html#Abelson1996>[Abelson1996]</a>, <a href=apa.html#VanRoy2004>[VanRoy2004]</a> e <a href=apa.html#Turbak2008>[Turbak2008]</a> trattano diversi approcci generali di programmazione in maniera completa. Infine, <a href=apa.html#Okasaki1998>[Okasaki1998]</a> e <a href=apa.html#Rabhi1999>[Rabhi1999]</a> discutono i dettagli di strutture dati e algoritmi funzionali.
+
+<h2 id=WhatIsFunctionalProgramming>Che cos&#8217;è la programmazione funzionale?</h2>
+
+<p>Tutti i linguaggi di programmazione non posseggono già un qualche concetto di funzione? Che siano chiamate metodi, procedure, o <code>GOTO</code>, i programmatori hanno sempre avuto a che fare con le funzioni. La programmazione funzionale è basata sul comportamento delle funzioni in senso matematico, con tutte le implicazioni che questo punto di partenza comporta.
+
+<h3 id=FunctionsInMathematics>Le funzioni in matematica</h3>
+
+<p>In matematica, le funzioni non hanno <em>effetti collaterali</em>. Considerate la classica funzione <code>sin(x)</code>.
+
+<pre><code>y = sin(x)</code></pre>
+
+<p>A prescindere dal numero di operazioni compiute da <code>sin(x)</code>, tutti i risultati vengono restituiti e assegnati a <var>y</var>. Internamente, <code>sin(x)</code> non modifica alcuna informazione di stato globale. Quindi, diciamo che una tale funzione è priva di <em>effetti collaterali</em>, cioè <em>pura</em>.
+
+<p>Questa proprietà semplifica enormemente il compito di analizzare, collaudare e correggere una funzione. Potete svolgere queste attività senza sapere nulla del contesto in cui la funzione viene invocata, a parte le altre funzioni che essa potrebbe invocare. Tuttavia, potete analizzare queste altre funzioni nello stesso modo, lavorando dal basso verso l&#8217;alto per verificare l&#8217;intera &#8220;pila&#8221; di invocazioni.
+
+<p>Questa possibilità di trascurare il contesto circostante è nota come <em>trasparenza referenziale</em>. Potete invocare ovunque una di queste funzioni ed essere sicuri che si comporterà sempre nello stesso modo. Se lo stato globale non viene modificato, l&#8217;invocazione concorrente di una funzione è semplice e affidabile.
+
+<p>Nella programmazione funzionale potete creare nuove funzioni componendole a partire da altre funzioni. Per esempio, <code>tan(x) = sin(x) / cos(x)</code>. Dalla componibilità consegue che le funzioni possono essere trattate come <em>valori</em>. In altre parole, le funzioni sono <em>entità di prima classe</em>, esattamente come i dati: potete assegnare funzioni alle variabili; potete passare funzioni ad altre funzioni; potete restituire funzioni come valori di ritorno da altre funzioni. Nel paradigma funzionale, le funzioni diventano un tipo primitivo, un componente che è altrettanto essenziale per il lavoro del programmatore quanto i numeri interi o le stringhe.
+
+<p>Quando una funzione accetta altre funzioni come argomenti o restituisce una funzione, essa viene chiamata <em>funzione di ordine superiore</em>. In matematica, due esempi di funzioni di ordine superiore sono la derivazione e l&#8217;integrazione.
+
+<h3 id=VariablesThatArent>Variabili che non sono tali</h3>
+
+<p>La parola &#8220;variabile&#8221; assume un nuovo significato nella programmazione funzionale. Se provenite da una formazione orientata agli oggetti o procedurale, siete abituati a variabili che sono <em>mutabili</em>. Nella programmazione funzionale le variabili sono <em>immutabili</em>.
+
+<p>Questa è un&#8217;altra conseguenza dell&#8217;orientamento matematico. Nell&#8217;espressione <code>y = sin(x)</code>, una volta che scegliete <var>x</var>, <var>y</var> è fissa. Per fare un altro esempio, se incrementate di 1 l&#8217;intero 3, non &#8220;modificate l&#8217;oggetto 3&#8221;, ma create un nuovo valore per rappresentare 4.
+
+<p>Per essere più precisi, sono i valori a essere immutabili. I linguaggi di programmazione funzionale vi impediscono di assegnare un nuovo valore a una variabile che possiede già un valore.
+
+<p>Lavorare con l&#8217;immutabilità è difficile se non ci siete abituati. Non potete modificare una variabile, quindi non potete usare contatori in un ciclo, per esempio. Siamo abituati a oggetti che cambiano il loro stato quando invochiamo metodi su di essi. Imparare a pensare in termini di immutabilità richiede un certo sforzo.
+
+<p>Tuttavia, l&#8217;immutabilità ha benefici enormi per la concorrenza. Quasi tutte le difficoltà della programmazione multithread consistono nel sincronizzare l&#8217;accesso a uno stato condiviso e mutabile. Se rimuovete la mutabilità, allora i problemi essenzialmente spariscono. &Egrave; la combinazione delle funzioni dotate di trasparenza referenziale con i valori immutabili che rende la programmazione funzionale irresistibile come &#8220;un modo migliore&#8221; per scrivere software concorrente.
+
+<p>Queste qualità possono giovare ai programmi anche in altri modi. Quasi tutti i costrutti inventati in più di sessant&#8217;anni di informatica non sono stati altro che tentativi di gestire la complessità. Le funzioni di ordine superiore e la trasparenza referenziale offrono una grande flessibilità nella composizione dei programmi.
+
+<p>L&#8217;immutabilità riduce enormemente gli errori di regressione, molti dei quali sono causati da modifiche <em>accidentali</em> dello stato in una parte del programma a causa di modifiche <em>intenzionali</em> in un&#8217;altra parte. Altri elementi contribuiscono a questi effetti <em>non locali</em>, ma la mutabilità è uno dei più importanti.
+
+<p>Nella progettazione orientata agli oggetti è pratica comune incapsulare l&#8217;accesso alle strutture dati negli oggetti. Se queste strutture sono mutabili, non possiamo semplicemente condividerle con i clienti, ma dobbiamo aggiungere metodi speciali di accesso per fare in modo che i clienti non possano modificarle al di fuori del nostro controllo. Queste aggiunte incrementano la dimensione del codice appesantendo il collaudo e la manutenzione, e quindi richiedono ai clienti uno sforzo maggiore per capire le caratteristiche <em>ad hoc</em> delle nostre <abbr>API</abbr>.
+
+<p>Al contrario, se le strutture dati sono immutabili, molti di questi problemi semplicemente scompaiono. Possiamo offrire accesso alle collezioni senza timore di perdere o rovinare i dati. Naturalmente, il principio generale di riduzione delle dipendenze è sempre valido: i clienti non dovrebbero preoccuparsi se viene usata un&#8217;istanza di <code>Set</code> o di <code>List</code>, purché un metodo <code>foreach</code> sia disponibile.
+
+<p>L&#8217;immutabilità dei dati implica anche che ne verranno fatte molte copie, cosa che potrebbe essere costosa. Le strutture dati funzionali vengono ottimizzate per risolvere questo problema <a href=apa.html#Okasaki1998>[Okasaki1998]</a> e molti tipi predefiniti di Scala sono efficienti nel creare nuove copie da copie esistenti.
+
+<p>&Egrave; venuto il momento di immergersi nelle pratiche della programmazione funzionale in Scala. Discuteremo altri aspetti e benefici di questo approccio man mano che procediamo.
+
+<h2 id=FunctionalProgrammingInScala>La programmazione funzionale in Scala</h2>
+
+<p>In quanto linguaggio ibrido a oggetti e funzionale, Scala non esige che le funzioni siano pure né che le variabili siano immutabili. Tuttavia, vi incoraggia a scrivere codice in questo modo ogni volta che potete. Avete la libertà di usare tecniche orientate agli oggetti o procedurali quando e dove vi sembrano le più appropriate.
+
+<p>Sebbene l'obiettivo principale dei linguaggi funzionali sia quello di eliminare gli effetti collaterali, un linguaggio che non ammette <em>mai</em> effetti collaterali sarebbe inutile. Lo scambio di dati con le periferiche (detto I/O) è intrinsecamente legato agli effetti collaterali ed è essenziale per tutti i tipi di programmi. Per questo motivo, tutti i linguaggi funzionali offrono meccanismi per generare effetti collaterali in modo controllato.
+
+<p>Invece di vincolarvi, Scala vi incoraggia a usare valori immutabili e funzioni e metodi puri ovunque sia possibile. Quando la mutabilità e gli effetti collaterali sono necessari, perseguiteli secondo certi &#8220;principi&#8221;, cioè isolandoli in moduli ben definiti e concentrandoli su singole attività.
+
+<p>Se per voi la programmazione funzionale è una novità, tenete presente che è facile ricadere nelle vecchie abitudini. Vi incoraggiamo a padroneggiare il lato funzionale di Scala e a imparare a usarlo in modo efficace.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Una funzione che restituisce <code>Unit</code> è una funzione con effetti collaterali puri, nel senso che, se esegue operazioni utili, quelle operazioni devono essere composte esclusivamente da effetti collaterali, dato che la funzione non restituisce nulla.
+</blockquote>
+
+<p>Abbiamo visto molti esempi di funzioni di ordine superiore e di componibilità in Scala. Per esempio, <code>List.map</code> prende una funzione per trasformare ogni elemento della lista in qualcos&#8217;altro.
+
+<pre><code>// <a href=esempi/cap-8/basics/list-map-example-script.scala>esempi/cap-8/basics/list-map-example-script.scala</a>
+
+List(1, 2, 3, 4, 5) map { _ * 2 }</code></pre>
+
+<p>Ricordatevi che <code>_ * 2</code> è un <em>letterale funzione</em> che rappresenta una forma abbreviata di <code>i =&gt; i * 2</code>. Per ogni argomento della funzione, potete usare <var>_</var> se l&#8217;argomento è usato una volta sola. Possiamo anche usare la notazione operazionale infissa per invocare <code>map</code>. Ecco un esempio che &#8220;riduce&#8221; la stessa lista moltiplicando tra loro tutti gli elementi.
+
+<pre><code>// <a href=esempi/cap-8/basics/list-reduceLeft-example-script.scala>esempi/cap-8/basics/list-reduceLeft-example-script.scala</a>
+
+List(1, 2, 3, 4, 5) reduceLeft { _ * _ }</code></pre>
+
+<p>Il primo <var>_</var> rappresenta l&#8217;argomento che accumula il valore della riduzione e il secondo <var>_</var> rappresenta l&#8217;elemento corrente nella lista.
+
+<p>Entrambi gli esempi hanno &#8220;attraversato&#8221; con successo la lista senza usare un contatore mutabile per tenere traccia delle iterazioni. La maggior parte dei contenitori nella libreria Scala offre metodi di iterazione funzionalmente puri. In altri casi, la ricorsione è il modo migliore per attraversare una struttura dati o eseguire un algoritmo. Riprenderemo questo argomento nella sezione <a href=#Recursion>Ricorsione</a> più avanti in questo capitolo.
+
+<h3 id=FunctionLiteralsAndClosures>Letterali funzione e chiusure</h3>
+
+<p>Estendiamo un poco il nostro precedente esempio di <code>map</code>.
+
+<pre><code>// <a href=esempi/cap-8/basics/list-map-closure-example-script.scala>esempi/cap-8/basics/list-map-closure-example-script.scala</a>
+
+var factor = 3
+val multiplier = (i:Int) =&gt; i * factor
+
+val l1 = List(1, 2, 3, 4, 5) map multiplier
+
+factor = 5
+val l2 = List(1, 2, 3, 4, 5) map multiplier
+
+println(l1)
+println(l2)</code></pre>
+
+<p>Abbiamo definito una variabile <var>factor</var> da usare come fattore di moltiplicazione e abbiamo estratto la precedente funzione anonima in un valore chiamato <code>multiplier</code> che ora usa <var>factor</var>. Poi abbiamo usato <code>map</code> su una lista di interi, come abbiamo fatto in precedenza. Dopo la prima invocazione di <code>map</code>, modifichiamo <var>factor</var> e invochiamo nuovamente <code>map</code>. Questo è il risultato.
+
+<pre><samp>List(3, 6, 9, 12, 15)
+List(5, 10, 15, 20, 25)</samp></pre>
+
+<p>Nonostante <code>multiplier</code> fosse un valore funzione immutabile, il suo comportamento è cambiato quando <var>factor</var> è stata modificata.
+
+<p>Ci sono due <em>variabili libere</em> in <var>multiplier</var>: <var>i</var> e <var>factor</var>. Una di loro, <var>i</var>, è un <em>parametro formale</em> della funzione. Quindi, viene <em>legato</em> a un nuovo valore ogni volta che <code>multiplier</code> viene invocata.
+
+<p>Tuttavia, <var>factor</var> non è un parametro formale, ma un riferimento a una variabile nell&#8217;ambito esterno. Quindi, il compilatore crea una <em>chiusura</em> che racchiude (o si &#8220;chiude sopra&#8221;) <code>multiplier</code> e il contesto esterno delle variabili non legate a cui <code>multiplier</code> fa riferimento, legando in questo modo anche quelle variabili.
+
+<p>Questo è il motivo per cui il comportamento di <code>multiplier</code> è cambiato dopo la modifica di <var>factor</var>. La funzione fa riferimento a <var>factor</var> e legge il suo valore corrente ogni volta. Se una funzione non ha riferimenti esterni, allora è banalmente chiusa su sé stessa e non richiede nessun contesto esterno.
+
+<h3 id=PurityInsideVsOutside>Purezza interna ed esterna</h3>
+
+<p>Se avessimo invocato <code>sin(x)</code> migliaia di volte con lo stesso valore di <var>x</var>, calcolare ogni singola volta lo stesso risultato sarebbe stato uno spreco. Persino nelle librerie funzionali &#8220;pure&#8221; sono comuni le ottimizzazioni interne come la registrazione in una cache dei risultati precedentemente calcolati (una pratica chiamata <em>memoizzazione</em>, in inglese <em>memoization</em>). L&#8217;uso della cache introduce effetti collaterali, in quanto lo stato della cache viene modificato.
+
+<p>Tuttavia, questa mancanza di purezza dovrebbe essere invisibile all&#8217;utente (eccetto forse in termini di un impatto sulle prestazioni). Se state progettando librerie funzionali, assicuratevi che preservino la purezza delle loro astrazioni, incluso il comportamento di trasparenza referenziale e le sue implicazioni per la concorrenza.
+
+<p>La libreria Scala contiene alcuni esempi di librerie funzionali con entità interne mutabili. I metodi di <code>List</code> usano spesso varibili locali mutabili per attraversare la struttura in maniera efficiente. Le variabili locali sono thread-safe, così come gli attraversamenti, dato che le istanze di <code>List</code> sono immutabili di per sé.
+
+<h2 id=Recursion>Ricorsione</h2>
+
+<p>La ricorsione gioca un ruolo più ampio nella programmazione funzionale pura rispetto alla programmazione imperativa, in parte a causa della restrizione per cui le variabili sono immutabili. Per esempio, in un ciclo non potete usare contatori che verrebbero modificati a ogni passo di esecuzione. La ricorsione offre un modo per implementare i cicli in maniera puramente funzionale.
+
+<p>Il calcolo del fattoriale ci fornisce un buon esempio. Eccone un&#8217;implementazione imperativa che usa un ciclo.
+
+<pre><code>// <a href=esempi/cap-8/recursion/factorial-loop-script.scala>esempi/cap-8/recursion/factorial-loop-script.scala</a>
+
+def factorial_loop(i: BigInt): BigInt = {
+  var result = BigInt(1)
+  for (j &lt;- 2 to i.intValue)
+    result *= j
+  result
+}
+
+for (i &lt;- 1 to 10)
+  format("%s: %s\n", i, factorial_loop(i))</code></pre>
+
+<p>Sia il contatore del ciclo <var>j</var> sia <var>result</var> sono variabili mutabili. (Per semplicità, stiamo ignorando i numeri in ingresso che sono minori o uguali a zero.) L&#8217;uscita di questo script è la seguente.
+
+<pre><samp>1: 1
+2: 2
+3: 6
+4: 24
+5: 120
+6: 720
+7: 5040
+8: 40320
+9: 362880
+10: 3628800</samp></pre>
+
+<p>Ecco un primo passo verso un&#8217;implementazione ricorsiva.
+
+<pre><code>// <a href=esempi/cap-8/recursion/factorial-recur1-script.scala>esempi/cap-8/recursion/factorial-recur1-script.scala</a>
+
+def factorial(i: BigInt): BigInt = i match {
+  case _ if i == 1 =&gt; i
+  case _ =&gt; i * factorial(i - 1)
+}
+
+for (i &lt;- 1 to 10)
+  format("%s: %s\n", i, factorial(i))</code></pre>
+
+<p>L&#8217;uscita è la stessa, ma ora non ci sono variabili mutabili. La ricorsione non solo ci aiuta a evitare le variabili mutabili, ma è anche la forma più naturale con cui esprimere alcune funzioni, in particolare le funzioni matematiche. La definizione ricorsiva della nostra seconda funzione <code>factorial</code> è strutturalmente simile alla definizione di fattoriale che potreste vedere in un libro di matematica.
+
+<p>Tuttavia, ci sono due potenziali problemi con la ricorsione: la riduzione di prestazioni dovuta alle ripetute invocazioni di una funzione e il rischio di <em>stack overflow</em>.
+
+<p>A volte i problemi di prestazione in uno scenario ricorsivo possono essere affrontati con la <em>memoizzazione</em>, ma bisognerebbe stare attenti a evitare che i requisiti di spazio per la cache diventino più rilevanti rispetto ai benefici sulle prestazioni.
+
+<p>Lo stack overflow può essere evitato convertendo l&#8217;invocazione ricorsiva in un ciclo di qualche tipo. In effetti, il compilatore Scala può effettuare per voi questa conversione su alcuni tipi di invocazioni ricorsive che descriveremo nella prossima sezione.
+
+<h2 id=TailCalls>La ricorsione in coda e la sua ottimizzazione</h2>
+
+<p>La <em>ricorsione in coda</em> è un tipo particolare di ricorsione che avviene quando la funzione richiama sé stessa come sua ultima operazione. La ricorsione in coda è molto importante, perché è il tipo di ricorsione più facile da ottimizzare con la conversione in un ciclo. I cicli eliminano il potenziale stack overflow e migliorano le prestazioni eliminando il costo aggiuntivo della chiamata ricorsiva di funzione. Nonostante l&#8217;ottimizzazione della ricorsione in coda non sia ancora supportata nativamente dalla <abbr>JVM</abbr>, <kbd>scalac</kbd> può effettuarla.
+
+<p>Tuttavia, il nostro esempio del fattoriale non è una ricorsione in coda, perché <code>factorial</code> si richiama e <em>poi</em> opera una moltiplicazione tra i risultati. &Egrave; possibile implementare <code>factorial</code> in modo da usare la ricorsione in coda. In effetti, ne abbiamo vista un&#8217;implementazione nella sezione <a href=cap-2.html#NestingMethodDefinitions>Annidare le definizioni di metodo</a> del capitolo 2. Tuttavia, quell&#8217;esempio non usava alcuni costrutti che abbiamo imparato nel frattempo, come le espressioni <code>for</code> e il pattern matching. Quindi, ecco una nuova implementazione di <code>factorial</code> che effettua i calcoli con la ricorsione in coda.
+
+<pre><code>// <a href=esempi/cap-8/recursion/factorial-recur2-script.scala>esempi/cap-8/recursion/factorial-recur2-script.scala</a>
+
+def factorial(i: BigInt): BigInt = {
+  def fact(i: BigInt, accumulator: BigInt): BigInt = i match {
+    case _ if i == 1 =&gt; accumulator
+    case _ =&gt; fact(i - 1, i * accumulator)
+  }
+  fact(i, 1)
+}
+
+for (i &lt;- 1 to 10)
+  format("%s: %s\n", i, factorial(i))</code></pre>
+
+<p>Questo script produce la stessa uscita di prima. Ora, <code>factorial</code> fa tutto il lavoro in un metodo annidato <code>fact</code> che è ricorsivo in coda perché passa un argomento <var>accumulator</var> per memorizzare il risultato del calcolo in corso. Questo argomento viene calcolato con una moltiplicazione <em>prima</em> della chiamata ricorsiva a <code>fact</code>, che ora è l&#8217;ultima operazione effettuata. Nella nostra implementazione precedente, questa moltiplicazione veniva fatta <em>dopo</em> l&#8217;invocazione di <code>fact</code>. Quando invochiamo <code>fact(1)</code>, restituiamo semplicemente il valore accumulato.
+
+<p>Se invochiamo la nostra implementazione originale di <code>factorial</code>, che non è ricorsiva in coda, con un numero grande, per esempio 10000, causeremo uno stack overflow su un tipico computer da scrivania. L&#8217;implementazione ricorsiva in coda funziona perfettamente, restituendo un numero molto grande.
+
+<p>L&#8217;annidamento di una funzione ricorsiva in coda che usa un accumulatore è una tecnica idiomatica molto utile per convertire molti algoritmi ricorsivi in ricorsioni in coda che possono essere ottimizzate da <kbd>scalac</kbd> sotto forma di cicli.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>L&#8217;ottimizzazione della ricorsione in coda non verrà applicata quando un metodo che chiama sé stesso può essere ridefinito in un tipo derivato. Il metodo deve essere dichiarato <code>private</code> o <code>final</code>, definito in un <code>object</code>, o annidato in un altro metodo (come <code>fact</code> nel nostro esempio). La nuova annotazione <code>@tailrec</code> introdotta nella versione 2.8 genererà un errore se il compilatore non riesce a ottimizzare il metodo annotato. (Si veda la sezione <a href=cap-13.html#Annotations>Annotazioni</a> nel capitolo 13.)
+</blockquote>
+
+<h3 id=TrampolineTailCalls>Trampolino per le ricorsioni in coda</h3>
+
+<p>Un <em>trampolino</em> è un ciclo che attraversa una lista di funzioni invocandole una per volta. Il nome deriva dalla metafora di lanciare le funzioni da un trampolino.
+
+<p>Considerate un tipo di ricorsione in cui una funzione <code>A</code> non si invochi ricorsivamente, ma invece invochi un&#8217;altra funzione <code>B</code>, che invoca <code>A</code>, che invoca <code>B</code>, <i class=baa>&amp;</i>c. Anche questo tipo di ricorsione avanti-e-indietro può essere convertito in un ciclo, usando un trampolino. Notate che il trampolino impone una penalizzazione sulle prestazioni, ma è ideale per le ricorsioni funzionali pure (in contrasto con un equivalente imperativo) che altrimenti esaurirebbero lo stack.
+
+<p>Il supporto per questa ottimizzazione è pianificato per la versione 2.8 di Scala, sebbene non sia ancora stato implementato al momento della scrittura.
+
+<h2 id=FunctionalDataStructures>Strutture dati funzionali</h2>
+
+<p>Esistono diverse strutture dati comunemente usate nella programmazione funzionale, molte delle quali sono contenitori, come le collezioni. I linguaggi come Erlang fanno affidamento su pochi tipi, mentre altri linguaggi funzionali offrono un sistema di tipi più ricco.
+
+<p>Queste strutture dati supportano tutte lo stesso sottoinsieme di funzioni di ordine superiore per l&#8217;attraversamento e l&#8217;accesso in sola lettura ai loro elementi. Queste caratteristiche le rendono adatte come &#8220;protocolli&#8221; per minimizzare le dipendenze tra i componenti pur supportando lo scambio di dati.
+
+<p>In effetti, queste strutture dati e le loro operazioni sono così utili da essere incluse in molti linguaggi, compresi quelli che non sono considerati linguaggi funzionali, come Java e Ruby. Java non supporta direttamente le funzioni di ordine superiore; invece, i valori funzione devono essere racchiusi in oggetti. Ruby usa le <code>proc</code> e le <code>lambda</code> come valori funzione.
+
+<h3 id=ListsInFunctionalProgramming>Le liste nella programmazione funzionale</h3>
+
+<p>Le liste sono la struttura dati più comune nella programmazione funzionale. Sono il cuore del primo linguaggio di programmazione funzionale, Lisp.
+
+<p>Per favorire l&#8217;immutabilità, quando aggiungete un nuovo elemento a una lista viene creata una nuova lista. La convenzione prevede di aggiungere il nuovo elemento in testa alla lista, come abbiamo visto prima.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/list-script.scala>esempi/cap-8/datastructs/list-script.scala</a>
+
+val list1 = List("Programmare", "in", "Scala")
+val list2 = "Chinuque" :: "dovrebbe" :: "leggere" :: list1
+println(list2)</code></pre>
+
+<p>Dato che l&#8217;operatore <code>::</code> lega gli operandi alla sua destra, la definizione di <var>list2</var> è equivalente a entrambe le variazioni seguenti.
+
+<pre><code>val list2 = ("Chiunque" :: ("dovrebbe" :: ("leggere" :: list1)))
+val list2 = list1.::("leggere").::("dovrebbe").::("Chiunque")</code></pre>
+
+<p>In termini di prestazioni, l&#8217;aggiunta in testa è O(1). Vedremo perché quando esamineremo da vicino l&#8217;implementazione di <code>List</code> nella sezione <a href=cap-12.html#ACloserLookAtLists>Uno sguardo ravvicinato alle liste</a> del capitolo 12, dopo che avremo imparato qualcosa in più sui <em>tipi parametrici</em> in Scala.
+
+<p>A differenza di alcune altre collezioni, Scala definisce <code>List</code> solo come tipo immutabile. Tuttavia, definisce anche alcuni tipi di lista mutabili, come <code>ListBuffer</code> e <code>LinkedList</code>.
+
+<h3 id=MapsInFunctionalProgramming>Le mappe nella programmazione funzionale</h3>
+
+<p>Forse la seconda struttura dati più comune è la mappa, chiamata <em>hash</em> o <em>dizionario</em> in altri linguaggi, che non deve essere confusa con la funzione <code>map</code> che abbiamo visto prima. Le mappe sono usate per memorizzare coppie di chiavi e valori.
+
+<p>Come scelta minimalista, le mappe potrebbero essere implementate sotto forma di liste. Ogni elemento di posto pari nella lista (contando da zero) potrebbe essere una chiave, seguita dal valore nella posizione dispari successiva. In pratica, di solito le mappe vengono implementate in altri modi per motivi di efficienza.
+
+<p>Scala supporta la speciale sintassi di inizializzazione che abbiamo visto in precedenza.
+
+<pre><code>val stateCapitals = Map(
+  "Alabama" -&gt; "Montgomery",
+  "Alaska"  -&gt; "Juneau",
+  // &hellip;
+  "Wyoming" -&gt; "Cheyenne")</code></pre>
+
+<p>Il tratto <code>scala.collection.Map[A, +B]</code> definisce solo i metodi per leggere i dati contenuti nelle istanze di <code>Map</code>. Da esso derivano i tratti per le mappe immutabili e mutabili, <code>scala.collection.immutable.Map[A, +B]</code> e <code>scala.collection.mutable.Map[A, B]</code>, rispettivamente. Questi tratti definiscono gli operatori <code>+</code> e <code>-</code> per aggiungere e rimuovere elementi, e gli operatori <code>++</code> e <code>--</code> per aggiungere e rimuovere elementi definiti in istanze di <code>Iterator</code> che contengono istanze di <code>Pair</code>, dove ogni istanza di <code>Pair</code> è una coppia chiave-valore.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Potreste aver notato che non c&#8217;è il segno <code>+</code> davanti al parametro di tipo <code>B</code> per <code>scala.collection.mutable.Map</code>. Vedrete perché nella sezione <a href=cap-12.html#VarianceOfMutableTypes>La varianza dei tipi mutabili</a> del capitolo 12.
+</blockquote>
+
+<h3 id=SetsInFunctionalProgramming>Gli insiemi nella programmazione funzionale</h3>
+
+<p>Gli insiemi sono come le liste, ma richiedono che ogni elemento sia unico. Anche gli insiemi potrebbero essere implementati usando le liste, purché l&#8217;equivalente dell&#8217;operatore &#8220;cons&#8221; (<code>::</code>) controlli prima che l&#8217;elemento non sia già presente nella lista. Dalla proprietà di unicità consegue che l&#8217;inserimento di un elemento sarebbe O(N) se fossero usate le liste, e che l&#8217;ordine degli elementi nell&#8217;insieme non corrisponderebbe necessariamente all&#8217;ordine delle operazioni di &#8220;inserimento&#8221;. In pratica, di solito gli insiemi vengono implementati con strutture dati più efficienti.
+
+<p>Proprio come per <code>Map</code>, il tratto <code>scala.collection.Set[A]</code> definisce solo i metodi per leggere i dati contenuti nelle istanze di <code>Set</code>. Da esso derivano i tratti per gli insiemi immutabili e mutabili, <code>scala.collection.immutable.Set[A]</code> e <code>scala.collection.mutable.Set[A]</code>, rispettivamente. Questi tratti definiscono gli operatori <code>+</code> e <code>-</code> per aggiungere e rimuovere elementi, e gli operatori <code>++</code> e <code>--</code> per aggiungere e rimuovere elementi definiti in istanze di <code>Iterator</code> (che potrebbero essere altri insiemi, liste, <i class=baa>&amp;</i>c.)
+
+<h3 id=OtherDataStructuresInFunctionalProgramming>Altre strutture dati nella programmazione funzionale</h3>
+
+<p>Nei linguaggi funzionali compariranno anche altre strutture dati familiari, come <code>Tuple</code> e <code>Array</code>, che vengono tipicamente usate per offrire alcune caratteristiche convenienti non supportate dai tipi funzionali più comuni. Nella maggior parte dei casi, però, queste strutture possono essere sostituite dalle liste.
+
+<h2 id=TraversingMappingFilteringFolding>Operazioni comuni sulle strutture dati funzionali</h2>
+
+<p>Le collezioni funzionali che abbiamo appena discusso, cioè liste, mappe, insiemi, e anche tuple e array, supportano tutte diverse operazioni comuni basate sugli attraversamenti a sola lettura. In effetti, questa uniformità può essere sfruttata se tutti i tipi di &#8220;contenitore&#8221; supportano anche queste operazioni. Per esempio, un&#8217;istanza di <code>Option</code> contiene zero elementi o un elemento, a seconda che sia un&#8217;istanza di <code>None</code> o <code>Some</code>, rispettivamente.
+
+<h3 id=FunctionalTraversal>Attraversamento</h3>
+
+<p>Il metodo standard di attraversamento per i contenitori in Scala è <code>foreach</code>, che è definito nel tratto <code>Iterable</code> mescolato nei contenitori. &Egrave; O(N) nel numero degli elementi. Ecco un esempio di come usarlo con liste e mappe.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/foreach-script.scala>esempi/cap-8/datastructs/foreach-script.scala</a>
+
+List(1, 2, 3, 4, 5) foreach { i =&gt; println("Int: " + i) }
+
+val stateCapitals = Map(
+  "Alabama" -&gt; "Montgomery",
+  "Alaska"  -&gt; "Juneau",
+  "Wyoming" -&gt; "Cheyenne")
+
+stateCapitals foreach { kv =&gt; println(kv._1 + ": " + kv._2) }</code></pre>
+
+<p>La firma di <code>foreach</code> è la seguente.
+
+<pre><code>trait Iterable[+A] {
+  &hellip;
+  def foreach(f : (A) =&gt; Unit) : Unit = &hellip;
+  &hellip;
+}</code></pre>
+
+<p><code>foreach</code> è una funzione di ordine superiore che prende come argomento una funzione che rappresenta l&#8217;operazione da eseguire su ciascun elemento. Notate che, per una mappa, <var>A</var> in realtà è una tupla, come mostrato nell&#8217;esempio. In più, <code>foreach</code> restituisce <code>Unit</code>, perché non è concepita per creare nuove collezioni; vedremo esempi di operazioni che creano collezioni tra breve.
+
+<p>Una volta che avete <code>foreach</code>, potete implementare tutte le ulteriori operazioni di attraversamento che discuteremo successivamente, e anche molte altre. Se date un&#8217;occhiata a <code>Iterable</code>, vedrete che supporta metodi per filtrare le collezioni, per trovare elementi che corrispondono a criteri specifici, per calcolare il numero di elementi, e così via.
+
+<p>I metodi che discuteremo nelle prossime sezioni sono il marchio di fabbrica della programmazione funzionale: mappatura, filtraggio, ripiegamento e riduzione.
+
+<h3 id=FunctionalMapping>Mappatura</h3>
+
+<p>Abbiamo già incontrato il metodo <code>map</code> in precedenza. Questo metodo restituisce una nuova collezione della stessa dimensione dell&#8217;originale. Anche <code>map</code> è un membro di <code>Iterable</code> e la sua firma è la seguente.
+
+<pre><code>trait Iterable[+A] {
+  &hellip;
+  def map[B](f : (A) =&gt; B) : Iterable[B] = &hellip;
+  &hellip;
+}</code></pre>
+
+<p>La funzione che viene passata (<code>f</code>) può trasformare un elemento originale di tipo <var>A</var> in un nuovo elemento di tipo <var>B</var>. Ecco un esempio.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/map-script.scala>esempi/cap-8/datastructs/map-script.scala</a>
+
+val stateCapitals = Map(
+  "Alabama" -&gt; "Montgomery",
+  "Alaska"  -&gt; "Juneau",
+  "Wyoming" -&gt; "Cheyenne")
+
+val lengths = stateCapitals map { kv =&gt; (kv._1, kv._2.length) }
+println(lengths)</code></pre>
+
+<p>Questo script produce l&#8217;uscita seguente.
+
+<pre><samp>ArrayBuffer((Alabama,10), (Alaska,6), (Wyoming,8))</samp></pre>
+
+<p>Abbiamo convertito gli elementi <code>Pair[String, String]</code> in un <code>ArrayBuffer</code> di elementi <code>Pair[String, Int]</code>. Da dove è arrivato <code>ArrayBuffer</code>? A quanto pare, <code>Iterable.map</code> crea e restituisce un&#8217;istanza di <code>ArrayBuffer</code> come nuova collezione iterabile.
+
+<p>Questo solleva un conflitto generale tra i tipi immutabili e le gerarchie di tipo orientate agli oggetti. Se un tipo base crea una nuova istanza durante un&#8217;operazione di modifica, come fa a sapere qual è il tipo dell&#8217;istanza che deve creare?
+
+<p>Potete risolvere questo problema in due modi. Ogni tipo nella gerarchia potrebbe ridefinire il metodo <code>map</code> per restituire un&#8217;istanza di quello stesso tipo. Questo approccio è soggetto a errori, però, in quanto sarebbe facile dimenticare di ridefinire tutti questi metodi quando viene aggiunto un nuovo tipo.
+
+<p>Anche se vi ricordaste sempre di ridefinire tutti i metodi, rimarreste con il problema di come implementare la ridefinizione. Invocate il metodo <code>super</code> per riutilizzare l&#8217;algoritmo, poi iterate attraverso l&#8217;istanza restituita per creare una nuova istanza del tipo corretto? Questo sarebbe inefficiente. Potreste copiare l&#8217;algoritmo e incollarlo in ogni ridefinizione, ma questo creerebbe problemi di mantenibilità, disallineamento e spreco di risorse.
+
+<p>Esiste un approccio alternativo: non provateci nemmeno. Come viene usata l&#8217;istanza effettivamente restituita? Ci interessa veramente che sia del tipo &#8220;sbagliato&#8221;? Tenete presente che tutto quello che di solito ci interessa sono le astrazioni di più basso livello come liste, mappe e insiemi. Nel caso di strutture dati funzionali, i tipi derivati che potremmo implementare usando l&#8217;ereditarietà orientata agli oggetti sono molto spesso implementazioni ottimizzate. La gerarchia dei contenitori di Scala ha alcuni livelli di astrazione verso l'alto: per esempio, <code>Collection</code> estende <code>Iterable</code> che estende <code>AnyRef</code>; ma sotto <code>Collection</code> ci sono <code>Seq</code> (genitore di <code>List</code>), <code>Map</code>, <code>Set</code>, <i class=baa>&amp;</i>c.
+
+<p>Detto questo, se davvero avete bisogno di una mappa, potete crearne una abbastanza facilmente.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/map2-script.scala>esempi/cap-8/datastructs/map2-script.scala</a>
+
+val stateCapitals = Map(
+  "Alabama" -&gt; "Montgomery",
+  "Alaska"  -&gt; "Juneau",
+  "Wyoming" -&gt; "Cheyenne")
+
+val map2 = stateCapitals map { kv =&gt; (kv._1, kv._2.length) }
+
+// val lengths = Map(map2)  // ERRORE: non funzionerà
+val lengths = Map[String, Int]() ++ map2
+
+println(lengths)</code></pre>
+
+<p>La riga di codice nascosta in un commento suggerisce che sarebbe bello se poteste semplicemente passare la nuova istanza di <code>Iterable</code> a <code>Map.apply</code>, ma questo non funziona. Ecco la firma di <code>Map.apply</code>.
+
+<pre><code>object Map {
+  &hellip;
+  def apply[A, B](elems : (A, B)*) : Map[A, B] = &hellip;
+  &hellip;
+}</code></pre>
+
+<p>Questo metodo si aspetta una lista variabile di argomenti, non un&#8217;istanza di <code>Iterable</code>. Tuttavia, potete creare una mappa vuota del tipo corretto e poi aggiungervi la nuova istanza di <code>Iterable</code> usando il metodo <code>++</code> che restituisce una nuova istanza di <code>Map</code>.
+
+<p>Quindi, possiamo ottenere la mappa che vogliamo quando ci è necessario averne una. Sarebbe bello se i metodi come <code>map</code> restituissero una collezione dello stesso tipo di quella in ingresso, ma abbiamo visto che non c&#8217;è un modo facile per farlo. Invece, dobbiamo accettare che <code>map</code> e metodi simili restituiscano un&#8217;astrazione come <code>Iterable</code> e poi dobbiamo fare affidamento sul sottotipo specifico per popolare la collezione passando un&#8217;istanza di <code>Iterable</code> come argomento.
+
+<p>Un&#8217;operazione correlata di <code>Map</code> è <code>flatMap</code>, che può essere usata per &#8220;appiattire&#8221; una struttura dati gerarchica, rimuovere elementi &#8220;vuoti&#8221;, <i class=baa>&amp;</i>c. Quindi, a differenza di <code>map</code>, potrebbe restituire una nuova collezione di dimensione diversa rispetto alla collezione originale.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/flatmap-script.scala>esempi/cap-8/datastructs/flatmap-script.scala</a>
+
+val graph = List(
+  "a", List("b1", "b2", "b3"), List("c1", List("c21", Nil, "c22"), Nil, "e")
+)
+
+def flatten(list: List[_]): List[_] = list flatMap {
+  case head :: tail =&gt; head :: flatten(tail)
+  case Nil =&gt; Nil
+  case x =&gt; List(x)
+}
+
+println(flatten(graph))</code></pre>
+
+<p>Questo script riduce il grafo gerarchico contenuto in <code>graph</code> alla lista <code>List(a, b1, b2, b3, c1, c21, c22, e)</code>. Notate che gli elementi <code>Nil</code> sono stati rimossi. Abbiamo usato <code>List[_]</code> perché, a causa della <em>cancellazione di tipo</em>, non sapevamo quali fossero i parametri di tipo delle liste annidate quando abbiamo attraversato la lista esterna.
+
+<p>Ecco la firma di <code>flatMap</code>, insieme a quella di <code>map</code>, per un confronto.
+
+<pre><code>trait Iterable[+A] {
+  &hellip;
+  def map[B]    (f : (A) =&gt; B) : Iterable[B] = &hellip;
+  def flatMap[B](f : (A) =&gt; Iterable[B]) : Iterable[B] = &hellip;
+  &hellip;
+}</code></pre>
+
+<p>Ogni passo deve restituire <code>Iterable[B]</code>, non <code>B</code>. Dopo aver attraversato la collezione, <code>flatMap</code> &#8220;appiattirà&#8221; tutte quelle istanze di <code>Iterable</code> in una collezione. Notate che <code>flatMap</code> non appiattirà elementi oltre al primo livello di profondità. Se il nostro letterale funzione lascia intatte le liste annidate, esse non verranno appiattite per noi.
+
+<h3 id=FunctionalFiltering>Filtraggio</h3>
+
+<p>Attraversare una collezione ed estrarne una nuova collezione contenente elementi che corrispondono a certi criteri è un&#8217;operazione molto comune.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/filter-script.scala>esempi/cap-8/datastructs/filter-script.scala</a>
+
+val stateCapitals = Map(
+  "Alabama" -&gt; "Montgomery",
+  "Alaska"  -&gt; "Juneau",
+  "Wyoming" -&gt; "Cheyenne")
+
+val map2 = stateCapitals filter { kv =&gt; kv._1 startsWith "A" }
+
+println(map2)</code></pre>
+
+<p><code>Iterable</code> definisce diversi tipi di metodi per filtrare o altrimenti restituire parte della collezione originale. (Commenti adattati dalla documentazione <em>Scaladoc</em>.)
+
+<pre><samp>trait Iterable[+A] {
+  &hellip;
+  // Restituisce questo iterabile senza i suoi primi n elementi. Se
+  // l'iterabile ha meno di n elementi, viene restituito l'iterabile vuoto.
+  def drop (n : Int) : Collection[A] = &hellip;
+
+  // Restituisce il suffisso più lungo di questo iterabile il cui primo
+  // elemento non soddisfa il predicato p.
+  def dropWhile (p : (A) =&gt; Boolean) : Collection[A] = &hellip;
+
+  // Applica un predicato p a tutti gli elementi di questo iterabile e 
+  // restituisce true se e solo se p restituisce true per almeno un elemento.
+  def exists (p : (A) =&gt; Boolean) : Boolean = &hellip;
+
+  // Restituisce tutti gli elementi di questo iterabile che soddisfano il
+  // predicato p. L'ordine degli elementi viene preservato.
+  def filter (p : (A) =&gt; Boolean) : Iterable[A] = &hellip;
+
+  // Trova e restituisce il primo elemento dell'iterabile che soddisfa il
+  // predicato, se questo elemento esiste.
+  def find (p : (A) =&gt; Boolean) : Option[A] = &hellip;
+
+  // Restituisce l'indice del primo elemento che soddisfa il predicato, o -1.
+  def findIndexOf (p : (A) =&gt; Boolean) : Int = &hellip;
+
+  // Applica un predicato p a tutti gli elementi di questo iterabile e
+  // restituisce true se e solo se p restituisce true per tutti gli elementi.
+  def forall (p : (A) =&gt; Boolean) : Boolean = &hellip;
+
+  // Restituisce l'indice della prima occorrenza dell'oggetto specificato
+  // in questo iterabile.
+  def indexOf [B &gt;: A](elem : B) : Int = &hellip;
+
+  // Partiziona questo iterabile in due iterabili in accordo col predicato.
+  def partition (p : (A) =&gt; Boolean) : (Iterable[A], Iterable[A]) = &hellip;
+
+  // Controlla se l'altro iterabile contiene gli stessi elementi.
+  def sameElements [B &gt;: A](that : Iterable[B]) : Boolean = &hellip;
+
+  // Restituisce un iterabile che consiste solo dei primi n elementi di
+  // questo iterabile, o l'intero iterabile se ha meno di n elementi.
+  def take (n : Int) : Collection[A] = &hellip;
+
+  // Restituisce il prefisso più lungo di questo iterabile i cui elementi
+  // soddisfano il predicato p.
+  def takeWhile (p : (A) =&gt; Boolean) : Iterable[A] = &hellip;
+}</samp></pre>
+
+<p>Tipi come <code>Map</code> e <code>Set</code> sono dotati di ulteriori metodi.
+
+<h3 id=FunctionalFoldingAndReducing>Ripiegamento e riduzione</h3>
+
+<p>Discuteremo il ripiegamento e la riduzione nella stessa sezione, dato che sono simili. Entrambe sono operazioni per &#8220;restringere&#8221; una collezione a una collezione più piccola o a un singolo valore.
+
+<p>Il ripiegamento comincia con un valore di &#8220;origine&#8221; (anche detto &#8220;seme&#8221;) ed elabora ogni elemento nel contesto di quel valore. Al contrario, la riduzione non comincia con un valore iniziale fornito dall&#8217;utente. Piuttosto, usa il primo elemento come valore iniziale.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/foldreduce-script.scala>esempi/cap-8/datastructs/foldreduce-script.scala</a>
+
+List(1,2,3,4,5,6) reduceLeft(_ + _)
+
+List(1,2,3,4,5,6).foldLeft(10)(_ * _)</code></pre>
+
+<p>Questo script riduce la lista di interi sommandoli tra loro, restituendo 21. Poi ripiega la stessa lista usando la moltiplicazione con un seme uguale a 10, restituendo 7200.
+
+<p>La riduzione non funziona su una collezione vuota, dato che non ci sarebbe nulla da restituire. In questo caso, viene lanciata un&#8217;eccezione. Il ripiegamento su una collezione vuota restituirà semplicemente il valore di origine.
+
+<p>Il ripiegamento offre anche più opzioni per generare il risultato finale. Ecco un&#8217;operazione di &#8220;ripiegamento&#8221; che in realtà è un&#8217;operazione di mappatura.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/foldleft-map-script.scala>esempi/cap-8/datastructs/foldleft-map-script.scala</a>
+
+List(1, 2, 3, 4, 5, 6).foldLeft(List[String]()) {
+  (list, x) =&gt; ("&lt;" + x + "&gt;") :: list
+}.reverse</code></pre>
+
+<p>Questa operazione restituisce <code>List(&lt;1&gt;, &lt;2&gt;, &lt;3&gt;, &lt;4&gt;, &lt;5&gt;, &lt;6&gt;)</code>. Notate che abbiamo dovuto invocare <code>reverse</code> sul risultato per ottenere una lista ordinata allo stesso modo di quella in ingresso.
+
+<p>Ecco le firme delle varie operazioni di ripiegamento e riduzione in <code>Iterable</code>.
+
+<pre><code>trait Iterable[+A] {
+  &hellip;
+  // Combina insieme gli elementi di questo iterabile usando la funzione
+  // binaria op, da sinistra a destra, cominciando dal valore z.
+  def foldLeft [B](z : B)(op : (B, A) =&gt; B) : B
+
+  // Combina insieme gli elementi di questo iterabile usando la funzione
+  // binaria op, da destra a sinistra, cominciando dal valore z.
+  def foldRight [B](z : B)(op : (A, B) =&gt; B) : B
+
+  // Simile a foldLeft ma può essere usata come un operatore con l'ordine
+  // inverso degli argomenti. Cioè, z /: xs è uguale a xs foldLeft z.
+  def /: [B](z : B)(op : (B, A) =&gt; B) : B
+
+  // Un alias di foldRight. Cioè, xs :\ z è uguale a xs foldRight z.
+  def :\ [B](z : B)(op : (A, B) =&gt; B) : B
+
+  // Combina insieme gli elementi di questo iterabile usando l'operatore
+  // binario op, da sinistra a destra.
+  def reduceLeft [B &gt;: A](op : (B, A) =&gt; B) : B
+
+  // Combina insieme gli elementi di questo iterabile usando l'operatore
+  // binario op, da destra a sinistra.
+  def reduceRight [B &gt;: A](op : (A, B) =&gt; B) : B
+}</code></pre>
+
+<p>Molte persone considerano le forme operatore, <code>:\</code> per <code>foldRight</code> e <code>/:</code> per <code>foldLeft</code>, un po&#8217; più oscure e difficili da ricordare. Quando scrivete codice, non dimenticate quanto è importante comunicare con chi lo leggerà.
+
+<p>Perché esistono forme di ripiegamento e riduzione a sinistra e a destra? Per i primi esempi che vi abbiamo mostrato, la somma e la moltiplicazione di una lista di interi, le due forme restituirebbero lo stesso risultato. Considerate una versione di <code>foldRight</code> dal nostro ultimo esempio che usi il ripiegamento per mappare gli interi sulle stringhe.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/foldright-map-script.scala>esempi/cap-8/datastructs/foldright-map-script.scala</a>
+
+List(1, 2, 3, 4, 5, 6).foldRight(List[String]()) {
+  (x, list) =&gt; ("&lt;" + x + "&gt;") :: list
+}</code></pre>
+
+<p>Questo script produce <code>List(&lt;1&gt;, &lt;2&gt;, &lt;3&gt;, &lt;4&gt;, &lt;5&gt;, &lt;6&gt;)</code> senza dover invocare <code>reverse</code>, come invece abbiamo fatto prima. Notate anche che gli argomenti della funzione letterale sono in ordine inverso rispetto agli argomenti usati con <code>foldLeft</code>, come richiesto dalla definizione di <code>foldRight</code>.
+
+<p>Sia <code>foldLeft</code> sia <code>reduceLeft</code> elaborano gli elementi da sinistra a destra. Ecco la sequenza di <code>foldLeft</code> per <code>List(1, 2, 3, 4, 5, 6).foldLeft(10)(_ * _)</code>.
+
+<pre><samp>((((((10 * 1) * 2) * 3) * 4) * 5) * 6)
+((((((10) * 2) * 3) * 4) * 5) * 6)
+(((((20) * 3) * 4) * 5) * 6)
+((((60) * 4) * 5) * 6)
+(((240) * 5) * 6)
+((1200) * 6)
+(7200)</samp></pre>
+
+<p>Ecco la sequenza di <code>foldRight</code>.
+
+<pre><code>(1 * (2 * (3 * (4 * (5 * (6 * 10))))))
+(1 * (2 * (3 * (4 * (5 * (60))))))
+(1 * (2 * (3 * (4 * (300)))))
+(1 * (2 * (3 * (1200))))
+(1 * (2 * (3600)))
+(1 * (7200))
+(7200)</code></pre>
+
+<p>A quanto pare, <code>foldLeft</code> e <code>reduceLeft</code> hanno un vantaggio molto importante rispetto ai loro fratelli &#8220;destri&#8221;: sono ricorsivi in coda, e come tali possono beneficiare dell&#8217;ottimizzazione per la ricorsione in coda.
+
+<p>Se osservate le precedenti scomposizioni per la moltiplicazione di interi, potete probabilmente vedere perché queste operazioni sono ricorsive in coda. Ricordatevi che la chiamata ricorsiva deve essere l&#8217;ultima operazione in un&#8217;iterazione. Per ogni riga nella sequenza di <code>foldRight</code>, la moltiplicazione più esterna non può essere eseguita fino a quando le moltiplicazioni più interne non sono state tutte completate, quindi l&#8217;operazione non è ricorsiva in coda.
+
+<p>Nello script seguente, la prima riga stampa 1784293664, mentre la seconda causa uno stack overflow.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/reduceleftright-script.scala>esempi/cap-8/datastructs/reduceleftright-script.scala</a>
+
+println((1 to 1000000) reduceLeft(_ + _))
+println((1 to 1000000) reduceRight(_ + _))</code></pre>
+
+<p>Ma allora perché avere entrambi i tipi di ricorsione? Se lo stack overflow non vi preoccupa, una ricorsione a destra potrebbe essere l&#8217;abbinamento più naturale per l&#8217;operazione che state eseguendo. Ricordatevi che quando abbiamo usato <code>foldLeft</code> per mappare gli interi sulle stringhe abbiamo dovuto invertire il risultato. Questo è stato abbastanza facile da fare in quel caso, ma in generale il risultato di una ricorsione a sinistra potrebbe non essere sempre facile da convertire nella forma a destra.
+
+<h3 id=OptionsAndOtherContainers><code>Option</code> funzionali</h3>
+
+<p>Le operazioni funzionali che abbiamo analizzato si trovano ovunque nella libreria Scala, non solo nelle collezioni. Il comodo contenitore <code>Option</code> supporta <code>filter</code>, <code>map</code>, <code>flatMap</code> e altri metodi orientati alle funzioni che vengono applicati solo se l&#8217;istanza di <code>Option</code> non è vuota (cioè se è un&#8217;istanza di <code>Some</code> e non un&#8217;istanza di <code>None</code>).
+
+<p>Vediamo questa caratteristica in azione.
+
+<pre><code>// <a href=esempi/cap-8/datastructs/option-script.scala>esempi/cap-8/datastructs/option-script.scala</a>
+
+val someNumber = Some(5)
+val noneNumber = None
+
+for (option &lt;- List(noneNumber, someNumber)) {
+  option.map(n =&gt; println(n * 5))
+}</code></pre>
+
+<p>In questo esempio, tentiamo di moltiplicare i contenuti di due <code>Option</code> per cinque. Normalmente, il tentativo di moltiplicare un valore <code>null</code> provocherebbe un errore. Ma dato che l&#8217;implementazione di <code>map</code> in <code>Option</code> applica la funzione passata come argomento solo quando l&#8217;istanza non è vuota, non dobbiamo preoccuparci di verificare la presenza di un valore o di gestire un&#8217;eccezione quando effettuiamo una mappatura su <code>None</code>.
+
+<p>Le operazioni funzionali di <code>Option</code> ci risparmiano l&#8217;uso di espressioni condizionali aggiuntive o del pattern matching. Il pattern matching, comunque, è uno strumento potente nel contesto della programmazione funzionale, come vedremo nella prossima sezione.
+
+<h2 id=FPPatternMatching>Pattern matching</h2>
+
+<p>Abbiamo visto molti esempi di pattern matching nel corso del libro. Ne abbiamo avuto il nostro primo assaggio nella sezione <a href=cap-1.html#ATasteOfConcurrency>Un assaggio di concorrenza</a> del capitolo 1, quando abbiamo usato il pattern matching nel nostro attore che disegnava forme geometriche. Abbiamo discusso approfonditamente il pattern matching nella sezione <a href=cap-3.html#PatternMatching>Pattern matching</a> del capitolo 3.
+
+<p>Il pattern matching è uno strumento fondamentale nella programmazione funzionale. &Egrave; importante tanto quanto il polimorfismo nella programmazione orientata agli oggetti, sebbene gli scopi delle due tecniche siano molto differenti.
+
+<p>Il pattern matching è un modo elegante di decomporre gli oggetti nelle loro parti costituenti per elaborarle. A prima vista, l&#8217;uso del pattern matching per questo scopo sembra violare il principio di incapsulamento seguito dagli oggetti. L&#8217;immutabilità, però, stempera notevolmente questo conflitto. Il rischio che le parti di un oggetto possano cambiare al di fuori del controllo dell&#8217;oggetto che le racchiude viene evitato.
+
+<p>Per esempio, supponendo di avere una classe <code>Person</code> che contiene un lista di indirizzi, non è un problema esporre quella lista ai clienti se la lista è immutabile, perché così i clienti non possono modificare inaspettatamente la lista.
+
+<p>Tuttavia, esporre le parti costituenti genera una potenziale dipendenza tra i clienti e i <em>tipi</em> di quelle parti. Non possiamo cambiare il modo in cui le parti sono implementate senza danneggiare i clienti. Un modo per minimizzare questo rischio è quello di esporre le astrazioni di livello più alto possibile. Quando i clienti accedono agli indirizzi di una persona, devono davvero sapere che i dati sono memorizzati in un&#8217;istanza di <code>List</code> o è sufficiente che sappiano che i dati si trovano in un&#8217;istanza di <code>Iterable</code> o di <code>Seq</code>? Se è così, allora possiamo modificare l&#8217;implementazione degli indirizzi purché supporti quelle astrazioni. Naturalmente, nella programmazione orientata agli oggetti sappiamo da tempo di dover ammettere solo le dipendenze dalle astrazioni, non dai dettagli concreti (si veda per esempio <a href=apa.html#Martin2003>[Martin2003]</a>).
+
+<p>Il pattern matching funzionale e il polimorfismo orientato agli oggetti sono potenti complementi l&#8217;uno dell&#8217;altro. Lo abbiamo visto nell&#8217;esempio degli attori proveniente dalla sezione <a href=cap-1.html#ATasteOfConcurrency>Un assaggio di concorrenza</a> del capitolo 1, dove abbiamo usato il pattern matching sulle astrazioni <code>Shape</code> ma abbiamo invocato l&#8217;operazione polimorfica <code>draw</code>.
+
+<h2 id=PartialFunctions>Funzioni parziali</h2>
+
+<p>Avete già visto le funzioni <em>applicate parzialmente</em>, o funzioni parziali, nel corso di questo libro. Quando avete visto un trattino basso passato a un metodo, avete probabilmente visto l&#8217;applicazione parziale al lavoro.
+
+<p>Le funzioni parziali sono espressioni in cui una funzione riceve argomenti solo per alcuni dei parametri che definisce. In Scala, le funzioni parziali vengono usate per impacchettare una funzione insieme ai suoi argomenti e al suo valore di ritorno in modo da assegnarla a una variabile o passarla come argomento a un&#8217;altra funzione.
+
+<p>Questa spiegazione rimane oscura fino a quando non vedete una funzione parziale in azione.
+
+<pre><code>// <a href=esempi/cap-8/partial/partial-script.scala>esempi/cap-8/partial/partial-script.scala</a>
+
+def concatUpper(s1: String, s2: String): String = (s1 + " " + s2).toUpperCase
+
+val c = concatUpper _
+println(c("pantaloni", "corti"))
+
+val c2 = concatUpper("pantaloni", _: String)
+println(c2("corti"))</code></pre>
+
+<p>Invocare <code>concatUpper</code> con un trattino basso (<var>_</var>) trasforma il metodo in un valore funzione. Nella prima parte di questo esempio, abbiamo assegnato una versione parzialmente applicata di <code>concatUpper</code> al valore <var>c</var>. Poi l&#8217;abbiamo <em>applicata</em>, invocando implicitamente il metodo <code>apply</code> su <var>c</var> passandogli direttamente gli argomenti. Quindi abbiamo stampato il valore di ritorno.
+
+<p>Nella seconda parte, abbiamo specificato il primo argomento di <code>concatUpper</code> ma non il secondo, anche se del secondo argomento abbiamo specificato il tipo. Abbiamo assegnato questa variante a un secondo valore <var>c2</var>. Per produrre la stessa uscita già vista, è necessario passare solo un singolo valore quando applichiamo <var>c2</var>. Abbiamo applicato parte della funzione nell&#8217;assegnamento a <var>c2</var> e abbiamo &#8220;riempito gli spazi vuoti&#8221; quando abbiamo invocato <var>c2</var> nella riga successiva.
+
+<p>Abbiamo anche visto funzioni parzialmente applicate senza la sintassi del trattino basso.
+
+<pre><code>List("pantaloni", "corti").map(println)</code></pre>
+
+<p>In questo esempio, <code>println</code> è la funzione parzialmente applicata. Viene applicata a ogni elemento nella lista nel momento in cui è invocata dalla mappatura. Dato che l&#8217;operazione di mappatura si aspetta una funzione come argomento, non abbiamo bisogno di scrivere <code>map(println, _)</code>. In questo contesto, il trattino basso finale che trasforma <code>println</code> in un valore funzione è sottinteso.
+
+<p>Potete anche pensare alle funzioni parziali come a funzioni che vi informeranno quando fornite loro argomenti che sono al di fuori del loro dominio. Ogni funzione parziale è, come potreste indovinare, di tipo <code>PartialFunction</code>. Questo tratto definisce un metodo <code>orElse</code> che accetta un&#8217;altra istanza di <code>PartialFunciton</code>; se la prima funzione parziale non si applicasse, verrà invocata la seconda.
+
+<p>Ancora una volta, la spiegazione è più facile da capire vedendo un esempio pratico.
+
+<pre><code>// <a href=esempi/cap-8/partial/orelse-script.scala>esempi/cap-8/partial/orelse-script.scala</a>
+
+val truthier: PartialFunction[Boolean, String] = { case true =&gt; "veritiero" }
+val fallback: PartialFunction[Boolean, String] = { case x =&gt; "approssimativo" }
+val tester = truthier orElse fallback
+
+println(tester(1 == 1))
+println(tester(2 + 2 == 5))</code></pre>
+
+<p>In questo esempio, <code>tester</code> è una funzione parziale composta da altre due funzioni parziali, <code>truthier</code> e <code>fallback</code>. Nella prima istruzione <code>println</code> viene eseguita <code>truthier</code> perché la clausola <code>case</code> interna alla funzione parziale trova una corrispondenza. Nella seconda istruzione viene eseguita <code>fallback</code> perché il valore dell&#8217;espressione è al di fuori del dominio di <code>truthier</code>.
+
+<p>Le istruzioni <code>case</code> che abbiamo visto durante la nostra esplorazione di Scala vengono espanse internamente in funzioni parzialmente applicate. Le funzioni offrono il metodo astratto <code>isDefinedAt</code>, una caratteristica del tratto <code>PartialFunction</code>, usato per specificare i limiti del dominio di una funzione parziale.
+
+<pre><code>// <a href=esempi/cap-8/partial/isdefinedat-script.scala>esempi/cap-8/partial/isdefinedat-script.scala</a>
+
+val pantsTest: PartialFunction[String, String] = {
+  case "pantaloni" =&gt; "sì, indossiamo i pantaloni!"
+}
+
+println(pantsTest.isDefinedAt("pantaloni"))
+println(pantsTest.isDefinedAt("gonna"))</code></pre>
+
+<p>Qui, la nostra funzione parziale è un test per la stringa <code>"pantaloni"</code>. Quando controlliamo se la stringa <code>"pantaloni"</code> è definita per questa funzione, il risultato è <code>true</code>. Ma per la stringa <code>"gonna"</code> il risultato è <code>false</code>. Se avessimo definito una nostra funzione parziale, avremmo potuto fornire un&#8217;implementazione di <code>isDefinedAt</code> che verifica in modo arbitrario il rispetto dei limiti della nostra funzione.
+
+<h2 id=Currying>Currying</h2>
+
+<p>Così come avete incontrato le funzioni parzialmente applicate prima che le definissimo, avete anche visto le funzioni curry. Dal nome del matematico Haskell Curry (che ha dato il nome anche al linguaggio Haskell), il currying trasforma una funzione che accetta più argomenti in una catena di funzioni ognuna delle quali accetta un singolo argomento.
+
+<p>In Scala, le funzioni curry vengono definite con molteplici liste di parametri, come nell&#8217;esempio seguente.
+
+<pre><code>def cat(s1: String)(s2: String) = s1 + s2</code></pre>
+
+<p>Naturalmente, possiamo definire più di due parametri per una funzione curry, se vogliamo.
+
+<p>Possiamo anche usare la seguente sintassi per definire una funzione curry.
+
+<pre><code>def cat(s1: String) = (s2: String) =&gt; s1 + s2</code></pre>
+
+<p>Sebbene a nostro parere la prima sintassi sia più leggibile, l&#8217;uso di questa sintassi elimina il requisito di un trattino basso finale quando trattiamo la funzione curry come una funzione parzialmente applicata.
+
+<p>Nel <abbr>REPL</abbr> di Scala, l&#8217;invocazione della nostra funzione curry per concatenare due stringhe si effettua in questo modo.
+
+<pre><samp>scala&gt; cat("foo")("bar")
+res1: java.lang.String = foobar</samp></pre>
+
+<p>Possiamo anche convertire metodi che accettano più argomenti in una forma curry con il metodo <code>Function.curried</code>.
+
+<pre><samp>scala&gt; def cat(s1: String, s2: String) = s1 + s2
+cat: (String,String)java.lang.String
+
+scala&gt; val curryCat = Function.curried(cat _)
+curryCat: (String) =&gt; (String) =&gt; java.lang.String = &lt;function&gt;
+
+scala&gt; cat("foo", "bar") == curryCat("foo")("bar")
+res2: Boolean = true</samp></pre>
+
+<p>In questo esempio trasformiamo una funzione <code>cat</code> definita con due parametri nel suo equivalente curry che accetta molteplici liste di argomenti. Se <code>cat</code> fosse stata definita con tre parametri, il suo equivalente curry avrebbe accettato tre liste di argomenti, e così via. Le due forme sono funzionalmente equivalenti, come dimostrato dal confronto di uguaglianza, ma <code>curryCat</code> ora può anche essere usata come base per una funzione parzialmente applicata.
+
+<pre><samp>scala&gt; val partialCurryCat = curryCat("foo")(_)
+partialCurryCat: (String) =&gt; java.lang.String = &lt;function&gt;
+
+scala&gt; partialCurryCat("bar")
+res3: java.lang.String = foobar</samp></pre>
+
+<p>In pratica, il currying viene principalmente usato allo scopo di specializzare le funzioni per particolari tipi di dato. Potete cominciare con un caso estremamente generale e usare la forma curry di una funzione per ridurla a casi particolari.
+
+<p>Per fare un semplice esempio di questo approccio, il codice seguente fornisce forme specializzate di una funzione base che gestisce la moltiplicazione.
+
+<pre><code>def multiplier(i: Int)(factor: Int) = i * factor
+val byFive = multiplier(5) _
+val byTen = multiplier(10) _</code></pre>
+
+<p>Abbiamo cominciato con <code>multiplier</code>, che accetta due argomenti: un intero, e un altro intero per il quale moltiplicare il primo. Dopodiché usiamo il currying per creare due casi speciali di <code>multiplier</code> sotto forma di valori funzione. Notate i trattini bassi finali, che inducono il compilatore ad applicare il currying all&#8217;espressione precedente. In particolare, il trattino basso indica che gli argomenti rimanenti (in questo esempio, un solo argomento) non sono specificati.
+
+<p>Quando invochiamo le nostre funzioni curry nella console di Scala, otteniamo il risultato previsto.
+
+<pre><code>scala&gt; byFive(2)
+res4: Int = 10
+
+scala&gt; byTen(2)
+res5: Int = 20</code></pre>
+
+<p>Rivisiteremo il metodo <code>curry</code> nella sezione <a href=cap-12.html#FunctionTypes>Tipi funzione</a> del capitolo 12.
+
+<p>Come potete vedere, il currying e le funzioni parzialmente applicate sono concetti intimamente correlati. Potete vederli riferiti in maniera intercambiabile, ma quello che è importante è la loro applicazione (nessun gioco di parole intenzionale).
+
+<h2 id=Implicits>Impliciti</h2>
+
+<p>A volte avete bisogno di usare un&#8217;istanza di un certo tipo in un contesto che richiede un tipo diverso ma in qualche modo simile. Per il caso &#8220;singolo&#8221; potreste creare un&#8217;istanza del tipo richiesto usando lo stato dell&#8217;istanza che avete già. Tuttavia, per il caso generale, se questo problema si incontra di frequente, vorreste piuttosto avere un meccanismo di conversione automatica.
+
+<p>Una situazione simile si verifica quando invocate ripetutamente una o più funzioni e dovete passare gli stessi valori a tutte le invocazioni. Potreste gradire un modo di specificare un valore predefinito per un certo parametro in modo che non sia necessario specificarlo esplicitamente ogni volta.
+
+<p>La parola chiave <code>implicit</code> di Scala può essere usata per soddisfare entrambe le necessità.
+
+<h3 id=ImplicitConversions>Conversioni implicite</h3>
+
+<p>Considerate il seguente frammento di codice.
+
+<pre><code>val name: String = "scala"
+println(name.capitalize.reverse)</code></pre>
+
+<p>Quando viene eseguito, stampa il testo seguente.
+
+<pre><samp>alacS</samp></pre>
+
+<p>Nella sezione <a href=cap-7.html#PredefObject>L&#8217;oggetto <code>Predef</code></a> del capitolo 7 abbiamo visto che <code>Predef</code> definisce il tipo <code>String</code> in modo che sia uguale a <code>java.lang.String</code>, ma <code>java.lang.String</code> non definisce i metodi <code>capitalize</code> e <code>reverse</code>. Come funziona questo codice?
+
+<p>La libreria Scala definisce una classe &#8220;avvolgente&#8221; chiamata <code>scala.runtime.RichString</code> che è dotata di questi metodi, e il compilatore converte implicitamente la stringa <code>name</code> in un&#8217;istanza di <code>RichString</code>, usando un metodo speciale definito in <code>Predef</code> e chiamato <code>stringWrapper</code>.
+
+<pre><code>implicit def stringWrapper(x: String) = new runtime.RichString(x)</code></pre>
+
+<p>La parola chiave <code>implicit</code> dice al compilatore che può usare questo metodo per una conversione &#8220;implicita&#8221; da <code>String</code> a <code>RichString</code> ogni volta che quest&#8217;ultima è necessaria. Il compilatore ha notato un tentativo di invocare il metodo <code>capitalize</code> e ha determinato che <code>RichString</code> è dotata di questo metodo; poi ha esaminato l&#8217;ambito di visibilità corrente per cercare un metodo <code>implicit</code> che convertisse <code>String</code> in <code>RichString</code>, trovando <code>stringWrapper</code>.
+
+<p>Come vedremo nella sezione <a href=cap-12.html#ViewsAndViewBounds>Viste e limiti di vista</a> del capitolo 12, a volte questi metodi di conversione vengono chiamati <em>viste</em>, nel senso che il nostro metodo <code>stringWrapper</code> offre una vista da <code>String</code> a <code>RichString</code>.
+
+<p><code>Predef</code> definisce molti altri metodi di conversione implicita, la maggior parte dei quali segue la convenzione nominale <code>vecchio2Nuovo</code>, dove <code>vecchio</code> è il tipo di oggetto disponibile e <code>Nuovo</code> è il tipo desiderato. Tuttavia, non c&#8217;è alcuna restrizione sui nomi dei metodi di conversione. Un certo numero di altre classi avvolgenti &#8220;ricche&#8221; viene definito nel package <code>scala.runtime</code>.
+
+<p>Ecco un riepilogo delle regole di ricerca usate dal compilatore per trovare e applicare i metodi di conversione. Per maggiori dettagli, si veda <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>.
+
+<ol>
+<li>Nessuna conversione verrà tentata se l&#8217;oggetto è di tipo compatibile con il metodo.
+<li>Vengono considerati solo i metodi con la parola chiave <code>implicit</code>.
+<li>Vengono considerati solo i metodi impliciti nell&#8217;ambito di visibilità corrente, così come i metodi impliciti definiti nell&#8217;oggetto <em>associato</em> del tipo <em>destinazione</em>.
+<li>I metodi impliciti non vengono concatenati per arrivare dal tipo disponibile al tipo destinazione attraverso tipi intermedi. Verrà considerato solo un metodo che prende una singola istanza del tipo disponibile e restituisce un&#8217;istanza del tipo destinazione.
+<li>Nessuna conversione viene tentata se esiste più di un metodo di conversione che potrebbe essere applicato. Ci deve essere una e una sola possibilità.
+</ol>
+
+<p>E se non potete definire un metodo di conversione in un oggetto associato, per soddisfare la terza regola, forse perché non potete modificare o creare l&#8217;oggetto associato? In questo caso, definite il metodo da qualche altra parte e importatelo. Normalmente, definireste un <code>object</code> con i soli metodi di conversione necessari. Ecco un esempio.
+
+<pre><code>// <a href=esempi/cap-8/implicits/implicit-conversion-script.scala>esempi/cap-8/implicits/implicit-conversion-script.scala</a>
+import scala.runtime.RichString
+
+class FancyString(val str: String)
+
+object FancyString2RichString {
+    implicit def fancyString2RichString(fs: FancyString) =
+        new RichString(fs.str)
+}
+
+import FancyString2RichString._
+
+val fs = new FancyString("scala")
+println(fs.capitalize.reverse)</code></pre>
+
+<p>Non possiamo modificare <code>RichString</code> o <code>Predef</code> per aggiungere un metodo di conversione implicita per la nostra classe personalizzata <code>FancyString</code>. Invece, definiamo un <code>object</code> chiamato <code>FancyString2String</code> e vi definiamo il metodo di conversione. Poi importiamo il contenuto di questo oggetto e il convertitore viene invocato implicitamente nell&#8217;ultima riga. L&#8217;uscita di questo script è la seguente.
+
+<pre><samp>alacS</samp></pre>
+
+<p>Questo schema per aggiungere efficacemente nuovi metodi alle classi è stato chiamato <em>pimp my library</em> (letteralmente, <em>decora la mia libreria</em>) <a href=apa.html#Odersky2006>[Odersky2006]</a>.
+
+<h2 id=ImplicitFunctionParameters>Parametri di funzione impliciti</h2>
+
+<p>Nel <a href=cap-2.html>capitolo 2</a> abbiamo visto che Scala 2.8 aggiunge il supporto per i valori predefiniti degli argomenti, che potete trovare in altri linguaggi come Ruby e C++. Ci sono altri modi di ottenere lo stesso effetto in tutte le versioni di Scala. Il primo consiste nell&#8217;usare il currying per le funzioni, come abbiamo già visto. Il secondo consiste nel definire valori <em>impliciti</em> tramite la parola chiave <code>implicit</code>.
+
+<p>Esaminiamo come funzionano i valori impliciti.
+
+<pre><code>// <a href=esempi/cap-8/implicits/implicit-parameter-script.scala>esempi/cap-8/implicits/implicit-parameter-script.scala</a>
+import scala.runtime.RichString
+
+def multiplier(i: Int)(implicit factor: Int) {
+  println(i * factor)
+}
+
+implicit val factor = 2
+
+multiplier(2)
+multiplier(2)(3)</code></pre>
+
+<p>Il nostro moltiplicatore è definito con due liste di parametri. L&#8217;ultima include un valore intero <var>factor</var> indicato come <code>implicit</code>. Questa parola chiave induce il compilatore a cercare il valore di <var>factor</var> nell&#8217;ambito circostante, se è disponibile, oppure a usare qualunque argomento sia stato esplicitamente fornito alla funzione.
+
+<p>Abbiamo definito il nostro valore <var>factor</var> nell&#8217;ambito di visibilità, e quel valore viene usato nella prima invocazione di <code>multiplier</code>. Nella seconda invocazione stiamo esplicitamente passando un valore per <var>factor</var>, in modo che venga usato al posto del valore definito nell&#8217;ambito circostante.
+
+<p>Essenzialmente, i parametri di funzione impliciti si comportano come parametri con un valore predefinito, con la differenza fondamentale che il valore proviene dall&#8217;ambito circostante. Se il nostro valore <var>factor</var> si fosse trovato in una classe o in un oggetto, avremmo dovuto importarlo nell&#8217;ambito locale. Se il compilatore non può determinare il valore da usare per un parametro implicito, genererà un errore.
+
+<h3 id=FinalThoughtsOnImplicits>Considerazioni conclusive sugli impliciti</h3>
+
+<p>Gli impliciti possono essere pericolosamente vicini alla &#8220;magia&#8221;; se vengono usati in maniera eccessiva, offuscano il comportamento del codice per il lettore. In più, state attenti all&#8217;implementazione dei metodi di conversione, in particolare se il tipo di ritorno non è esplicitamente dichiarato. Se una futura modifica al metodo provocasse anche un sottile cambiamento del tipo di ritorno, la conversione potrebbe improvvisamente smettere di funzionare. In generale, gli impliciti possono causare comportamenti misteriosi che sono difficili da trovare e correggere.
+
+<p>Quando decidete come implementare i valori &#8220;predefiniti&#8221; per gli argomenti dei metodi, uno dei vantaggi principali dei valori predefiniti degli argomenti (in Scala 2.8) è che la decisione su quale valore usare come valore predefinito viene presa dal manutentore del metodo. L&#8217;implementazione è più chiara e voi evitate la &#8220;magia&#8221; dei metodi impliciti. Tuttavia, uno svantaggio dei valori predefiniti degli argomenti potrebbe essere la relativa difficoltà di usare un valore &#8220;predefinito&#8221; differente sulla base del contesto in cui il metodo viene invocato. Scala 2.8 vi offre una certa flessibilità, in quanto potete usare un&#8217;espressione per un argomento invece di un semplice valore costante. Ma questa flessibilità potrebbe non essere sufficiente; in questo caso, gli impliciti costituiscono un&#8217;alternativa molto flessibile e potente.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Usate gli impliciti con parsimonia e attenzione. Considerate la possibilità di aggiungere un tipo di ritorno esplicito ai metodi di conversione &#8220;non banali&#8221;.
+</blockquote>
+
+<h2 id=_call_by_name_call_by_value>Invocazione per nome o per valore</h2>
+
+<p>Tipicamente, i parametri vengono passati <em>per valore</em> alle funzioni, cioè il valore del parametro viene determinato prima di essere passato alla funzione. Nella maggior parte delle circostanze, questo è il comportamento desiderato e atteso.
+
+<p>Ma come possiamo fare se vogliamo scrivere una funzione che accetta come parametro un&#8217;espressione che vogliamo evitare di valutare fino a quando non è utilizzata all&#8217;interno della nostra funzione? Per questa circostanza Scala vi offre i parametri <em>per nome</em>.
+
+<p>Un parametro per nome viene specificato omettendo le parentesi che normalmente accompagnano un parametro funzione, come nel seguente esempio.
+
+<pre><code>def myCallByNameFunction(callByNameParameter: =&gt; ReturnType)</code></pre>
+
+<p>Senza questa abbreviazione sintattica, questa definizione di metodo si presenterebbe nel modo seguente.
+
+<pre><code>def myCallByNameFunction(callByNameParameter: () =&gt; ReturnType)</code></pre>
+
+<p>E in più dovremmo includere quelle sgradevoli parentesi vuote in ogni invocazione di quel meotdo. L&#8217;uso dei parametri per nome rimuove questo vincolo.
+
+<p>I parametri per nome possono essere usati per implementare potenti costrutti di ciclo, tra le altre cose. Facciamo i pazzi e implementiamo il nostro ciclo <code>while</code>, gettando anche il currying nella mischia.
+
+<pre><code>// <a href=esempi/cap-8/overrides/call-by-name-script.scala>esempi/cap-8/overrides/call-by-name-script.scala</a>
+
+def whileAwesome(conditional: =&gt; Boolean)(f: =&gt; Unit) {
+  if (conditional) {
+    f
+    whileAwesome(conditional)(f)
+  }
+}
+
+var count = 0
+
+whileAwesome(count &lt; 5) {
+  println("ancora fantastico")
+  count += 1
+}</code></pre>
+
+<p>Cosa succederebbe se rimuovessimo la freccia tra <code>conditional:</code> e <code>Boolean</code>? L&#8217;espressione <code>count &lt; 5</code> verrebbe valutata a <code>true</code> prima di essere passata al nostro ciclo <code>while</code> personalizzato, e il messaggio <code>"ancora fantastico"</code> verrebbe stampato indefinitamente. Ritardando la valutazione fino a quando <code>conditional</code> viene invocato all&#8217;interno della nostra funzione con un parametro per nome, otteniamo il comportamento atteso.
+
+<h2 id=LazyVals>Valori ritardati</h2>
+
+<p>Nella sezione <a href=cap-6.html#OverridingFieldsInTraits>Ridefinire i campi astratti e concreti nei tratti</a> del capitolo 6 abbiamo mostrato diversi scenari in cui l&#8217;ordine della inizializzazione dei campi può essere problematico in caso di ridefinizione, e li abbiamo risolti utilizzando i <em>campi pre-inizializzati</em>. Ora discutiamo l&#8217;altra soluzione che avevamo menzionato in precedenza, i <em>valori ritardati</em>.
+
+<p>Ecco uno di quegli esempi, riscritto usando un valore ritardato <code>lazy val</code>.
+
+<pre><code>// <a href=esempi/cap-8/overrides/trait-lazy-init-val-script.scala>esempi/cap-8/overrides/trait-lazy-init-val-script.scala</a>
+
+trait AbstractT2 {
+  println("In AbstractT2:")
+  val value: Int
+  lazy val inverse = { println("inizializzo inverse:"); 1.0/value }
+  //println("AbstractT2: value = " + value + ", inverse = " + inverse)
+}
+
+val c2d = new AbstractT2 {
+  println("In c2d:")
+  val value = 10
+}
+
+println("Uso c2d:")
+println("c2d.value = " + c2d.value + ", inverse = " + c2d.inverse)</code></pre>
+
+<p>Questa è l&#8217;uscita dello script.
+
+<pre><samp>In AbstractT2:
+In c2d:
+Uso c2d:
+inizializzo inverse:
+c2d.value = 10, inverse = 0.1</samp></pre>
+
+<p>Come prima, stiamo usando una classe anonima annidata che estende implicitamente il tratto. Il corpo della classe, che inizializza <var>value</var>, viene valutato <em>dopo</em> il corpo del tratto. Tuttavia, notate che <code>inverse</code> è dichiarato come <code>lazy</code>; questo significa che il lato destro verrà valutato solo quando <code>inverse</code> viene effettivamente <em>usato</em>. In questo caso, ciò accade nell&#8217;ultima istruzione <code>println</code>. Solo in quel momento <code>inverse</code> viene inizializzato, usando <code>value</code>, che a quel punto è correttamente inizializzato.
+
+<p>Provate a estrarre dal commento l&#8217;istruzione <code>println</code> al termine del corpo di <code>AbstractT2</code>. Cosa succede ora?
+
+<pre><code>In AbstractT2:
+inizializzo inverse:
+AbstractT2: value = 0, inverse = Infinity
+In c2d:
+Uso c2d:
+c2d.value = 10, inverse = Infinity</code></pre>
+
+<p>Questa <code>println</code> impone la valutazione di <code>inverse</code> dentro al corpo di <code>AbstractT2</code>, prima che <var>value</var> venga inizializzato dal corpo della classe, riproducendo così il problema che avevamo prima.
+
+<p>Questo esempio sottolinea un punto importante: se altri valori <code>val</code> usano il valore <code>lazy val</code> nel corpo della stessa classe o dello stesso tratto, quei valori dovrebbero essere dichiarati <code>lazy</code> a loro volta. In più, fate attenzione alle invocazioni di funzione che si trovano nel corpo e usano i valori ritardati.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Se un valore è ritardato, assicuratevi che tutti gli usi di quel valore siano ritardati.
+</blockquote>
+
+<p>Quindi, in che modo un valore ritardato è differente da un&#8217;invocazione di metodo? In un&#8217;invocazione di metodo il corpo viene eseguito <em>ogni</em> volta che il metodo è invocato. Per un valore ritardato, il &#8220;corpo&#8221; di inizializzazione viene valutato una volta sola, nel momento in cui la variabile viene usata per la prima volta. Questa valutazione unica non ha molto senso per un campo mutabile. Di conseguenza, la parola chiave <code>lazy</code> non è consentita sui campi <code>var</code>. (Non possono effettivamente farne uso comunque.)
+
+<p>Potete usare i valori ritardati anche per evitare inizializzazioni costose di cui potreste non avere effettivamente bisogno e per differire le inizializzazioni che rallentano l&#8217;avvio dell&#8217;applicazione. I valori ritardati funzionano bene nei costruttori, dove è chiaro agli altri programmatori che tutte le operazioni uniche di supporto per inizializzare un&#8217;istanza vengono eseguite in un solo posto.
+
+<p>Il &#8220;ritardo&#8221; si può anche sfruttare per gestire strutture dati potenzialmente infinite dove solo un sottoinsieme ridotto dei dati verrà effettivamente usato. In effetti, la notazione matematica è intrinsecamente ritardata. Quando scriviamo la sequenza di Fibonacci, per esempio, potremmo scriverla come una sequenza infinita in questo modo.
+
+<pre><samp>Fib = 1, 1, 2, 3, 5, 8, &hellip;</samp></pre>
+
+<p>Alcuni linguaggi funzionali puri sono ritardati per default, quindi imitano questo comportamento nella maniera più fedele possibile. Questo può funzionare senza esaurire le risorse della macchina se l&#8217;utente non cerca mai di utilizzare più di un sottoinsieme finito di questi valori. Scala non è un linguaggio ritardato per default, ma fornisce un supporto per lavorare con strutture dati infinite. Affronteremo questo argomento nella sezione <a href=cap-12.html#InfiniteDataStructuresAndLaziness>Strutture dati infinite e ritardo</a> del capitolo 12.
+
+<h2 id=FunctionalComponentAbstractions>Riepilogo: le astrazioni per i componenti funzionali</h2>
+
+<p>Quando la programmazione orientata agli oggetti divenne popolare alla fine degli anni &#8217;80 e all&#8217;inizio degli anni &#8217;90, la speranza fu quella di veder nascere un&#8217;era di componenti software riusabili. Le cose non sono andate proprio così, a parte in alcuni rari casi, come le <abbr>API</abbr> dei sistemi a finestre sulle varie piattaforme.
+
+<p>Perché questo non è accaduto? Ci sono sicuramente molte ragioni, ma una possibile causa è il fatto che i semplici protocolli di interoperabilità a livello di codice sorgente o di codice eseguibile che avrebbero dovuto unire tra loro questi componenti non si sono mai materializzati. La ricchezza delle <abbr>API</abbr> orientate agli oggetti è stato proprio il fattore che ha minato la componentizzazione.
+
+<p>I modelli a componenti che hanno avuto successo sono tutti basati su fondamenta molto semplici. In elettronica, i circuiti integrati si agganciano ai bus di comunicazione con 2<sup>n</sup> morsetti che trasmettono segnali booleani, cioè accesi o spenti. Da quel protocollo molto semplice è nata la crescita industriale più esplosiva nella storia dell&#8217;umanità.
+
+<p><abbr>HTTP</abbr> è un altro buon esempio. Con una manciata di tipi di messaggio e uno standard molto semplice per il contenuto del messaggio, questo protocollo ha posto le basi per la rivoluzione di Internet. I servizi web di tipo <abbr>REST</abbr> costruiti su <abbr>HTTP</abbr> si stanno rivelando riusciti come componenti, ma la loro complessità è già sufficiente da rendere necessaria una certa cura per assicurarne il corretto funzionamento.
+
+<p>Quindi c&#8217;è speranza per la nascita di un modello a componenti a livello di codice sorgente o di codice eseguibile? Probabilmente un tale modello non sarà orientato agli oggetti, come abbiamo visto; piuttosto, potrebbe essere più funzionale.
+
+<p>I componenti dovrebbero interoperare scambiandosi alcune strutture dati immutabili, come per esempio liste e mappe, che contengano sia dati sia &#8220;comandi&#8221;. Un modello a componenti di questo tipo avrebbe la semplicità necessaria per diffondersi e la ricchezza richiesta per funzionare nel mondo reale. Notate come questo suoni molto simile ad <abbr>HTTP</abbr> e <abbr>REST</abbr>.
+
+<p>In effetti, il modello degli attori possiede molte di queste qualità, come vedremo nel prossimo capitolo.
+
+<p class=v><a rel=prev href=cap-7.html title='indietro a &#8220;Il sistema a oggetti di Scala&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-9.html title='avanti a &#8220;Programmazione concorrente robusta e scalabile con gli attori&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>

@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Completare l&#8217;indispensabile - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 3}
+</style>
+<script>_gaq=[['_setAccount','UA-10482652-1'],['_trackPageview']];(function(){var g=document.createElement('script');g.src='//www.google-analytics.com/ga.js';g.setAttribute('async','true');document.documentElement.firstChild.appendChild(g);})();</script>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-3>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Completare l&#8217;indispensabile</h1>
+
+<p>Prima di immergerci nel supporto di Scala per la programmazione orientata agli oggetti e funzionale, concludiamo la nostra discussione sulle caratteristiche essenziali che userete nella maggior parte dei vostri programmi.
+
+<h2 id=_operator_operator>Operatore? Operatore?</h2>
+
+<p>Un concetto fondamentale in Scala è che tutti gli operatori in realtà sono metodi. Considerate il più semplice degli esempi:
+
+<pre><code>// <a href=esempi/cap-3/one-plus-two-script.scala>esempi/cap-3/one-plus-two-script.scala</a>
+
+1 + 2</code></pre>
+
+<p>Vedete quel segno più tra i numeri? &Egrave; un metodo. Primo, Scala vi consente di usare nomi di metodo non alfanumerici: potete chiamare i metodi <code>+</code>, <code>-</code>, <code>$</code>, o in qualunque modo desideriate. Secondo, questa espressione è identica a <code>1 .+(2)</code>. (Abbiamo aggiunto uno spazio dopo <code>1</code> perché <code>1.</code> verrebbe interpretato come un numero <code>Double</code>.) Quando un metodo accetta un argomento, Scala vi permette di omettere sia il punto sia le parentesi, così l&#8217;invocazione del metodo sembra l&#8217;invocazione di un operatore. Questa notazione viene chiamata &#8220;infissa&#8221;, perché l&#8217;operatore si trova tra l&#8217;istanza e l&#8217;argomento. Ne sapremo di più tra breve.
+
+<p>Similmente, un metodo senza argomenti può essere invocato senza il punto. Questa notazione viene chiamata &#8220;postfissa&#8221;.
+
+<p>I programmatori Ruby e Smalltalk ora dovrebbero sentirsi a proprio agio. Come sa chi usa quei linguaggi, queste semplici regole portano grandi benefici quando si vogliono scrivere programmi che scorrono in maniera naturale ed elegante.
+
+<p>Quindi, quali caratteri potete usare negli identificatori? Qui vi presentiamo un breve riepilogo delle regole per gli identificatori usati come nomi dei metodi e dei tipi, come variabili, <i class=baa>&amp;</i>c. Per i dettagli precisi, si veda <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>. Scala consente di usare tutti i caratteri <abbr>ASCII</abbr> stampabili, come lettere, cifre, il trattino basso <code>_</code> e il simbolo del dollaro <code>$</code>, a eccezione dei caratteri &#8220;parentetici&#8221; <code>(</code>, <code>)</code>, <code>[</code>, <code>]</code>, <code>{</code>, <code>}</code>, e dei &#8220;delimitatori&#8221; <code>&#8245;</code>, <code>&#8217;</code>, <code>'</code>, <code>&quot;</code>, <code>.</code>, <code>;</code> e <code>,</code>. Scala consente di usare anche gli altri caratteri nell&#8217;intervallo <code>\u0020</code>&ndash;<code>\u007F</code> che non appartengono agli insiemi precedenti, come i simboli matematici e &#8220;altri&#8221; simboli; questi caratteri vengono chiamati <em>caratteri operatore</em> e includono caratteri come <code>/</code>, <code>&lt;</code>, <i class=baa>&amp;</i>c.
+
+<dl>
+<dt>Le parole riservate non possono essere usate
+<dd>Come nella maggior parte dei linguaggi, non potete utilizzare le parole riservate come identificatori. Abbiamo elencato le parole riservate nella sezione <a href=cap-2.html#ReservedWords>Parole riservate</a> del capitolo 2. Ricordatevi che alcune di esse sono combinazioni di caratteri di punteggiatura e caratteri operatore. Per esempio, un singolo trattino basso (<code>_</code>) è una parola riservata!
+<dt>Identificatori semplici &ndash; combinazioni di lettere, cifre, <code>$</code>, <code>_</code> e operatori
+<dd>Come in Java e in molti linguaggi, un <em>identificatore semplice</em> può cominciare con una lettera o un trattino basso e proseguire con ulteriori lettere, cifre, trattini bassi e simboli del dollaro. Sono permessi anche caratteri Unicode equivalenti. Tuttavia, al pari di Java, Scala riserva il simbolo del dollaro per uso interno, quindi non dovreste usarlo nei vostri identificatori. Dopo un trattino basso, potete avere lettere e cifre <em>oppure</em> una sequenza di caratteri operatore. Il trattino basso è importante, perché dice al compilatore di trattare tutti i caratteri fino allo spazio bianco successivo come parte dell&#8217;identificatore. Per esempio, <code>val xyz_++= = 1</code> assegna il valore <code>1</code> alla variabile <var>xyz_++=</var>, mentre l&#8217;espressione <code>val xyz++= = 1</code> non verrà compilata, perché &#8220;l&#8217;identificatore&#8221; potrebbe anche essere interpretato come <code>xyz ++=</code>, che somiglia a un tentativo di aggiungere qualcosa in coda a <var>xyz</var>. Similmente, se avete caratteri operatore dopo il trattino basso, non potete mescolarli con lettere e cifre. Questa restrizione serve a evitare espressioni ambigue come <code>abc_=123</code>: rappresenta l&#8217;identificatore <var>abc_=123</var> oppure l&#8217;assegnamento del valore <code>123</code> alla variabile <var>abc_</var>?
+<dt>Identificatori semplici &ndash; operatori
+<dd>Se un identificatore comincia con un carattere operatore, il resto del nome deve essere composto da caratteri operatore.
+<dt>Letterali tra apici inversi
+<dd>Un identificatore può anche essere una stringa arbitraria (soggetta alle limitazioni della piattaforma) racchiusa tra due apici inversi, come per esempio <code>val &#8245;questo è un identificatore valido&#8245; = "Ciao mondo!"</code>. Ricordatevi che questa sintassi si utilizza anche per invocare un metodo su una classe Java o .NET quando il nome del metodo è identico a una parola riservata di Scala, come per esempio <code>java.net.Proxy.&#8245;type&#8245;()</code>.
+<dt>Identificatori per il pattern matching
+<dd>Nelle espressioni di pattern matching, i lessemi che cominciano con una lettera minuscola vengono riconosciuti come <em>identificatori di variabile</em>, mentre quelli che cominciano con una lettera maiuscola vengono riconosciuti come <em>identificatori di costante</em>. Questa restrizione evita alcune ambigiutà causate dalla sintassi usata per le variabili, che è molto concisa; per esempio, la parola chiave <code>val</code> non è presente.
+</dl>
+
+<h3 id=para_pattern_matching_identifiers_>Zucchero sintattico</h3>
+
+<p>Sapendo che tutti gli operatori sono metodi, è più facile ragionare sul codice Scala con cui non avete familiarità. Non dovete preoccuparvi di casi speciali quando vedete nuovi operatori. Lavorando con gli attori nel <a href=cap-1.html>capitolo 1</a>, avrete notato che abbiamo usato un punto esclamativo (<code>!</code>) per inviare un messaggio a un attore. Ora sapete che <code>!</code> è semplicemente un altro metodo, come lo sono altri comodi operatori abbreviati che potete usare per comunicare con gli attori. Allo stesso modo, la libreria <abbr>XML</abbr> di Scala fornisce gli operatori <code>\</code> e <code>\\</code> per navigare la struttura dei documenti; questi sono semplicemente metodi della classe <code>scala.xml.NodeSeq</code>.
+
+<p>Questa denominazione flessibile per i metodi vi mette in grado di scrivere librerie che danno la sensazione di essere una naturale estensione del linguaggio. Potreste scrivere una nuova libreria matematica con tipi numerici che accettano tutti i classici operatori aritmetici come addizione e sottrazione. Potreste scrivere un nuovo livello di messaggistica concorrente che si comporta nello stesso modo degli attori. Le possibilità sono vincolate solo dai limiti che Scala impone alla denominazione dei metodi.
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span>Solo perché <em>potete</em> non significa che <em>dovreste</em>. Quando progettate le vostre librerie e le vostre <abbr>API</abbr> in Scala, tenete presente che i programmatori hanno difficoltà a ricordare gli operatori poco intuitivi formati da punteggiatura. Se ne abusate, il vostro codice potrebbe diventare illeggibile a causa del troppo &#8220;rumore&#8221;. Quando il significato di un&#8217;abbreviazione non è immediato, è preferibile aderire alle convenzioni e scrivere per esteso i nomi dei metodi.
+</blockquote>
+
+<h2 id=_methods_without_parentheses_and_dots>Metodi senza parentesi e punti</h2>
+
+<p>Per facilitare l&#8217;adozione di alcuni stili di programmazione leggibili, Scala è flessibile sull&#8217;uso delle parentesi nei metodi. Se un metodo non accetta parametri, potete definirlo senza parentesi; in questo caso, chi lo invoca deve chiamare il metodo senza parentesi. Se aggiungete una coppia vuota di parentesi, allora chi invoca il metodo può opzionalmente aggiungere le parentesi. Per esempio, il metodo <code>size</code> della classe <code>List</code> non ha parentesi, quindi dovete scrivere <code>List(1, 2, 3).size</code>. Se provate a scrivere <code>List(1, 2, 3).size()</code> otterrete un errore. Tuttavia, il metodo <code>length</code> della classe <code>String</code> è definito con le parentesi, quindi le invocazioni <code>"ciao".length()</code> e <code>"ciao".length</code> verranno entrambe compilate.
+
+<p>La convenzione nella comunità Scala prevede di omettere le parentesi quando si invoca un metodo che non ha <em>effetti collaterali</em>. Quindi, la dimensione di una sequenza va richiesta senza parentesi, ma la definizione di un metodo che trasforma gli elementi di una sequenza dovrebbe essere scritta con le parentesi. Questa convenzione segnala i metodi potenzialmente pericolosi agli utenti del vostro codice.
+
+<p>&Egrave; anche possibile omettere il punto quando si invoca un metodo che non ha parametri o un metodo che accetta solo un argomento. Tenendo presente questa possibilità, il nostro esempio <code>List(1, 2, 3).size</code> potrebbe essere scritto come:
+
+<pre><code>// <a href=code-esempi/cap-3/no-dot-script.scala>esempi/cap-3/no-dot-script.scala</a>
+
+List(1, 2, 3) size</code></pre>
+
+<p>Bello, ma poco chiaro. Quand&#8217;è che questa flessibilità sintattica si rivela utile? Quando concatenate insieme più invocazioni di metodo in &#8220;frasi&#8221; di codice espressive e dal significato intuitivo:
+
+<pre><code>// <a href=esempi/cap-3/no-dot-better-script.scala>esempi/cap-3/no-dot-better-script.scala</a>
+
+def isEven(n: Int) = (n % 2) == 0
+
+List(1, 2, 3, 4) filter isEven foreach println</code></pre>
+
+<p>Come potreste indovinare, l&#8217;esecuzione di questo codice produce l&#8217;uscita:
+
+<pre><samp>2
+4</samp></pre>
+
+<p>L&#8217;approccio liberale di Scala alle parentesi e ai punti per i metodi fornisce uno degli ingredienti per la creazione di <em>linguaggi domain-specific</em>. Impareremo a conoscere meglio questi linguaggi dopo una breve discussione sulla precedenza degli operatori.
+
+<h3 id=_precedence_rules>Regole di precedenza</h3>
+
+<p>Quindi, se un&#8217;espressione come <code>2.0 * 4.0 / 3.0 * 5.0</code> è in realtà una serie di chiamate di metodo su <code>Double</code>, quali sono le regole di <em>precedenza degli operatori</em>? Eccole qui, in ordine dalla precedenza più bassa a quella più alta <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>.
+
+<ul>
+<li><em>tutte le lettere</em>
+<li><code>|</code>
+<li><code>^</code>
+<li><code>&amp;</code>
+<li><code>&lt;</code> <code>&gt;</code>
+<li><code>=</code> <code>!</code>
+<li><code>:</code>
+<li><code>+</code> <code>-</code>
+<li><code>*</code> <code>/</code> <code>%</code>
+<li><em>tutti gli altri caratteri speciali</em>
+</ul>
+
+<p>I caratteri sulla stessa riga hanno la stessa precedenza. L&#8217;unica eccezione è <code>=</code> che, quando viene usato per l&#8217;assegnamento, ha la precedenza più bassa.
+
+<p>Dato che <code>*</code> e <code>/</code> hanno la stessa precedenza, le due espressioni nella sessione <kbd>scala</kbd> seguente si comportano allo stesso modo.
+
+<pre><samp>scala&gt; 2.0 * 4.0 / 3.0 * 5.0
+res2: Double = 13.333333333333332
+
+scala&gt; (((2.0 * 4.0) / 3.0) * 5.0)
+res3: Double = 13.333333333333332</samp></pre>
+
+<p>In una sequenza di invocazioni associative a sinistra, i metodi legano gli argomenti in ordine da sinistra a destra. &#8220;Associative a sinistra&#8221;, dite? In Scala, ogni metodo con un nome che termina con i due punti in realtà lega l&#8217;argomento alla propria <em>destra</em>, mentre tutti gli altri metodi legano quello alla propria sinistra. Per esempio, potete inserire un elemento in testa a un&#8217;istanza di <code>List</code> usando il metodo <code>::</code> (chiamato &#8220;cons&#8221;, abbreviazione di &#8220;constructor&#8221;, cioè &#8220;costruttore&#8221;).
+
+<pre><samp>scala&gt; val list = List('b', 'c', 'd')
+list: List[Char] = List(b, c, d)
+
+scala&gt; 'a' :: list
+res4: List[Char] = List(a, b, c, d)</samp></pre>
+
+<p>La seconda espressione è equivalente a <code>list.::('a')</code>. In una sequenza di invocazioni associative a destra, i metodi legano gli argomenti da destra a sinistra. E cosa succede nelle espressioni che mescolano le associatività?
+
+<pre><code>scala&gt; 'a' :: list ++ List('e', 'f')
+res5: List[Char] = List(a, b, c, d, e, f)</code></pre>
+
+<p>(Il metodo <code>++</code> concatena due liste.) In questo caso, <var>list</var> viene aggiunta a <code>List('e', 'f')</code>, poi <code>'a'</code> viene inserita in testa per creare la lista finale. Di solito è meglio aggiungere le parentesi per evitare qualsiasi possibile incertezza.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Tutti i metodi il cui nome finisce con <code>:</code> legano l&#8217;argomento alla propria <em>destra</em>, non alla propria <em>sinistra</em>.
+</blockquote>
+
+<p>Infine notate che, quando usate il comando <kbd>scala</kbd>, interattivamente o con gli script, potrebbe sembrare che stiate definendo variabili &#8220;globali&#8221; e metodi al di fuori dei tipi. In realtà, questa è un&#8217;illusione: l&#8217;interprete racchiude tutte le definizioni in un tipo anonimo prima di generare il bytecode per la <abbr>JVM</abbr> o per il <abbr>CLR</abbr>.
+
+<h2 id=_domain_specific_languages>Linguaggi domain-specific</h2>
+
+<p>I <em>linguaggi domain-specific</em>, o <abbr>DSL</abbr>, forniscono un mezzo sintattico conveniente per esprimere obiettivi nel dominio di un dato problema. Per esempio, SQL possiede le funzionalità di un linguaggio di programmazione sufficienti soltanto a lavorare con un database, qualificandosi dunque come un linguaggio specifico per quel dominio.
+
+<p>Mentre alcuni <abbr>DSL</abbr> come SQL sono autocontenuti, si è diffusa la pratica di implementare i <abbr>DSL</abbr> come sottoinsiemi di linguaggi di programmazione completi. In questo modo, i programmatori possono sfruttare l&#8217;intero linguaggio ospite per i casi limite che il <abbr>DSL</abbr> non copre e risparmiarsi la fatica di scrivere analizzatori lessicali, analizzatori sintattici, e tutti gli altri componenti di un interprete.
+
+<p>La sintassi ricca e flessibile di Scala rende la scrittura dei <abbr>DSL</abbr> un gioco da ragazzi. Considerate questo esempio di uno stile di scrittura dei test chiamato <em>sviluppo guidato dal comportamento</em> (in inglese, <em>behavior-driven development</em>) <a href=apa.html#BDD>[BDD]</a> che usa la libreria <em>Specs</em> (si veda la sezione <a href=cap-14.html#ScalaSpecs>Specs</a> nel capitolo 14).
+
+<pre><code>// <a href=esempi/cap-3/specs-script.scala>esempi/cap-3/specs-script.scala</a>
+// Frammento di esempio di uno script Specs. Non funziona da solo.
+
+"il cercatore di nerd" should {
+  "identificare i nerd in una lista" in {
+    val actors = List("Rick Moranis", "James Dean", "Woody Allen")
+    val finder = new NerdFinder(actors)
+    finder.findNerds mustEqual List("Rick Moranis", "Woody Allen")
+  }
+}</code></pre>
+
+<p>Notate quanto sia facile leggere queste righe di codice come frasi in linguaggio naturale:<sup id=fnn-1><a href=#fn-1>1</a></sup> &#8220;questo dovrebbe (<code>should</code>) collaudare quello nello (<code>in</code>) scenario seguente&#8221;, &#8220;questo valore deve essere uguale (<code>mustEqual</code>) a quel valore&#8221;, e così via. Questo esempio usa la superba libreria Specs, che fornisce un <abbr>DSL</abbr> efficace per sfruttare il processo di sviluppo guidato dal comportamento come metodologia ingegneristica e di collaudo. Facendo massimo uso della sintassi liberale e dei potenti metodi di Scala, i test scritti con Specs sono comprensibili anche da chi non è uno sviluppatore.
+
+<p>Questo è solo un assaggio della potenza dei <abbr>DSL</abbr> in Scala. Ne vedremo altri esempi più avanti e impareremo come scrivere i nostri man mano che faremo progressi (si veda il <a href=cap-11.html>capitolo 11</a>).
+
+<h2 id=IfStatements>Le istruzioni <code>if</code> in Scala</h2>
+
+<p>Anche gli aspetti linguistici più familiari sono potenziati in Scala; ci basta dare un&#8217;occhiata alla modesta istruzione <code>if</code>. Come in quasi tutti i linguaggi, l&#8217;istruzione <code>if</code> in Scala valuta un&#8217;espressione condizionale, poi procede verso un blocco se il risultato è <code>true</code> oppure diverge verso un blocco alternativo se il risultato è <code>false</code>. Ecco un semplice esempio:
+
+<pre><code>// <a href=esempi/cap-3/if-script.scala>esempi/cap-3/if-script.scala</a>
+
+if (2 + 2 == 5) {
+  println("Saluti dal 1984.")
+} else if (2 + 2 == 3) {
+    println("Saluti da un corso di recupero in matematica?")
+} else {
+  println("Saluti da un futuro non orwelliano.")
+}</code></pre>
+
+<p>La differenza è che in Scala <code>if</code> e quasi tutte le altre istruzioni in realtà sono espressioni. Quindi, possiamo assegnare il risultato di un&#8217;espressione <code>if</code>, come mostrato in questo esempio:
+
+<pre><code>// <a href=esempi/cap-3/assigned-if-script.scala>esempi/cap-3/assigned-if-script.scala</a>
+
+val configFile = new java.io.File(".myapprc")
+
+val configFilePath = if (configFile.exists()) {
+  configFile.getAbsolutePath()
+} else {
+  configFile.createNewFile()
+  configFile.getAbsolutePath()
+}</code></pre>
+
+<p>Notate che le istruzioni <code>if</code> sono espressioni, nel senso che hanno un valore. In questo esempio, la variabile <var>configFilePath</var> contiene il risultato di un&#8217;espressione <code>if</code> che gestisce internamente il caso in cui un file di configurazione non esiste, poi restituisce il percorso assoluto di quel file. Questo valore ora può essere riutilizzato nell&#8217;intera applicazione senza che l&#8217;espressione <code>if</code> venga valutata nuovamente ogni volta.
+
+<p>Dato che in Scala le istruzioni <code>if</code> sono espressioni, non c&#8217;è alcun bisogno del caso particolare rappresentato dalle espressioni condizionali ternarie presenti nei linguaggi derivati dal C. Non vedrete <code>x ? faiQuesto() : faiQuello()</code> in Scala, perché Scala fornisce un meccanismo che è altrettanto potente e più leggibile.
+
+<p>Cosa succede se omettiamo la clausola <code>else</code> nell&#8217;esempio precedente? Otterremo la risposta digitando il codice nell&#8217;interprete <kbd>scala</kbd>.
+
+<pre><samp>scala&gt; val configFile = new java.io.File("~/.myapprc")
+configFile: java.io.File = ~/.myapprc
+
+scala&gt; val configFilePath = if (configFile.exists()) {
+     |   configFile.getAbsolutePath()
+     | }
+configFilePath: Unit = ()
+
+scala&gt;</samp></pre>
+
+<p>Notate che ora <var>configFilePath</var> è un&#8217;istanza di <code>Unit</code>. (Prima era un&#8217;istanza di <code>String</code>.) L&#8217;inferenza di tipo sceglie un tipo valido per tutti i risultati dell&#8217;espressione <code>if</code>; in questo caso <code>Unit</code> è l&#8217;unica alternativa, dato che &#8220;nessun valore&#8221; è uno dei possibili risultati.
+
+<h2 id=ForComprehensions>Le espressioni <code>for</code> in Scala</h2>
+
+<p>Un&#8217;altra struttura di controllo ordinaria particolarmente potente in Scala è il ciclo <code>for</code>, che la comunità Scala chiama <em>espressione</em> <code>for</code> o <em>descrizione</em> <code>for</code>. Questa parte del linguaggio merita quantomeno un nome stravagante, perché è in grado di fare alcuni giochi di prestigio fantastici.
+
+<p>In effetti, il termine &#8220;descrizione&#8221; viene dalla programmazione funzionale. Esprime l&#8217;idea di attraversare un qualche tipo di insieme, &#8220;descrivendo&#8221; ciò che vogliamo trovare allo scopo di usarlo per calcolare qualcosa di nuovo.
+
+<h3 id=_a_dog_simple_example>Un semplice esempio</h3>
+
+<p>Cominciamo con una espressione <code>for</code> di base:
+
+<pre><code>// <a href=esempi/cap-3/basic-for-script.scala>esempi/cap-3/basic-for-script.scala</a>
+
+val dogBreeds = List("Dobermann", "Yorkshire Terrier", "Bassotto",
+                     "Scottish Terrier", "Alano", "Cane d'acqua portoghese")
+
+for (breed &lt;- dogBreeds)
+  println(breed)</code></pre>
+
+<p>Come potreste indovinare, questo codice dice: &#8220;per ogni elemento nella lista <var>dogBreeds</var>, crea una variabile temporanea chiamata <var>breed</var> con il valore di quell&#8217;elemento e poi stampala&#8221;. Pensate all&#8217;operatore <code>&lt;-</code> come a una freccia che assegna gli elementi di una collezione, uno per uno, alla variabile attraverso la quale vi faremo riferimento all&#8217;interno della espressione <code>for</code>. L&#8217;operatore freccia-a-sinistra viene chiamato <em>generatore</em> perché <em>genera</em> i singoli valori di una collezione per usarli in una espressione.
+
+<h3 id=_filtering>Filtrare gli elementi</h3>
+
+<p>E se volessimo una grana più fine? Le espressioni <code>for</code> in Scala ci consentono di usare <em>filtri</em> per specificare gli elementi di una collezione con i quali vogliamo lavorare. Quindi, per trovare tutti i Terrier nella nostra lista di razze canine, potremmo modificare l&#8217;esempio precedente in questo modo:
+
+<pre><code>// <a href=esempi/cap-3/filtered-for-script.scala>esempi/cap-3/filtered-for-script.scala</a>
+
+val dogBreeds = List("Dobermann", "Yorkshire Terrier", "Bassotto",
+                     "Scottish Terrier", "Alano", "Cane d'acqua portoghese")
+for (breed &lt;- dogBreeds
+  if breed.contains("Terrier")
+) println(breed)</code></pre>
+
+<p>Per aggiungere più di un filtro a una espressione <code>for</code>, separate i filtri con un punto e virgola.
+
+<pre><code>// <a href=esempi/cap-3/double-filtered-for-script.scala>esempi/cap-3/double-filtered-for-script.scala</a>
+
+val dogBreeds = List("Dobermann", "Yorkshire Terrier", "Bassotto",
+                     "Scottish Terrier", "Alano", "Cane d'acqua portoghese")
+for (breed &lt;- dogBreeds
+  if breed.contains("Terrier");
+  if !breed.startsWith("Yorkshire")
+) println(breed)</code></pre>
+
+<p>Ora avete trovato tutti i Terrier che non vengono dallo Yorkshire, e ci auguriamo che abbiate imparato quanto possono essere utili i filtri nella elaborazione.
+
+<h3 id=Yielding>Produrre gli elementi in uscita</h3>
+
+<p>E se invece di stampare la vostra collezione filtrata aveste bisogno di passarla  a un&#8217;altra parte del vostro programma? La parola chiave <code>yield</code> è la soluzione che vi permette di generare nuove collezioni con le espressioni <code>for</code>. Notate che, nell&#8217;esempio seguente, abbiamo racchiuso l&#8217;espressione <code>for</code> tra parentesi graffe, come faremmo per definire un blocco qualsiasi.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span> Le espressioni <code>for</code> possono essere definite con parentesi tonde o graffe, ma se usate le parentesti graffe non siete obbligati a separare i vostri filtri con il punto e virgola. Molto spesso preferirete usare le parentesi graffe quando avete più di un filtro, più di un assegnamento, <i class=baa>&amp;</i>c.
+</blockquote>
+
+<pre><code>// <a href=esempi/cap-3/yielding-for-script.scala>esempi/cap-3/yielding-for-script.scala</a>
+
+val dogBreeds = List("Dobermann", "Yorkshire Terrier", "Bassotto",
+                     "Scottish Terrier", "Alano", "Cane d'acqua portoghese")
+val filteredBreeds = for {
+  breed &lt;- dogBreeds
+  if breed.contains("Terrier")
+  if !breed.startsWith("Yorkshire")
+} yield breed</code></pre>
+
+<p>Ogni volta che l&#8217;espressione <code>for</code> viene attraversata, il risultato filtrato viene prodotto in uscita sotto forma di un valore chiamato <var>breed</var>. Questi risultati si accumulano a ogni passaggio, e la collezione risultante viene assegnata alla variabile <var>filteredBreeds</var> (come abbiamo fatto più indietro con l&#8217;istruzione <code>if</code>). Il tipo della collezione risultante da una espressione <code>for</code>/<code>yield</code> viene inferito a partire dal tipo della collezione su cui si sta iterando. In questo caso <var>filteredBreeds</var> è di tipo <code>List[String]</code>, essendo un sottoinsieme della lista <var>dogBreeds</var> che è anch&#8217;essa di tipo <code>List[String]</code>.
+
+<h3 id=_expanded_scope>Ambito esteso</h3>
+
+<p>L&#8217;ultima caratteristica utile delle espressioni <code>for</code> di Scala è la possibilità di definire variabili all&#8217;interno della prima parte della vostra espressione <code>for</code> per poi usarle nell&#8217;ultima parte. Questo si capisce meglio con un esempio:
+
+<pre><code>// <a href=esempi/cap-3/scoped-for-script.scala>esempi/cap-3/scoped-for-script.scala</a>
+
+val dogBreeds = List("Dobermann", "Yorkshire Terrier", "Bassotto",
+                     "Scottish Terrier", "Alano", "Cane d'acqua portoghese")
+for {
+  breed &lt;- dogBreeds
+  upcasedBreed = breed.toUpperCase()
+} println(upcasedBreed)</code></pre>
+
+<p>Notate che, anche senza dichiarare <var>upcasedBreed</var> come <code>val</code>, potete riutilizzarla all&#8217;interno del corpo della vostra espressione <code>for</code>. Questo approccio è ideale per trasformare gli elementi di una collezione man mano che la attraversate.
+
+<p>Infine, nella sezione <a href=cap-13.html#OptionsAndForComprehensions><code>Option</code> ed espressioni <code>for</code></a> del capitolo 13 vedremo come l&#8217;uso di <code>Option</code> con le espressioni <code>for</code> possa ridurre notevolmente la dimensione del codice eliminando controlli superflui per valori &#8220;nulli&#8221; o &#8220;mancanti&#8221;.
+
+<h2 id=OtherLoopingConstructs>Altri costrutti di ciclo</h2>
+
+<p>Scala possiede alcuni ulteriori costrutti di ciclo.
+
+<h3 id=_scala_while_loops>I cicli <code>while</code> in Scala</h3>
+
+<p>Presente in molti linguaggi, il ciclo <code>while</code> esegue un blocco di codice fino a quando una condizione si mantiene vera. Per esempio, il codice seguente stampa un reclamo una volta al giorno fino al prossimo venerdì 13.
+
+<pre><code>// <a href=esempi/cap-3/while-script.scala>esempi/cap-3/while-script.scala</a>
+// ATTENZIONE: l'esecuzione di questo script dura MOOOOLTO tempo!
+
+import java.util.Calendar
+
+def isFridayThirteen(cal: Calendar): Boolean = {
+  val dayOfWeek = cal.get(Calendar.DAY_OF_WEEK)
+  val dayOfMonth = cal.get(Calendar.DAY_OF_MONTH)
+
+  // Scala restituisce il risultato dell'ultima espressione in un metodo
+  (dayOfWeek == Calendar.FRIDAY) &amp;&amp; (dayOfMonth == 13)
+}
+
+while (!isFridayThirteen(Calendar.getInstance())) {
+  println("Oggi non è venerdì 13. Che indecenza.")
+  // riposa per un giorno
+  Thread.sleep(86400000)
+}</code></pre>
+
+<p>Più avanti potete trovare una tabella degli operatori condizionali che si possono usare con i cicli <code>while</code>.
+
+<h3 id=_scala_do_while_loops>I cicli <code>do</code>/<code>while</code> in Scala</h3>
+
+<p>Come il ciclo <code>while</code> appena visto, un ciclo <code>do</code>/<code>while</code> esegue un blocco di codice fino a quando un&#8217;espressione condizionale è vera. L&#8217;unica differenza è che un ciclo <code>do</code>/<code>while</code> controlla se la condizione è vera <em>dopo</em> aver eseguito il blocco. Per contare fino a dieci, potremmo scrivere questo:
+
+<pre><code>// <a href=esempi/cap-3/do-while-script.scala>esempi/cap-3/do-while-script.scala</a>
+
+var count = 0
+
+do {
+  count += 1
+  println(count)
+} while (count &lt; 10)</code></pre>
+
+<p>A quanto pare, c&#8217;è un modo più elegante per attraversare le collezioni in Scala, come vedremo nella prossima sezione.
+
+<h3 id=GeneratorExpressions>Espressioni generatore</h3>
+
+<p>Ricordate l&#8217;operatore freccia (<code>&lt;-</code>) dalla discussione precedente sui cicli <code>for</code>? Possiamo metterlo all&#8217;opera anche qui. Ritocchiamo l&#8217;ultimo esempio sul ciclo <code>do</code>/<code>while</code>:
+
+<pre><code>// <a href=esempi/cap-3/generator-script.scala>esempi/cap-3/generator-script.scala</a>
+
+for (i &lt;- 1 to 10) println(i)</code></pre>
+
+<p>Sì, non c&#8217;è bisogno d&#8217;altro. Questa singola riga così pulita è possibile grazie alla classe <code>RichInt</code> di Scala. Il compilatore invoca una <em>conversione implicita</em> per convertire <code>1</code>, che è un <code>Int</code>, in un <code>RichInt</code>. (Parleremo di queste conversioni nella sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> del capitolo 7 e nella sezione <a href=cap-8.html#ImplicitConversions>Conversioni implicite</a> del capitolo 8.) La classe <code>RichInt</code> definisce un metodo <code>to</code> che prende un altro intero e restituisce un&#8217;istanza di <code>Range.Inclusive</code>. <code>Inclusive</code> è una classe annidata nell&#8217;<em>oggetto associato</em> <code>Range</code> (un concetto che abbiamo introdotto brevemente nel <a href=cap-1.html>capitolo 1</a>; si veda il <a href=cap-6.html>capitolo 6</a> per i dettagli). Questa sottoclasse della <em>classe</em> <code>Range</code> eredita un certo numero di metodi per lavorare con le sequenze e con le strutture dati iterabili, compresi quelli necessari per essere usata in un ciclo <code>for</code>.
+
+<p>A proposito, se volete contare da 1 fino a 10 escluso, potete usare <code>until</code> invece di <code>to</code>, come in <code>for (i &lt;- 1 until 10)</code>.
+
+<p>Questo dovrebbe fornirvi un quadro più chiaro di come le librerie interne di Scala si compongono per formare costrutti linguistici facili da usare.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Quando lavorate con i cicli nella maggior parte dei linguaggi, potete uscire da un ciclo usando <code>break</code> o passare all&#8217;iterazione successiva usando <code>continue</code>. Scala non è dotato di queste istruzioni, perché non sono necessarie se scrivete codice Scala idiomatico. Usate le espressioni condizionali per controllare se un ciclo debba continuare, oppure fate uso della ricorsione. Ancora meglio, filtrate le vostre collezioni in anticipo per eliminare condizioni complesse all&#8217;interno dei vostri cicli. Tuttavia, a causa delle molte richieste, la versione 2.8 di Scala include il supporto per <code>break</code>, sotto forma di metodo di libreria piuttosto che di parola chiave predefinita.
+</blockquote>
+
+<h2 id=para_however_because_of_demand_for>Operatori condizionali</h2>
+
+<p>Scala prende in prestito molti operatori condizionali da Java e dai suoi predecessori. Troverete gli operatori che seguono nelle istruzioni <code>if</code>, nei cicli <code>while</code> e dovunque si possa applicare una condizione.
+
+<div class=table id=conditional-operators>
+<p class=tt>Tabella 3.1. Operatori condizionali
+<table summary="Operatori condizionali" border=0>
+<colgroup>
+<col align=left>
+<col align=left>
+<col align=left>
+</colgroup>
+<thead valign=top><tr>
+<th align=left valign=top>Operatore</th>
+<th align=left valign=top>Operazione</th>
+<th align=left valign=top>Descrizione</th>
+</tr></thead>
+<tbody valign=top>
+<tr>
+<td align=left valign=top><p><code>&amp;&amp;</code></p></td>
+<td align=left valign=top><p>congiunzione</p></td>
+<td align=left valign=top><p>I valori alla destra e alla sinistra dell&#8217;operatore sono veri. La parte destra viene valutata <em>solo</em> se la parte sinistra è <em>vera</em>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>||</code></p></td>
+<td align=left valign=top><p>disgiunzione</p></td>
+<td align=left valign=top><p>Almeno uno dei valori alla sinistra o alla destra dell&#8217;operatore è vero. La parte destra viene valutata <em>solo</em> se la parte sinistra è <em>falsa</em>.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&gt;</code></p></td>
+<td align=left valign=top><p>maggiore di</p></td>
+<td align=left valign=top><p>Il valore sulla sinistra è maggiore del valore sulla destra.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&gt;=</code></p></td>
+<td align=left valign=top><p>maggiore o uguale a</p></td>
+<td align=left valign=top><p>Il valore sulla sinistra è maggiore o uguale al valore sulla destra.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&lt;</code></p></td>
+<td align=left valign=top><p>minore di</p></td>
+<td align=left valign=top><p>Il valore sulla sinistra è minore del valore sulla destra.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>&lt;=</code></p></td>
+<td align=left valign=top><p>minore o uguale a</p></td>
+<td align=left valign=top><p>Il valore sulla sinistra è minore o uguale al valore sulla destra.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>==</code></p></td>
+<td align=left valign=top><p>uguaglianza</p></td>
+<td align=left valign=top><p>Il valore sulla sinistra è uguale al valore sulla destra.</p></td>
+</tr>
+<tr>
+<td align=left valign=top><p><code>!=</code></p></td>
+<td align=left valign=top><p>disugualianza</p></td>
+<td align=left valign=top><p>Il valore sulla sinistra è diverso dal valore sulla destra.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Notate che <code>&amp;&amp;</code> e <code>||</code> sono operatori &#8220;a corto circuito&#8221;. Interrompono la valutazione delle espressioni appena ne conoscono il risultato.
+
+<p>Discuteremo l&#8217;uguaglianza tra gli oggetti in maggior dettaglio nella sezione <a href=cap-6.html#EqualityOfObjects>L&#8217;uguaglianza tra oggetti</a> del capitolo 6. Per esempio, vedremo che <code>==</code> ha un significato differente in Scala rispetto a Java. A parte questo, gli altri operatori dovrebbero esservi già noti, quindi proseguiamo con qualcosa di nuovo ed eccitante.
+
+<h2 id=PatternMatching>Pattern matching</h2>
+
+<p>Un&#8217;idea presa in prestito dai linguaggi funzionali, il <em>pattern matching</em> è un modo potente e conciso di compiere scelte programmatiche tra molteplici condizioni. Il pattern matching equivale alla consueta istruzione <code>case</code> dei linguaggi derivati dal C, ma potenziata. Nella tipica istruzione <code>case</code> siete vincolati a cercare corrispondenze con valori di tipi ordinali, producendo espressioni banali come &#8220;nel caso in cui <var>i</var> sia 5, stampa un messaggio; nel caso in cui <var>i</var> sia 6, esci dal programma&#8221;. Con il pattern matching di Scala i vostri casi possono includere tipi, wildcard, sequenze, e persino ispezionare in profondità le variabili di un oggetto.
+
+<h3 id=ASimpleMatch>Una semplice corrispondenza</h3>
+
+<p>Per cominciare, simuliamo il lancio di una moneta cercando una corrispondenza con il valore di un booleano:
+
+<pre><code>// <a href=esempi/cap-3/match-boolean-script.scala>esempi/cap-3/match-boolean-script.scala</a>
+
+val bools = List(true, false)
+
+for (bool &lt;- bools) {
+  bool match {
+    case true =&gt; println("testa")
+    case false =&gt; println("croce")
+    case _ =&gt; println("qualcosa di diverso da testa o croce (aaagh!)")
+  }
+}</code></pre>
+
+<p>Sembra proprio un&#8217;istruzione <code>case</code> nello stile del C, giusto? L&#8217;unica differenza è l&#8217;ultima clausola con il trattino basso <code>_</code> come wildcard che corrisponde a qualsiasi cosa non definita nei casi precedenti e che quindi serve allo stesso scopo della parola chiave <code>default</code> nelle istruzioni <code>switch</code> di Java e C#.
+
+<p>Il pattern matching è <em>avido</em>: la prima corrispondenza vince. Quindi, se provate a mettere una clausola <code>case _</code> prima di tutte le altre clausole <code>case</code>, il compilatore segnalerà un errore di &#8220;codice irraggiungibile&#8221; sulla clausola successiva, perché niente riuscirà a oltrepassare la clausola di default!
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Usate <code>case _</code> per la corrispondenza jolly &#8220;acchiappatutto&#8221; di default.
+</blockquote>
+
+<p>E se volessimo lavorare con le corrispondenze come variabili?
+
+<h3 id=VariablesInMatches>Usare variabili nelle corrispondenze</h3>
+
+<pre><code>// <a href=esempi/cap-3/match-variable-script.scala>esempi/cap-3/match-variable-script.scala</a>
+
+import scala.util.Random
+
+val randomInt = new Random().nextInt(10)
+
+randomInt match {
+  case 7 =&gt; println("sette fortunato!")
+  case otherNumber =&gt; println("buu, il vecchio e noioso " + otherNumber)
+}</code></pre>
+
+<p>In questo esempio, assegniamo il valore catturato dalla clausola <code>case</code> jolly a una variabile chiamata <var>otherNumber</var>, poi stampiamo la variabile nell&#8217;espressione successiva. Se generiamo un sette, decanteremo le virtù di questo numero; altrimenti, malediremo la sorte subita che ci ha fatto pescare un numero sfortunato.
+
+<h3 id=MatchingOnType>Corrispondenze sul tipo</h3>
+
+<p>Questi semplici esempi non cominciano nemmeno a scalfire la superficie delle caratteristiche del pattern matching di Scala. Proviamo una corrispondenza sulla base del tipo:
+
+<pre><code>// <a href=esempi/cap-3/match-type-script.scala>esempi/cap-3/match-type-script.scala</a>
+
+val sundries = List(23, "Ciao", 8.5, 'q')
+
+for (sundry &lt;- sundries) {
+  sundry match {
+    case i: Int =&gt; println("ecco un Int: " + i)
+    case s: String =&gt; println("ecco una String: " + s)
+    case f: Double =&gt; println("ecco un Double: " + f)
+    case other =&gt; println("ecco qualcos'altro: " + other)
+  }
+}</code></pre>
+
+<p>Qui estraiamo ogni elemento da una lista di elementi di qualsiasi tipo che in questo caso contiene istanze di <code>String</code>, <code>Double</code>, <code>Int</code> e <code>Char</code>. Per i primi tre tipi, facciamo sapere all&#8217;utente quale tipo particolare abbiamo estratto e qual è il suo valore; quando otteniamo qualcosa di diverso (l&#8217;istanza di tipo <code>Char</code>), facciamo sapere all&#8217;utente solo il valore. Potremmo aggiungere alla lista altri elementi di tipo diverso e questi verrebbero catturati dalla clausola jolly finale nella variabile <var>other</var>.
+
+<h3 id=MatchingOnSequences>Corrispondenze sulle sequenze</h3>
+
+<p>Dato che lavorare con Scala significa spesso lavorare con le sequenze, non sarebbe comodo poter cercare una corrispondenza sulla base della lunghezza e del contenuto di liste e array? L&#8217;esempio seguente fa proprio questo, controllando se due liste contengono quattro elementi, il secondo dei quali deve essere il numero intero <code>3</code>.
+
+<pre><code>// <a href=esempi/cap-3/match-seq-script.scala>esempi/cap-3/match-seq-script.scala</a>
+
+val willWork = List(1, 3, 23, 90)
+val willNotWork = List(4, 18, 52)
+val empty = List()
+
+for (l &lt;- List(willWork, willNotWork, empty)) {
+  l match {
+    case List(_, 3, _, _) =&gt; println("Quattro elementi, di cui il 2° è '3'.")
+    case List(_*) =&gt; println("Qualsiasi altra lista con 0 o più elementi.")
+  }
+}</code></pre>
+
+<p>Nella seconda clausola <code>case</code> abbiamo usato una wildcard speciale per trovare una corrispondenza con istanze di <code>List</code> di qualunque dimensione, anche zero, che contengono elementi di qualunque tipo. Potete usare questo pattern al termine di ogni corrispondenza sulle sequenze per rimuovere la condizione sulla lunghezza.
+
+<p>Ricordate il metodo &#8220;cons&#8221; delle liste, <code>::</code>, che abbiamo menzionato in precedenza? L&#8217;espressione <code>a :: lista</code> inserisce <var>a</var> in testa a una lista. Potete usare questo operatore anche per estrarre la testa e la coda di una lista.
+
+<pre><code>// <a href=esempi/cap-3/match-list-script.scala>esempi/cap-3/match-list-script.scala</a>
+
+val willWork = List(1, 3, 23, 90)
+val willNotWork = List(4, 18, 52)
+val empty = List()
+
+def processList(l: List[Any]): Unit = l match {
+  case head :: tail =&gt;
+    format("%s ", head)
+    processList(tail)
+  case Nil =&gt; println("")
+}
+
+for (l &lt;- List(willWork, willNotWork, empty)) {
+  print("Lista: ")
+  processList(l)
+}</code></pre>
+
+<p>Il metodo <code>processList</code> cerca una corrispondenza a partire dall&#8217;argomento <var>l</var> di tipo <code>List</code>. L&#8217;inizio della definizione di metodo potrebbe sembrarvi strano.
+
+<pre><code>def processList(l: List[Any]): Unit = l match {
+  &hellip;
+}</code></pre>
+
+<p>Ci auguriamo che nascondere i dettagli con i punti di sospensione renda il significato un po&#8217; più chiaro. Il metodo <code>processList</code> in realtà è composto da una sola istruzione che si estende su più righe.
+
+<p>Come prima cosa, l&#8217;istruzione cerca una corrispondenza con <code>head :: tail</code>, assegnando il primo elemento della lista a <var>head</var> e il resto della lista a <var>tail</var>; stiamo estraendo la testa e la coda della lista usando <code>::</code>. Quando questa clausola <code>case</code> trova una corrispondenza, stampa <var>head</var> e invoca ricorsivamente <code>processList</code> per lavorare sulla coda.
+
+<p>La seconda clausola <code>case</code> corrisponde alla lista vuota, <code>Nil</code>. Stampa un carattere di fine riga e termina la ricorsione.
+
+<h3 id=MatchingOnTuples>Corrispondenze su tuple (e guardie)</h3>
+
+<p>In alternativa, se volessimo controllare di avere una tupla di due elementi, potremmo cercare una corrispondenza con le tuple:
+<pre><code>// <a href=esempi/cap-3/match-tuple-script.scala>esempi/cap-3/match-tuple-script.scala</a>
+
+val tupA = ("Buona", "giornata!")
+val tupB = ("Guten", "Tag!")
+
+for (tup &lt;- List(tupA, tupB)) {
+  tup match {
+    case (thingOne, thingTwo) if thingOne == "Buona" =&gt;
+        println("Una 2-tupla che comincia con 'Buona'.")
+    case (thingOne, thingTwo) =&gt;
+        println("Questa contiene due cose: " + thingOne + " e " + thingTwo)
+  }
+}</code></pre>
+
+<p>Nella seconda clausola <code>case</code> di questo esempio abbiamo estratto i valori contenuti nella tupla assegnandoli ad alcune variabili, poi abbiamo riutilizzato quelle variabili nell&#8217;espressione successiva.
+
+<p>Nella prima clausola abbiamo aggiunto un nuovo concetto: le <em>guardie</em>. La condizione <code>if</code> dopo la tupla è una guardia. La guardia viene valutata durante la ricerca di una corrispondenza, nel momento in cui le variabili nella parte precedente della clausola vengono estratte. Le guardie offrono una granularità aggiuntiva quando si costruiscono i casi. In questo esempio, l&#8217;unica differenza tra i due pattern è l&#8217;espressione di guardia, ma questo basta al compilatore per distinguerli.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Ricordatevi che le clausole del pattern matching vengono valutate in ordine. Per esempio, se il vostro primo caso è più generale del secondo, il secondo caso non verrà mai raggiunto. (I casi non raggiungibili causeranno un errore di compilazione.) Potete includere un caso &#8220;di default&#8221; alla fine di un costrutto di pattern matching, usando come wildcard un trattino basso o una variabile con un nome significativo. Quando usate una variabile, essa non dovrebbe avere alcun tipo esplicito oppure dovrebbe essere dichiarata come <code>Any</code>, in modo da poter corrispondere a qualsiasi cosa. Tuttavia, cercate di progettare il vostro codice per evitare di usare una clausola jolly, assicurandovi che il costrutto riceva solo gli specifici elementi attesi.
+</blockquote>
+
+<h3 id=MatchingOnCaseClasses>Corrispondenze sulle classi <code>case</code></h3>
+
+<p>Proviamo a cercare una <em>corrispondenza in profondità</em>, esaminando il contenuto degli oggetti nel pattern matching.
+
+<pre><code>// <a href=esempi/cap-3/match-deep-script.scala>esempi/cap-3/match-deep-script.scala</a>
+
+case class Person(name: String, age: Int)
+
+val alice = new Person("Alice", 25)
+val bob = new Person("Bob", 32)
+val charlie = new Person("Charlie", 32)
+
+for (person &lt;- List(alice, bob, charlie)) {
+  person match {
+    case Person("Alice", 25) =&gt; println("Ciao Alice!")
+    case Person("Bob", 32) =&gt; println("Ciao Bob!")
+    case Person(name, age) =&gt;
+      println("Chi sei tu, persona di " + age + " anni chiamata " + name + "?")
+  }
+}</code></pre>
+
+<p>Il povero Charlie viene trattato con freddezza, come possiamo vedere nell&#8217;uscita di questo esempio:
+
+<pre><samp>Ciao Alice!
+Ciao Bob!
+Chi sei tu, persona di 32 anni chiamata Charlie?</samp></pre>
+
+<p>Come prima cosa, definiamo una <em>classe <code>case</code></em>, un tipo particolare di classe che impareremo a conoscere nella sezione <a href=cap-6.html#CaseClasses>Classi <code>case</code></a> del capitolo 6. Per ora, sarà sufficiente dire che una classe <code>case</code> consente di costruire in maniera molto sintetica oggetti semplici dotati di alcuni metodi predefiniti. Il pattern matching cerca Alice e Bob ispezionando i valori passati al costruttore di <code>Person</code>, la nostra classe <code>case</code>. Charlie ricade nella clausola acchiappatutto pur avendo lo stesso valore di <var>age</var> che ha Bob, poiché la corrispondenza viene cercata anche sulla proprietà <code>name</code>.
+
+<p>Questo tipo di corrispondenza diventa estremamente utile quando si lavora con gli attori, come vedremo più avanti. Le istanze di classi <code>case</code> vengono frequentemente inviate come messaggi agli attori, e il pattern matching in profondità sui contenuti di un oggetto è un modo conveniente per &#8220;esaminare&#8221; quei messaggi.
+
+<h3 id=MatchingOnRegularExpressions>Corrispondenze su espressioni regolari</h3>
+
+<p>Le espressioni regolari sono convenienti per estrarre dati da stringhe che hanno una struttura informale ma che non sono &#8220;dati strutturati&#8221; (cioè, non sono in formato <abbr>XML</abbr> o <abbr>JSON</abbr>, per esempio). Chiamate comunemente <em>regex</em>, le espressioni regolari sono una caratteristica presente in quasi tutti i linguaggi di programmazione moderni. Esse forniscono una sintassi concisa per specificare corrispondenze complesse, e dietro le quinte vengono tipicamente trasformate in macchine a stati per ottimizzare le prestazioni.
+
+<p>Le espressioni regolari in Scala non dovrebbero contenere sorprese se le avete usate in altri linguaggi di programmazione. Vediamone un esempio.
+
+<pre><code>// <a href=esempi/cap-3/match-regex-script.scala>esempi/cap-3/match-regex-script.scala</a>
+
+val BookExtractorRE = """Libro: titolo=([^,]+),\s+autori=(.+)""".r
+val MagazineExtractorRE = """Rivista: titolo=([^,]+),\s+numero=(.+)""".r
+
+val catalog = List(
+  "Libro: titolo=Programmare in Scala, autori=Dean Wampler, Alex Payne",
+  "Rivista: titolo=The New Yorker, numero=Gennaio 2009",
+  "Libro: titolo=Guerra e pace, autori=Lev Tolstoj",
+  "Rivista: titolo=The Atlantic, numero=Febbraio 2009",
+  "DatiInvalidi: testo=Chi ha messo qui questa roba?"
+)
+
+for (item &lt;- catalog) {
+  item match {
+    case BookExtractorRE(title, authors) =&gt;
+      println("Libro \"" + titolo + "\", scritto da " + authors)
+    case MagazineExtractorRE(title, issue) =&gt;
+      println("Rivista \"" + titolo + "\", numero " + issue)
+    case entry =&gt; println("Registrazione non riconosciuta: " + entry)
+  }
+}</code></pre>
+
+<p>Cominciamo con due espressioni regolari, una per le registrazioni di libri e un&#8217;altra per le registrazioni di riviste. L&#8217;invocazione di <code>r</code> su una stringa la trasforma in un&#8217;espressione regolare; qui usiamo stringhe con triple virgolette per evitare di dover effettuare l&#8217;escape delle barre inverse. Se doveste trovare poco chiaro il metodo <code>r</code> di trasformazione delle stringhe, potete anche definire le espressioni regolari creando nuove istanze della classe <code>Regex</code>, come in <code>new Regex("""\W""")</code>.
+
+<p>Notate che ognuna delle nostre espressioni regolari definisce due <em>gruppi di cattura</em> denotati dalle parentesi. Ogni gruppo cattura il valore di un singolo campo nella registrazione, come l&#8217;autore o il titolo di un libro. In Scala, le espressioni regolari convertono questi gruppi di cattura in <em>estrattori</em>. Ogni corrispondenza trovata imposta un campo al risultato catturato; ogni corrispondenza mancata imposta il campo a <code>null</code>.
+
+<p>Cosa significa questo in pratica? Se il testo dato in pasto all&#8217;espressione regolare corrisponde, <code>case BookExtractorRE(title, authors)</code> assegnerà il primo gruppo di cattura a <var>title</var> e il secondo a <var>authors</var>. Possiamo quindi usare quei valori sulla parte destra della clausola <code>case</code>, come abbiamo fatto nel nostro esempio. I nomi delle variabili <var>title</var> e <var>author</var> nell&#8217;estrattore sono arbitrari; le corrispondenze dei gruppi di cattura vengono semplicemente assegnate da sinistra a destra, e potete dare loro i nomi che preferite.
+
+<p>Queste sono le espressioni regolari di Scala in breve. La classe <code>scala.util.matching.Regex</code> offre diversi metodi comodi per trovare e sostituire le corrispondenze in una stringa, sia per tutte le occorrenze sia soltanto per la prima occorrenza, quindi fatene buon uso.
+
+<p>In questa sezione non parleremo di come si scrivono le espressioni regolari. La classe <code>Regex</code> di Scala usa le <abbr>API</abbr> della libreria di espressioni regolari della piattaforma sottostante (cioè, la libreria di Java o di .NET). Consultate le guide di riferimento per quelle <abbr>API</abbr> se ne volete conoscere i dettagli più complicati, in quanto potrebbero esserci sottili differenze rispetto al supporto per le espressioni regolari nel vostro linguaggio preferito.
+
+<h3 id=BindingNestedVariablesInCaseClauses>Legare variabili annidate nelle clausole <code>case</code></h3>
+
+<p>A volte volete legare una variabile a un oggetto racchiuso in una corrispondenza nel caso in cui state specificando criteri di corrispondenza anche per l&#8217;oggetto annidato. Supponete di modificare l&#8217;esempio di <code>Person</code> appena visto in modo da cercare una corrispondenza sulle coppie chiave-valore di una mappa. Memorizzeremo gli stessi oggetti <code>Person</code> come valori e useremo un identificatore numerico come chiave. Aggiungeremo anche un altro attributo a <code>Person</code>, un campo <var>role</var> che punta a un oggetto proveniente da una gerarchia di tipi.
+
+<pre><code>// <a href=esempi/cap-3/match-deep-pair-script.scala>esempi/cap-3/match-deep-pair-script.scala</a>
+
+class Role
+case object Manager extends Role
+case object Developer extends Role
+
+case class Person(name: String, age: Int, role: Role)
+
+val alice = new Person("Alice", 25, Developer)
+val bob = new Person("Bob", 32, Manager)
+val charlie = new Person("Charlie", 32, Developer)
+
+for (item &lt;- Map(1 -&gt; alice, 2 -&gt; bob, 3 -&gt; charlie)) {
+  item match {
+    case (id, p @ Person(_, _, Manager)) =&gt; format("%s è sottopagata.\n", p)
+    case (id, p @ Person(_, _, _)) =&gt; format("%s è strapagata.\n", p)
+  }
+}</code></pre>
+
+<p>I <code>case object</code> non sono altro che oggetti singleton come quelli che abbiamo visto in precedenza, ma con lo speciale comportamento delle classi <code>case</code>. Siamo soprattutto interessati all&#8217;espressione <code>p @ Person(&hellip;)</code> incorporata nella clausola <code>case</code>. Stiamo cercando una corrispondenza con una categoria particolare di oggetti <code>Person</code> all&#8217;interno della tupla. Vogliamo anche assegnare l&#8217;istanza di <code>Person</code> a una variabile <var>p</var> in modo da poterla stampare.
+
+<pre><samp>Person(Alice,25,Developer) è sottopagata.
+Person(Bob,32,Manager) è strapagata.
+Person(Charlie,32,Developer) è sottopagata.</samp></pre>
+
+<p>Se non usassimo criteri per la corrispondenza con <code>Person</code>, potremmo semplicemente scrivere <code>p: Person</code>. Per esempio, la clausola <code>match</code> precedente potrebbe essere scritta in questo modo.
+
+<pre><code>item match {
+  case (id, p: Person) =&gt; p.role match {
+    case Manager =&gt; format("%s è sottopagata.\n", p)
+    case _ =&gt; format("%s è strapagata.\n", p)
+  }
+}</code></pre>
+
+<p>Notate che la sintassi <code>p @ Person(&hellip;)</code> ci offre un modo per appiattire le istruzioni <code>match</code> annidate ottenendo una sola istruzione. &Egrave; simile all&#8217;uso che si fa dei &#8220;gruppi di cattura&#8220; in un&#8217;espressione regolare per estrarre le sottostringhe che vogliamo invece di suddividere la stringa in diversi passi successivi. Adoperate la tecnica che preferite.
+
+<h3 id=TryCatchFinally>Usare le clausole <code>try</code>, <code>catch</code> e <code>finally</code></h3>
+
+<p>Sfruttando i costrutti funzionali e la tipizzazione forte, Scala incoraggia uno stile di codifica che riduce il bisogno di usare e gestire le eccezioni. Ma quando Scala interagisce con Java, le eccezioni prevalgono ancora.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Scala non possiede eccezioni controllate, a differenza di Java. Persino le eccezioni controllate di Java sono trattate come non controllate da Scala. Non c&#8217;è alcuna clausola <code>throws</code> sulle dichiarazioni di metodo. Tuttavia, esiste un&#8217;annotazione <code>@throws</code> utile per interoperare con Java. Si veda la sezione <a href=cap-13.html#Annotations>Annotazioni</a> nel capitolo 13.
+</blockquote>
+
+<p>Per fortuna, Scala tratta la gestione delle eccezioni semplicemente come un altro caso di pattern matching, permettendoci di fare scelte intelligenti quando affrontiamo una molteplicità di potenziali eccezioni. Vediamola in azione.
+
+<pre><code>// <a href=esempi/cap-3/try-catch-script.scala>esempi/cap-3/try-catch-script.scala</a>
+
+import java.util.Calendar
+
+val then = null
+val now = Calendar.getInstance()
+
+try {
+  now.compareTo(then)
+} catch {
+  case e: NullPointerException =&gt; println("Uno era null!"); System.exit(-1)
+  case unknown =&gt; println("Eccezione sconosciuta " + unknown); System.exit(-1)
+} finally {
+  println("Ha funzionato tutto.")
+  System.exit(0)
+}</code></pre>
+
+<p>In questo esempio, abbiamo esplicitamente catturato l&#8217;eccezione <code>NullPointerException</code> che viene lanciata quando proviamo a confrontare un&#8217;istanza di <code>Calendar</code> con <code>null</code>. Abbiamo anche definito <var>unknown</var> come clausola jolly, giusto per sicurezza. Se non stessimo scrivendo questo programma per farlo fallire, il blocco <code>finally</code> verrebbe raggiunto e l&#8217;utente verrebbe informato che ogni cosa ha funzionato alla perfezione.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Potete usare un trattino basso (la wildcard standard di Scala) come segnaposto per catturare ogni tipo di eccezione (in realtà, per trovare una corrispondenza con qualsiasi oggetto in un&#8217;espressione di pattern matching). Tuttavia, non sarete in grado di fare riferimento all&#8217;eccezione nelle espressioni successive. Date un nome alla variabile che contiene l&#8217;eccezione se ne avete bisogno, per esempio se volete stampare l&#8217;eccezione come abbiamo fatto nella clausola jolly dell&#8217;esempio precedente; <var>e</var> o <var>ex</var> sono nomi accettabili.
+</blockquote>
+
+<p>A parte il pattern matching, il trattamento che Scala riserva alla gestione delle eccezioni dovrebbe essere familiare a coloro che programmano correntemente in Java, Ruby, Python e nella maggior parte dei linguaggi mainstream. E sì, le eccezioni si lanciano scrivendo <code>throw new MyBadException(&hellip;)</code>. Non c&#8217;è altro da dire.
+
+<h3 id=ConcludingRemarksOnPatternMatching>Considerazioni conclusive sul pattern matching</h3>
+
+<p>Quando viene usato in maniera appropriata, il pattern matching è un modo potente ed elegante per estrarre informazioni dagli oggetti. Se ricordate, nel <a href=cap-1.html>capitolo 1</a> abbiamo sottolineato la sinergia tra pattern matching e polimorfismo. La maggior parte delle volte volete evitare i problemi delle istruzioni <code>switch</code> che lavorano con una gerarchia di classi, perché devono essere modificate ogni volta che la gerarchia viene cambiata.
+
+<p>Nel nostro esempio degli attori che disegnano abbiamo usato il pattern matching per separare le differenti &#8220;categorie&#8221; di messaggi, ma abbiamo sfruttato il polimorfismo per disegnare le forme che venivano inviate. Potremmo cambiare la gerarchia di <code>Shape</code> e il codice che usa gli attori non richiederebbe alcuna modifica.
+
+<p>Il pattern matching è utile anche per quei problemi di progettazione in cui avete bisogno di ottenere dati che si trovano dentro un oggetto, ma solo in circostanze particolari. Una delle conseguenze non intenzionali della specifica <em>JavaBeans</em> <a href=apa.html#JavaBeansSpec>[JavaBeansSpec]</a> è quella di aver incoraggiato i programmatori a esporre i campi dei propri oggetti attraverso metodi per ottenere e impostare i valori. Questa non dovrebbe <em>mai</em> essere la decisione predefinita. L&#8217;accesso alla &#8220;informazione di stato&#8221; dovrebbe essere incapsulato e venire esposto solo in modi che hanno senso per il tipo dal punto di vista dell&#8217;astrazione che rappresenta.
+
+<p>Invece, considerate l&#8217;uso del pattern matching per quei &#8220;rari&#8221; casi in cui avete bisogno di estrarre informazioni in maniera controllata. Come vedremo nella sezione <a href=cap-6.html#UnapplyMethod>Il metodo <code>unapply</code></a> del capitolo 6, gli esempi di pattern matching che vi abbiamo mostrato usano i metodi <code>unapply</code> definiti per estrarre informazioni dalle istanze. Questi metodi vi permettono di estrarre le informazioni desiderate tenendo nascosti i dettagli di implementazione. In effetti, le informazioni restituite da un metodo <code>unapply</code> potrebbero essere una trasformazione delle reale informazioni contenute nell&#8217;istanza.
+
+<p>Infine, quando progettate istruzioni di pattern matching, guardatevi dal fare affidamento su una clausola <code>case</code> di default. In quali circostanze &#8220;nessuna delle precedenti&#8221; sarebbe la risposta corretta? La presenza di una tale clausola potrebbe indicare che il progetto deve essere ritoccato in modo che sappiate più precisamente quali corrispondenze potrebbero verificarsi. Impareremo una tecnica che vi sarà di aiuto quando discuteremo le gerarchie di classi <em>sigillate</em> nella sezione <a href=cap-7.html#SealedClassHierarchies>Gerarchie di classi sigillate</a> del capitolo 7.
+
+<h2 id=Enumerations>Enumerazioni</h2>
+
+<p>Ricordate i nostri esempi che coinvolgevano varie razze canine? Ragionando sui tipi in quei programmi, potremmo voler introdurre un tipo radice <code>Breed</code> che tenga traccia del numero di razze. Un tipo come questo viene chiamato <em>tipo enumerato</em> e i valori che contiene vengono chiamati <em>enumerazioni</em>.
+
+<p>Sebbene le enumerazioni siano una parte predefinita di molti linguaggi di programmazione, Scala prende una strada diversa e le implementa come classi nella sua libreria standard. Questo significa che non c&#8217;è alcuna sintassi particolare per le enumerazioni in Scala, a differenza di quanto accade in Java e C#; invece, vi basta definire un oggetto che estende la classe <code>Enumeration</code>. Quindi, a livello di bytecode, non c&#8217;è nessun collegamento tra le enumerazioni di Scala e i costrutti <code>enum</code> di Java e C#.
+
+<p>Ecco un esempio:
+
+<pre><code>// <a href=esempi/cap-3/enumeration-script.scala>esempi/cap-3/enumeration-script.scala</a>
+
+object Breed extends Enumeration {
+  val doberman = Value("Dobermann")
+  val yorkie = Value("Yorkshire Terrier")
+  val scottie = Value("Scottish Terrier")
+  val dane = Value("Alano")
+  val portie = Value("Cane d'acqua portoghese")
+}
+
+// stampa una lista di razze con il loro identificatore
+println("ID\tRazza")
+for (breed &lt;- Breed) println(breed.id + "\t" + breed)
+
+// stampa una lista di razze Terrier
+println("\nSolo i Terrier:")
+Breed.filter(_.toString.endsWith("Terrier")).foreach(println)</code></pre>
+
+<p>Eseguendolo, otterrete l&#8217;uscita seguente:
+
+<pre><samp>ID      Razza
+0       Dobermann
+1       Yorkshire Terrier
+2       Scottish Terrier
+3       Alano
+4       Cane d'acqua portoghese
+
+Solo i Terrier:
+Yorkshire Terrier
+Scottish Terrier</samp></pre>
+
+Possiamo vedere che il nostro tipo enumerato <code>Breed</code> contiene diverse variabili di tipo <code>Value</code>, come nell&#8217;esempio seguente.
+
+<pre><code>val doberman = Value("Dobermann")</code></pre>
+
+<p>Ogni dichiarazione in realtà invoca un metodo chiamato <code>Value</code> che prende una stringa come argomento. Usiamo questo metodo per assegnare a ogni enumerazione un nome di razza completo, che il metodo <code>Value.toString</code> ha usato come valore di ritorno nell&#8217;uscita appena vista.
+
+<p>Notate che non c&#8217;è collisione di nomi tra il tipo e il metodo che sono entrambi chiamati <code>Value</code>. Ci sono altre versioni sovraccaricate del metodo <code>Value</code>. Una di queste non accetta argomenti, un&#8217;altra accetta un identificatore numerico di tipo <code>Int</code> e un&#8217;altra ancora accetta un <code>Int</code> e una <code>String</code>. Questi metodi <code>Value</code> restituiscono un oggetto <code>Value</code> e aggiungono il valore alla collezione di valori del tipo enumerato.
+
+<p>In effetti, la classe <code>Enumeration</code> di Scala supporta i soliti metodi per lavorare con le collezioni, così possiamo facilmente iterare attraverso le razze con un ciclo <code>for</code> e filtrarle per nome. L&#8217;uscita appena vista dimostra anche che a ogni <code>Value</code> in un&#8217;enumerazione viene automaticamente assegnato un identificatore numerico, a meno che non invochiate uno dei metodi <code>Value</code> in cui specificate esplicitamente il vostro identificatore.
+
+<p>Vorrete spesso dare nomi leggibili alle vostre enumerazioni. Tuttavia, a volte potreste non averne bisogno. Ecco un altro esempio di enumerazione adattato dalla documentazione <em>Scaladoc</em> per <code>Enumeration</code>.
+
+<pre><code>// <a href=esempi/cap-3/days-enumeration-script.scala>esempi/cap-3/days-enumeration-script.scala</a>
+
+object WeekDay extends Enumeration {
+  type WeekDay = Value
+  val Mon, Tue, Wed, Thu, Fri, Sat, Sun = Value
+}
+import WeekDay._
+
+def isWorkingDay(d: WeekDay) = ! (d == Sat || d == Sun)
+
+WeekDay filter isWorkingDay foreach println</code></pre>
+
+<p>L&#8217;esecuzione di questo script tramite <kbd>scala</kbd> produce la seguente uscita.
+
+<pre><code>Main$$anon$1$WeekDay(0)
+Main$$anon$1$WeekDay(1)
+Main$$anon$1$WeekDay(2)
+Main$$anon$1$WeekDay(3)
+Main$$anon$1$WeekDay(4)</code></pre>
+
+<p>Quando non vengono assegnati nomi evitando di usare uno dei metodi <code>Value</code> che prendono una stringa come argomento, <code>Value.toString</code> stampa il nome di tipo che viene prodotto dal compilatore, insieme al valore dell&#8217;identificatore che è stato generato automaticamente. (In questo caso, Scala 2.8 stampa i nomi dei valori di enumerazione: <var>Mon</var>, <var>Tue</var>, <i class=baa>&amp;</i>c.)
+
+<p>Notate che importando <code>WeekDay._</code> abbiamo reso visibili tutti i valori di enumerazione, come <var>Mon</var>, <var>Tue</var>, <i class=baa>&amp;</i>c. Altrimenti, avreste dovuto scrivere <var>WeekDay.Mon</var>, <var>WeekDay.Tue</var>, <i class=baa>&amp;</i>c.
+
+<p>In più, l&#8217;importazione ha reso visibile l&#8217;<em>alias di tipo</em> <code>type WeekDay = Value</code>, che abbiamo usato come tipo per il parametro del metodo <code>isWorkingDay</code>. Senza un alias di tipo come questo, il metodo andrebbe dichiarato come <code>def isWorkingDay(d: WeekDay.Value)</code>.
+
+<p>Dato che le enumerazioni di Scala sono solo normali oggetti, potreste usare qualsiasi oggetto che definisca diversi campi <code>val</code> per denotare i &#8220;valori di enumerazione&#8221;. Tuttavia, estendere <code>Enumeration</code> presenta diversi vantaggi: i valori vengono gestiti automaticamente come collezioni su cui potete iterare (come nei nostri esempi) e un identificatore numerico unico viene assegnato automaticamente a ogni valore.
+
+<p>Le classi <code>case</code> (si veda la sezione <a href=cap-6.html#CaseClasses>Classi <code>case</code></a> nel capitolo 6) vengono spesso usate al posto delle enumerazioni in Scala, perché i loro &#8220;casi d&#8217;uso&#8221; coinvolgono spesso il pattern matching. Riparleremo di questo argomento nella sezione <a href=cap-13.html#EnumerationsVsPatternMatching>Enumerazioni vs. pattern matching</a> del capitolo 13.
+
+<h2 id=_recap_and_what_8217_s_next_3>Riepilogo, e poi?</h2>
+
+<p>Abbiamo trattato molti argomenti in questo capitolo. Abbiamo imparato quanto può essere flessibile la sintassi di Scala e come essa faciliti la creazione di linguaggi domain-specific. Poi abbiamo esplorato i miglioramenti apportati da Scala ai costrutti di ciclo e alle espressioni condizionali. Abbiamo sperimentato diverse applicazioni del pattern matching, una potente estensione della comune istruzione <code>case</code>/<code>switch</code>. Infine, abbiamo imparato come incapsulare valori nelle enumerazioni.
+
+<p>Ora dovreste essere pronti per leggere una certa quantità di codice Scala, ma ci sono molte altre funzioni del linguaggio ancora da aggiungere alla vostra cintura degli attrezzi. Nei prossimi quattro capitoli esploreremo l&#8217;approccio di Scala alla programmazione orientata agli oggetti, cominciando con i <em>tratti</em>.
+
+<hr style="border-color: black; height: 1px; width: 8em; margin-left: 0px; margin-top: 2em;">
+
+<ol id=fns>
+<li id=fn-1>[NdT] In realtà, le specifiche si leggono come frasi in &#8220;linguaggio naturale&#8221; solo se scrivete le stringhe di descrizione in inglese, poiché i vari metodi di <em>Specs</em> (come <code>should</code>, <code>in</code> e <code>mustEqual</code>) sono stati implementati con nomi in inglese. Se scrivete le descrizioni degli scenari in italiano, la fluidità di lettura risulterà compromessa. <a href=#fnn-1>&#8617;</a>
+</ol>
+
+<p class=v><a rel=prev href=cap-2.html title='indietro a &#8220;Scrivere meno, fare di più&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-4.html title='avanti a &#8220;Tratti&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>

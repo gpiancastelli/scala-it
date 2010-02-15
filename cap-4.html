@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Tratti - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 4}
+</style>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-4>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Tratti</h1>
+
+<h2 id=IntroducingTraits>Una introduzione ai tratti</h2>
+
+<p>Prima di immergerci nella programmazione orientata agli oggetti, c&#8217;è un&#8217;ulteriore caratteristica essenziale di Scala con cui dovreste familiarizzare: i <em>tratti</em>. Per capire il valore di questa funzionalità è necessario descriverne brevemente il contesto di origine.
+
+<p>In Java una classe può implementare un numero arbitrario di <em>interfacce</em>. Questo modello è molto utile per dichiarare che una classe espone molteplici astrazioni, ma sfortunatamente ha un grosso svantaggio.
+
+<p>Per molte interfacce, buona parte delle funzioni può essere implementata con codice &#8220;stereotipato&#8221; che sarà valido per tutte le classi che usano l&#8217;interfaccia. Java non fornisce alcun meccanismo primitivo per definire e usare questo codice riusabile. Invece, i programmatori Java devono usare convenzioni <em>ad hoc</em> per riutilizzare il codice di implementazione per una data interfaccia. Nel caso peggiore, lo sviluppatore copia e incolla lo stesso codice in ogni classe che ne ha bisogno.
+
+<p>Spesso, l&#8217;implementazione di un&#8217;interfaccia possiede alcuni membri che non sono correlati (cioè, che sono &#8220;ortogonali&#8221;) ai rimanenti membri dell&#8217;istanza. Il termine <em>mixin</em> viene spesso usato per indicare queste parti specializzate e potenzialmente riusabili di un&#8217;istanza che potrebbero essere mantenute indipendentemente.
+
+<p>Date un&#8217;occhiata al codice seguente, che implementa un pulsante in un&#8217;interfaccia grafica e usa una serie di callback per gestire i &#8220;clic&#8221;.
+
+<pre><code>// <a href=esempi/cap-4/ui/button-callbacks.scala>esempi/cap-4/ui/button-callbacks.scala</a>
+
+package ui
+
+class ButtonWithCallbacks(val label: String,
+    val clickedCallbacks: List[() =&gt; Unit]) extends Widget {
+
+  require(clickedCallbacks != null, "La lista di callback non può essere nulla!")
+
+  def this(label: String, clickedCallback: () =&gt; Unit) =
+    this(label, List(clickedCallback))
+
+  def this(label: String) = {
+    this(label, Nil)
+    println("Attenzione: il pulsante non ha callback per i clic!")
+  }
+
+  def click() = {
+    // ... logica per mostrare visivamente il clic sul pulsante ...
+    clickedCallbacks.foreach(f =&gt; f())
+  }
+}</code></pre>
+
+<p>Qui stanno succedendo molte cose. Il costruttore principale prende un argomento <var>label</var> e una lista di callback che vengono invocate quando il metodo <code>click</code> del pulsante viene invocato. Esploreremo i dettagli di questa classe nel <a href=cap-5.html>capitolo 5</a>. Per ora vogliamo concentrarci su un problema particolare. <code>ButtonWithCallbacks</code> non si limita a gestire il comportamento essenziale di un pulsante (come i clic) ma gestisce anche gli eventi di notifica per i clic invocando le funzioni di callback. Questa è una violazione del <em>principio di singola responsabilità</em> <a href=apa.html#Martin2003>[Martin2003]</a>, un mezzo per raggiungere il fine della <em>separazione degli interessi</em>. Vorremmo separare la logica specifica per il pulsante dalla logica di callback, in modo che ogni componente logico diventi più semplice, più modulare e più riusabile. La logica di callback è un buon esempio di <em>mixin</em>.
+
+<p>Questa separazione è difficile da ottenere in Java; anche se definiamo un&#8217;interfaccia per il comportamento di callback, dobbiamo ancora incorporare in qualche modo il codice di implementazione nella classe, compromettendo così la modularità. L&#8217;unica alternativa è quella di usare uno strumento specializzato come la <em>programmazione orientata agli aspetti</em> (<abbr>AOP</abbr>, si veda <a href=apa.html#AOSD>[AOSD]</a>), implementata per esempio da AspectJ <a href=apa.html#AspectJ>[AspectJ]</a>, un&#8217;estensione di Java. La <abbr>AOP</abbr> è principalmente progettata per separare le implementazioni di interessi &#8220;pervasivi&#8221; che sono replicate all&#8217;interno di un&#8217;applicazione. Tenta di rendere modulari questi interessi, pur abilitando, durante la compilazione o l&#8217;esecuzione, il &#8220;mescolamento&#8221; a grana fine dei loro comportamenti con altri interessi, inclusa la logica di dominio dell&#8217;applicazione.
+
+<h3 id=TraitsAsMixins>I tratti come mixin</h3>
+
+<p>Scala fornisce una soluzione mixin completa chiamata <em>tratto</em>. Nel nostro esempio, possiamo definire l&#8217;<em>astrazione</em> di callback in un tratto, come in un&#8217;interfaccia Java, ma possiamo anche implementare l&#8217;astrazione nel tratto (o in un tratto derivato). Possiamo dichiarare classi che &#8220;mescolano&#8221; il tratto, in maniera molto simile a come si dichiarano classi che implementano un&#8217;interfaccia in Java. Tuttavia, in Scala possiamo anche mescolare i tratti nel momento in cui creiamo istanze, senza prima dichiarare una classe che mescola tutti i tratti desiderati. Quindi, i tratti in Scala preservano la separazione degli interessi dandoci allo stesso tempo la capacità di comporre comportamenti su richiesta.
+
+<p>Se provenite da una formazione in Java, potete pensare ai tratti come a interfacce <em>con</em> implementazioni opzionali. Altri linguaggi forniscono costrutti che sono simili ai tratti, come i <em>moduli</em> in Ruby, per esempio.
+
+<p>Proviamo a usare un tratto per separare la gestione delle callback dalla logica del pulsante. Generalizzeremo un poco il nostro approccio. In realtà le callback sono un caso speciale del <em>pattern observer</em> <a href=apa.html#GOF1995>[GOF1995]</a>. Quindi, creeremo un <em>tratto</em> che implementi questo pattern, poi lo useremo per gestire il comportamento delle callback. Per semplificare le cose, cominceremo con una singola callback che conta il numero dei clic sul pulsante.
+
+<p>Per prima cosa, definiamo una semplice classe <code>Button</code>.
+
+<pre><code>// <a href=esempi/cap-4/ui/button.scala>esempi/cap-4/ui/button.scala</a>
+
+package ui
+
+class Button(val label: String) extends Widget {
+  def click() = {
+    // Logica per mostrare visivamente il clic sul pulsante...
+  }
+}</code></pre>
+
+<p>Ed ecco qui la classe genitore <code>Widget</code>.
+
+<pre><code>// <a href=esempi/cap-4/ui/widget.scala>esempi/cap-4/ui/widget.scala</a>
+
+package ui
+
+abstract class Widget</code></pre>
+
+<p>La logica per gestire le callback (cioè la lista <var>clickedCallbacks</var>) è stata rimossa, così come i due costruttori ausiliari. Nel pulsante rimangono solo il campo <var>label</var> e il metodo <code>click</code>. Il metodo <code>click</code> ora si preoccupa solo di come appare visivamente un pulsante &#8220;fisico&#8221; quando viene cliccato. La classe <code>Button</code> ha un solo interesse, gestire &#8220;l&#8217;essenza&#8221; dell&#8217;essere un pulsante.
+
+<p>Ecco un <em>tratto</em> che implementa la logica del <em>pattern observer</em>
+
+<pre><code>// <a href=esempi/cap-4/observer/observer.scala>esempi/cap-4/observer/observer.scala</a>
+
+package observer
+
+trait Subject {
+  type Observer = { def receiveUpdate(subject: Any) }
+
+  private var observers = List[Observer]()
+  def addObserver(observer:Observer) = observers ::= observer
+  def notifyObservers = observers foreach (_.receiveUpdate(this))
+}</code></pre>
+
+<p>Tranne che per la parola chiave <code>trait</code>, <code>Subject</code> sembra una classe ordinaria. <code>Subject</code> definisce tutti i membri che dichiara. I tratti possono dichiarare membri <em>astratti</em>, <em>concreti</em>, o di entrambi i tipi proprio come le classi (si veda la sezione <a href=cap-6.html#OverridingMembers>Ridefinire i membri di classi e tratti</a> nel capitolo 6 per maggiori dettagli). Come le classi, i tratti possono contenere definizioni annidate di tratti e classi; le classi possono contenere definizioni annidate di tratti.
+
+<p>La prima riga definisce un tipo per <code>Observer</code>. Questo è un <em>tipo strutturale</em> della forma <code>{ def receiveUpdate(subject: Any) }</code>. I tipi strutturali specificano solo la struttura che un sottotipo deve supportare; potete pensarli come tipi &#8220;anonimi&#8221;.
+
+<p>In questo caso, il tipo strutturale è definito da un metodo con una firma particolare. Qualsiasi tipo che sia dotato di un metodo con questa firma può essere usato come osservatore. Impareremo di più sui tipi strutturali nel <a href=cap-12.html>capitolo 12</a>. Se vi state chiedendo perché non abbiamo usato <code>Subject</code> come tipo dell&#8217;argomento invece di <code>Any</code>, rivisiteremo questa scelta nella sezione <a href=cap-13.html#SelfTypeAnnotationsAndAbstractTypeMembers>Annotazioni <em>selftype</em> e membri di tipo astratto</a> del capitolo 13.
+
+<p>Per ora, la cosa principale da notare è come questo tipo strutturale minimizzi le dipendenze tra il tratto <code>Subject</code> e qualsiasi potenziale utente del tratto.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span><code>Subject</code> mantiene ancora una dipendenza dal nome del metodo in <code>Observer</code> attraverso il tipo strutturale, cioè dal nome del metodo <code>receiveUpdate</code>. Ci sono molti modi in cui possiamo ridurre questa dipendenza residua. Vedremo come fare nella sezione <a href=cap-6.html#OverridingAbstractTypes>Ridefinire i tipi astratti</a> del capitolo 6.
+</blockquote>
+
+<p>Successivamente, dichiariamo una lista di osservatori usando <code>var</code> anziché <code>val</code> perché <code>List</code> è immutabile, quindi dobbiamo creare una nuova lista quando un osservatore viene aggiunto tramite il metodo <code>addObserver</code>.
+
+<p>Parleremo ulteriormente della classe <code>List</code> di Scala nella sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> del capitolo 7 e anche nel <a href=cap-8.html>capitolo 8</a>. Per ora, notate che <code>addObserver</code> usa il metodo &#8220;operatore&#8221; <code>::</code> della lista (detto &#8220;cons&#8221;) per aggiungere un osservatore in testa alla lista degli osservatori. Il compilatore Scala è abbastanza intelligente da trasformare la seguente istruzione:
+
+<pre><code>observers ::= observer</code></pre>
+
+<p>in questa istruzione:
+
+<pre><code>observers = observer :: observers</code></pre>
+
+<p>Notate che abbiamo scritto <code>observer :: observers</code> collocando la lista <var>observers</var> esistente sul lato destro. Ricordatevi che qualsiasi metodo il cui nome finisce con <code>:</code> lega l&#8217;argomento alla propria <em>destra</em>. Quindi, l&#8217;istruzione precedente è equivalente a questa istruzione:
+
+<pre><code>observers = observers.::(observer)</code></pre>
+
+<p>Il metodo <code>notifyObservers</code> itera attraverso la lista di osservatori usando il metodo <code>foreach</code> e invoca <code>receiveUpdate</code> su ognuno. (Notate che stiamo usando la notazione &#8220;infissa&#8221; per gli operatori invece di <code>observers.foreach</code>.) Usiamo il segnaposto <code>_</code> per abbreviare l&#8217;espressione seguente:
+
+<pre><code>(obs) =&gt; obs.receiveUpdate(this)</code></pre>
+
+<p>in questa espressione:
+
+<pre><code>_.receiveUpdate(this)</code></pre>
+
+<p>Questa espressione in realtà è il corpo di una &#8220;funzione anonima&#8221;, chiamata <em>letterale funzione</em> in Scala. &Egrave; simile a una <em>lambda</em> e a costrutti simili usati in molti altri linguaggi. I letterali funzione e il concetto associato di <em>chiusura</em> sono discussi nella sezione <a href=cap-8.html#FunctionLiteralsAndClosures>Letterali funzione e chiusure</a> del capitolo 8.
+
+<p>In Java, il metodo <code>foreach</code> avrebbe probabilmente accettato un&#8217;interfaccia e gli avreste passato un&#8217;istanza della classe che implementa l&#8217;interfaccia (questo è il tipico modo in cui viene usata <code>Comparable</code>, per esempio).
+
+<p>In Scala, il metodo <code>List[A].foreach</code> si aspetta un argomento di tipo <code>(A) =&gt; Unit</code>, cioè una funzione che accetta un&#8217;istanza di tipo <code>A</code>, dove <code>A</code> rappresenta il tipo degli elementi nella lista (<code>Observer</code> in questo caso), e che restituisce <code>Unit</code> (simile a <code>void</code> in Java).
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>In questo esempio, abbiamo scelto di usare <code>var</code> con istanze immutabili di <code>List</code> per memorizzare gli osservatori. Avremmo potuto usare <code>val</code> con un tipo mutabile come <code>ListBuffer</code>. Questa scelta sarebbe stata più sensata per un&#8217;applicazione reale, ma volevamo evitare di distrarvi spiegando nuove classi di libreria.
+</blockquote>
+
+<p>Ancora una volta, da un piccolo esempio abbiamo imparato molte caratteristiche di Scala. Ora mettiamo all&#8217;opera il nostro tratto <code>Subject</code>. Ecco <code>ObservableButton</code>, che estende <code>Button</code> e mescola <code>Subject</code>.
+
+<pre><code>// <a href=esempi/cap-4/ui/observable-button.scala>esempi/cap-4/ui/observable-button.scala</a>
+
+package ui
+import observer._
+
+class ObservableButton(name: String) extends Button(name) with Subject {
+  override def click() = {
+    super.click()
+    notifyObservers
+  }
+}</code></pre>
+
+<p>Cominciamo importando tutto il contenuto del package <code>observer</code> usando <code>_</code> come wildcard. In realtà il package contiene solo la definizione del tratto <code>Subject</code>.
+
+<p>La nuova classe usa la parola chiave <code>with</code> per aggiungere il tratto <code>Subject</code> alla classe. <code>ObservableButton</code> ridefinisce il metodo <code>click</code>. Usando la parola chiave <code>super</code> (si veda la sezione <a href=cap-6.html#OverridingMethods>Ridefinire i metodi astratti e concreti</a> nel capitolo 6), questo metodo prima invoca il metodo <code>Button.click</code> della &#8220;superclasse&#8221;, poi informa gli osservatori. Dato che il nuovo metodo <code>click</code> ridefinisce l&#8217;implementazione concreta di <code>Button</code>, la parola chiave <code>override</code> è obbligatoria.
+
+<p>La parola chiave <code>with</code> è analoga alla parola chiave <code>implements</code> di Java per le interfacce. Potete specificare tutti i tratti che volete, ognuno con la propria parola chiave <code>with</code>.
+
+<p>Una classe può estendere un tratto e un tratto può estendere una classe. In effetti, la nostra classe <code>Widget</code> definita in precedenza avrebbe potuto essere dichiarata come un tratto.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Se dichiarate una classe che usa uno o più tratti e che <em>non</em> estende un&#8217;altra classe, dovete usare la parola chiave <code>extends</code> per il primo tratto elencato.
+</blockquote>
+
+<p>Se non usate <code>extends</code> per il primo tratto, cioè se scrivete in questo modo:
+
+<pre><code>// ERRORE:
+class ObservableButton(name: String) with Button(name) with Subject {&hellip;}</code></pre>
+
+<p>otterrete il seguente errore:
+
+<pre><samp>&hellip; error: ';' expected but 'with' found.
+     class ObservableButton(name: String) with Button(name) with Subject {&hellip;}
+                                          ^</samp></pre>
+
+<p>Il messaggio di errore in realtà dovrebbe dire &#8220;<code>extends</code> expected but <code>with</code> found&#8221;.<sup id=fnn-1><a href=#fn-1>1</a></sup>
+
+<p>Per vedere questo codice in azione, cominciamo creando una classe che osserva i clic sul pulsante per contarne semplicemente il numero.
+
+<pre><code>// <a href=esempi/cap-4/ui/button-count-observer.scala>esempi/cap-4/ui/button-count-observer.scala</a>
+
+package ui
+import observer._
+
+class ButtonCountObserver {
+  var count = 0
+  def receiveUpdate(subject: Any) = count += 1
+}</code></pre>
+
+<p>Infine, scriviamo un test che utilizzi tutte queste classi. Useremo la libreria <em>Specs</em> (discussa nella sezione <a href=cap-14.html#ScalaSpecs>Specs</a> del capitolo 14) per scrivere una &#8220;specifica&#8221; di <em>sviluppo guidato dal comportamento</em> (<a href=apa.html#BDD>[BDD]</a>) che adoperi i tipi <code>Button</code> e <code>Subject</code> combinati tra loro.
+
+<pre><code>// <a href=esempi/cap-4/ui/button-observer-spec.scala>esempi/cap-4/ui/button-observer-spec.scala</a>
+
+package ui
+import org.specs._
+import observer._
+
+object ButtonObserverSpec extends Specification {
+  "Un osservatore di un pulsante" should {
+    "osservare i click sul pulsante" in {
+      val observableButton = new ObservableButton("Okay")
+      val buttonObserver = new ButtonCountObserver
+      observableButton.addObserver(buttonObserver)
+
+      for (i &lt;- 1 to 3) observableButton.click()
+      buttonObserver.count mustEqual 3
+    }
+  }
+}</code></pre>
+
+<p>Se avete scaricato gli esempi di codice dal sito di O&#8217;Reilly, allora potete seguire le direttive nei file <span class=file>README</span> per assemblare ed eseguire gli esempi di questo capitolo. Usando <code>specs</code> come &#8220;obiettivo&#8221; dell&#8217;assemblaggio otterrete un&#8217;uscita che dovrebbe includere il testo seguente.
+
+<pre><samp>Specification "ButtonCountObserverSpec"
+  Un osservatore di un pulsante should
+  + osservare i clic sul pulsante
+
+Total for specification "ButtonCountObserverSpec":
+Finished in 0 second, 10 ms
+1 example, 1 expectation, 0 failure, 0 error</samp></pre>
+
+<p>Notate che le stringhe <code>"Un osservatore di un pulsante"</code> e <code>"osservare i clic sul pulsante"</code> corrispondono alle stringhe nell&#8217;esempio. L&#8217;uscita di un&#8217;esecuzione di <em>Specs</em> offre un apprezzabile riepilogo dei requisiti per gli elementi che vengono collaudati, supponendo che le stringhe siano state scelte con cura.
+
+<p>Il corpo del test crea un <code>ObservableButton</code> con il nome <code>"Okay"</code> e un <code>ButtonCountObserver</code> che rappresenta l&#8217;osservatore per il pulsante. Il pulsante viene cliccato tre volte usando il ciclo <code>for</code>. L&#8217;ultima riga richiede che il campo <var>count</var> dell&#8217;osservatore sia uguale a 3. Se avete familiarità nell&#8217;usare uno strumento di collaudo come <em>JUnit</em> <a href=apa.html#JUnit>[JUnit]</a> o <em>ScalaTest</em> <a href=apa.html#ScalaTestTool>[ScalaTestTool]</a> (si veda anche la sezione <a href=cap-14.html#ScalaTest>ScalaTest</a> nel capitolo 14), allora l&#8217;ultima riga è equivalente alla seguente asserzione in <em>JUnit</em>.
+
+<pre><code>assertEquals(3, buttonObserver.count)</code></pre>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>La libreria <em>Specs</em> (si veda la sezione <a href=cap-14.html#ScalaSpecs>Specs</a>) e la libreria <em>ScalaTest</em> (si veda la sezione <a href=cap-14.html#ScalaTest>ScalaTest</a>) supportano entrambe lo <em>sviluppo guidato dal comportamento</em> <a href=apa.html#BDD>[BDD]</a>, uno stile di <em>sviluppo guidato dai test</em> (in inglese, <em>test-driven development</em>) <a href=apa.html#TDD>[TDD]</a> che enfatizza il ruolo di &#8220;specifica&#8221; giocato dai test.
+</blockquote>
+
+<p>Pensate di aver bisogno di una sola istanza di <code>ObservableButton</code>? In realtà non c&#8217;è bisogno di dichiarare una classe che estenda <code>Button</code> con <code>Subject</code>, ma è possibile incorporare il tratto quando si crea l&#8217;istanza.
+
+<p>L&#8217;esempio successivo mostra un file <em>Specs</em> revisionato che crea un&#8217;istanza della classe <code>Button</code> mescolando <code>Subject</code> come parte della dichiarazione.
+
+<pre><code>// <a href=esempi/cap-4/ui/button-observer-anon-spec.scala>esempi/cap-4/ui/button-observer-anon-spec.scala</a>
+
+package ui
+import org.specs._
+import observer._
+
+object ButtonObserverAnonSpec extends Specification {
+  "Un osservatore di un pulsante" should {
+    "osservare i clic sul pulsante" in {
+      val observableButton = new Button("Okay") with Subject {
+        override def click() = {
+          super.click()
+          notifyObservers
+        }
+      }
+
+      val buttonObserver = new ButtonCountObserver
+      observableButton.addObserver(buttonObserver)
+
+      for (i &lt;- 1 to 3) observableButton.click()
+      buttonObserver.count mustEqual 3
+    }
+  }
+}</code></pre>
+
+<p>La dichiarazione revisionata di <var>observableButton</var> crea effettivamente una classe anonima in cui ridefiniamo il metodo <code>click</code>, come prima. La differenza principale rispetto alla creazione di classi anonime in Java è che possiamo incorporare i tratti in questo processo. Java non vi permette di implementare una nuova interfaccia mentre istanziate una classe.
+
+<p>Infine, notate che un&#8217;istanza può avere una gerarchia di ereditarietà complessa se mescola tratti che estendono altri tratti, <i class=baa>&amp;</i>c. Discuteremo i dettagli della gerarchia nella sezione <a href=cap-7.html#Linearization>Linearizzare la gerarchia di un oggetto</a> del capitolo 7.
+
+<h2 id=StackableTraits>Tratti impilabili</h2>
+
+<p>Possiamo ritoccare un paio di aspetti del nostro lavoro per migliorarne la riusabilità e per facilitare l&#8217;impiego di più di un tratto alla volta, cioè per &#8220;impilarli&#8221;.
+
+<p>Come prima cosa, introduciamo un nuovo tratto chiamato <code>Clickable</code> per rappresentare qualsiasi elemento grafico che risponde ai clic.
+
+<pre><code>// <a href=esempi/cap-4/ui2/clickable.scala>esempi/cap-4/ui2/clickable.scala</a>
+
+package ui2
+
+trait Clickable {
+  def click()
+}</code></pre>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Creiamo un nuovo package <code>ui2</code> per facilitare il compito di mantenere separate le vecchie versioni degli esempi da quelle nuove nel codice scaricabile.
+</blockquote>
+
+<p>Il tratto <code>Clickable</code> sembra proprio un&#8217;interfaccia Java: è completamente astratto. Definisce un singolo metodo astratto di nome <code>click</code>; il metodo è astratto perché non ha un corpo. Se <code>Clickable</code> fosse stata una classe, avremmo dovuto aggiungere la parola chiave <code>abstract</code> davanti alla parola chiave <code>class</code>. Questo non è necessario per i tratti.
+
+<p>Ecco il pulsante rielaborato per usare il tratto.
+
+<pre><code>// <a href=esempi/cap-4/ui2/button.scala>esempi/cap-4/ui2/button.scala</a>
+
+package ui2
+
+import ui.Widget
+
+class Button(val label: String) extends Widget with Clickable {
+  def click() = {
+    // Logica per mostrare visivamente il clic sul pulsante...
+  }
+}</code></pre>
+
+<p>Questo codice è simile a codice Java che implementa un&#8217;interfaccia <code>Clickable</code>.
+
+<p>Quando abbiamo definito <code>ObservableButton</code> in precedenza (nella sezione <a href=#TraitsAsMixins>I tratti come mixin</a>), abbiamo ridefinito <code>Button.click</code> per informare gli osservatori. Abbiamo dovuto duplicare quella logica in <code>ButtonObserverAnonSpec</code> quando abbiamo dichiarato <var>observableButton</var> come un&#8217;istanza di <code>Button</code> che ha mescolato direttamente il tratto <code>Subject</code>. Ora possiamo eliminare quella duplicazione.
+
+<p>Quando rielaboriamo il codice in questo modo, ci accorgiamo di non essere realmente interessati a osservare i pulsanti; ci interessa osservare i clic. Ecco un tratto che si concentra esclusivamente sulla osservazione dei <code>Clickable</code>.
+
+<pre><code>// <a href=esempi/cap-4/ui2/observable-clicks.scala>esempi/cap-4/ui2/observable-clicks.scala</a>
+
+package ui2
+import observer._
+
+trait ObservableClicks extends Clickable with Subject {
+  abstract override def click() = {
+    super.click()
+    notifyObservers
+  }
+}</code></pre>
+
+<p>Il tratto <code>ObservableClicks</code> estende <code>Clickable</code> e mescola <code>Subject</code>. Poi ridefinisce il metodo <code>click</code> con un&#8217;implementazione che sembra quasi uguale a quella del metodo ridefinito mostrato nella sezione <a href=#TraitsAsMixins>I tratti come mixin</a>. La differenza importante è la parola chiave <code>abstract</code>.
+
+<p>Osservate da vicino questo metodo: invoca <code>super.click()</code>, ma cos&#8217;è <var>super</var> in questo caso? A questo punto, potrebbe solamente essere <code>Clickable</code>, che <em>dichiara</em> il metodo <code>click</code> ma non lo <em>definisce</em>, oppure potrebbe essere <code>Subject</code>, che non possiede un metodo <code>click</code>. Quindi, <var>super</var> non può essere legata, almeno non ancora.
+
+<p>In effetti, <code>super</code> verrà legata nel momento in cui questo tratto viene mescolato in un&#8217;istanza che definisce un metodo <code>click</code> concreto, come un&#8217;istanza di <code>Button</code>. Di conseguenza, abbiamo bisogno di usare la parola chiave <code>abstract</code> su <code>ObservableClicks.click</code> per dire al compilatore (e al lettore) che <code>click</code> non è ancora completamente implementato, anche se <code>ObservableClicks.click</code> ha un corpo.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Tranne che per dichiarare classi astratte, la parola chiave <code>abstract</code> è obbligatoria solo su un metodo di un tratto nel caso in cui il metodo abbia un corpo ma usi <var>super</var> per chiamare un metodo che non ha un&#8217;implementazione concreta nei genitori del tratto.
+</blockquote>
+
+<p>Usiamo questo tratto insieme a <code>Button</code> e al suo metodo <code>click</code> concreto in un test <em>Specs</em>.
+
+<pre><code>// <a href=esempi/cap-4/ui2/button-clickable-observer-spec.scala>esempi/cap-4/ui2/button-clickable-observer-spec.scala</a>
+
+package ui2
+import org.specs._
+import observer._
+import ui.ButtonCountObserver
+
+object ButtonClickableObserverSpec extends Specification {
+  "Un osservatore di un pulsante" should {
+    "osservare i clic sul pulsante" in {
+      val observableButton = new Button("Okay") with ObservableClicks
+      val buttonClickCountObserver = new ButtonCountObserver
+      observableButton.addObserver(buttonClickCountObserver)
+
+      for (i &lt;- 1 to 3) observableButton.click()
+      buttonClickCountObserver.count mustEqual 3
+    }
+  }
+}</code></pre>
+
+<p>Confrontate questo codice con <code>ButtonObserverAnonSpec</code>. Istanziamo <code>Button</code> mescolando il tratto <code>ObservableClicks</code>, ma ora non c&#8217;è alcuna ridefinizione obbligatoria di <code>click</code>. Quindi, questo cliente di <code>Button</code> non deve preoccuparsi di ridefinire opportunamente <code>click</code>; la fatica è già stata fatta da <code>ObservableClicks</code>. Il comportamento desiderato viene <em>composto dichiarativamente</em> quando è necessario.
+
+<p>Concludiamo il nostro esempio aggiungendo un secondo tratto. La specifica <em>JavaBeans</em> <a href=apa.html#JavaBeansSpec>[JavaBeansSpec]</a> introduce il concetto di eventi &#8220;vietabili&#8221; in cui gli osservatori dei cambiamenti in un componente possono porre il veto sul cambiamento. Implementiamo qualcosa di simile con un tratto che vieta un numero di clic maggiore rispetto a una soglia prefissata.
+
+<pre><code>// <a href=esempi/cap-4/ui2/vetoable-clicks.scala>esempi/cap-4/ui2/vetoable-clicks.scala</a>
+
+package ui2
+import observer._
+
+trait VetoableClicks extends Clickable {
+  val maxAllowed = 1  // valore predefinito
+  private var count = 0
+
+  abstract override def click() = {
+    if (count &lt; maxAllowed) {
+      count += 1
+      super.click()
+    }
+  }
+}</code></pre>
+
+<p>Ancora una volta, ridefiniamo il metodo <code>click</code>. Come prima, il metodo ridefinito deve essere dichiarato <code>abstract</code>. Il massimo numero predefinito di clic permessi è 1. Potreste chiedervi cosa intendiamo qui con &#8220;predefinito&#8221;: il campo non è stato dichiarato come <code>val</code>? E non c&#8217;è alcun costruttore definito per inizializzarlo a un altro valore. Rivisiteremo queste domande nella sezione <a href=cap-6.html#OverridingMembers>Ridefinire i membri di classi e tratti</a> del capitolo 6.
+
+<p>Questo tratto dichiara anche una variabile <var>count</var> per tenere traccia del numero di clic osservati. Essa viene dichiarata <code>private</code> in modo che sia invisibile al di fuori del tratto (si veda la sezione <a href=cap-5.html#VisibilityRules>Regole di visibilità</a> nel capitolo 5). Il metodo <code>click</code> ridefinito incrementa <var>count</var> e invoca il metodo <code>super.click()</code> solo se il conto è minore o uguale al valore <var>maxAllowed</var>.
+
+<p>Ecco un oggetto <em>Specs</em> che mostra come <code>ObservableClicks</code> e <code>VetoableClicks</code> lavorano insieme. Notate che è obbligatorio usare una parola chiave <code>with</code> separata per ogni tratto anziché usare una parola chiave e separare i nomi con una virgola, come fa Java per le clausole <code>implements</code>.
+
+<pre><code>// <a href=esempi/cap-4/ui2/button-clickable-observer-vetoable-spec.scala>esempi/cap-4/ui2/button-clickable-observer-vetoable-spec.scala</a>
+
+package ui2
+import org.specs._
+import observer._
+import ui.ButtonCountObserver
+
+object ButtonClickableObserverVetoableSpec extends Specification {
+  "Un osservatore di un pulsante con clic vietabili" should {
+    "osservare solo il primo clic sul pulsante" in {
+      val observableButton =
+          new Button("Okay") with ObservableClicks with VetoableClicks
+      val buttonClickCountObserver = new ButtonCountObserver
+      observableButton.addObserver(buttonClickCountObserver)
+
+      for (i &lt;- 1 to 3) observableButton.click()
+      buttonClickCountObserver.count mustEqual 1
+    }
+  }
+}</code></pre>
+
+<p>Il conto atteso per l&#8217;osservatore è 1. Il pulsante osservabile <var>observableButton</var> è dichiarato come segue.
+
+<pre><code>new Button("Okay") with ObservableClicks with VetoableClicks</code></pre>
+
+<p>Possiamo dedurre che il metodo <code>click</code> ridefinito in <code>VetoableClicks</code> viene invocato <em>prima</em> del metodo <code>click</code> ridefinito in <code>ObservableClicks</code>. Generalmente parlando, dato che la nostra classe anonima non definisce il proprio metodo <code>click</code>, la ricerca del metodo procede <em>da destra a sinistra</em> nella dichiarazione. In realtà le cose sono più complicate di così, come vedremo più avanti nella sezione <a href=cap-7.html#Linearization>Linearizzare la gerarchia di un oggetto</a> del capitolo 7.
+
+<p>Nel frattempo, cosa succede se usiamo i tratti nell&#8217;ordine inverso?
+
+<pre><code>// <a href=esempi/cap-4/ui2/button-vetoable-clickable-observer-spec.scala>esempi/cap-4/ui2/button-vetoable-clickable-observer-spec.scala</a>
+
+package ui2
+import org.specs._
+import observer._
+import ui.ButtonCountObserver
+
+object ButtonVetoableClickableObserverSpec extends Specification {
+  "Un pulsante vietabile con un osservatore di clic" should {
+    "osservare tutti i clic sul pulsante, anche se alcuni sono vietati" in {
+      val observableButton =
+          new Button("Okay") with VetoableClicks with ObservableClicks
+      val buttonClickCountObserver = new ButtonCountObserver
+      observableButton.addObserver(buttonClickCountObserver)
+
+      for (i &lt;- 1 to 3) observableButton.click()
+      buttonClickCountObserver.count mustEqual 3
+    }
+  }
+}</code></pre>
+
+<p>Ora il conto atteso per l&#8217;osservatore è 3. Il tratto <code>ObservableClicks</code> ora ha precedenza su <code>VetoableClicks</code>, quindi il conto dei clic viene incrementato anche quando alcuni clic vengono successivamente vietati!
+
+<p>Quindi, l&#8217;ordine della dichiarazione è importante, e dovete tenerlo presente per prevenire comportamenti inattesi quando i tratti si influenzano a vicenda. Forse un&#8217;altra lezione da ricordare è che suddividere gli oggetti in troppi tratti a grana fine può rendere oscuro l&#8217;ordine di esecuzione del vostro codice!
+
+<p>Dividere la vostra applicazione in piccoli tratti specializzati è un modo potente per creare astrazioni e &#8220;componenti&#8221; scalabili e riusabili. &Egrave; possibile assemblare comportamenti complessi attraverso la <em>composizione dichiarativa</em> dei tratti. Esploreremo molto dettagliatamente questa idea nella sezione <a href=cap-13.html#ScalableAbstractions>Astrazioni scalabili</a> del capitolo 13.
+
+<h2 id=ConstructingTraits>Costruire i tratti</h2>
+
+<p>I tratti non supportano i costruttori ausiliari e non accettano una lista di argomenti per il costruttore principale. I tratti possono estendere classi o altri tratti, ma non possono passare argomenti al costruttore della classe genitore (nemmeno valori letterali), perciò possono solo estendere classi che hanno un costruttore principale o ausiliario senza argomenti.
+
+<p>Tuttavia, come per le classi, il corpo di un tratto viene eseguito ogni volta che viene creata un&#8217;istanza che usa il tratto, come mostrato nello script seguente.
+
+<pre><code>// <a href=esempi/cap-4/trait-construction-script.scala>esempi/cap-4/trait-construction-script.scala</a>
+
+trait T1 {
+  println("  in T1: x = " + x)
+  val x = 1
+  println("  in T1: x = " + x)
+}
+trait T2 {
+  println("  in T2: y = " + y)
+  val y = "T2"
+  println("  in T2: y = " + y)
+}
+
+class Base12 {
+  println("  in Base12: b = " + b)
+  val b = "Base12"
+  println("  in Base12: b = " + b)
+}
+class C12 extends Base12 with T1 with T2 {
+  println("  in C12: c = " + c)
+  val c = "C12"
+  println("  in C12: c = " + c)
+}
+println("Sto creando C12:")
+new C12
+println("Dopo aver creato C12")</code></pre>
+
+<p>L&#8217;esecuzione di questo script con il comando <kbd>scala</kbd> produce l&#8217;uscita seguente.
+
+<pre><samp>Sto creando C12:
+&#160;&#160;in Base12: b = null
+&#160;&#160;in Base12: b = Base12
+&#160;&#160;in T1: x = 0
+&#160;&#160;in T1: x = 1
+&#160;&#160;in T2: y = null
+&#160;&#160;in T2: y = T2
+&#160;&#160;in C12: c = null
+&#160;&#160;in C12: c = C12
+Dopo aver creato C12</samp></pre>
+
+<p>Notate l&#8217;ordine di invocazione dei costruttori della classe e del tratto. Dato che la dichiarazione di <code>C12</code> è <code>extends Base12 with T1 with T2</code>, l&#8217;ordine di costruzione per questa semplice gerarchia di classi va da sinistra a destra, cominciando con la classe base <code>Base12</code>, seguita dai tratti <code>T1</code> e <code>T2</code>, e terminando con il corpo del costruttore di <code>C12</code>. (Per la costruzione di gerarchie arbitrariamente complesse si veda la sezione <a href=cap-7.html#Linearization>Linearizzare la gerarchia di un oggetto</a> nel capitolo 7.)
+
+<p>Quindi, pur non potendo passare parametri di costruzione ai tratti, potete inizializzare i campi con valori predefiniti o lasciarli astratti. In realtà questa è una cosa che abbiamo già visto nel nostro tratto <code>Subject</code>, dove il campo <code>Subject.observers</code> veniva inizializzato con una lista vuota.
+
+<p>Se un campo concreto in un tratto non ha un valore predefinito appropriato, non c&#8217;è alcun modo &#8220;intrinsecamente sicuro&#8221; per inizializzarne il valore. Tutti gli approcci alternativi richiedono che gli utenti del tratto effettuino qualche operazione <em>ad hoc</em>, ma questa pratica è soggetta a errori perché gli utenti potrebbero sbagliarsi o dimenticarsene completamente. Forse il campo dovrebbe essere lasciato astratto, in modo che le classi o gli altri tratti che usano questo tratto siano obbligati a definirne opportunamente il valore. Tratteremo nel dettaglio la ridefinizione di membri astratti e concreti nel <a href=cap-6.html>capitolo 6</a>.
+
+<p>Un&#8217;altra soluzione consiste nello spostare quel campo in una classe separata dove il processo di costruzione possa garantire che i dati di inizializzazione corretti vengano forniti dall&#8217;utente. Potrebbe darsi che l&#8217;intero tratto in realtà debba essere una classe, e che quindi sia possibile definire un costruttore per inizializzarne i campi.
+
+<h3 id=ClassOrTrait>Classe o tratto?</h3>
+
+<p>Quando valutate se un &#8220;concetto&#8221; debba essere un tratto o una classe, tenete a mente che i tratti usati come mixin hanno più senso per il comportamento &#8220;aggiuntivo&#8221;. Se scoprite che un tratto particolare viene usato più spesso come genitore di altre classi, in modo che le classi figlie si <em>comportino come</em> il tratto genitore, allora considerate la possibilità di definire il tratto come una classe, per rendere questa relazione logica più chiara. (Abbiamo detto <em>si comporta come</em> piuttosto che <em>è un</em> perché la prima espressione è una definizione più precisa di ereditarietà, basata sul <em>principio di sostituzione di Liskov</em>&nbsp;&mdash;&nbsp;si veda <a href=apa.html#Martin2003>[Martin2003]</a>, per esempio.)</p>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Nei tratti, evitate di usare campi concreti che non possono essere inizializzati con valori predefiniti appropriati. Invece, usate campi astratti, oppure convertite il tratto in una classe dotata di un costruttore. Naturalmente, i tratti senza stato non hanno alcun problema di inizializzazione.
+</blockquote>
+
+<p>&Egrave; un principio generale della buona progettazione orientata agli oggetti che un&#8217;istanza debba sempre trovarsi in uno stato valido e noto a partire dal momento in cui il processo di costruzione termina.
+
+<h2 id=TraitsRecapAndWhatsNext>Riepilogo, e poi?</h2>
+
+<p>In questo capitolo abbiamo imparato come usare i tratti per incapsulare e condividere interessi trasversali tra le classi. Abbiamo parlato di quando e come usare i tratti, di come &#8220;impilare&#8221; molteplici tratti e delle regole per inizializzare valori all&#8217;interno dei tratti.
+
+<p>Nel prossimo capitolo esploreremo il funzionamento dei fondamenti della programmazione orientata agli oggetti in Scala. Anche se siete veterani della programmazione orientata agli oggetti, vorrete leggere i prossimi capitoli per capire i particolari dell&#8217;approccio di Scala alla <abbr>OOP</abbr>.
+
+<hr style="border-color: black; height: 1px; width: 8em; margin-left: 0px; margin-top: 2em;">
+
+<ol id=fns>
+<li id=fn-1>[NdT] Letteralmente, il messaggio si potrebbe tradurre con &#8220;atteso <code>extends</code> ma trovato <code>with</code>&#8221;. <a href=#fnn-1>&#8617;</a>
+</ol>
+
+<p class=v><a rel=prev href=cap-3.html title='indietro a &#8220;Completare l&#8217;indispensabile&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-5.html title='avanti a &#8220;Programmazione orientata agli oggetti in Scala: le basi&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>

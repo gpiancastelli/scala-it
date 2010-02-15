@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Prefazione - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+h1:before{content:''}
+</style>
+<script>_gaq=[['_setAccount','UA-10482652-1'],['_trackPageview']];(function(){var g=document.createElement('script');g.src='//www.google-analytics.com/ga.js';g.setAttribute('async','true');document.documentElement.firstChild.appendChild(g);})();</script>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#prefazione>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Prefazione</h1>
+
+<p><cite>Programmare in Scala</cite> presenta un nuovo fantastico linguaggio che offre tutti i vantaggi di un modello a oggetti moderno, della programmazione funzionale e di un sistema di tipi avanzato. Ricco di esempi di codice, questo è un libro completo che vi insegna come diventare velocemente produttivi in Scala e vi spiega cosa rende questo linguaggio ideale per le odierne applicazioni basate su componenti e altamente scalabili che supportano concorrenza e distribuzione. Imparerete anche quali sono i vantaggi che Scala offre come linguaggio per la Java Virtual Machine.
+
+<h2 id=_welcome_to_programming_scala>Benvenuti a Programmare in Scala</h2>
+
+<p>I linguaggi di programmazione diventano popolari per molte ragioni. A volte i programmatori che lavorano su una determinata piattaforma preferiscono un particolare linguaggio, oppure un linguaggio viene istituzionalizzato da un rivenditore. La maggior parte dei programmatori Mac OS X usa Objective-C. La maggior parte dei programmatori Windows usa C++ e i linguaggi .NET. La maggior parte degli sviluppatori di sistemi embedded usa C e C++.
+
+<p>A volte la popolarità derivata da meriti tecnici provoca mode e fanatismi. C++, Java e Ruby sono stati oggetto di devozione fanatica tra i programmatori.
+
+<p>A volte un linguaggio diventa popolare perché soddisfa i bisogni del proprio tempo. Java venne inizialmente visto come il linguaggio più adatto per sviluppare applicazioni rich-client basate sul browser. Smalltalk catturò l&#8217;essenza della Programmazione Orientata agli Oggetti (<abbr>OOP</abbr>) e quel modello di programmazione entrò a far parte del mainstream.
+
+<p>Oggi fattori come concorrenza, eterogeneità, servizi costantemente attivi e piani di sviluppo sempre più brevi guidano l&#8217;interesse generale verso la Programmazione Funzionale (<abbr>FP</abbr>). Sembra che il dominio della programmazione orientata agli oggetti possa essere giunto al termine. Mescolare i paradigmi sta diventando popolare, persino necessario.
+
+<p>Provenendo da altri linguaggi, abbiamo grativato attorno a Scala perché Scala incarna molte delle qualità ottimali che vogliamo in un linguaggio di programmazione general-purpose con cui sviluppare il tipo di applicazioni che costruiamo oggi: applicazioni industriali e di rete affidabili, a elevate prestazioni e ad alta concorrenza.
+
+<p>Scala è un linguaggio multiparadigma che supporta sia l&#8217;approccio alla programmazione orientato agli oggetti sia quello funzionale. Scala è scalabile, adatto per tutto ciò che va dai piccoli programmi alle applicazioni su larga scala basate su componenti. Scala è sofisticato perché incorpora idee allo stato dell&#8217;arte provenienti dalle stanze dei dipartimenti di Informatica di tutto il mondo. Però, Scala è anche pratico perché il suo creatore, Martin Odersky, ha partecipato allo sviluppo di Java per anni e comprende le necessità degli sviluppatori di professione.
+
+<p>Siamo stati entrambi sedotti da Scala, dalla sua sintassi concisa, elegante ed espressiva, e dalla portata degli strumenti che ha messo a nostra disposizione. In questo libro, ci sforziamo di dimostrare perché tutte queste qualità rendono Scala un linguaggio di programmazione irresistibile e indispensabile.
+
+<p>Se siete sviluppatori esperti che desiderano un&#8217;introduzione veloce e completa a Scala, allora questo è il libro che fa per voi. Forse state valutando Scala come rimpiazzo o complemento per i linguaggi con cui programmate attualmente, o forse avete già deciso di usare Scala e avete bisogno di imparare le sue caratteristiche e come sfruttarle appieno. In ogni caso, speriamo di illustrarvi questo potente linguaggio in modo accessibile.
+
+<p>Presumiamo che siate competenti nella programmazione orientata agli oggetti, ma non supponiamo che abbiate conoscenze pregresse di programmazione funzionale. Presumiamo che siate esperti di almeno un altro linguaggio di programmazione. Faremo confronti con le caratteristiche di Java, C#, Ruby e altri linguaggi. Se ne conoscete qualcuno, vi mostreremo alcune caratteristiche simili in Scala e molte altre caratteristiche che sono nuove.
+
+<p>Che la vostra formazione si basi sulla programmazione orientata agli oggetti o su quella funzionale, vedrete come Scala combina elegantemente entrambi i paradigmi dimostrando la loro natura complementare. Usando numerosi esempi, capirete come e quando applicare tecniche <abbr>OOP</abbr> o <abbr>FP</abbr> a molti problemi di progettazione differenti.
+
+<p>Alla fine, speriamo che anche voi veniate sedotti da Scala. Anche se Scala non diventerà il linguaggio in cui programmate quotidianamente, speriamo che possiate applicare le intuizioni ottenute a prescindere dal linguaggio che state usando.
+
+<h2 id=_conventions_used_in_this_book>Convenzioni usate in questo libro</h2>
+
+<p>Questo libro utilizza le seguenti convenzioni tipografiche.
+
+<dl>
+<dt><i>Corsivo</i>
+<dd>Indica nuovi termini, URL, indirizzi email, nomi ed estensioni di file. Molti termini in corsivo sono definiti nel <a href=app-a.html>glossario</a>.
+<dt><tt>Spaziatura fissa</tt>
+<dd>Usato per i listati dei programmi e all&#8217;interno dei paragrafi per fare riferimento a elementi dei programmi come nomi di variabili o di funzioni, database, tipi di dati, variabili d&#8217;ambiente, istruzioni e parole chiave.
+<dt><tt><b>Spaziatura fissa in grassetto</b></tt>
+<dd>Mostra comandi o altro testo che dovrebbe essere digitato alla lettera dall&#8217;utente.
+<dt><tt><i>Spaziatura fissa in corsivo</i></tt>
+<dd>Mostra testo che dovrebbe essere sostituito con valori forniti dall&#8217;utente o determinati dal contesto.
+</dl>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Questa icona indica un consiglio, un suggerimento, o una nota generale.</p>
+</blockquote>
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span>Questa icona indica un avviso o un avvertimento.</p>
+</blockquote>
+
+<h2 id=UsingCodeExamples>Usare gli esempi di codice</h2>
+
+<p>Questo libro ha il compito di aiutarvi a svolgere il vostro lavoro. In generale, potete usare il codice del libro nei vostri programmi e nella vostra documentazione. Non è necessario che ci contattiate per chiedere il permesso di usare il codice a meno che non ne stiate riproducendo una porzione significativa. Per esempio, non è necessario il permesso per scrivere un programma che usa diverse porzioni di codice estratte da questo libro, ma dovete chiedere il permesso se volete vendere o distribuire un CD-ROM di esempi contenuti nei libri pubblicati da O&#8217;Reilly. Non serve il permesso per rispondere a una domanda citando questo libro e riproducendo codice di esempio, ma dovete chiedere il permesso se volete incorporare una quantità significativa di codice di esempio proveniente da questo libro nella documentazione di un vostro prodotto.
+
+<p>L&#8217;attribuzione è apprezzata ma non obbligatoria. Un&#8217;attribuzione di solito include il titolo, l&#8217;autore, l&#8217;editore e il codice <abbr>ISBN</abbr>. Per esempio: &#8220;<cite>Programmare in Scala</cite> di Dean Wampler e Alex Payne. Copyright 2009 O&#8217;Reilly Media, Inc., 978-0-596-15595-7.&#8221;
+
+<p>Se credete che il vostro uso degli esempi di codice ricada fuori dall&#8217;uso legittimo e dai permessi appena descritti, sentitevi liberi di contattarci all&#8217;indirizzo email <a class=url href=mailto:permissions@oreilly.com>permissions@oreilly.com</a>.
+
+<h3 id=GettingCodeExamples>Ottenere gli esempi di codice</h3>
+
+<p>Potete scaricare gli esempi di codice da <a class=url href=http://examples.oreilly.com/9780596155964>http://examples.oreilly.com/9780596155964/</a>. Estraete i file in un luogo conveniente. Leggete il file <span class=file>README.txt</span> incluso nella distribuzione per le istruzioni su come assemblare e utilizzare gli esempi.
+
+<p>Alcuni file di esempio posso essere eseguiti come script usando il comando <kbd>scala</kbd>. Altri devono essere compilati in file di classe. Alcuni file contengono errori intenzionali e non sarà possibile compilarli. Abbiamo adottato una convenzione sui nomi dei file per indicare ognuno di questi casi, anche se man mano che imparate Scala la maggior parte dei singoli casi dovrebbe diventare ovvia esaminando i contenuti dei file.
+
+<dl>
+<dt><tt><b>*-script.scala</b></tt>
+<dd>I file il cui nome termina in <tt>-script.scala</tt> possono essere eseguiti sulla riga di comando usando <kbd>scala</kbd>, come per esempio <kbd>scala foo-script.scala</kbd>. Potete anche eseguire <kbd>scala</kbd> nella modalità interprete (quando non specificate un file di script) e caricare qualsiasi file di script nell&#8217;interprete usando il comando <code>:load nomefile</code>
+<dt><tt><b>*-wont-compile.scala</b></tt>
+<dd>I file il cui nome termina in <tt>-wont-compile.scala</tt> contengono errori intenzionali che causeranno il fallimento della loro compilazione. Abbiamo combinato questa convenzione di nomi con uno o più commenti sugli errori nel testo dei file in modo da chiarire perché il codice che contengono non è valido. Questi file vengono esclusi dal processo di assemblaggio degli esempi.
+<dt><tt><b>sake.scala</b></tt>
+<dd>I file chiamati <tt>sake.scala</tt> sono usati dal nostro strumento di assemblaggio, chiamato <kbd>sake</kbd>. Il file <tt>README.txt</tt> descrive questo strumento.
+<dt><tt><b>*.scala</b></tt>
+<dd>Tutti gli altri file Scala devono essere compilati usando <kbd>scalac</kbd>. Nella distribuzione, vengono usati da altri script o da altri file compilati, come i test, che non sono tutti elencati nel libro.
+</dl>
+
+<h2 id=para_other_file_convention>Safari&reg; Books Online</h2>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Quando vedete un&#8217;icona Safari&reg; Books Online sulla copertina del vostro libro tecnico preferito, questo significa che il libro è disponibile in rete attraverso la libreria Safari di O&#8217;Reilly Network.</p>
+</blockquote>
+
+<p>Safari offre una soluzione migliore degli e-book. &Egrave; una libreria virtuale che vi permette di effettuare facilmente ricerche su migliaia di ottimi libri tecnici, copiare e incollare gli esempi di codice, scaricare capitoli e trovare velocemente risposte quando avete bisogno delle informazioni più recenti e accurate. Provatelo gratuitamente all&#8217;indirizzo <a class=url href=http://safari.oreilly.com>http://safari.oreilly.com</a>.
+
+<h2 id=_how_to_contact_us>Come contattarci</h2>
+
+<p>Siete pregati di spedire commenti e domande riguardanti questo libro all&#8217;editore:
+
+<pre><samp>O&#8217;Reilly Media, Inc
+1005 Gravenstein Highway North
+Sebastopol, CA 95472
+800-998-9938 (negli Stati Uniti o in Canada)
+707-829-0515 (internazionale o locale)
+707 829-0104 (fax)</samp></pre>
+
+<p>Abbiamo predisposto una pagina web dedicata a questo libro, dove elenchiamo errata, esempi e qualsiasi informazione aggiuntiva. Potete accedere a questa pagina (relativa alla versione inglese del libro) all&#8217;indirizzo:
+
+<pre><samp>http://www.oreilly.com/catalog/9780596155957</samp></pre>
+
+<p>Per inviare un commento o porre domande di tipo tecnico su questo libro, spedite un&#8217;email a
+
+<pre><samp><a href=mailto:bookquestions@oreilly.com>bookquestions@oreilly.com</a></samp></pre>
+
+<p>Per maggiori informazioni sui nostri libri, sulle conferenze, sui Centri di Risorse e su O&#8217;Reilly Network visitate il nostro sito web all&#8217;indirizzo:
+
+<pre><samp>http://www.oreilly.com</samp></pre>
+
+<h2 id=_acknowledgements>Ringraziamenti</h2>
+
+<p>Durante la stesura del libro, molte persone ne hanno letto le bozze e hanno suggerito numerosi miglioramenti al testo, per i quali saremo loro eternamente grati. In particolare, vogliamo ringraziare Steve Jensen, Ramnivas Laddad, Marcel Molina, Bill Venners e Jonas Bonér per i loro commenti esaurienti.
+
+<p>Molti dei commenti che abbiamo ricevuto sono arrivati attraverso il servizio di pubblicazione Safari Rough Cuts e tramite l&#8217;edizione online disponibile su <a class=url href=http://programmingscala.com>http://programmingscala.com</a>. Ringraziamo per i commenti forniti (in nessun ordine particolare) Iulian Dragos, Nikolaj Lindberg, Matt Hellige, David Vydra, Ricky Clarkson, Alex Cruise, Josh Cronemeyer, Tyler Jennings, Alan Supynuk, Tony Hillerson, Roger Vaughn, Arbi Sookazian, Bruce Leidl, Daniel Sobral, Eder Andres Avila, Marek Kubica, Henrik Huttunen, Bhaskar Maddala, Ged Byrne, Derek Mahar, Geoffrey Wiseman, Peter Rawsthorne, Geoffrey Wiseman, Joe Bowbeer, Alexander Battisti, Rob Dickens, Tim MacEachern, Jason Harris, Steven Grady, Bob Follek, Ariel Ortiz, Parth Malwankar, Reid Hochstedler, Jason Zaugg, Jon Hanson, Mario Gleichmann, David Gates, Zef Hemel, Michael Yee, Marius Kreis, Martin Süsskraut, Javier Vegas, Tobias Hauth, Francesco Bochicchio, Stephen Duncan Jr., Patrik Dudits, Jan Niehusmann, Bill Burdick, David Holbrook, Shalom Deitch, Jesper Nordenberg, Esa Laine, Gleb Frank, Simon Andersson, Patrik Dudits, Chris Lewis, Julian Howarth, Dirk Kuzemczak, Henri Gerrits, John Heintz, Stuart Roebuck e Jungho Kim. Anche molti altri lettori di cui abbiamo solo lo pseudonimo ci hanno fornito i loro commenti. Desideriamo ringraziare Zack, JoshG, ewilligers, abcoates, brad, teto, pjcj, mkleint, dandoyon, Arek, rue, acangiano, vkelman, bryanl, Jeff, mbaxter, pjb3, kxen, hipertracker, ctran, Ram R., cody, Nolan, Joshua, Ajay, Joe e tutti coloro che hanno contribuito in forma anonima. Scusateci se abbiamo dimenticato qualcuno!
+
+<p>Il nostro editor, Mike Loukides, sa come fare pressione e stimolare gentilmente. &Egrave; stato di grande aiuto durante questo folle processo di scrittura e pubblicazione. Molte altre persone in O&#8217;Reilly sono sempre state presenti per rispondere alle nostre domande e aiutarci a proseguire il lavoro.
+
+<p>Ringraziamo Jonas Bonér per aver scritto l&#8217;introduzione del libro. Jonas è un amico di lunga data e un collaboratore proveniente dalla comunità della programmazione orientata agli aspetti (<abbr>AOP</abbr>). Per anni ha svolto un lavoro di tipo pionieristico nella comunità Java. Ora usa le proprie energie per promuovere Scala e far crescere questa comunità.
+
+<p>Bill Venners ha gentilmente fornito la citazione sulla quarta di copertina. Il primo libro pubblicato su Scala, <cite>Programming in Scala</cite>, che Bill ha scritto insieme a Martin Odersky e Lex Spoon, è indispensabile per lo sviluppatore Scala. Bill ha anche creato la meravigliosa libreria <tt>ScalaTest</tt>.
+
+<p>Abbiamo imparato molto dai nostri colleghi sviluppatori sparsi per il mondo. Oltre a Jonas e a Bill, Debasish Ghosh, James Iry, Daniel Spiewak, David Pollack, Paul Snively, Ola Bini, Daniel Sobral, Josh Suereth, Robey Pointer, Nathan Hamblen, Jorge Ortiz e altri hanno gettato luce sulle parti più oscure del linguaggio con gli articoli pubblicati sui loro blog, le discussioni sui forum e le conversazioni private.
+
+<p>Dean ringrazia i suoi colleghi di Object Mentor e diversi sviluppatori nelle sedi dei clienti per le numerose discussioni stimolanti sui linguaggi, sulla progettazione software e sui problemi pratici che gli sviluppatori devono affrontare nell&#8217;industria. I membri del gruppo <abbr>CASE</abbr> (Chicago Area Scala Enthusiasts) sono stati una fonte di validi commenti e ispirazione.
+
+<p>Alex dedica la propria porzione del libro a sua madre, che gli ha conferito la capacità di apprezzare la buona scrittura e gli annessi strumenti intellettuali con i quali tentare di produrla. Alex ringrazia la propria amorevole compagna Kristen per la sua pazienza e la sua gentilezza durante tutto il processo di scrittura. Vorrebbe anche ringraziare i suoi colleghi di Twitter per il loro incoraggiamento e il superbo lavoro nel dimostrare l&#8217;efficacia di Scala.
+
+<p>Ma soprattutto, vogliamo entrambi ringraziare Martin Odersky e il suo gruppo per aver creato Scala.
+
+<p class=v><a rel=prev href=index.html title='indietro a &#8220;Indice&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-1.html title='avanti a &#8220;Da zero a sessanta: una introduzione a Scala&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>

@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Programmazione orientata agli oggetti in Scala: elementi avanzati - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+body{counter-reset:h1 6}
+</style>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-6>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Programmazione orientata agli oggetti in Scala: elementi avanzati</h1>
+
+<p>Abbiamo appreso i concetti di base della <abbr>OOP</abbr> in Scala, ma ci sono molte altre cose da imparare.
+
+<h2 id=OverridingMembers>Ridefinire i membri di classi e tratti</h2>
+
+<p>Le classi e i tratti possono dichiarare <em>campi</em>, <em>metodi</em> e <em>tipi</em> come membri <em>astratti</em>. Questi membri devono essere definiti da una classe derivata o da un tratto derivato prima che sia possibile creare un&#8217;istanza. La maggior parte dei linguaggi orientati agli oggetti supporta i metodi astratti e alcuni supportano anche campi e tipi astratti.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Per ridefinire un membro concreto, Scala richiede l&#8217;uso della parola chiave <code>override</code>. Questa parola chiave è opzionale quando un sottotipo definisce (&#8220;ridefinisce&#8221;, in inglese, appunto, <em>override</em>) un membro astratto. Al contrario, dovete evitare di usare <code>override</code> a meno che non stiate effettivamente ridefinendo un membro.
+</blockquote>
+
+<p>L&#8217;obbligo di usare la parola chiave <code>override</code> ha diversi vantaggi.
+
+<ol>
+<li>Cattura gli errori di ortografia nel nome dei membri indicati come ridefinizioni. Il compilatore segnalerà che il membro non ridefinisce alcunché.
+<li>Cattura un errore potenzialmente sottile che può avvenire se si aggiunge un nuovo membro a una classe base in cui il nome del membro collide con un membro di una classe derivata più vecchia che lo sviluppatore della classe base non conosce. Cioè, il membro della classe derivata non era stato concepito per ridefinire un membro della classe base. Dato che il membro della classe derivata sarà privo della parola chiave <code>override</code>, il compilatore lancerà un errore quando il nuovo membro della classe base viene introdotto.
+<li>Vi rammenta di considerare quali membri dovrebbero o non dovrebbero essere ridefiniti.</ol>
+
+<p>Java è dotato di un&#8217;annotazione <code>@Override</code> opzionale per i metodi che vi aiuta a catturare gli errori del primo tipo (ortografia sbagliata) ma che, essendo appunto opzionale, non può aiutarvi con gli errori del secondo tipo.
+
+<h3 id=FinalDeclarations>Tentare di ridefinire le dichiarazioni <code>final</code></h3>
+
+<p>In ogni caso, è proibito ridefinire una dichiarazione se essa include la parola chiave <code>final</code>. Nell&#8217;esempio seguente, <code>fixedMethod</code> è dichiarato come <code>final</code> nella classe genitore. Il tentativo di compilare l&#8217;esempio risulterà in un errore di compilazione.
+
+<pre><code>// <a href=esempi/cap-6/overrides/final-member-wont-compile.scala>esempi/cap-6/overrides/final-member-wont-compile.scala</a>
+// NON verrà compilato!
+
+class NotFixed {
+  final def fixedMethod = "fisso"
+}
+
+class Changeable2 extends NotFixed {
+  override def fixedMethod = "non fisso" // ERRORE
+}</code></pre>
+
+<p>Questo vincolo si applica alle classi e ai tratti così come ai membri. Nel prossimo esempio, la classe <code>Fixed</code> viene dichiarata come <code>final</code>, quindi anche il tentativo di estenderla genererà un errore di compilazione.
+
+<pre><code>// <a href=esempi/cap-6/overrides/final-class-wont-compile.scala>esempi/cap-6/overrides/final-class-wont-compile.scala</a>
+// NON verrà compilato!
+
+final class Fixed {
+  def doSomething = "Fixed ha fatto qualcosa!"
+}
+
+class Changeable1 extends Fixed // ERRORE</code></pre>
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Alcuni tipi nella libreria Scala sono <code>final</code>, comprese certe classi del <abbr>JDK</abbr> come <code>String</code> e tutti i tipi valore derivati da <code>AnyVal</code> (si veda la sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> nel capitolo 7).
+</blockquote>
+
+<p>Esaminiamo le regole per ridefinire le dichiarazioni che non sono <code>final</code> e i loro comportamenti, cominciando dai metodi.
+
+<h3 id=OverridingMethods>Ridefinire i metodi astratti e concreti</h3>
+
+<p>Estendiamo la nostra classe base <code>Widget</code> con un metodo astratto <code>draw</code>, per supportare il &#8220;rendering&#8221; degli elementi grafici su uno schermo, una pagina web, <i class=baa>&amp;</i>c. Ridefiniremo anche il metodo concreto <code>toString()</code>, noto a tutti i programmatori Java, usando un formato <em>ad hoc</em>. Come prima, introdurremo un nuovo package, chiamato <code>ui3</code>.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Il disegno in realtà è un <em>interesse trasversale</em>. Lo stato di un elemento grafico è una cosa; il modo in cui viene rappresentato su piattaforme differenti, applicazioni rich-client, pagine web, dispositivi mobili, <i class=baa>&amp;</i>c. è un&#8217;altra cosa, completamente separata. Quindi, il disegno è un buon candidato per un tratto, soprattutto se volete che le vostre astrazioni di interfaccia grafica siano portabili. Tuttavia, per semplificare le cose, gestiremo il disegno nella gerarchia di <code>Widget</code>.
+</blockquote>
+
+<p>Ecco la classe <code>Widget</code> revisionata con i metodi <code>draw</code> e <code>toString</code>.
+
+<pre><code>// <a href=esempi/cap-6/ui3/widget.scala>esempi/cap-6/ui3/widget.scala</a>
+
+package ui3
+
+abstract class Widget {
+  def draw(): Unit
+  override def toString() = "(elemento)"
+}</code></pre>
+
+<p>Il metodo <code>draw</code> è astratto perché non ha un corpo; cioè, il metodo non è seguito da un segno di uguale (<code>=</code>) e da altro testo. Di conseguenza, <code>Widget</code> deve essere dichiarato <code>abstract</code> (la dichiarazione è opzionale per il metodo). Ogni sottoclasse concreta di <code>Widget</code> dovrà implementare <code>draw</code> o fare affidamento su una classe genitore che lo implementa. Non dobbiamo restituire nulla da <code>draw</code>, quindi il suo valore di ritorno è <code>Unit</code>.
+
+<p>Il metodo <code>toString</code> è banale. Dato che <code>AnyRef</code> definisce <code>toString</code>, è obbligatorio usare la parola chiave <code>override</code> per <code>Widget.toString</code>.
+
+<p>Ecco la classe <code>Button</code> revisionata con i metodi <code>draw</code> e <code>toString</code>.
+
+<pre><code>// <a href=esempi/cap-6/ui3/button.scala>esempi/cap-6/ui3/button.scala</a>
+
+package ui3
+
+class Button(val label: String) extends Widget with Clickable {
+
+  def click() = {
+    // Logica per mostrare visivamente il clic sul pulsante...
+  }
+
+  def draw() = {
+    // Logica per disegnare il pulsante su uno schermo, una pagina web, &amp;c.
+  }
+
+  override def toString() =
+    "(pulsante: etichetta=" + label + ", " + super.toString() + ")"
+}</code></pre>
+
+<p><code>Button</code> implementa il metodo astratto <code>draw</code>. La parola chiave <code>override</code> non è obbligatoria. <code>Button</code> ridefinisce anche <code>toString</code>, e in questo caso la parola chiave <code>override</code> è obbligatoria. Notate che questo metodo invoca <code>super.toString</code>.
+
+<p>La parola chiave <code>super</code> è analoga a <code>this</code>, ma è legata al tipo genitore, che è l&#8217;aggregazione della classe genitore e di tutti i tratti mescolati. La ricerca di <code>super.toString</code> troverà il metodo <code>toString</code> del tipo genitore &#8220;più vicino&#8221;, come determinato dal processo di linearizzazione (si veda la sezione <a href=cap-7.html#Linearization>Linearizzare la gerarchia di un oggetto</a> nel capitolo 7). In questo caso, dato che <code>Clickable</code> non definisce <code>toString</code>, il metodo invocato sarà <code>Widget.toString</code>.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>La ridefinizione di un membro concreto dovrebbe essere fatta raramente, perché è un&#8217;operazione soggetta a errori. Dovreste invocare il metodo genitore? Se è così, quando? Lo invocate prima di fare tutto il resto o dopo? Sebbene lo sviluppatore del metodo genitore possa descrivere i vincoli di ridefinizione del metodo, è difficile assicurarsi che lo sviluppatore di una classe derivata rispetti questi vincoli. Il <em>pattern template method</em> <a href=apa.html#GOF1995>[GOF1995]</a> è un approccio molto più robusto.
+</blockquote>
+
+<h3 id=OverridingFields>Ridefinire i campi astratti e concreti</h3>
+
+<p>La maggior parte dei linguaggi orientati agli oggetti vi consente di ridefinire i campi mutabili (<code>var</code>). Un numero inferiore di linguaggi orientati agli oggetti vi consente di definire campi astratti o di ridefinire i campi concreti immutabili (<code>val</code>). Per esempio, è pratica comune usare il costruttore di una classe base per inizializzare un campo mutabile e usare il costruttore di una classe derivata per cambiare il valore di quel campo.
+
+<p>Discuteremo la ridefinizione dei campi nei tratti separatamente dalla ridefinizione dei campi nelle classi, in quanto i tratti presentano alcuni problemi particolari.
+
+<h3 id=OverridingFieldsInTraits>Ridefinire i campi astratti e concreti nei tratti</h3>
+
+<p>Ricordate il nostro tratto <code>VetoableClicks</code> nella sezione <a href=cap-4.html#StackableTraits>Tratti impilabili</a> del capitolo 4? Il tratto definisce un campo <code>val</code> chiamato <var>maxAllowed</var> e lo inizializza a <code>1</code>. Ci piacerebbe essere in grado di ridefinire il valore in una classe che mescola questo tratto.
+
+<p>Sfortunatamente, nelle versioni 2.7.X di Scala non è possibile ridefinire un campo <code>val</code> definito in un <em>tratto</em>. Tuttavia, è possibile ridefinire un campo <code>val</code> definito in una <em>classe</em> genitore. La versione 2.8 di Scala supporta anche la ridefinizione dei campi <code>val</code> in un tratto.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Dato che il comportamento di ridefinizione per i campi <code>val</code> in un tratto sta cambiando, dovreste evitare di fare affidamento sulla possibilità di ridefinirli, se state attualmente usando le versioni 2.7.X di Scala. Invece, adottate un altro approccio.
+</blockquote>
+
+<p>Sfortunatamente, il compilatore della versione 2.7 accetta il codice che tenta di ridefinire un campo <code>val</code> definito in un tratto, ma la ridefinizione in realtà non avviene, come illustrato da questo esempio.
+
+<pre><code>// <a href=esempi/cap-6/overrides/trait-val-script.scala>esempi/cap-6/overrides/trait-val-script.scala</a>
+// PERICOLO! Fallimento silenzioso della ridefinizione di un campo
+//           in un tratto (solo per la versione 2.7.5)
+// Ha il funzionamento atteso nella versione 2.8.0
+
+trait T1 {
+  val name = "T1"
+}
+
+class Base
+
+class ClassWithT1 extends Base with T1 {
+  override val name = "ClassWithT1"
+}
+
+val c = new ClassWithT1()
+println(c.name)
+
+class ClassExtendsT1 extends T1 {
+  override val name = "ClassExtendsT1"
+}
+
+val c2 = new ClassExtendsT1()
+println(c2.name)</code></pre>
+
+<p>Se eseguite questo script con la versione 2.7.5 di <kbd>scala</kbd>, ottenete l&#8217;uscita seguente.
+
+<pre><samp>T1
+T1</samp></pre>
+
+<p>Leggendo lo script, ci saremmo aspettati che le due stringhe <code>T1</code> fossero <code>ClassWithT1</code> e <code>ClassExtendsT1</code> rispettivamente.
+
+<p>Tuttavia, se eseguite questo script con la versione 2.8 di <kbd>scala</kbd>, ottenete questa uscita.
+
+<pre><samp>ClassWithT1
+ClassExtendsT1</samp></pre>
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span>Nelle versioni 2.7.X di Scala, il tentativo di ridefinire un campo <code>val</code> definito in un tratto verrà accettato dal compilatore, ma non avrà alcun effetto.
+</blockquote>
+
+<p>Ci sono tre espedienti a cui potete ricorrere con la versione 2.7 di Scala. Il primo consiste nell&#8217;usare alcune opzioni avanzate di <kbd>scala</kbd> e <kbd>scalac</kbd>. L&#8217;opzione <tt>-Xfuture</tt> attiverà il comportamento di ridefinizione supportato nella versione 2.8. L&#8217;opzione <tt>-Xcheckinit</tt> analizzerà il vostro codice e vi dirà se il cambiamento del comportamento lo danneggerà. L&#8217;opzione <tt>-Xexperimental</tt>, che attiva molte modifiche sperimentali, vi avvertirà che il comportamento di ridefinizione per i campi <code>val</code> è differente.
+
+<p>Il secondo espediente consiste nel rendere il campo <code>val</code> astratto nel tratto. Questo obbliga un&#8217;istanza che usa il tratto ad assegnare un valore al campo. Dichiarare un campo <code>val</code> astratto in un tratto è un approccio di progettazione perfetto da usare in entrambe le versioni di Scala. In effetti, questa è la scelta di progettazione migliore quando non esiste alcun valore predefinito appropriato da assegnare al campo <code>val</code> nel tratto.
+
+<pre><code>// <a href=esempi/cap-6/overrides/trait-abs-val-script.scala>esempi/cap-6/overrides/trait-abs-val-script.scala</a>
+
+trait AbstractT1 {
+  val name: String
+}
+
+class Base
+
+class ClassWithAbstractT1 extends Base with AbstractT1 {
+  val name = "ClassWithAbstractT1"
+}
+
+val c = new ClassWithAbstractT1()
+println(c.name)
+
+class ClassExtendsAbstractT1 extends AbstractT1 {
+  val name = "ClassExtendsAbstractT1"
+}
+
+val c2 = new ClassExtendsAbstractT1()
+println(c2.name)</code></pre>
+
+<p>Questo script produce l&#8217;uscita che ci aspettiamo.
+
+<pre><samp>ClassWithAbstractT1
+ClassExtendsAbstractT1</samp></pre>
+
+<p>Quindi un campo <code>val</code> astratto funziona bene, <em>a meno che</em> nel corpo del tratto il campo non sia usato in modo tale da provocare problemi se non viene opportunamente inizializzato. Sfortunatamente, l&#8217;inizializzazione non avverrà fino a quando il corpo del tratto non viene eseguito. Considerate l&#8217;esempio seguente.
+
+<pre><code>// <a href=esempi/cap-6/overrides/trait-invalid-init-val-script.scala>esempi/cap-6/overrides/trait-invalid-init-val-script.scala</a>
+// ERRORE: "value" viene letto prima di essere inizializzato.
+
+trait AbstractT2 {
+  println("In AbstractT2:")
+  val value: Int
+  val inverse = 1.0/value // ???
+  println("AbstractT2: value = " + value + ", inverse = " + inverse)
+}
+
+val c2b = new AbstractT2 {
+  println("In c2b:")
+  val value = 10
+}
+println("c2b.value = " + c2b.value + ", inverse = " + c2b.inverse)</code></pre>
+
+<p>Nonostante <code>new AbstractT2 {&hellip;}</code> somigli alla creazione di un&#8217;istanza del tratto, in realtà stiamo usando una classe anonima che estende implicitamente il tratto. Questo script mostra cosa succede quando <var>inverse</var> viene calcolato.
+
+<pre><samp>In AbstractT2:
+AbstractT2: value = 0, inverse = Infinity
+In c2b:
+c2b.value = 10, inverse = Infinity</samp></pre>
+
+<p>Come vi potreste aspettare, <var>inverse</var> viene calcolato troppo presto. Notate che non viene lanciata nessuna eccezione di divisione per zero; il compilatore riconosce che il valore è infinito, ma in realtà non ha ancora &#8220;provato&#8221; la divisione!
+
+<p>Il comportamento dello script in effetti è piuttosto sottile. Come esercizio, provate a rimuovere (o a racchiudere in un commento) selettivamente le diverse istruzioni <code>println</code>, una alla volta. Osservate ciò che accade ai risultati. A volte <code>inverse</code> viene inizializzato propriamente! (Suggerimento: rimuovete l&#8217;istruzione <code>println("In c2b:")</code>. Poi provate a reinserirla, ma dopo la riga <code>val value = 10</code>.)
+
+<p>In realtà, questo esperimento mostra che gli effetti collaterali (come quelli causati dalle istruzioni <code>println</code>) possono essere sottili e inaspettati, specialmente durante l&#8217;inizializzazione. &Egrave; meglio evitarli.
+
+<p>Scala offre due soluzioni per questo problema: i <em>valori ritardati</em>, che discuteremo nella sezione <a href=cap-8.html#LazyVals>Valori ritardati</a> del capitolo 8, e i <em>campi pre-inizializzati</em>, mostrati nel codice seguente che perfeziona l&#8217;esempio precedente.
+
+<pre><code>// <a href=esempi/cap-6/overrides/trait-pre-init-val-script.scala>esempi/cap-6/overrides/trait-pre-init-val-script.scala</a>
+
+trait AbstractT2 {
+  println("In AbstractT2:")
+  val value: Int
+  val inverse = 1.0/value
+  println("AbstractT2: value = " + value + ", inverse = " + inverse)
+}
+
+val c2c = new {
+  // Nei blocchi di pre-inizializzazione sono permesse
+  // solo le inizializzazioni.
+  // println("In c2c:")
+  val value = 10
+} with AbstractT2
+
+println("c2c.value = " + c2c.value + ", inverse = " + c2c.inverse)</code></pre>
+
+<p>Qui abbiamo istanziato una classe annidata anonima, inizializzando il campo <var>value</var> nel blocco che precede la clausola <code>with AbstractT2</code>. Questo garantisce che <var>value</var> venga inizializzato prima di eseguire il corpo di <code>AbstractT2</code>, come mostrato dalla esecuzione dello script.
+
+<pre><samp>In AbstractT2:
+AbstractT2: value = 10, inverse = 0.1
+c2c.value = 10, inverse = 0.1</samp></pre>
+
+<p>In più, se rimuovete selettivamente qualsiasi istruzione <code>println</code>, ottenete gli stessi risultati attesi e predicibili.
+
+<p>Il terzo espediente consiste nel cambiare la dichiarazione <code>val</code> in <code>var</code>. Questa soluzione è più adatta se esiste un buon valore predefinito per il campo e non volete obbligare le istanze che usano il tratto a impostare sempre il valore. In questo caso, potete cambiare la dichiarazione, sia che sia pubblica, sia che sia privata e quindi nascosta dietro una coppia di metodi di lettura e scrittura. In ogni caso, possiamo semplicemente riassegnare il valore in un tratto derivato o in una classe derivata.
+
+<p>Tornando al nostro esempio di <code>VetoableClicks</code>, ecco il tratto modificato che usa un campo <code>var</code> pubblico per <var>maxAllowed</var>.
+
+<pre><code>// <a href=esempi/cap-6/ui3/vetoable-clicks.scala>esempi/cap-6/ui3/vetoable-clicks.scala</a>
+
+package ui3
+import observer._
+
+trait VetoableClicks extends Clickable {
+  var maxAllowed = 1 // valore predefinito
+  private var count = 0
+  abstract override def click() = {
+    count += 1
+    if (count &lt;= maxAllowed)
+      super.click()
+  }
+}</code></pre>
+
+<p>Ecco un nuovo oggetto &#8220;di specifica&#8221; <code>ButtonClickableObserverVetoableSpec2</code> che sperimenta la modifica del valore di <var>maxAllowed</var>.
+
+<pre><code>// <a href=esempi/cap-6/ui3/button-clickable-observer-vetoable2-spec.scala>esempi/cap-6/ui3/button-clickable-observer-vetoable2-spec.scala</a>
+package ui3
+
+import org.specs._
+import observer._
+import ui.ButtonCountObserver
+
+object ButtonClickableObserverVetoableSpec2 extends Specification {
+  "Un osservatore di un pulsante con clic vietabili" should {
+    "osservare solo i primi 'maxAllowed' clic" in {
+      val observableButton =
+        new Button("Okay") with ObservableClicks with VetoableClicks {
+          maxAllowed = 2
+      }
+      observableButton.maxAllowed mustEqual 2
+      val buttonClickCountObserver = new ButtonCountObserver
+      observableButton.addObserver(buttonClickCountObserver)
+      for (i &lt;- 1 to 3) observableButton.click()
+      buttonClickCountObserver.count mustEqual 2
+    }
+  }
+}</code></pre>
+
+<p>Nessuna dichiarazione <code>override var</code> è necessaria. Assegniamo semplicemente un nuovo valore. Dato che il corpo del tratto viene eseguito prima del corpo della classe che lo usa, il riassegnamento del valore del campo avviene <em>dopo</em> l&#8217;assegnamento iniziale nel corpo del tratto. Tuttavia, come abbiamo visto prima, questo riassegnamento potrebbe avvenire troppo tardi se, nel corpo del tratto, il campo viene usato in qualche calcolo che non sarà più valido dopo il riassegnamento. Potete evitare questo problema rendendo il campo privato e definendo un metodo di scrittura pubblico che riesegua tutti i calcoli dipendenti dal valore del campo.
+
+<p>La dichiarazione <code>var</code> ha un altro svantaggio: <var>maxAllowed</var> non era stato concepito per essere modificabile. Come vedremo nel <a href=cap-8.html>capitolo 8</a>, i valori a sola lettura portano benefici importanti. Preferiremmo che <var>maxAllowed</var> fosse a sola lettura, almeno dopo il completamento del processo di costruzione.
+
+<p>Possiamo vedere che la semplice modifica della dichiarazione <code>val</code> in <code>var</code> causa potenziali problemi al manutentore di <code>VetoableClicks</code>. Ora si è perso il controllo del campo. Il manutentore deve considerare con attenzione l&#8217;eventualità che il valore cambi e le conseguenze di un tale cambiamento sulla validità dello stato dell&#8217;istanza. Questo problema è particolarmente pernicioso nei sistemi multithread (si veda la sezione <a href=cap-9.html#ProblemsOfSharedSynchronizedState>I problemi dello stato condiviso e sincronizzato</a> nel capitolo 9).
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Evitate i campi <code>var</code> quando è possibile (sia nelle classi sia nei tratti). Considerate particolarmente rischiosi i campi <code>var</code> pubblici.
+</blockquote>
+
+<h3 id=OverridingFieldsInClasses>Ridefinire i campi astratti e concreti nelle classi</h3>
+
+<p>Al contrario di quanto accade nei tratti, la ridefinizione di un campo <code>val</code> dichiarato in una classe funziona come ci si aspetta. Ecco un esempio che contiene sia la ridefinizione di un campo <code>val</code>, sia un riassegnamento di un campo <code>var</code> in una classe derivata.
+
+<pre><code>// <a href=esempi/cap-6/overrides/class-field-script.scala>esempi/cap-6/overrides/class-field-script.scala</a>
+
+class C1 {
+  val name = "C1"
+  var count = 0
+}
+
+class ClassWithC1 extends C1 {
+  override val name = "ClassWithC1"
+  count = 1
+}
+
+val c = new ClassWithC1()
+println(c.name)
+println(c.count)</code></pre>
+
+<p>La parola chiave <code>override</code> è obbligatoria per il campo <code>val</code> <em>concreto</em> <code>name</code>, ma non per il campo <code>var</code> <code>count</code>, perché stiamo modificando l&#8217;inizializzazione di una costante (<code>val</code>), che è un&#8217;operazione &#8220;speciale&#8221;.
+
+<p>Se eseguite questo script, ottenete l&#8217;uscita seguente.
+
+<pre><samp>ClassWithC1
+1</samp></pre>
+
+<p>Nella classe derivata, entrambi i campi vengono ridefiniti come previsto. Ecco lo stesso esempio modificato in modo che i campi <code>val</code> e <code>var</code> della classe base siano astratti.
+
+<pre><code>// <a href=esempi/cap-6/overrides/class-abs-field-script.scala>esempi/cap-6/overrides/class-abs-field-script.scala</a>
+
+abstract class AbstractC1 {
+  val name: String
+  var count: Int
+}
+
+class ClassWithAbstractC1 extends AbstractC1 {
+  val name = "ClassWithAbstractC1"
+  var count = 1
+}
+
+val c = new ClassWithAbstractC1()
+println(c.name)
+println(c.count)</code></pre>
+
+<p>La parola chiave <code>override</code> non è obbligatoria per <var>name</var> in <code>ClassWithAbstractC1</code>, dato che la dichiarazione originale è astratta. L&#8217;uscita di questo script è la seguente.
+
+<pre><samp>ClassWithAbstractC1
+1</samp></pre>
+
+<p>&Egrave; importante sottolineare che <var>name</var> e <var>count</var> sono campi <em>astratti</em>, non campi concreti con valori predefiniti. Una dichiarazione simile di <var>name</var> in una classe Java, <code>String name;</code>, rappresenterebbe un campo concreto con un valore predefinito (<code>null</code> in questo caso). Java non supporta campi o tipi astratti (come diremo più avanti), solo metodi.
+
+<h3 id=OverridingAbstractTypes>Ridefinire i tipi astratti</h3>
+
+<p>Abbiamo introdotto le dichiarazioni di tipo astratto nella sezione <a href=cap-2.html#AbstractTypesAndParameterizedTypes>Tipi astratti e tipi parametrici</a> del capitolo 2.
+
+<pre><code>// <a href=esempi/cap-2/abstract-types-script.scala>esempi/cap-2/abstract-types-script.scala</a>
+
+import java.io._
+
+abstract class BulkReader {
+  type In
+  val source: In
+  def read: String
+}
+
+class StringBulkReader(val source: String) extends BulkReader {
+  type In = String
+  def read = source
+}
+
+class FileBulkReader(val source: File) extends BulkReader {
+  type In = File
+  def read = {
+    val in = new BufferedInputStream(new FileInputStream(source))
+    val numBytes = in.available()
+    val bytes = new Array[Byte](numBytes)
+    in.read(bytes, 0, numBytes)
+    new String(bytes)
+  }
+}
+
+println(new StringBulkReader("Ciao Scala!").read)
+println(new FileBulkReader(new File("abstract-types-script.scala")).read)</code></pre>
+
+<p>I tipi astratti sono un&#8217;alternativa ai tipi parametrici, che esploreremo nella sezione <a href=cap-12.html#ParameterizedTypes>Capire i tipi parametrici</a> del capitolo 12. Come i tipi parametrici, essi forniscono un meccanismo di astrazione a livello di tipo.
+
+<p>L&#8217;esempio mostra come dichiarare un tipo astratto e come definire un valore concreto per il tipo nelle classi derivate. <code>BulkReader</code> dichiara <code>type In</code> senza inizializzarlo. La classe concreta derivata <code>StringBulkReader</code> fornisce al tipo un valore concreto usando <code>type In = String</code>.
+
+<p>A differenza dei campi e dei metodi, non è possibile ridefinire una definizione <code>type</code> concreta. Tuttavia, la dichiarazione astratta può vincolare i valori concreti consentiti per il tipo; vedremo come nel <a href=cap-12.html>capitolo 12</a>.
+
+<p>Infine, avrete probabilmente notato che questo esempio mostra anche come definire un campo astratto, tramite un parametro del costruttore, e un metodo astratto.
+
+<p>Per fare un altro esempio, riprendiamo il nostro tratto <code>Subject</code> dalla sezione <a href=cap-4.html#TraitsAsMixins>I tratti come mixin</a> nel capitolo 4. Il tipo <code>Observer</code> viene definito come un <em>tipo strutturale</em> con un metodo chiamato <code>receiveUpdate</code>. Gli osservatori devono avere questa &#8220;struttura&#8221;. Ora generalizziamo l&#8217;implementazione usando un tipo astratto.
+
+<pre><code>// <a href=esempi/cap-6/observer/observer2.scala>esempi/cap-6/observer/observer2.scala</a>
+
+package observer
+
+trait AbstractSubject {
+  type Observer
+
+  private var observers = List[Observer]()
+  def addObserver(observer:Observer) = observers ::= observer
+  def notifyObservers = observers foreach (notify(_))
+
+  def notify(observer: Observer): Unit
+}
+
+trait SubjectForReceiveUpdateObservers extends AbstractSubject {
+  type Observer = { def receiveUpdate(subject: Any) }
+
+  def notify(observer: Observer): Unit = observer.receiveUpdate(this)
+}
+
+trait SubjectForFunctionalObservers extends AbstractSubject {
+  type Observer = (AbstractSubject) =&gt; Unit
+
+  def notify(observer: Observer): Unit = observer(this)
+}</code></pre>
+
+<p>Ora <code>AbstractSubject</code> dichiara <code>type Observer</code> come astratto (implicitamente, in quanto non c&#8217;è nessuna definizione). Dato che il tipo strutturale originale è scomparso, non sappiamo esattamente come informare un osservatore. Quindi, abbiamo aggiunto anche un metodo astratto <code>notify</code>, che un tratto o una classe concreta definiranno in maniera appropriata.
+
+<p>Il tratto derivato <code>SubjectForReceiveUpdateObservers</code> definisce <code>Observer</code> con lo stesso tipo strutturale che abbiamo usato nell&#8217;esempio originale e <code>notify</code> si limita a chiamare <code>receiveUpdate</code>, come prima.
+
+<p>Il tratto derivato <code>SubjectForFunctionalObservers</code> definisce <code>Observer</code> come una funzione che prende un&#8217;istanza di <code>AbstractSubject</code> e restituisce <code>Unit</code>. Tutto quello che <code>notify</code> deve fare è invocare la funzione osservatore, passando il soggetto come unico argomento. Notate che questa implementazione è simile all&#8217;approccio che abbiamo usato nella nostra implementazione originale del pulsante <code>ButtonWithCallbacks</code>, dove le &#8220;callback&#8221; erano funzioni fornite dall&#8217;utente. (Si vedano la sezione <a href=cap-4.html#IntroducingTraits>Una introduzione ai tratti</a> nel capitolo 4 e una versione riveduta nella sezione <a href=cap-5.html#Constructors>I costruttori in Scala</a> del capitolo 5.)
+
+<p>Ecco una specifica che esercita queste due variazioni, osservando i clic sul pulsante come prima.
+
+<pre><code>// <a href=esempi/cap-6/observer/button-observer2-spec.scala>esempi/cap-6/observer/button-observer2-spec.scala</a>
+
+package ui
+import org.specs._
+import observer._
+
+object ButtonObserver2Spec extends Specification {
+  "Un osservatore che controlla un pulsante SubjectForReceiveUpdateObservers" should {
+    "osservare i clic sul pulsante" in {
+      val observableButton =
+        new Button(name) with SubjectForReceiveUpdateObservers {
+        override def click() = {
+          super.click()
+          notifyObservers
+        }
+      }
+      val buttonObserver = new ButtonCountObserver
+      observableButton.addObserver(buttonObserver)
+      for (i &lt;- 1 to 3) observableButton.click()
+      buttonObserver.count mustEqual 3
+    }
+  }
+  "Un osservatore che controlla un pulsante SubjectForFunctionalObservers" should {
+    "osservare i clic sul pulsante" in {
+      val observableButton =
+        new Button(name) with SubjectForFunctionalObservers {
+        override def click() = {
+          super.click()
+          notifyObservers
+        }
+      }
+      var count = 0
+      observableButton.addObserver((button) =&gt; count += 1)
+      for (i &lt;- 1 to 3) observableButton.click()
+      count mustEqual 3
+    }
+  }
+}</code></pre>
+
+<p>Prima esercitiamo <code>SubjectForReceiveUpdateObservers</code>, che sembra molto simile ai nostri esempi precedenti. Poi esercitiamo <code>SubjectForFunctionalObservers</code>: in questo caso non abbiamo bisogno di istanziare un &#8220;osservatore&#8221; vero e proprio, ma ci basta mantenere una variabile <var>count</var> e passare al metodo <code>addObserver</code> un <em>letterale funzione</em> che incrementa il conto (e ignora il pulsante).
+
+<p>La qualità principale di <code>SubjectForFunctionalObservers</code> è il suo minimalismo. Non richiede istanze particolari, né tratti che definiscono astrazioni, <i class=baa>&amp;</i>c. In molti casi, è un approccio ideale.
+
+<p><code>AbstractSubject</code> è maggiormente riusabile rispetto alla definizione originale di <code>Subject</code>, perché impone meno vincoli sui possibili osservatori.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span><code>AbstractSubject</code> mostra che un&#8217;astrazione con un numero inferiore di dettagli concreti di solito è maggiormente riusabile.
+</blockquote>
+
+<p>Ma aspettate, c&#8217;è di più! Rivisiteremo l&#8217;uso dei tipi astratti e il pattern observer nella sezione <a href=cap-13.html#ScalableAbstractions>Astrazioni scalabili</a> del capitolo 13.
+
+<h3 id=UniformAccessPrinciple>Quando i metodi di accesso e i campi sono indistinguibili: il principio di accesso uniforme</h3>
+
+<p>Supponete che un utente della classe <code>ButtonCountObserver</code>, vista nella sezione <a href=cap-4.html#TraitsAsMixins>I tratti come mixin</a> del capitolo 4, acceda al membro <var>count</var>.
+
+<pre><code>// <a href=esempi/cap-4/ui/button-count-observer-script.scala>esempi/cap-4/ui/button-count-observer-script.scala</a>
+
+val bco = new ui.ButtonCountObserver
+val oldCount = bco.count
+bco.count = 5
+val newCount = bco.count
+println(newCount + " == 5 e " + oldCount + " == 0?")</code></pre>
+
+<p>Quando il campo <var>count</var> viene letto o scritto, come in questo esempio, si invocano metodi o si accede direttamente al campo? Per come è fatta la dichiarazione originale di <code>ButtonCountObserver</code>, si accede direttamente al campo. Tuttavia, questo non ha importanza per l&#8217;utente. Infatti, dal punto di vista dell&#8217;utente, le due definizioni seguenti sono funzionalmente equivalenti.
+
+<pre><code>class ButtonCountObserver {
+  var count = 0  // campo ad accesso pubblico (definizione originale)
+  // &hellip;
+}</code></pre>
+<pre><code>class ButtonCountObserver {
+  private var cnt = 0  // campo privato
+  def count = cnt      // metodo di lettura
+  def count_=(newCount: Int) = cnt = newCount  // metodo di scrittura
+  // &hellip;
+}</code></pre>
+
+<p>Questa equivalenza è un esempio del <em>principio di accesso uniforme</em>. I clienti leggono e scrivono il valore di un campo come se il campo fosse pubblicamente accessibile, anche se in alcuni casi stanno effettivamente invocando metodi. Chi mantiene <code>ButtonCountObserver</code> è libero di cambiare l&#8217;implementazione senza obbligare gli utenti a modificare il loro codice.
+
+<p>Nella seconda versione della classe, il metodo di lettura non ha parentesi. Ricordatevi che è obbligatorio usare le parentesi in maniera consistente se la definizione di un metodo le omette. L&#8217;omissione è consentita solo se il metodo non accetta argomenti. Per fare in modo che il principio di accesso uniforme funzioni, è necessario definire i metodi di lettura senza le parentesi. (Confrontate questo approccio con Ruby, dove le parentesi dei metodi sono sempre opzionali, purché il codice non sia ambiguo.)
+
+<p>Il metodo di scrittura ha la forma <code>count_=(&hellip;)</code>. Come zucchero sintattico, il compilatore consente di scrivere le invocazioni dei metodi che hanno questa forma nei modi seguenti.
+
+<pre><code>oggetto.campo_=(nuovoValore)
+// oppure
+oggetto.campo = nuovoValore</code></pre>
+
+<p>Nella definizione alternativa abbiamo chiamato <var>cnt</var> la variabile privata. Scala tiene i nomi dei campi e dei metodi nello <em>stesso</em> spazio di nomi; questo significa che non possiamo dare al campo il nome <var>count</var> se esiste già un metodo chiamato <code>count</code>. Molti linguaggi, come Java, non hanno questa restrizione, perché tengono i nomi dei campi in uno spazio di nomi separato rispetto ai nomi dei metodi. Tuttavia, come risultato, questi linguaggi non possono supportare il principio di accesso uniforme, a meno che non modifichino <em>ad hoc</em> la loro sintassi e il loro compilatore.
+
+<p>Dato che le definizioni dei membri <code>object</code> si comportano in modo simile ai campi dal punto di vista del chiamante, anche queste si trovano nello stesso spazio di nomi dei metodi e dei campi. Quindi, la classe seguente non verrebbe compilata.
+
+<pre><code>// <a href=esempi/cap-6/overrides/member-namespace-wont-compile.scala>esempi/cap-6/overrides/member-namespace-wont-compile.scala</a>
+// NON verrà compilato!
+
+class IllegalMemberNameUse {
+  def member(i: Int) = 2 * i
+  val member = 2         // ERRORE
+  object member {        // ERRORE
+    def apply() = 2
+  }
+}</code></pre>
+
+Questa &#8220;unificazione&#8221; di spazi di nomi ha un altro vantaggio. Se una classe genitore dichiara un metodo senza parametri, allora una sottoclasse può ridefinire quel metodo con un campo <code>val</code>. Se il metodo del genitore è concreto, allora la parola chiave <code>override</code> è obbligatoria.
+
+<pre><code>// <a href=esempi/cap-6/overrides/method-field-class-script.scala>esempi/cap-6/overrides/method-field-class-script.scala</a>
+
+class Parent {
+  def name = "Parent"
+}
+
+class Child extends Parent {
+  override val name = "Child"
+}
+
+println(new Child().name)   // =&gt; "Child"</code></pre>
+
+<p>Se il metodo del genitore è astratto, allora la parola chiave <code>override</code> è opzionale.
+
+<pre><code>// <a href=esempi/cap-6/overrides/abs-method-field-class-script.scala>esempi/cap-6/overrides/abs-method-field-class-script.scala</a>
+
+abstract class AbstractParent {
+  def name: String
+}
+
+class ConcreteChild extends AbstractParent {
+  val name = "ConcreteChild"
+}
+
+println(new ConcreteChild().name)   // =&gt; "ConcreteChild"</code></pre>
+
+<p>Questo funziona anche con i tratti. Se il metodo del tratto è concreto, abbiamo la situazione seguente.
+
+<pre><code>// <a href=esempi/cap-6/overrides/method-field-trait-script.scala>esempi/cap-6/overrides/method-field-trait-script.scala</a>
+
+trait NameTrait {
+  def name = "NameTrait"
+}
+
+class ConcreteNameClass extends NameTrait {
+  override val name = "ConcreteNameClass"
+}
+
+println(new ConcreteNameClass().name)   // =&gt; "ConcreteNameClass"</code></pre>
+
+<p>Se il metodo del tratto è astratto, allora abbiamo la situazione seguente.
+
+<pre><code>// <a href=esempi/cap-6/overrides/abs-method-field-trait-script.scala>esempi/cap-6/overrides/abs-method-field-trait-script.scala</a>
+
+trait AbstractNameTrait {
+  def name: String
+}
+
+class ConcreteNameClass extends AbstractNameTrait {
+  val name = "ConcreteNameClass"
+}
+
+println(new ConcreteNameClass().name)   // =&gt; "ConcreteNameClass"</code></pre>
+
+<p>Questa caratteristica è utile perché consente alle classi derivate e ai tratti derivati di usare solo l&#8217;accesso diretto al campo quando questo è sufficiente, oppure un&#8217;invocazione di metodo quando sono necessarie ulteriori elaborazioni, come nel caso della inizializzazione ritardata. In generale, la stessa considerazione vale anche per il principio di accesso uniforme.
+
+<p>Ridefinire un metodo <code>def</code> con un campo <code>val</code> in una sottoclasse può anche essere comodo per interoperare con il codice Java. Potete trasformare un metodo di accesso in un campo <code>val</code> mettendolo nel costruttore, come mostra l&#8217;esempio seguente, in cui la nostra classe Scala <code>Person</code> implementa un&#8217;ipotetica <code>PersonInterface</code> che proviene da codice Java esistente.
+
+<pre><code>class Person(val getName: String) extends PersonInterface</code></pre>
+
+<p>Se i metodi di accesso presenti nel codice Java da integrare sono pochi, questa tecnica se ne prenderà cura velocemente.
+
+<p>Cosa succede se ridefiniamo un metodo senza parametri con un campo <code>var</code>, o se ridefiniamo un campo <code>val</code> o <code>var</code> con un metodo? Queste ridefinizioni non sono permesse, perché il loro comportamento non può corrispondere a quello delle entità che ridefiniscono.
+
+<p>Se tentate di usare un campo <code>var</code> per ridefinire un metodo senza parametri otterrete un errore, perché il metodo di scrittura <code>override name_=</code> non ridefinisce nulla. In più, questa ridefinizione non sarebbe coerente con uno degli obiettivi filosofici della programmazione funzionale, per la quale un metodo che non accetta parametri dovrebbe restituire sempre lo stesso risultato. Un&#8217;implementazione differente richiederebbe la presenza di effetti collaterali, che la programmazione funzionale cerca di evitare per ragioni che esamineremo nel <a href=cap-8.html>capitolo 8</a>. Dato che un campo <code>var</code> è modificabile, il &#8220;metodo&#8221; senza parametri definito nel tipo genitore non restituirebbe più lo stesso risultato in maniera consistente.
+
+<p>Se poteste ridefinire un campo <code>val</code> con un metodo, Scala non sarebbe in grado di garantire che il metodo restituisca sempre lo stesso valore in accordo con la semantica della dichiarazione <code>val</code>. Un campo <code>var</code> non ha questo problema, naturalmente, ma dovreste ridefinire questo campo con due metodi, uno per la lettura e uno per la scrittura. Il compilatore di Scala non supporta questa sostituzione.
+
+<h2 id=CompanionObjects>Oggetti associati</h2>
+
+<p>Ricordatevi che i campi e i metodi definiti negli <code>object</code> giocano lo stesso ruolo dei campi e dei metodi &#8220;statici&#8221; nei linguaggi simili a Java. I campi e i metodi di un <code>object</code> che sono intimamente associati con una classe particolare vengono normalmente definiti in un <em>oggetto associato</em>.
+
+<p>Abbiamo menzionato velocemente gli oggetti associati nel primo capitolo e abbiamo parlato della classe <code>Pair</code>, proveniente dalla libreria Scala, nel secondo capitolo e nel capitolo precedente. Ora è venuto il momento di completare il quadro con i dettagli rimanenti.
+
+<p>Prima di tutto, ricordatevi che se una classe (o una dichiarazione <code>type</code> che fa riferimento a una classe) e un <code>object</code> vengono dichiarati nello stesso file, nello stesso package e con lo stesso nome, vengono chiamati <em>classe associata</em> (o <em>tipo associato</em>) e <em>oggetto associato</em>, rispettivamente.
+
+<p>Quando il nome viene riutilizzato in questo modo non c&#8217;è nessuna collisione di nomi, perché Scala memorizza il nome della classe nello spazio di nomi dei tipi e  memorizza il nome dell&#8217;oggetto nello spazio di nomi dei termini <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>.
+
+<p>I due metodi più interessanti che vengono frequentemente definiti in un oggetto associato sono <code>apply</code> e <code>unapply</code>.
+
+<h3 id=ApplyMethod>Il metodo <code>apply</code></h3>
+
+<p>Il metodo <code>apply</code> è una forma di zucchero sintattico fornita da Scala. Quando un&#8217;istanza di una classe è seguita da una coppia di parentesi che racchiude una lista di zero o più argomenti, il compilatore invoca il metodo <code>apply</code> per quella istanza. Questo vale sia per un <code>object</code> che definisce un metodo <code>apply</code> (come un oggetto associato) sia per un&#8217;istanza di una classe che definisce un metodo <code>apply</code>.
+
+<p>Nel caso di un <code>object</code>, il metodo <code>apply</code> viene convenzionalmente usato come metodo <em>factory</em> che restituisce una nuova istanza. Questo è ciò che fa <code>Pair.apply</code> nella libreria Scala. Ecco la definizione di <code>Pair</code> dalla libreria standard.
+
+<pre><code>type Pair[+A, +B] = Tuple2[A, B]
+object Pair {
+  def apply[A, B](x: A, y: B) = Tuple2(x, y)
+  def unapply[A, B](x: Tuple2[A, B]): Option[Tuple2[A, B]] = Some(x)
+}</code></pre>
+
+<p>Quindi, potete creare una nuova istanza di <code>Pair</code> nel modo seguente.
+
+<pre><code>val p = Pair(1, "uno")</code></pre>
+
+<p>Sembra che, in qualche modo, stiamo creando un&#8217;istanza di <code>Pair</code> senza usare <code>new</code>. Anziché invocare un costruttore di <code>Pair</code> direttamente, stiamo in realtà invocando <code>Pair.apply</code> (usando l&#8217;oggetto associato <code>Pair</code>) che a sua volta invoca <code>Tuple2.apply</code> sull&#8217;oggetto associato <code>Tuple2</code>!
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Se una classe è dotata di diversi costruttori alternativi e possiede anche un oggetto associato, considerate la possibilità di rimuovere alcuni costruttori dalla classe e di definire diversi metodi <code>apply</code> sovraccaricati nell&#8217;oggetto associato per gestire le variazioni.
+</blockquote>
+
+<p>Tuttavia, <code>apply</code> non deve limitarsi a istanziare la classe associata. Invece, potrebbe restituire un&#8217;istanza di una sottoclasse della classe associata. Nel prossimo esempio, definiremo un oggetto associato <code>Widget</code> che usa le espressioni regolari per riconoscere una stringa che rappresenta una sottoclasse di <code>Widget</code>. Quando viene trovata una corrispondenza, la sottoclasse viene istanziata e la nuova istanza viene restituita.
+
+<pre><code>// <a href=esempi/cap-6/objects/widget.scala>esempi/cap-6/objects/widget.scala</a>
+
+package objects
+
+abstract class Widget {
+  def draw(): Unit
+  override def toString() = "(elemento)"
+}
+
+object Widget {
+  val ButtonExtractorRE = """\(pulsante: etichetta=([^,]+),\s+\(elemento\)\)""".r
+  val TextFieldExtractorRE = """\(campoditesto: testo=([^,]+),\s+\(elemento\)\)""".r
+
+  def apply(specification: String): Option[Widget] = specification match {
+    case ButtonExtractorRE(label)   =&gt; new Some(new Button(label))
+    case TextFieldExtractorRE(text) =&gt; new Some(new TextField(text))
+    case _ =&gt; None
+  }
+}</code></pre>
+
+<p><code>Widget.apply</code> riceve una stringa &#8220;di specifica&#8221; che definisce la classe da istanziare. La stringa potrebbe provenire da un file di configurazione contenente gli elementi grafici da creare all&#8217;avvio, per esempio. Il formato della stringa è lo stesso usato da <code>toString()</code>. Sono definite espressioni regolari per ogni tipo. (Come alternativa si potrebbero usare gli <em>operatori di riconoscimento</em>, discussi nella sezione <a href=cap-11.html#ExternalDSLsWithCombinatorParsers><abbr>DSL</abbr> esterni con la combinazione di riconoscitori</a> del capitolo 11.)
+
+<p>L&#8217;espressione <code>match</code> applica ogni espressione regolare alla stringa. In un&#8217;espressione come:
+
+<pre><code>case ButtonExtractorRE(label) =&gt; new Some(new Button(label))</code></pre>
+
+<p>si effettua la ricerca di una corrispondenza tra la stringa e l&#8217;espressione regolare <code>ButtonExtractorRE</code>. Se la corrispondenza viene trovata, si estrae la sottostringa del primo gruppo di cattura nell&#8217;espressione regolare e la si assegna alla variabile <var>label</var>. Infine, si crea un nuovo pulsante con questa etichetta, racchiuso in un&#8217;istanza di <code>Some</code>. Impareremo il funzionamento di questo processo di estrazione nella prossima sezione.
+
+<p>La creazione di istanze di <code>TextField</code> viene gestita con un caso simile. (Qui <code>TextField</code> non viene mostrato. Si vedano gli esempi di codice sul sito di O&#8217;Reilly.) Infine, se <code>apply</code> non trova una corrispondenza con la stringa, restituisce <code>None</code>.
+
+<p>Ecco un <code>object</code> &#8220;di specifica&#8221; che esercita <code>Widget.apply</code>.
+
+<pre><code>// <a href=esempi/cap-6/objects/widget-apply-spec.scala>esempi/cap-6/objects/widget-apply-spec.scala</a>
+
+package objects
+import org.specs._
+
+object WidgetApplySpec extends Specification {
+  "Widget.apply con una stringa di specifica valida per un elemento" should {
+    "restituire un'istanza con i campi corretti impostati" in {
+      Widget("(pulsante: etichetta=cliccami, (elemento))") match {
+        case Some(w) =&gt; w match {
+          case b:Button =&gt; b.label mustEqual "cliccami"
+          case x =&gt; fail(x.toString())
+        }
+        case None =&gt; fail("Restituito None.")
+      }
+      Widget("(campoditesto: testo=Questo è testo, (elemento))") match {
+        case Some(w) =&gt; w match {
+          case tf:TextField =&gt; tf.text mustEqual "Questo è testo"
+          case x =&gt; fail(x.toString())
+        }
+        case None =&gt; fail("Restituito None.")
+      }
+    }
+  }
+  "Widget.apply con una stringa di specifica non valida" should {
+    "restituire None" in {
+      Widget("(pulsante: , (elemento)") mustEqual None
+    }
+  }
+}</code></pre>
+
+<p>La prima istruzione <code>match</code> invoca implicitamente <code>Widget.apply</code> con la stringa <code>"(pulsante: etichetta=cliccami, (elemento))"</code>. Se non viene restituito un pulsante con l&#8217;etichetta <code>"cliccami"</code> racchiuso in un&#8217;istanza di <code>Some</code>, questo test fallirà. Poi viene eseguito un test simile per un elemento grafico <code>TextField</code>. L&#8217;ultimo test usa una stringa non valida e conferma la restituzione di <code>None</code>.
+
+<p>Uno svantaggio di questa particolare implementazione è che abbiamo dovuto cablare una dipendenza da ogni classe derivata da <code>Widget</code> nella classe <code>Widget</code> stessa, violando così il <em>principio aperto-chiuso</em> (si vedano <a href=apa.html#Meyer1997>[Meyer1997]</a> e <a href=apa.html#Martin2003>[Martin2003]</a>). Un&#8217;implementazione migliore userebbe un pattern di progettazione factory <a href=apa.html#GOF1995>[GOF1995]</a>. Nondimeno, l&#8217;esempio mostra che il metodo <code>apply</code> può essere usato come una factory reale.
+
+<p>Non siete obbligati a usare il metodo <code>apply</code> di un <code>object</code> come una factory, e non ci sono restrizioni sulla lista di argomenti o sul valore di ritorno di <code>apply</code>. Tuttavia, essendo così comune l&#8217;uso di <code>apply</code> come factory in un <code>object</code>, fate attenzione quando usate <code>apply</code> per altri scopi, in quanto potreste confondere i vostri utenti. In ogni caso, esistono validi controesempi, come l&#8217;uso di <code>apply</code> nei linguaggi domain-specific (si veda il <a href=cap-11.html>capitolo 11</a>).
+
+<p>Il metodo <code>apply</code> definito nelle classi segue più raramente questa convenzione. Per esempio, nella libreria standard di Scala, <code>Array.apply(i: int)</code> restituisce l&#8217;elemento di indice <var>i</var> nell&#8217;array. Molte altre collezioni usano <code>apply</code> in modo simile. Quindi, gli utenti possono scrivere codice come quello che segue.
+<pre><code>val a = Array(1,2,3,4)
+println(a(2))  // =&gt; 3</code></pre>
+
+<p>Infine, come promemoria, <code>apply</code> non è diverso dagli altri metodi, nonostante venga gestito in modo particolare dal compilatore. Potete sovraccaricarlo, invocarlo direttamente, <i class=baa>&amp;</i>c.
+
+<h3 id=UnapplyMethod>Il metodo <code>unapply</code></h3>
+
+<p>Il nome <code>unapply</code> suggerisce che questo metodo esegua l&#8217;operazione &#8220;opposta&#8221; rispetto a quella eseguita da <code>apply</code>. In effetti, <code>unapply</code> viene usato per estrarre le parti costituenti di un&#8217;istanza. Il pattern matching fa ampio uso di questa funzione. Quindi, <code>unapply</code> viene spesso definito negli oggetti associati ed è usato per estrarre i valori dei campi dalle istanze dei tipi associati corrispondenti. Per questo motivo, i metodi <code>unapply</code> vengono chiamati <em>estrattori</em>.
+
+<p>Ecco una versione ampliata di <tt>button.scala</tt> con un <code>object</code> <code>Button</code> che definisce un metodo estrattore <code>unapply</code>.
+
+<pre><code>// <a href=esempi/cap-6/objects/button.scala>esempi/cap-6/objects/button.scala</a>
+
+package objects
+import ui3.Clickable
+
+class Button(val label: String) extends Widget with Clickable {
+
+  def click() = {
+    // Logica per mostrare visivamente il clic sul pulsante...
+  }
+
+  def draw() = {
+    // Logica per disegnare il pulsante su uno schermo, una pagina web, &amp;c.
+  }
+
+  override def toString() = "(pulsante: etichetta=" + label + ", " + super.toString() + ")"
+}
+
+object Button {
+  def unapply(button: Button) = Some(button.label)
+}</code></pre>
+
+<p><code>Button.unapply</code> accetta un singolo argomento di tipo <code>Button</code> e restituisce il valore di <code>label</code> racchiudendolo in un&#8217;istanza di <code>Some</code>. Questo esempio mostra il protocollo dei metodi <code>unapply</code>: essi restituiscono un&#8217;istanza di <code>Some</code> che racchiude i campi estratti. (Vedremo come gestire più di un campo fra un momento.)
+
+<p>Ecco un oggetto &#8220;di specifica&#8221; che esercita <code>Button.unapply</code>.
+
+<pre><code>// <a href=esempi/cap-6/objects/button-unapply-spec.scala>esempi/cap-6/objects/button-unapply-spec.scala</a>
+
+package objects
+import org.specs._
+
+object ButtonUnapplySpec extends Specification {
+  "Button.unapply" should {
+    "trovare una corrispondenza con un oggetto Button" in {
+      val b = new Button("cliccami")
+      b match {
+        case Button(label) =&gt; label mustEqual "cliccami"
+        case _ =&gt; fail()
+      }
+    }
+    "trovare una corrispondenza con un oggetto RadioButton" in {
+      val b = new RadioButton(false, "cliccami")
+      b match {
+        case Button(label) =&gt; label mustEqual "cliccami"
+        case _ =&gt; fail()
+      }
+    }
+    "non trovare una corrispondenza con un oggetto diverso da Button" in {
+      val tf = new TextField("ciao mondo!")
+      tf match {
+        case Button(label) =&gt; fail()
+        case x =&gt; x must notBeNull // hack per evitare che Specs ignori questo test
+      }
+    }
+    "estrarre l'etichetta di un pulsante" in {
+      val b = new Button("cliccami")
+      b match {
+        case Button(label) =&gt; label mustEqual "cliccami"
+        case _ =&gt; fail()
+      }
+    }
+    "estrarre l'etichetta di un pulsante radio" in {
+      val rb = new RadioButton(false, "clicca anche me")
+      rb match {
+        case Button(label) =&gt; label mustEqual "clicca anche me"
+        case _ =&gt; fail()
+      }
+    }
+  }
+}</code></pre>
+
+<p>I primi tre esempi (cioè le prime tre clausole <code>in</code>) confermano che <code>Button.unapply</code> viene effettivamente chiamato solo per le istanze di <code>Button</code> o per le istanze delle classi derivate come <code>RadioButton</code>.
+
+<p>Dato che <code>unapply</code> accetta un argomento di tipo <code>Button</code> (in questo caso), l&#8217;interprete Scala controlla il tipo dell&#8217;istanza coinvolta nella corrispondenza, poi cerca un oggetto associato con un metodo <code>unapply</code> e invoca quel metodo passandogli l&#8217;istanza. La clausola jolly <code>case _</code> viene invocata per le istanze che risultano incompatibili dopo il controllo di tipo. Il processo di pattern matching è completamente type-safe.
+
+<p>Gli esempi rimanenti (cioè le altre clausole <code>in</code>) confermano l&#8217;estrazione dei valori corretti di <code>label</code>. L&#8217;interprete Scala estrae automaticamente l&#8217;elemento contenuto nell&#8217;istanza di <code>Some</code>.
+
+<p>Come si fa per estrarre più di un campo? Per un insieme fisso di campi noti, si restituisce un&#8217;istanza di <code>Some</code> che racchiude un&#8217;istanza di <code>Tuple</code>, come mostrato in questa versione aggiornata di <code>RadioButton</code>.
+
+<pre><code>// <a href=esempi/cap-6/objects/radio-button.scala>esempi/cap-6/objects/radio-button.scala</a>
+
+package objects
+
+/**
+ * Pulsante con due stati, attivo (on) o disattivo (off), come
+ * il pulsante di selezione del canale sulle radio vecchio stile.
+ */
+class RadioButton(val on: Boolean, label: String) extends Button(label)
+
+object RadioButton {
+  def unapply(button: RadioButton) = Some((button.on, button.label))
+                 // equivalente a: = Some(Pair(button.on, button.label))
+}</code></pre>
+
+<p>Qui viene restituita un&#8217;istanza di <code>Some</code> che racchiude <code>Pair(button.on, button.label)</code>. Come diremo nella sezione <a href=cap-7.html#PredefObject>L&#8217;oggetto <code>Predef</code></a> del capitolo 7, <code>Pair</code> è un <em>tipo</em> definito per essere uguale a <code>Tuple2</code>. Ecco il corrispondente oggetto &#8220;di specifica&#8221; che collauda <code>RadioButton</code>.
+
+<pre><code>// <a href=esempi/cap-6/objects/radio-button-unapply-spec.scala>esempi/cap-6/objects/radio-button-unapply-spec.scala</a>
+
+package objects
+import org.specs._
+
+object RadioButtonUnapplySpec extends Specification {
+  "RadioButton.unapply" should {
+    "trovare una corrispondenza con un oggetto RadioButton" in {
+      val b = new RadioButton(true, "cliccami")
+      b match {
+        case RadioButton(on, label) =&gt; label mustEqual "cliccami"
+        case _ =&gt; fail()
+      }
+    }
+    "non trovare una corrispondenza con un oggetto Button (classe genitore)" in {
+      val b = new Button("cliccami")
+      b match {
+        case RadioButton(on, label) =&gt; fail()
+        case x =&gt; x must notBeNull
+      }
+    }
+    "non trovare una corrispondenza con un oggetto diverso da RadioButton" in {
+      val tf = new TextField("ciao mondo!")
+      tf match {
+        case RadioButton(on, label) =&gt; fail()
+        case x =&gt; x must notBeNull
+      }
+    }
+    "estrarre lo stato on/off e l'etichetta di un pulsante radio" in {
+      val b = new RadioButton(true, "cliccami")
+      b match {
+        case RadioButton(on, label) =&gt; {
+          label mustEqual "cliccami"
+          on    mustEqual true
+        }
+        case _ =&gt; fail()
+      }
+    }
+  }
+}</code></pre>
+
+<h3 id=UnapplySeqMethod><code>apply</code> e <code>unapply</code> per le collezioni</h3>
+
+<p>E se volessimo costruire una collezione a partire da una lista variabile di argomenti passata ad <code>apply</code>? E se volessimo estrarre i primi elementi di una collezione senza curarci dei rimanenti?
+
+<p>In questo caso, dovete definire i metodi <code>apply</code> e <code>unapplySeq</code> (un metodo <code>unapply</code> per le sequenze). Ecco come sono definiti questi metodi per la classe <code>List</code> di Scala.
+
+<pre><code>def apply[A](xs: A*): List[A] = xs.toList
+
+def unapplySeq[A](x: List[A]): Some[List[A]] = Some(x)</code></pre>
+
+<p>La parametrizzazione di tipo <code>[A]</code> su questi metodi consente all&#8217;oggetto associato <code>List</code>, che non è parametrico, di costruire una nuova istanza di <code>List[A]</code>. (Si veda la sezione <a href=cap-12.html#ParameterizedTypes>Capire i tipi parametrici</a> nel capitolo 12 per maggiori dettagli.) Molto spesso, il parametro di tipo verrà inferito sulla base del contesto.
+
+<p>La lista di parametri <code>xs: A*</code> è una lista variabile di argomenti. Chi invoca <code>apply</code> può passare tutte le istanze di <code>A</code> che vuole, anche nessuna. Internamente, le liste variabili di argomenti vengono memorizzate in un&#8217;istanza di <code>Array[A]</code>, che eredita da <code>Iterable</code> il metodo <code>toList</code> qui utilizzato.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Chi scrive <abbr>API</abbr> troverà questo idioma molto comodo. Accettare un numero variabile di argomenti per una funzione può essere conveniente per gli utenti, e convertire gli argomenti in una lista è spesso la soluzione ideale per la loro gestione interna.
+</blockquote>
+
+<p>Ecco uno script di esempio che usa <code>List.apply</code> implicitamente.
+
+<pre><code>// <a href=esempi/cap-6/objects/list-apply-example-script.scala>esempi/cap-6/objects/list-apply-example-script.scala</a>
+
+val list1 = List()
+val list2 = List(1, 2.2, "tre", 'quattro)
+val list3 = List("1", "2.2", "tre", "quattro")
+println("1: " + list1)
+println("2: " + list2)
+println("3: " + list3)</code></pre>
+
+<p>Qui <code>'quattro</code> è un <em>simbolo</em>, essenzialmente una stringa internata. I simboli vengono usati più comunemente in Ruby, per esempio, dove questo simbolo sarebbe scritto come <code>:quattro</code>. I simboli sono utili per rappresentare le identità in maniera consistente.
+
+<p>Lo script produce questa uscita.
+
+<pre><samp>1: List()
+2: List(1, 2.2, tre, 'quattro)
+3: List(1, 2.2, tre, quattro)</samp></pre>
+
+<p>Il metodo <code>unapplySeq</code> è banale: restituisce la lista in ingresso racchiusa in un&#8217;istanza di <code>Some</code>. Tuttavia, questo è sufficiente per il pattern matching, come mostrato nell&#8217;esempio seguente.
+
+<pre><code>// <a href=esempi/cap-6/objects/list-unapply-example-script.scala>esempi/cap-6/objects/list-unapply-example-script.scala</a>
+
+val list = List(1, 2.2, "tre", 'quattro)
+list match {
+  case List(x, y, _*) =&gt; println("x = " + x + ", y = " + y)
+  case _ =&gt; throw new Exception("Nessuna corrispondenza! " + list)
+}</code></pre>
+
+<p>La sintassi <code>List(x, y, _*)</code> indica che vogliamo cercare una corrispondenza solo su una lista con almeno due elementi e che i primi due elementi verranno assegnati a <var>x</var> e <var>y</var>. Il resto della lista non ci interessa. <code>_*</code> corrisponde agli zero o più elementi rimanenti.
+
+<p>L&#8217;uscita è la seguente.
+
+<pre><samp>x = 1, y = 2.2</samp></pre>
+
+<p>Avremo molte più cose da dire sull&#8217;uso delle liste con il pattern matching nella sezione <a href=cap-8.html#ListsInFunctionalProgramming>Le liste nella programmazione funzionale</a> del capitolo 8.
+
+<h3 id=CompanionObjectsAndJavaStaticMethods>Gli oggetti associati e i metodi statici di Java</h3>
+
+C&#8217;è ancora una cosa da sapere sugli oggetti associati. Ogni volta che definite un metodo <code>main</code> come punto d&#8217;ingresso di un&#8217;applicazione, Scala vi obbliga a collocarlo in un oggetto. Tuttavia, al momento in cui scriviamo, i metodi <code>main</code> non possono essere definiti in un oggetto associato. A causa dei dettagli di implementazione del codice generato, la <abbr>JVM</abbr> non troverà il metodo <code>main</code>. Questo problema potrebbe essere risolto in una futura versione di Scala. Per ora, dovete definire qualsiasi metodo <code>main</code> in un oggetto <em>singleton</em> (cioè, un oggetto &#8220;non associato&#8221;) <a href=apa.html#ScalaTips>[ScalaTips]</a>. Considerate l&#8217;esempio seguente: una classe <code>Person</code> e il suo oggetto associato che tenta di definire un metodo <code>main</code>.
+
+<pre><code>// <a href=esempi/cap-6/objects/person.scala>esempi/cap-6/objects/person.scala</a>
+
+package objects
+
+class Person(val name: String, val age: Int) {
+  override def toString = "nome: " + name + ", età: " + age
+}
+
+object Person {
+  def apply(name: String, age: Int) = new Person(name, age)
+  def unapply(person: Person) = Some((person.name, person.age))
+
+  def main(args: Array[String]) = {
+    // Collaudiamo il costruttore...
+    val person = new Person("Buck Trends", 18)
+    assert(person.name == "Buck Trends")
+    assert(person.age  == 21)
+  }
+}
+
+object PersonTest {
+  def main(args: Array[String]) = Person.main(args)
+}</code></pre>
+
+<p>Questo codice viene compilato senza problemi, ma se provate a invocare <code>Person.main</code> usando <kbd>scala -cp &hellip; objects.Person</kbd>, ottenete l&#8217;errore seguente.
+
+<pre><samp>java.lang.NoSuchMethodException: objects.Person.main([Ljava.lang.String;)</samp></pre>
+
+<p>Se decompilate il file <tt>objects/Person.class</tt> con <kbd>javap -classpath &hellip; objects.Person</kbd> (si veda la sezione <a href=cap-14.html#CommandLineToolDecompilers>Gli strumenti a riga di comando <kbd>scalap</kbd>, <kbd>javap</kbd> e <kbd>jad</kbd></a> nel capitolo 14), potete vedere che non contiene un metodo <code>main</code>. Se decompilate <tt>objects/Person$.class</tt>, che contiene il bytecode dell&#8217;oggetto associato, trovate un metodo <code>main</code> che però non è stato dichiarato <code>static</code>. Quindi, anche il tentativo di invocare <kbd>scala -cp &hellip; objects.Person$</kbd> non riuscirà a trovare il metodo <code>main</code> &#8220;statico&#8221;.
+
+<pre><samp>java.lang.NoSuchMethodException: objects.Person$.main is not static</samp></pre>
+
+<p>Dovete usare l&#8217;oggetto <em>singleton</em> separato <code>PersonTest</code> che è definito nell&#8217;esempio. La decompilazione con <kbd>javap -classpath &hellip; objects.PersonTest</kbd> mostra che l&#8217;oggetto possiede un metodo <code>static main</code>. Se invocate <kbd>scala -cp &hellip; objects.PersonTest</kbd>, viene invocato il metodo <code>PersonTest.main</code>, che a sua volta invoca <code>Person.main</code>. Nella seconda invocazione di <code>assert</code> otterrete un errore di asserzione intenzionale.</p>
+
+<pre><samp>java.lang.AssertionError: assertion failed
+    at scala.Predef$.assert(Predef.scala:87)
+    at objects.Person$.test(person.scala:15)
+    at objects.PersonTest$.main(person.scala:20)
+    at objects.PersonTest.main(person.scala)
+    &hellip;</samp></pre>
+
+<p>In effetti, questo è un problema generale: i metodi definiti negli oggetti associati non sono statici nel bytecode; se avete bisogno di metodi che devono essere visibili al codice Java sotto forma di metodi statici, li dovete definire negli oggetti singleton. Considerate la classe Java seguente, che tenta di creare un utente con <code>Person.apply</code>.
+
+<pre><code>// <a href=esempi/cap-6/objects/PersonUserWontCompile.java>esempi/cap-6/objects/PersonUserWontCompile.java</a>
+// NON verrà compilato!
+
+package objects;
+
+public class PersonUserWontCompile {
+  public static void main(String[] args) {
+    Person buck = Person.apply("Buck Trends", 100);  // ERRORE
+    System.out.println(buck);
+  }
+}</code></pre>
+
+<p>Se la compiliamo (dopo aver compilato <code>Person.scala</code>), otteniamo l&#8217;errore seguente.
+
+<pre><samp>$ javac -classpath &hellip; objects/PersonUserWontCompile.java
+objects/PersonUserWontCompile.java:5: cannot find symbol
+symbol  : method apply(java.lang.String,int)
+location: class objects.Person
+        Person buck = Person.apply("Buck Trends", 100);
+                            ^
+1 error</samp></pre>
+
+<p>Tuttavia, possiamo usare l&#8217;oggetto singleton seguente.
+
+<pre><code>// <a href=esempi/cap-6/objects/person-factory.scala>esempi/cap-6/objects/person-factory.scala</a>
+
+package objects
+
+object PersonFactory {
+  def make(name: String, age: Int) = new Person(name, age)
+}</code></pre>
+
+<p>Ora la classe Java seguente verrà compilata.
+
+<pre><code>// <a href=esempi/cap-6/objects/PersonUser.java>esempi/cap-6/objects/PersonUser.java</a>
+
+package objects;
+
+public class PersonUser {
+  public static void main(String[] args) {
+    // La riga seguente non viene compilata.
+    // Person buck = Person.apply("Buck Trends", 100);
+    Person buck = PersonFactory.make("Buck Trends", 100);
+    System.out.println(buck);
+  }
+}</code></pre>
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span>Evitate di definire in un oggetto <em>associato</em> il metodo <code>main</code> o altri metodi che devono essere visibili al codice Java sotto forma di metodi <code>static</code>. Invece, definiteli in un oggetto <em>singleton</em>.
+</blockquote>
+
+<p>Se non avete altra scelta tranne quella di invocare da Java un metodo in un oggetto associato, potete esplicitamente creare un&#8217;istanza dell&#8217;oggetto con <code>new</code>, dato che nel bytecode l&#8217;oggetto è una classe Java &#8220;ordinaria&#8221;, e invocare il metodo su quella istanza.
+
+<h2 id=CaseClasses>Classi <code>case</code></h2>
+
+<p>Nella sezione <a href=cap-3.html#MatchingOnCaseClasses>Corrispondenze sulle classi <code>case</code></a> del capitolo 3, vi abbiamo brevemente presentato le <em>classi <code>case</code></em>. Le classi <code>case</code> posseggono diverse caratteristiche utili, ma presentano anche alcuni inconvenienti.
+
+<p>Riscriviamo l&#8217;esempio di <code>Shape</code> che abbiamo creato nella sezione <a href=cap-1.html#ATasteOfConcurrency>Un assaggio di concorrenza</a> del capitolo 1 in modo da usare le classi <code>case</code>. Ecco l&#8217;implementazione originale.
+
+<pre><code>// <a href=esempi/cap-1/shapes.scala>esempi/cap-1/shapes.scala</a>
+
+package shapes {
+  class Point(val x: Double, val y: Double) {
+    override def toString() = "Point(" + x + "," + y + ")"
+  }
+
+  abstract class Shape() {
+    def draw(): Unit
+  }
+
+  class Circle(val center: Point, val radius: Double) extends Shape {
+    def draw() = println("Circle.draw: " + this)
+    override def toString() = "Circle(" + center + "," + radius + ")"
+  }
+
+  class Rectangle(val lowerLeft: Point, val height: Double, val width: Double)
+        extends Shape {
+    def draw() = println("Rectangle.draw: " + this)
+    override def toString() =
+      "Rectangle(" + lowerLeft + "," + height + "," + width + ")"
+  }
+
+  class Triangle(val point1: Point, val point2: Point, val point3: Point)
+        extends Shape {
+    def draw() = println("Triangle.draw: " + this)
+    override def toString() =
+      "Triangle(" + point1 + "," + point2 + "," + point3 + ")"
+  }
+}</code></pre>
+
+<p>Ecco l&#8217;esempio riscritto usando la parola chiave <code>case</code>.
+
+<pre><code>// <a href=esempi/cap-6/shapes/shapes-case.scala>esempi/cap-6/shapes/shapes-case.scala</a>
+
+package shapes {
+  case class Point(x: Double, y: Double)
+
+  abstract class Shape() {
+    def draw(): Unit
+  }
+
+  case class Circle(center: Point, radius: Double) extends Shape() {
+    def draw() = println("Circle.draw: " + this)
+  }
+
+  case class Rectangle(lowerLeft: Point, height: Double, width: Double)
+      extends Shape() {
+    def draw() = println("Rectangle.draw: " + this)
+  }
+
+  case class Triangle(point1: Point, point2: Point, point3: Point)
+      extends Shape() {
+    def draw() = println("Triangle.draw: " + this)
+  }
+}</code></pre>
+
+<p>L&#8217;aggiunta della parola chiave <code>case</code> induce il compilatore ad aggiungere automaticamente un certo numero di caratteristiche utili. La parola chiave suggerisce un&#8217;associazione con le espressioni <code>case</code> nel pattern matching. In effetti, queste classi sono particolarmente adatte per essere usate in quel contesto, come vedremo.
+
+<p>Per prima cosa, il compilatore converte automaticamente i parametri del costruttore in campi immutabili (cioè campi <code>val</code>). La parola chiave <code>val</code> è opzionale. Se volete campi mutabili, usate la parola chiave <code>var</code>. Quindi, le liste di parametri dei nostri costruttori ora sono più corte.
+
+<p>Come seconda cosa, il compilatore implementa automaticamente i metodi <code>equals</code>, <code>hashCode</code> e <code>toString</code> della classe usando i campi specificati come parametri del costruttore. Quindi, non abbiamo più bisogno dei nostri metodi <code>toString</code>. In effetti, i metodi <code>toString</code> generati producono la stessa uscita di quelli che avevamo implementato noi. In più, il corpo di <code>Point</code> è sparito perché non abbiamo bisogno di definire alcun metodo!
+
+<p>Lo script seguente usa questi metodi, che ora si trovano nelle forme geometriche.
+
+<pre><code>// <a href=esempi/cap-6/shapes/shapes-usage-example1-script.scala>esempi/cap-6/shapes/shapes-usage-example1-script.scala</a>
+
+import shapes._
+
+val shapesList = List(
+  Circle(Point(0.0, 0.0), 1.0),
+  Circle(Point(5.0, 2.0), 3.0),
+  Rectangle(Point(0.0, 0.0), 2, 5),
+  Rectangle(Point(-2.0, -1.0), 4, 3),
+  Triangle(Point(0.0, 0.0), Point(1.0, 0.0), Point(0.0, 1.0)))
+
+val shape1 = shapesList.head  // prende la prima
+println("shape1: " + shape1 + ". hash = " + shape1.hashCode)
+for (shape2 &lt;- shapesList) {
+  println("shape2: " + shape2 + ". 1 == 2 ? " + (shape1 == shape2))
+}</code></pre>
+
+<p>Lo script produce il risultato seguente.
+
+<pre><samp>shape1: Circle(Point(0.0,0.0),1.0). hash = 2061963534
+shape2: Circle(Point(0.0,0.0),1.0). 1 == 2 ? true
+shape2: Circle(Point(5.0,2.0),3.0). 1 == 2 ? false
+shape2: Rectangle(Point(0.0,0.0),2.0,5.0). 1 == 2 ? false
+shape2: Rectangle(Point(-2.0,-1.0),4.0,3.0). 1 == 2 ? false
+shape2: Triangle(Point(0.0,0.0),Point(1.0,0.0),Point(0.0,1.0)). 1 == 2 ? false</samp></pre>
+
+<p>Come vedremo più avanti nella sezione <a href=#EqualityOfObjects>L&#8217;uguaglianza tra oggetti</a>, il metodo <code>==</code> in realtà invoca il metodo <code>equals</code>.
+
+<p>Anche al di fuori delle espressioni <code>case</code>, la generazione automatica di questi tre metodi è molto conveniente per classi &#8220;strutturali&#8221; semplici, cioè classi che contengono campi e comportamenti relativamente semplici.
+
+<p>Come terza cosa, quando viene usata la parola chiave <code>case</code>, il compilatore crea automaticamente un <em>oggetto associato</em> con un metodo factory <code>apply</code> che accetta gli stessi argomenti del costruttore <em>principale</em>. L&#8217;esempio appena visto usa i metodi <code>apply</code> appropriati per creare le istanze di <code>Point</code>, le diverse istanze di <code>Shape</code> e persino l&#8217;istanza di <code>List</code>. Questo è il motivo per cui non ci serve <code>new</code>; stiamo effettivamente invocando <code>apply(x, y)</code> sull&#8217;oggetto associato <code>Point</code>, per esempio.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Le classi <code>case</code> possono avere costruttori <em>secondari</em>, ma il compilatore non genererà nessun metodo <code>apply</code> sovraccaricato con le stesse liste di parametri. Dovrete usare <code>new</code> per creare istanze con quei costruttori.
+</blockquote>
+
+<p>L&#8217;oggetto associato viene dotato anche un metodo <em>estrattore</em> <code>unapply</code>, che estrae tutti i campi di un&#8217;istanza in modo elegante. Lo script seguente mostra gli estrattori in azione nelle istruzioni <code>case</code> del pattern matching.
+
+<pre><code>// <a href=esempi/cap-6/shapes/shapes-usage-example2-script.scala>esempi/cap-6/shapes/shapes-usage-example2-script.scala</a>
+
+import shapes._
+
+val shapesList = List(
+  Circle(Point(0.0, 0.0), 1.0),
+  Circle(Point(5.0, 2.0), 3.0),
+  Rectangle(Point(0.0, 0.0), 2, 5),
+  Rectangle(Point(-2.0, -1.0), 4, 3),
+  Triangle(Point(0.0, 0.0), Point(1.0, 0.0), Point(0.0, 1.0)))
+
+def matchOn(shape: Shape) = shape match {
+  case Circle(center, radius) =&gt;
+    println("Circle: center = " + center + ", radius = " + radius)
+  case Rectangle(ll, h, w) =&gt;
+    println("Rectangle: lowerLeft = " + ll + ", height = " + h + ", width = " + w)
+  case Triangle(p1, p2, p3) =&gt;
+    println("Triangle: point1 = " + p1 + ", point2 = " + p2 + ", point3 = " + p3)
+  case _ =&gt;
+    println("Forma geometrica sconosciuta!" + shape)
+}
+
+shapesList.foreach { shape =&gt; matchOn(shape) }</code></pre>
+
+<p>Questo script produce il risultato seguente.
+
+<pre><samp>Circle: center = Point(0.0,0.0), radius = 1.0
+Circle: center = Point(5.0,2.0), radius = 3.0
+Rectangle: lowerLeft = Point(0.0,0.0), height = 2.0, width = 5.0
+Rectangle: lowerLeft = Point(-2.0,-1.0), height = 4.0, width = 3.0
+Triangle: point1 = Point(0.0,0.0), point2 = Point(1.0,0.0), point3 = Point(0.0,1.0)</samp></pre>
+
+<h3 id=SyntacticSugarForBinaryOperations>Zucchero sintattico per le operazioni binarie</h3>
+
+<p>A proposito, ricordate quando abbiamo discusso le corrispondenze sulle liste nella sezione <a href=cap-3.html#MatchingOnSequences>Corrispondenze sulle sequenze</a> del capitolo 3? Abbiamo scritto questa espressione <code>case</code>.
+
+<pre><code>def processList(l: List[Any]): Unit = l match {
+  case head :: tail =&gt; &hellip;
+  &hellip;
+}</code></pre>
+
+<p>A quanto pare, le seguenti espressioni sono identiche.
+
+<pre><code>  case head :: tail =&gt; &hellip;
+  case ::(head, tail) =&gt; &hellip;</code></pre>
+
+<p>Stiamo usando l&#8217;oggetto associato con la classe <code>case</code> chiamata <code>::</code>, che è usata per le liste non vuote. Quando questa classe viene usata nelle espressioni <code>case</code>, il compilatore supporta questa particolare notazione operazionale infissa per invocare <code>unapply</code>.
+
+<p>Questa notazione non funziona solo per i metodi <code>unapply</code> con due argomenti, ma anche per quelli con uno o più argomenti. Potremmo riscrivere il nostro metodo <code>matchOn</code> visto in precedenza in questo modo.
+
+<pre><code>def matchOn(shape: Shape) = shape match {
+  case center Circle radius =&gt; &hellip;
+  case ll Rectangle (h, w) =&gt; &hellip;
+  case p1 Triangle (p2, p3) =&gt; &hellip;
+  case _ =&gt; &hellip;
+}</code></pre>
+
+<p>Per invocare un metodo <code>unapply</code> che accetta un solo argomento, è necessario inserire una coppia di parentesi vuota per evitare ambiguità nella sintassi.
+
+<pre><code>  case arg Foo () =&gt; &hellip;</code></pre>
+
+<p>Dal punto di vista della chiarezza, questa sintassi si rivela elegante in alcuni casi che coinvolgono due argomenti. Per esempio, <code>head :: tail</code> corrisponde all&#8217;espressione che costruisce una lista, quindi si ottiene una meravigliosa simmetria quando il processo di estrazione usa la stessa sintassi. Tuttavia, i meriti di questa sintassi sono meno evidenti per gli altri esempi, specialmente quando gli argomenti sono più di due.
+
+<h3 id=TheCopyMethodInScalaVersion28>Il metodo <code>copy</code> in Scala 2.8</h3>
+
+<p>In Scala 2.8, il compilatore genera automaticamente un altro metodo di istanza chiamato <code>copy</code>. Questo metodo è utile se volete costruire una nuova istanza di una classe <code>case</code> che sia identica a un&#8217;altra istanza con alcuni campi modificati. Considerate il seguente script di esempio.
+
+<pre><code>// <a href=esempi/cap-6/shapes/shapes-usage-example3-v28-script.scala>esempi/cap-6/shapes/shapes-usage-example3-v28-script.scala</a>
+// Solo per la versione 2.8 di Scala.
+
+import shapes._
+
+val circle1 = Circle(Point(0.0, 0.0), 2.0)
+val circle2 = circle1 copy (radius = 4.0)
+
+println(circle1)
+println(circle2)</code></pre>
+
+<p>Il secondo cerchio viene creato copiando il primo e specificando un nuovo raggio. L&#8217;implementazione del metodo <code>copy</code> generata dal compilatore sfrutta i nuovi parametri predefiniti e con nome, introdotti da Scala 2.8, che abbiamo discusso nella sezione <a href=cap-2.html#MethodDefaultAndNamedArguments>Argomenti con nome e argomenti predefiniti per i metodi (Scala 2.8)</a> del capitolo 2. L&#8217;implementazione generata di <code>Circle.copy</code> somiglia più o meno al codice seguente.
+
+<pre><code>case class Circle(center: Point, radius: Double) extends Shape() {
+  &hellip;
+  def copy(center: Point = this.center, radius: Double = this.radius) =
+    new Circle(center, radius)
+}</code></pre>
+
+<p>Quindi, tutti i parametri del metodo (solo due in questo caso) vengono dotati di un valore predefinito. Quando usa il metodo <code>copy</code>, l&#8217;utente specifica per nome solo i campi che stanno cambiando. I valori degli altri campi vengono usati senza dovervi fare riferimento esplicitamente.
+
+<h3 id=CaseClassInheritance>L&#8217;ereditarietà nelle classi <code>case</code></h3>
+
+<p>Avete notato che il nuovo codice della gerarchia di <code>Shape</code> nella sezione <a href=#CaseClasses>Classi <code>case</code></a> non usa la parola chiave <code>case</code> per la classe astratta <code>Shape</code>? Il compilatore lo consente, ma ci sono ragioni per evitare che una classe <code>case</code> ne estenda un&#8217;altra. Prima di tutto, questo può complicare l&#8217;inizializzazione dei campi. Supponete di trasformare <code>Shape</code> in una classe <code>case</code>. Supponete di voler aggiungere a tutte le forme geometriche un campo stringa che rappresenti un identificatore impostabile dall&#8217;utente; avrebbe senso definire questo campo in <code>Shape</code>. Apportiamo questi due cambiamenti alla classe <code>Shape</code>.
+
+<pre><code>abstract case class Shape(id: String) {
+  def draw(): Unit
+}</code></pre>
+
+<p>Ora le forme derivate devono passare <var>id</var> al costruttore <code>Shape</code>. Per esempio, <code>Circle</code> diventerebbe così.
+
+<pre><code>case class Circle(id: String, center: Point, radius: Double) extends Shape(id) {
+  def draw(): Unit
+}</code></pre>
+
+<p>Tuttavia, se compilate questo codice, otterrete errori come il seguente.
+
+<pre><samp>&hellip; error: error overriding value id in class Shape of type String;
+   value id needs `override' modifier
+    case class Circle(id: String, center: Point, radius: Double) extends Shape(id) {
+                      ^</samp></pre>
+
+<p>Ricordatevi che entrambe le definizioni di <var>id</var>, sia quella in <code>Shape</code> sia quella in <code>Circle</code>, sono considerate definizioni di campi <code>val</code>! Il messaggio di errore ci fornisce la soluzione: usate la parola chiave <code>override</code> come abbiamo discusso nella sezione <a href=#OverridingMembers>Ridefinire i membri di classi e tratti</a>. Quindi, l&#8217;insieme completo delle modifiche richieste è il seguente.
+
+<pre><code>// <a href=esempi/cap-6/shapes/shapes-case-id.scala>esempi/cap-6/shapes/shapes-case-id.scala</a>
+
+package shapesid {
+  case class Point(x: Double, y: Double)
+
+  abstract case class Shape(id: String) {
+    def draw(): Unit
+  }
+
+  case class Circle(override val id: String, center: Point, radius: Double)
+        extends Shape(id) {
+    def draw() = println("Circle.draw: " + this)
+  }
+
+  case class Rectangle(override val id: String, lowerLeft: Point,
+        height: Double, width: Double) extends Shape(id) {
+    def draw() = println("Rectangle.draw: " + this)
+  }
+
+  case class Triangle(override val id: String, point1: Point,
+        point2: Point, point3: Point) extends Shape(id) {
+    def draw() = println("Triangle.draw: " + this)
+  }
+}</code></pre>
+
+<p>Notate che dobbiamo anche aggiungere le parole chiave <code>val</code>. Questo codice funziona, ma è piuttosto brutto.
+
+<p>I metodi <code>equals</code> generati automaticamente sono fonte di un problema più pericoloso: in caso di ereditarietà, questi metodi non obbediscono alle regole standard di robustezza per il confronto di uguaglianza tra oggetti. Discuteremo queste regole più avanti nella sezione <a href=#EqualityOfObjects>L&#8217;uguaglianza tra oggetti</a>. Per ora, considerate l&#8217;esempio seguente.
+
+<pre><code>// <a href=esempi/cap-6/shapes/shapes-case-equals-ambiguity-script.scala>esempi/cap-6/shapes/shapes-case-equals-ambiguity-script.scala</a>
+
+import shapesid._
+
+case class FancyCircle(name: String, override val id: String,
+    override val center: Point, override val radius: Double)
+      extends Circle(id, center, radius) {
+  override def draw() = println("FancyCircle.draw: " + this)
+}
+
+val fc = FancyCircle("io", "cerchio", Point(0.0,0.0), 10.0)
+val c  = Circle("cerchio", Point(0.0,0.0), 10.0)
+format("FancyCircle == Circle? %b\n", (fc == c))
+format("Circle == FancyCircle? %b\n", (c  == fc))</code></pre>
+
+<p>Se eseguite questo script, ottenete l&#8217;uscita seguente.
+
+<pre><samp>FancyCircle == Circle? false
+Circle == FancyCircle? true</samp></pre>
+
+<p>Quindi, <code>Circle.equals</code> viene valutato come vero quando gli viene passata un&#8217;istanza di <code>FancyCircle</code> con gli stessi valori dei campi di un&#8217;istanza di <code>Circle</code>. Il caso inverso è falso. Sebbene possiate argomentare che, per quanto riguarda <code>Circle</code>, le due istanze <em>sono</em> effettivamente uguali, la maggior parte delle persone sosterrebbe che questa è un&#8217;interpretazione di uguaglianza &#8220;rilassata&#8221; e rischiosa. Una futura versione di Scala potrebbe generare metodi <code>equals</code> per le classi <code>case</code> che eseguono controlli rigorosi sulla uguaglianza di tipo.
+
+<p>Quindi, le comodità offerte dalle classi <code>case</code> a volte si rivelano problematiche. &Egrave; meglio evitare l&#8217;ereditarietà tra classi <code>case</code>. Notate che non ci sono problemi se una classe <code>case</code> estende una classe non <code>case</code> o un tratto, né se una classe non <code>case</code> o un tratto estendono una classe <code>case</code>.
+
+<p>A causa di questi problemi, è possibile che l&#8217;ereditarietà tra classi <code>case</code> venga deprecata e rimossa nelle future versioni di Scala.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>Evitate di estendere una classe <code>case</code> con un&#8217;altra classe <code>case</code>.
+</blockquote>
+
+<h2 id=EqualityOfObjects>L&#8217;uguaglianza tra oggetti</h2>
+
+L&#8217;implementazione di un confronto di uguaglianza affidabile per le istanze è difficile da realizzare correttamente. <em>Effective Java</em> <a href=apa.html#Bloch2008>[Bloch2008]</a> e la pagina <em>Scaladoc</em> per <code>AnyRef.equals</code> descrivono i requisiti per un valido confronto di uguaglianza. Una descrizione molto buona delle tecniche per scrivere metodi <code>equals</code> e <code>hashCode</code> corretti può essere trovata in <a href=apa.html#Odersky2009>[Odersky2009]</a>, che usa la sintassi Java ma è adattato dal ventottesimo capitolo di <em>Programming in Scala</em> <a href=apa.html#Odersky2008>[Odersky2008]</a>. Consultate questo materiale quando avete bisogno di implementare i vostri metodi <code>equals</code> e <code>hashCode</code>. Ricordate che questi metodi vengono creati automaticamente per le classi <code>case</code>.
+
+<p>Qui ci concentreremo sui diversi metodi di uguaglianza disponibili in Scala e sul loro significato. Ci sono alcune leggere inconsistenze tra la specifica del linguaggio <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a> e le pagine <em>Scaladoc</em> per i metodi di uguaglianza appartenenti alle classi <code>Any</code> e <code>AnyRef</code>, ma il comportamento generale è chiaro.
+
+<blockquote class=warning>
+<p><span class=u>&#x2762;</span>Alcuni metodi di uguaglianza hanno nomi uguali ai metodi di uguaglianza di altri linguaggi, ma a volte la loro semantica è differente!
+</blockquote>
+
+<h3 id=_the_equals_method>Il metodo <code>equals</code></h3>
+
+<p>Il metodo <code>equals</code> verifica l&#8217;uguaglianza tra <em>valori</em>. Cioè, <code>o1 equals o2</code> è vero se <code>o1</code> e <code>o2</code> hanno lo stesso valore. Non è necessario che facciano riferimento alla stessa istanza.
+
+<p>Dunque, <code>equals</code> si comporta come il metodo <code>equals</code> in Java e come il metodo <code>eql?</code> in Ruby.
+
+<h3 id=_the_and_methods>I metodi <code>==</code> e <code>!=</code></h3>
+
+<p>Sebbene <code>==</code> sia un operatore in molti linguaggi, in Scala è un metodo <code>final</code> definito in <code>Any</code>. Questo metodo verifica l&#8217;uguaglianza tra <em>valori</em>, come <code>equals</code>. Cioè, <code>o1 == o2</code> è vero se <code>o1</code> e <code>o2</code> hanno lo stesso valore. In effetti, <code>==</code> delega la propria funzione a <code>equals</code>, come descritto in questa parte della voce <em>Scaladoc</em> per <code>Any.==</code> (qui tradotta):
+
+<pre><samp>o == arg0 è uguale a o.equals(arg0).</samp></pre>
+
+<p>Ecco la parte corrispondente della voce <em>Scaladoc</em> per <code>AnyRef.==</code> (qui tradotta):
+
+<pre><samp>o == arg0 è uguale a if (o eq null) arg0 eq null else o.equals(arg0).</samp></pre>
+
+<p>Come vi aspettereste, <code>!=</code> è la negazione, cioè è equivalente a <code>!(o1 == o2)</code>.
+
+<p>Dato che <code>==</code> e <code>!=</code> sono dichiarati come <code>final</code> in <code>Any</code> non potete ridefinirli, ma non ne avete bisogno dato che essi delegano le proprie funzioni a <code>equals</code>.
+
+<blockquote class=note>
+<p><span class=u>&#x261E;</span>In Java, C++ e C# l&#8217;operatore <code>==</code> verifica l&#8217;uguaglianza per <em>riferimento</em>, non per <em>valore</em>. Al contrario, l&#8217;operatore <code>==</code> di Ruby verifica l&#8217;uguaglianza per <em>valore</em>. Qualunque sia il linguaggio a cui siete abituati, ricordatevi che in Scala <code>==</code> verifica l&#8217;uguaglianza per valore.
+</blockquote>
+
+<h3 id=_the_ne_and_eq_methods>I metodi <code>ne</code> ed <code>eq</code></h3>
+
+<p>Il metodo <code>eq</code> verifica l&#8217;uguaglianza per <em>riferimento</em>. Cioè, <code>o1 eq o2</code> è vero se <code>o1</code> e <code>o2</code> puntano alla stessa locazione in memoria. Questi metodi sono definiti solo in <code>AnyRef</code>.
+
+<p>Dunque, <code>eq</code> si comporta come l&#8217;operatore <code>==</code> in Java, C++ e C#, ma diversamente dall&#8217;operatore <code>==</code> in Ruby.
+
+<p>Il metodo <code>ne</code> è la negazione di <code>eq</code>, cioè è equivalente a <code>!(o1 eq o2)</code>.
+
+<h3 id=_array_equality_and_the_sameelements_method>L&#8217;uguaglianza tra array e il metodo <code>sameElements</code></h3>
+
+<p>Il confronto tra i contenuti di due array non ha un risultato ovvio in Scala.
+
+<pre><samp>scala&gt; Array(1, 2) == Array(1, 2)
+res0: Boolean = false</samp></pre>
+
+<p>Questa è una sorpresa! Per fortuna, esiste una semplice soluzione nella forma del metodo <code>sameElements</code>.
+
+<pre><samp>scala&gt; Array(1, 2).sameElements(Array(1, 2))
+res1: Boolean = true</samp></pre>
+
+<p>Così va molto meglio. Ricordate di usare <code>sameElements</code> quando volete verificare che due array contengano gli stessi elementi.
+
+<p>Sebbene questa possa sembrare un&#8217;inconsistenza, i progettisti del linguaggio hanno preferito adottare un approccio conservativo, incoraggiando l&#8217;uso di un test esplicito per il confronto di uguaglianza tra due strutture dati mutabili. Nel lungo termine, questo dovrebbe risparmiarvi una serie di risultati inattesi nelle vostre condizioni.
+
+<h2 id=AdvOOPRecapAndWhatsNext>Riepilogo, e poi?</h2>
+
+<p>Abbiamo esplorato i dettagli più raffinati della ridefinizione dei metodi nelle classi derivate. Abbiamo imparato a usare il confronto di uguaglianza tra oggetti, le classi <code>case</code> e le classi e gli oggetti associati.
+
+<p>Nel prossimo capitolo studieremo la gerarchia di tipi di Scala, in particolare l&#8217;oggetto <code>Predef</code> che include molte definizioni utili. Vedremo anche l&#8217;alternativa di Scala ai membri di classe <code>static</code> di Java e le regole di <em>linearizzazione</em> per la ricerca dei metodi.
+
+<p class=v><a rel=prev href=cap-5.html title='indietro a &#8220;Programmazione orientata agli oggetti in Scala: le basi&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-7.html title='avanti a &#8220;Il sistema a oggetti di Scala&#8221;'><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>
