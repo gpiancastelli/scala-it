@@ -181,7 +181,7 @@ body{counter-reset:h1 14}
 
 <p>Se specificate un file sorgente Scala per <code class=var>script-od-oggetto</code>, <kbd>scala</kbd> interpreta il file come uno script (cioè lo compila e lo esegue). Molti esempi nel libro vengono invocati in questo modo. Gli <code class=var>argomenti</code> vengono resi disponibili allo script nell'array <var>args</var>. Ecco uno script di esempio che implementa la stessa funzione di trasformazione in maiuscolo.
 
-<pre><code>// code-examples/ToolsLibs/upper-script.scala
+<pre><code>// <a href=esempi/cap-14/upper-script.scala>esempi/cap-14/upper-script.scala</a>
 
 args.map(_.toUpperCase()).foreach(printf("%s ",_))
 println("")</code></pre>
@@ -295,7 +295,7 @@ g
 <p>Per l'esecuzione in <em>modalità batch</em> usate l'opzione <code>-e</code> <code class=var>argomento</code> per specificare il codice Scala da interpretare. Se state usando una shell che supporta la redirezione I/O (per esempio la shell Bourne, la shell C, o i loro discendenti) e avete bisogno di costruire dinamicamente righe di codice, potete anche <span class=wtf>pipe</span> codice nell'interprete <kbd>scala</kbd>, come mostrato nel seguente esempio di uno script <em>bash</em> abbastanza artificioso.
 
 <pre><code>#!/usr/bin/env bash
-# code-examples/ToolsLibs/pipe-example.sh
+# <a href=esempi/cap-14/pipe-example.sh>esempi/cap-14/pipe-example.sh</a>
 
 h=Hello
 w=World
@@ -343,7 +343,7 @@ println</code></pre>
 
 <p>Qualsiasi script eseguito con <kbd>scala</kbd> viene racchiuso in un <code>object</code> anonimo che somiglia più o meno all'esempio seguente.
 
-<pre><code>// code-examples/ToolsLibs/script-wrapper.scala
+<pre><code>// <a href=esempi/cap-14/script-wrapper.scala>esempi/cap-14/script-wrapper.scala</a>
 
 object Script {
   def main(args: Array[String]): Unit = {
@@ -355,7 +355,7 @@ object Script {
 
 <p>Al momento della scrittura, gli <code>object</code> Scala non possono racchiudere dichiarazioni di package, e quindi non potete dichiarare package negli script. Questo è il motivo per cui gli esempi di questo libro che dichiarano package devono essere compilati ed eseguiti separatamente, come accade per questo esempio proveniente dal <a href=cap-2.html>capitolo 2</a>.
 
-<pre><code>// code-examples/TypeLessDoMore/package-example1.scala
+<pre><code>// <a href=esempi/cap-2/package-example1.scala>esempi/cap-2/package-example1.scala</a>
 
 package com.example.mypkg
 
@@ -365,7 +365,7 @@ class MyClass {
 
 <p>Specularmente, ci sono script validi che non possono essere compilati con <kbd>scalac</kbd> a meno di non usare una speciale opzione <code>-X</code>. Per esempio, le definizioni di funzione e le invocazioni di funzione al di fuori dei tipi non sono permesse. L'esempio seguente viene eseguito senza problemi da <kbd>scala</kbd>.
 
-<pre><code>// code-examples/ToolsLibs/example-script.scala
+<pre><code>// <a href=esempi/cap-14/example-script.scala>esempi/cap-14/example-script.scala</a>
 
 case class Message(name: String)
 
@@ -459,7 +459,7 @@ public final class MessagePrinter extends java.lang.Object{
 
 <p>Infine, come esercizio, compilate la seguente classe <code>Complex</code> molto semplice che rappresenta i numeri complessi. Poi eseguite <kbd>scalap</kbd>, <kbd>javap</kbd> e <kbd>jad</kbd> sui file di classe risultanti.
 
-<pre><code>// code-examples/ToolsLibs/complex.scala
+<pre><code>// <a href=esempi/cap-14/complex.scala>esempi/cap-14/complex.scala</a>
 
 case class Complex(real: Double, imaginary: Double) {
   def +(that: Complex) =
@@ -684,14 +684,14 @@ Il plug-in Scala per <em>maven</em> è disponibile all'indirizzo <a class=url hr
 <p>Alcuni dei pacchetti sono piuttosto immaturi. Se volete contribuire alla comunità Scala, vi preghiamo di considerare la possibilità di migliorare la qualità dei plug-in esistenti o di contribuire nuovi plug-in.
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>Al momento della scrittura, ci sono diverse variazioni di un &#8220;bundle&#8221; Scala per l'editor <em>TextMate</em>, che è un popolare editor di testi per Mac OS X. Questi bundle sono attualmente gestiti da Paul Phillips su GitHub all'indirizzo <a class=url href=http://github.com/paulp/scala-textmate/tree/master>http://github.com/paulp/scala-textmate/tree/master</a>. Sperabilmente, le migliori caratteristiche di ogni bundle verranno unificate in un bundle &#8220;autoritativo&#8221; e integrate nel pacchetto <code>scala-tool-support</code>.
+<p><span class=u>&#x261E;</span>Al momento della scrittura, ci sono diverse variazioni di un &#8220;bundle&#8221; Scala per l'editor <em>TextMate</em>, che è un popolare editor di testi per Mac OS X. Questi bundle sono attualmente gestiti da Paul Phillips su GitHub all'indirizzo <a class=url href=http://github.com/paulp/scala-textmate/>http://github.com/paulp/scala-textmate/</a>. Sperabilmente, le migliori caratteristiche di ogni bundle verranno unificate in un bundle &#8220;autoritativo&#8221; e integrate nel pacchetto <code>scala-tool-support</code>.
 </blockquote>
 
 <h2 id=_test_driven_development_in_scala>Sviluppo guidato dai test in Scala</h2>
 
 <p>Una delle pratiche di sviluppo più importanti introdotte nell'ultima decade è lo <em>sviluppo guidato dai test</em> (in inglese, <em>test-driven development</em> o <abbr>TDD</abbr>). La comunità Scala ha creato diversi strumenti per supportare la <abbr>TDD</abbr>.
 
-<p>Se lavorate in un'azienda Java &#8220;pura&#8221;, considerate la possibilità di introdurre uno o più di questi strumenti di collaudo scritti in Scala per guidare attraverso i test lo sviluppo del vostro codice Java. Questo approccio è un modo a basso rischio di introdurre Scala nel vostro ambiente, così potete acquisire esperienza con il linguaggio prima di <span class=wtf>makin the commitment</span> a Scala come linguaggio per il codice di produzione. In particolare, potreste fare esperimenti con <em>ScalaTest</em> (si veda la prossima sezione, intitolata <a href=#ScalaTest>ScalaTest</a>), che può essere usato con <em>JUnit</em> <a href=apa.html#JUnit>[JUnit]</a> e <em>TestNG</em> <a href=apa.html#TestNG>[TestNG]</a>. Potreste anche considerare <em>ScalaCheck</em> o <em>Reductio</em> (si veda la sezione <a href=#ScalaCheck>ScalaCheck</a> più avanti), che offrono innovazioni che potrebbero non essere disponibili nei framework di collaudo di Java. Tutti gli strumenti che descriviamo qui si integrano con gli strumenti di collaudo e di assemblaggio di Java, come <em>JUnit</em>, <em>TestNG</em>, varie librerie di <em class=wtf>mocking</em>, <em>Ant</em>, <em>Maven</em> <a href=apa.html#Maven>[Maven]</a>. Tutti offrono anche convenienti <abbr>DSL</abbr> in Scala per il collaudo.
+<p>Se lavorate in un'azienda Java &#8220;pura&#8221;, considerate la possibilità di introdurre uno o più di questi strumenti di collaudo scritti in Scala per guidare attraverso i test lo sviluppo del vostro codice Java. Questo approccio è un modo a basso rischio di introdurre Scala nel vostro ambiente, così potete acquisire esperienza con il linguaggio prima di <span class=wtf>making the commitment</span> a Scala come linguaggio per il codice di produzione. In particolare, potreste fare esperimenti con <em>ScalaTest</em> (si veda la prossima sezione, intitolata <a href=#ScalaTest>ScalaTest</a>), che può essere usato con <em>JUnit</em> <a href=apa.html#JUnit>[JUnit]</a> e <em>TestNG</em> <a href=apa.html#TestNG>[TestNG]</a>. Potreste anche considerare <em>ScalaCheck</em> o <em>Reductio</em> (si veda la sezione <a href=#ScalaCheck>ScalaCheck</a> più avanti), che offrono innovazioni che potrebbero non essere disponibili nei framework di collaudo di Java. Tutti gli strumenti che descriviamo qui si integrano con gli strumenti di collaudo e di assemblaggio di Java, come <em>JUnit</em>, <em>TestNG</em>, varie librerie di <em class=wtf>mocking</em>, <em>Ant</em>, <em>Maven</em> <a href=apa.html#Maven>[Maven]</a>. Tutti offrono anche convenienti <abbr>DSL</abbr> in Scala per il collaudo.
 
 <h3 id=ScalaTest>ScalaTest</h3>
 
@@ -703,7 +703,7 @@ Il plug-in Scala per <em>maven</em> è disponibile all'indirizzo <a class=url hr
 
 <p>Ecco un esempio di un test <em>ScalaTest</em> per la semplice classe <code>Complex</code> che abbiamo usato in precedenza nella sezione <a href=#CommandLineToolDecompilers>Gli strumenti <kbd>scalap</kbd>, <kbd>javap</kbd> e <kbd>jad</kbd> a riga di comando</a>.
 
-<pre><code>// code-examples/ToolsLibs/complex-test.scala
+<pre><code>// <a href=esempi/cap-14/complex-test.scala>esempi/cap-14/complex-test.scala</a>
 
 import org.scalatest.FunSuite
 
@@ -742,14 +742,14 @@ scala -classpath build:../lib/scalatest-0.9.5.jar org.scalatest.tools.Runner -p 
 
 <pre><samp>Run starting. Expected test count is: 4
 Suite Starting - ComplexSuite: The execute method of a nested suite is about to be invoked.
-Test Starting - ComplexSuite: addition with (0, 0)
-Test Succeeded - ComplexSuite: addition with (0, 0)
-Test Starting - ComplexSuite: subtraction with (0, 0)
-Test Succeeded - ComplexSuite: subtraction with (0, 0)
-Test Starting - ComplexSuite: addition
-Test Succeeded - ComplexSuite: addition
-Test Starting - ComplexSuite: subtraction
-Test Succeeded - ComplexSuite: subtraction
+Test Starting - ComplexSuite: addizione con (0, 0)
+Test Succeeded - ComplexSuite: addizione con (0, 0)
+Test Starting - ComplexSuite: sottrazione con (0, 0)
+Test Succeeded - ComplexSuite: sottrazione con (0, 0)
+Test Starting - ComplexSuite: addizione
+Test Succeeded - ComplexSuite: addizione
+Test Starting - ComplexSuite: sottrazione
+Test Succeeded - ComplexSuite: sottrazione
 Suite Completed - ComplexSuite: The execute method of a nested suite returned normally.
 Run completed. Total number of tests run was: 4
 All tests passed.</samp></pre>
@@ -762,7 +762,7 @@ All tests passed.</samp></pre>
 
 <p>Abbiamo già usato <em>Specs</em> in diversi esempi nel corso del libro, per esempio <code>ButtonObserverSpec</code> nella sezione <a href=cap-4.html#TraitsAsMixins>I tratti come mixin</a> del capitolo 4. Ecco un altro esempio per la semplice classe <code>Complex</code> che abbiamo precedentemente mostrato.
 
-<pre><code>// code-examples/ToolsLibs/complex-spec.scala
+<pre><code>// <a href=esempi/cap-14/complex-spec.scala>esempi/cap-14/complex-spec.scala</a>
 
 import org.specs._
 
@@ -869,7 +869,7 @@ L'addizione complessa con (0.0, 0.0) should
 
 <p>Ecco un test <em>ScalaCheck</em> per il tipo <code>Complex</code>.
 
-<pre><code>// code-examples/ToolsLibs/complex-check-script.scala
+<pre><code>// <a href=esempi/cap-14/complex-check-script.scala>esempi/cap-14/complex-check-script.scala</a>
 
 import org.scalacheck._
 import org.scalacheck.Prop._
@@ -941,7 +941,7 @@ ComplexSpecification.check</code></pre>
 
 <p><em>Lift</em> (<a class=url href=http://liftweb.net/>http://liftweb.net/</a>) è il più importante framework per applicazioni web scritto in Scala. Ha recentemente raggiunto la versione 1.0. <em>Lift</em> è stato usato per un certo numero di siti web commerciali. Potete anche trovare la documentazione per Lifr sul sito web di Lift.
 
-<p>Altri framework web includono Sweet (<a class=url href=http://code.google.com/p/sweetscala/>http://code.google.com/p/sweetscala/</a>), Pinky (<a class=url href=http://bitbucket.org/pk11/pinky/wiki/Home>http://bitbucket.org/pk11/pinky/wiki/Home</a>), e Slinky (<a class=url href=http://code.google.com/p/slinky2/>http://code.google.com/p/slinky2/</a>).
+<p>Altri framework web includono Sweet (<a class=url href=http://code.google.com/p/sweetscala/>http://code.google.com/p/sweetscala/</a>), Pinky (<a class=url href=http://bitbucket.org/pk11/pinky/>http://bitbucket.org/pk11/pinky/</a>), e Slinky (<a class=url href=http://code.google.com/p/slinky2/>http://code.google.com/p/slinky2/</a>).
 
 <h3 id=Scalaz>Scalaz</h3>
 
@@ -979,7 +979,7 @@ ComplexSpecification.check</code></pre>
 <tbody valign="top">
 <tr>
 <td align="left" valign="top"><p>Kestrel
-<td align="left" valign="top"><p>Un piccolo sistema molto veloce per gestire code. (<a class=url href=http://github.com/robey/kestrel/tree/master>http://github.com/robey/kestrel/tree/master</a>).
+<td align="left" valign="top"><p>Un piccolo sistema molto veloce per gestire code. (<a class=url href=http://github.com/robey/kestrel/>http://github.com/robey/kestrel/</a>).
 </tr>
 <tr>
 <td align="left" valign="top"><p>ScalaModules
@@ -999,7 +999,7 @@ ComplexSpecification.check</code></pre>
 </tr>
 <tr>
 <td align="left" valign="top"><p>scala-query
-<td align="left" valign="top"><p>Una <abbr>API</abbr> Scala per effettuare query su database in maniera type-safe (<a class=url href=http://github.com/szeiger/scala-query/tree/master>http://github.com/szeiger/scala-query/tree/master</a>).
+<td align="left" valign="top"><p>Una <abbr>API</abbr> Scala per effettuare query su database in maniera type-safe (<a class=url href=http://github.com/szeiger/scala-query/>http://github.com/szeiger/scala-query/</a>).
 </tr>
 </tbody>
 </table>
@@ -1017,7 +1017,7 @@ ComplexSpecification.check</code></pre>
 
 <p>Abbiamo visto numerosi esempi di codice Scala che usa tipi Java come <code>java.lang.String</code> e varie classi tra le collezioni Java. Instanziare tipi generici Java in Scala è semplice (a partire da Scala 2.7.0). Considerate la seguente classe generica Java molto semplice, <code>JStack</code>.
 
-<pre><code>// code-examples/ToolsLibs/JStack.java
+<pre><code>// <a href=esempi/cap-14/JStack.java>esempi/cap-14/JStack.java</a>
 
 import java.util.*;
 
@@ -1033,7 +1033,7 @@ public class JStack&lt;T&gt; {
 
 <p>Possiamo istanziare questa classe da Scala, specificando il parametro di tipo, come mostrato qui di seguito.
 
-<pre><code>// code-examples/ToolsLibs/JStack-spec.scala
+<pre><code>// <a href=esempi/cap-14/JStack-spec.scala>esempi/cap-14/JStack-spec.scala</a>
 
 import org.specs._
 
@@ -1055,7 +1055,7 @@ object JStackSpec extends Specification {
 
 <p>A partire da Scala 2.7.2, potete anche usare i generici Scala da Java. Considerate il seguente test per JUnit 4, che mostra alcune delle idiosincrasie che potreste incontrare.
 
-<pre><code>// code-examples/ToolsLibs/SMapTest.java
+<pre><code>// <a href=esempi/cap-14/SMapTest.java>esempi/cap-14/SMapTest.java</a>
 
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -1109,7 +1109,7 @@ public class SMapTest {
 
 <pre><samp>javac -Xlint:unchecked -cp $SCALA_HOME/lib/scala-library.jar:$JUNIT_HOME/junit-4.4.jar SMapTest.java</samp></pre>
 
-<p><code>SCALA_HOME</code> e <code>JUNIT_HOME</code> sono le directory di installazione di Sclaa e di JUnit, rispettivamente.
+<p><code>SCALA_HOME</code> e <code>JUNIT_HOME</code> sono le directory di installazione di Scala e di JUnit, rispettivamente.
 
 <p>La classe <code>SMapTest</code> definisce una classe <code>Name</code> annidata che viene usate come tipo &#8220;valore&#8221; in un'istanza di <code>scala.collection.mutable.LinkedHashMap</code>. Per semplicità, <code>Name</code> è dotato di campi <code>firstName</code> e <code>lastName</code> pubblici e di un costruttore.
 
@@ -1135,7 +1135,7 @@ required: scala.Option&lt;SMapTest.Name&gt;
 
 <p>Continuando con il nostro precedente esempio <code>SMapTest</code>, possiamo esplorare l'invocazione di codice Scala da Java quando sono richieste le funzioni Scala.
 
-<pre><code>// code-examples/ToolsLibs/SMapTestWithFunctions.java
+<pre><code>// <a href=esempi/cap-14/SMapTestWithFunctions.java>esempi/cap-14/SMapTestWithFunctions.java</a>
 
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -1227,7 +1227,7 @@ public class SMapTestWithFunctions {
 
 <p>Ricordate la classe <code>Complex</code> che abbiamo visto in precedenza? Ora aggiungiamo l'annotazione a ogni parametro del costruttore, che in una classe <code>case</code> rappresenta un campo.
 
-<pre><code>// code-examples/ToolsLibs/complex-javabean.scala
+<pre><code>// <a href=esempi/cap-14/complex-javabean.scala>esempi/cap-14/complex-javabean.scala</a>
 
 case class ComplexBean(
   @scala.reflect.BeanProperty real: Double,
@@ -1381,7 +1381,7 @@ case class ComplexBean(
 
 <p>Potete vedere questo all'opera nel seguente tratto artificioso, dove ogni carattere viene usato per dichiarare un metodo astratto che non prende argomenti e restituisce <code>Unit</code>.
 
-<pre><code>// code-examples/ToolsLibs/all-op-chars.scala
+<pre><code>// <a href=esempi/cap-14/all-op-chars.scala>esempi/cap-14/all-op-chars.scala</a>
 
 trait AllOpChars {
   def == : Unit   // $eq$eq
@@ -1448,7 +1448,7 @@ public interface AllOpChars{
 
 <p>Diamo un'occhiata a un aspetto che registra le invocazioni di metodo sulla classe <code>Complex</code> che abbiamo precedentemente usato in questo capitolo. Questa volta aggiungeremo una dichiarazione di package per fornire un ambito di visibilità.
 
-<pre><code>// code-examples/ToolsLibs/aspectj/complex.scala
+<pre><code>// <a href=esempi/cap-14/aspectj/complex.scala>esempi/cap-14/aspectj/complex.scala</a>
 
 package example.aspectj
 
@@ -1461,7 +1461,7 @@ case class Complex(real: Double, imaginary: Double) {
 
 <p>Ecco un <code>object</code> che usa questa classe <code>Complex</code>.
 
-<pre><code>// code-examples/ToolsLibs/aspectj/complex-main.scala
+<pre><code>// <a href=esempi/cap-14/aspectj/complex-main.scala>esempi/cap-14/aspectj/complex-main.scala</a>
 
 package example.aspectj
 
@@ -1476,7 +1476,7 @@ object ComplexMain {
 
 <p>Di seguito, ecco un aspetto AspectJ che definisce un <em class=wtf>pointcut</em> per la creazione di istanze di <code>Complex</code> e un altro <span class=wtf>pointcut</span> per l'invocazione del metodo <code>+</code>.
 
-<pre><code>// code-examples/ToolsLibs/aspectj/LogComplex.aj
+<pre><code>// <a href=esempi/cap-14/aspectj/LogComplex.aj>esempi/cap-14/aspectj/LogComplex.aj</a>
 
 package example.aspectj;
 
@@ -1519,7 +1519,7 @@ public aspect LogComplex {
 <!-- TODO "weave into" -->
 <p>Per eseguire questo codice con l'aspetto <code>LogComplex</code>, usiamo <em class=wtf>load-time weaving</em> (<a class=url href=http://www.eclipse.org/aspectj/doc/released/devguide/ltw.html>http://www.eclipse.org/aspectj/doc/released/devguide/ltw.html</a>). Invocheremo Java con un <em>agente</em> che &#8220;<span class=wtf>weaves</span>&#8221; l'<em class=wtf>advice</em> da <code>LogComplex</code> in <code>Complex</code>. Per usare il <span class=wtf>load-time weaving</span>, abbiamo anche bisogno del seguente file di configurazione, <span class=file>META-INF/aop.xml</span>.
 
-<pre><code>&lt;!-- code-examples/ToolsLibs/META-INF/aop.xml --&gt;
+<pre><code>&lt;!-- <a href=esempi/cap-14/META-INF/aop.xml>esempi/cap-14/META-INF/aop.xml</a> --&gt;
 
 &lt;aspectj&gt;
   &lt;aspects&gt;
@@ -1565,7 +1565,7 @@ Complex(4.0,6.0)</samp></pre>
 <p>Nella <abbr>DI</abbr> di Spring, le dipendenze vengono specificate usando una combinazione di file di configurazione <abbr>XML</abbr> e annotazioni nel codice sorgente. La <abbr>API</abbr> di Spring risolve queste dipendenze nel momento in cui le classi vengono istanziate. Spring si aspetta che queste classi seguano le convenzioni <em>JavaBeans</em> (si veda <a href=apa.html#JavaBeansSpec>[JavaBeansSpec]</a>). Classi ben progettate dipenderanno solamente dalle astrazioni, cioè da interfacce Java o tratti Scala, e le istanze concrete che soddisfano quelle dipendenze verranno passate ai componenti <em>JavaBeans</em> come argomenti di un costruttore o attraverso i metodi per impostare i valori. Quindi, se usate la <abbr>DI</abbr> di Spring con le classi Scala, dovrete usare l'annotazione <code>@scala.reflect.BeanProperty</code> quando usate l'iniezione attraverso i metodi per impostare i valori. L'annotazione non è necessaria se usate l'iniezione attraverso i costruttori.
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>Privilegiate l'iniezione attraverso i costruttori, quando è possibile. Questa scelta non solo elimina il bisogno di usare l'annotazione <code>@BeanProperty</code>, ma lascia ogni istanza in uno stato noto e <span class=wtf>good</span> quando il processo di costruzione termina.
+<p><span class=u>&#x261E;</span>Privilegiate l'iniezione attraverso i costruttori, quando è possibile. Questa scelta non solo elimina il bisogno di usare l'annotazione <code>@BeanProperty</code>, ma lascia ogni istanza in uno stato noto e valido quando il processo di costruzione termina.
 </blockquote>
 
 <p>Tuttavia, se iniettate dipendenze in un <code>object</code> Scala, dovete usare l'iniezione attraverso i metodi per impostare i valori, dato che non avete modod di definire i parametri del costruttore e non avete il controllo sul processo di costruzione.
@@ -1574,7 +1574,7 @@ Complex(4.0,6.0)</samp></pre>
 
 <p>Ecco un esempio che illustra come &#8220;collegare&#8221; oggetti tra loro con Spring.
 
-<pre><code>// code-examples/ToolsLibs/spring/object-bean.scala
+<pre><code>// <a href=esempi/cap-14/spring/object-bean.scala>esempi/cap-14/spring/object-bean.scala</a>
 
 package example.spring
 
@@ -1605,7 +1605,7 @@ case class FactoryUsingBean(factory: Factory)</code></pre>
 
 <p>Successivamente, definiamo il &#8220;collegamento&#8221; tra le dipendenze usando un file di configurazione <abbr>XML</abbr> standard di Spring.
 
-<pre><code>&lt;!-- code-examples/ToolsLibs/spring/scala-spring.xml --&gt;
+<pre><code>&lt;!-- <a href=esempi/cap-14/spring/scala-spring.xml>esempi/cap-14/spring/scala-spring.xml</a> --&gt;
 
 &lt;beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -1629,7 +1629,7 @@ case class FactoryUsingBean(factory: Factory)</code></pre>
 
 <p>Infine, ecco uno script che usa questi tipi per fare una dimostrazione della <abbr>DI</abbr> di Spring in Scala.
 
-<pre><code>// code-examples/ToolsLibs/spring/object-bean-script.scala
+<pre><code>// <a href=esempi/cap-14/spring/object-bean-script.scala>esempi/cap-14/spring/object-bean-script.scala</a>
 
 import example.spring._
 import org.springframework.context.support._
