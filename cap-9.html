@@ -361,36 +361,30 @@ scala -classpath . sleepingbarber.BarbershopSimulator</samp></pre>
 <col align=left>
 </colgroup>
 <thead valign=top><tr>
-<th align=left valign=top>Metodo</th>
-<th align=left valign=top>Valore di ritorno</th>
-<th align=left valign=top>Descrizione</th>
-</tr></thead>
+<th align=left valign=top>Metodo
+<th align=left valign=top>Valore di ritorno
+<th align=left valign=top>Descrizione
 <tbody valign=top>
 <tr>
-<td align=left valign=top><p><code>act</code></p></td>
-<td align=left valign=top><p><code>Unit</code></p></td>
-<td align=left valign=top><p>Metodo astratto a livello radice nella gerarchia di un attore. Tipicamente, contiene uno dei metodi che seguono.</p></td>
-</tr>
+<td align=left valign=top><p><code>act</code>
+<td align=left valign=top><p><code>Unit</code>
+<td align=left valign=top><p>Metodo astratto a livello radice nella gerarchia di un attore. Tipicamente, contiene uno dei metodi che seguono.
 <tr>
-<td align=left valign=top><p><code>receive</code></p></td>
-<td align=left valign=top><p>Il risultato della elaborazione del messaggio</p></td>
-<td align=left valign=top><p>Si blocca fino a quando non viene ricevuto un messaggio di un tipo corrispondente.</p></td>
-</tr>
+<td align=left valign=top><p><code>receive</code>
+<td align=left valign=top><p>Il risultato della elaborazione del messaggio
+<td align=left valign=top><p>Si blocca fino a quando non viene ricevuto un messaggio di un tipo corrispondente.
 <tr>
-<td align=left valign=top><p><code>receiveWithin</code></p></td>
-<td align=left valign=top><p>Il risultato della elaborazione del messaggio</p></td>
-<td align=left valign=top><p>Come <code>receive</code>, ma si sblocca dopo il numero di millisecondi specificato.</p></td>
-</tr>
+<td align=left valign=top><p><code>receiveWithin</code>
+<td align=left valign=top><p>Il risultato della elaborazione del messaggio
+<td align=left valign=top><p>Come <code>receive</code>, ma si sblocca dopo il numero di millisecondi specificato.
 <tr>
-<td align=left valign=top><p><code>react</code></p></td>
-<td align=left valign=top><p><code>Nothing</code></p></td>
-<td align=left valign=top><p>Richiede meno costi aggiuntivi (in termini di thread) rispetto a <code>receive</code>.</p></td>
-</tr>
+<td align=left valign=top><p><code>react</code>
+<td align=left valign=top><p><code>Nothing</code>
+<td align=left valign=top><p>Richiede meno costi aggiuntivi (in termini di thread) rispetto a <code>receive</code>.
 <tr>
-<td align=left valign=top><p><code>reactWithin</code></p></td>
-<td align=left valign=top><p><code>Nothing</code></p></td>
-<td align=left valign=top><p>Come <code>react</code>, ma si sblocca dopo il numero di millisecondi specificato.</p></td>
-</tr>
+<td align=left valign=top><p><code>reactWithin</code>
+<td align=left valign=top><p><code>Nothing</code>
+<td align=left valign=top><p>Come <code>react</code>, ma si sblocca dopo il numero di millisecondi specificato.
 </tbody>
 </table>
 </div>
