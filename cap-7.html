@@ -33,29 +33,23 @@ body{counter-reset:h1 7}
 </colgroup>
 <tbody valign=top>
 <tr>
-<td align=left valign=top><p><strong>Tipi</strong></p></td>
-<td align=left valign=top><p><code>Character</code>, <code>Class</code>, <code>Error</code>, <code>Function</code>, <code>Integer</code>, <code>Map</code>, <code>Pair</code>, <code>Runnable</code>, <code>Set</code>, <code>String</code>, <code>Throwable</code>, <code>Triple</code>.</p></td>
-</tr>
+<td align=left valign=top><p><strong>Tipi</strong>
+<td align=left valign=top><p><code>Character</code>, <code>Class</code>, <code>Error</code>, <code>Function</code>, <code>Integer</code>, <code>Map</code>, <code>Pair</code>, <code>Runnable</code>, <code>Set</code>, <code>String</code>, <code>Throwable</code>, <code>Triple</code>.
 <tr>
-<td align=left valign=top><p><strong>Eccezioni</strong></p></td>
-<td align=left valign=top><p><code>Exception</code>, <code>ArrayIndexOutOfBoundsException</code>, <code>ClassCastException</code>, <code>IllegalArgumentException</code>, <code>IndexOutOfBoundsException</code>, <code>NoSuchElementException</code>, <code>NullPointerException</code>, <code>NumberFormatException</code>, <code>RuntimeException</code>, <code>StringIndexOutOfBoundsException</code>, <code>UnsupportedOperationException</code></p></td>
-</tr>
+<td align=left valign=top><p><strong>Eccezioni</strong>
+<td align=left valign=top><p><code>Exception</code>, <code>ArrayIndexOutOfBoundsException</code>, <code>ClassCastException</code>, <code>IllegalArgumentException</code>, <code>IndexOutOfBoundsException</code>, <code>NoSuchElementException</code>, <code>NullPointerException</code>, <code>NumberFormatException</code>, <code>RuntimeException</code>, <code>StringIndexOutOfBoundsException</code>, <code>UnsupportedOperationException</code>.
 <tr>
-<td align=left valign=top><p><strong>Valori</strong></p></td>
-<td align=left valign=top><p><code>Map</code>, <code>Set</code>.</p></td>
-</tr>
+<td align=left valign=top><p><strong>Valori</strong>
+<td align=left valign=top><p><code>Map</code>, <code>Set</code>.
 <tr>
-<td align=left valign=top><p><strong>Oggetti</strong></p></td>
-<td align=left valign=top><p><code>Pair</code>, <code>Triple</code>.</p></td>
-</tr>
+<td align=left valign=top><p><strong>Oggetti</strong>
+<td align=left valign=top><p><code>Pair</code>, <code>Triple</code>.
 <tr>
-<td align=left valign=top><p><strong>Classi</strong></p></td>
-<td align=left valign=top><p><code>Ensuring</code>, <code>ArrowAssoc</code>.</p></td>
-</tr>
+<td align=left valign=top><p><strong>Classi</strong>
+<td align=left valign=top><p><code>Ensuring</code>, <code>ArrowAssoc</code>.
 <tr>
-<td align=left valign=top><p><strong>Metodi</strong></p></td>
-<td align=left valign=top><p>Metodi <em>factory</em> per creare <em>tuple</em>; versioni sovraccaricate di <code>exit</code>, <code>error</code>, <code>assert</code>, <code>assume</code> e <code>require</code>; metodi di conversione di tipo <em>implicita</em>; metodi di I/O come <code>readLine</code>, <code>println</code> e <code>format</code>; un metodo <code>currentThread</code> che invoca <code>java.lang.Thread.currentThread</code>.</p></td>
-</tr>
+<td align=left valign=top><p><strong>Metodi</strong>
+<td align=left valign=top><p>Metodi <em>factory</em> per creare <em>tuple</em>; versioni sovraccaricate di <code>exit</code>, <code>error</code>, <code>assert</code>, <code>assume</code> e <code>require</code>; metodi di conversione di tipo <em>implicita</em>; metodi di I/O come <code>readLine</code>, <code>println</code> e <code>format</code>; un metodo <code>currentThread</code> che invoca <code>java.lang.Thread.currentThread</code>.
 </tbody>
 </table>
 </div>
@@ -393,26 +387,22 @@ lunghezza del corpo? 17</samp></pre>
 <col align=left>
 </colgroup>
 <thead valign=top><tr>
-<th align=left valign=top>Nome</th>
-<th align=left valign=top>Genitore</th>
-<th align=left valign=top>Descrizione</th>
-</tr></thead>
+<th align=left valign=top>Nome
+<th align=left valign=top>Genitore
+<th align=left valign=top>Descrizione
 <tbody valign=top>
 <tr>
-<td align=left valign=top><p><code>Any</code></p></td>
-<td align=left valign=top><p><em>nessuno</em></p></td>
-<td align=left valign=top><p>La radice della gerarchia. Definisce alcuni metodi <code>final</code> come <code>==</code>, <code>!=</code>, <code>isInstanceOf[T]</code> (per il controllo di tipo) e <code>asInstanceOf[T]</code> (per la conversione di tipo), e anche le versioni predefinite di <code>equals</code>, <code>hashCode</code> e <code>toString</code>, che sono progettate per essere ridefinite dalle sottoclassi.</p></td>
-</tr>
+<td align=left valign=top><p><code>Any</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>La radice della gerarchia. Definisce alcuni metodi <code>final</code> come <code>==</code>, <code>!=</code>, <code>isInstanceOf[T]</code> (per il controllo di tipo) e <code>asInstanceOf[T]</code> (per la conversione di tipo), e anche le versioni predefinite di <code>equals</code>, <code>hashCode</code> e <code>toString</code>, che sono progettate per essere ridefinite dalle sottoclassi.
 <tr>
-<td align=left valign=top><p><code>AnyVal</code></p></td>
-<td align=left valign=top><p><code>Any</code></p></td>
-<td align=left valign=top><p>Il genitore di tutti i tipi <em>valore</em>, che corrispondono ai tipi <em>primitivi</em> della macchina virtuale sottostante, più <code>Unit</code>. Tutte le istanze di <code>AnyVal</code> sono <em>istanze valore</em> immutabili e tutti i tipi <code>AnyVal</code> sono <code>abstract final</code>. Quindi, nessuno di loro può essere istanziato con <code>new</code>. Invece, le nuove istanze vengono create con valori <em>letterali</em> (come <code>3.14</code> per un <code>Double</code>) o invocando metodi su istanze che restituiscono nuovi valori.</p></td>
-</tr>
+<td align=left valign=top><p><code>AnyVal</code>
+<td align=left valign=top><p><code>Any</code>
+<td align=left valign=top><p>Il genitore di tutti i tipi <em>valore</em>, che corrispondono ai tipi <em>primitivi</em> della macchina virtuale sottostante, più <code>Unit</code>. Tutte le istanze di <code>AnyVal</code> sono <em>istanze valore</em> immutabili e tutti i tipi <code>AnyVal</code> sono <code>abstract final</code>. Quindi, nessuno di loro può essere istanziato con <code>new</code>. Invece, le nuove istanze vengono create con valori <em>letterali</em> (come <code>3.14</code> per un <code>Double</code>) o invocando metodi su istanze che restituiscono nuovi valori.
 <tr>
-<td align=left valign=top><p><code>AnyRef</code></p></td>
-<td align=left valign=top><p><code>Any</code></p></td>
-<td align=left valign=top><p>Il genitore di tutti i tipi <em>riferimento</em>, compresi tutti i tipi <code>java.*</code> e <code>scala.*</code>. &Egrave; equivalente a <code>java.lang.Object</code> per la <abbr>JVM</abbr> e a <code>object</code> (<code>System.Object</code>) per il <abbr>CLR</abbr>. Le istanze dei tipi riferimento si creano con <code>new</code>.</p></td>
-</tr>
+<td align=left valign=top><p><code>AnyRef</code>
+<td align=left valign=top><p><code>Any</code>
+<td align=left valign=top><p>Il genitore di tutti i tipi <em>riferimento</em>, compresi tutti i tipi <code>java.*</code> e <code>scala.*</code>. &Egrave; equivalente a <code>java.lang.Object</code> per la <abbr>JVM</abbr> e a <code>object</code> (<code>System.Object</code>) per il <abbr>CLR</abbr>. Le istanze dei tipi riferimento si creano con <code>new</code>.
 </tbody>
 </table>
 </div>
@@ -427,46 +417,36 @@ lunghezza del corpo? 17</samp></pre>
 <col align=left>
 </colgroup>
 <thead valign=top><tr>
-<th align=left valign=top>Nome</th>
-<th align=left valign=top>Tipo primitivo corrispondente</th>
-</tr></thead>
+<th align=left valign=top>Nome
+<th align=left valign=top>Tipo primitivo corrispondente
 <tbody valign=top>
 <tr>
-<td align=left valign=top><p><code>Boolean</code></p></td>
-<td align=left valign=top><p><code>boolean</code> (<code>true</code> e <code>false</code>)</p></td>
-</tr>
+<td align=left valign=top><p><code>Boolean</code>
+<td align=left valign=top><p><code>boolean</code> (<code>true</code> e <code>false</code>)
 <tr>
-<td align=left valign=top><p><code>Byte</code></p></td>
-<td align=left valign=top><p><code>byte</code></p></td>
-</tr>
+<td align=left valign=top><p><code>Byte</code>
+<td align=left valign=top><p><code>byte</code>
 <tr>
-<td align=left valign=top><p><code>Char</code></p></td>
-<td align=left valign=top><p><code>char</code></p></td>
-</tr>
+<td align=left valign=top><p><code>Char</code>
+<td align=left valign=top><p><code>char</code>
 <tr>
-<td align=left valign=top><p><code>Short</code></p></td>
-<td align=left valign=top><p><code>short</code></p></td>
-</tr>
+<td align=left valign=top><p><code>Short</code>
+<td align=left valign=top><p><code>short</code>
 <tr>
-<td align=left valign=top><p><code>Int</code></p></td>
-<td align=left valign=top><p><code>int</code></p></td>
-</tr>
+<td align=left valign=top><p><code>Int</code>
+<td align=left valign=top><p><code>int</code>
 <tr>
-<td align=left valign=top><p><code>Long</code></p></td>
-<td align=left valign=top><p><code>long</code></p></td>
-</tr>
+<td align=left valign=top><p><code>Long</code>
+<td align=left valign=top><p><code>long</code>
 <tr>
-<td align=left valign=top><p><code>Float</code></p></td>
-<td align=left valign=top><p><code>float</code></p></td>
-</tr>
+<td align=left valign=top><p><code>Float</code>
+<td align=left valign=top><p><code>float</code>
 <tr>
-<td align=left valign=top><p><code>Double</code></p></td>
-<td align=left valign=top><p><code>double</code></p></td>
-</tr>
+<td align=left valign=top><p><code>Double</code>
+<td align=left valign=top><p><code>double</code>
 <tr>
-<td align=left valign=top><p><code>Unit</code></p></td>
-<td align=left valign=top><p>Gioca lo stesso ruolo assunto da <code>void</code> nella maggior parte dei linguaggi imperativi. Viene usato principalmente come valore di ritorno dei metodi. Esiste una sola istanza di <code>Unit</code>, chiamata <code>()</code>; potete pensarla come una tupla con zero elementi.</p></td>
-</tr>
+<td align=left valign=top><p><code>Unit</code>
+<td align=left valign=top><p>Gioca lo stesso ruolo assunto da <code>void</code> nella maggior parte dei linguaggi imperativi. Viene usato principalmente come valore di ritorno dei metodi. Esiste una sola istanza di <code>Unit</code>, chiamata <code>()</code>; potete pensarla come una tupla con zero elementi.
 </tbody>
 </table>
 </div>
@@ -482,76 +462,62 @@ lunghezza del corpo? 17</samp></pre>
 <col align=left>
 </colgroup>
 <thead valign=top><tr>
-<th align=left valign=top>Nome</th>
-<th align=left valign=top>Genitore</th>
-<th align=left valign=top>Descrizione</th>
-</tr></thead>
+<th align=left valign=top>Nome
+<th align=left valign=top>Genitore
+<th align=left valign=top>Descrizione
 <tbody valign=top>
 <tr>
-<td align=left valign=top><p><code>Collection[+T]</code></p></td>
-<td align=left valign=top><p><code>Iterable[T]</code></p></td>
-<td align=left valign=top><p>Tratto per le collezioni di dimensione nota.</p></td>
-</tr>
+<td align=left valign=top><p><code>Collection[+T]</code>
+<td align=left valign=top><p><code>Iterable[T]</code>
+<td align=left valign=top><p>Tratto per le collezioni di dimensione nota.
 <tr>
-<td align=left valign=top><p><code>Either[+T1, +T2]</code></p></td>
-<td align=left valign=top><p><code>AnyRef</code></p></td>
-<td align=left valign=top><p>Usato soprattutto come tipo di ritorno quando un metodo potrebbe restituire un&#8217;istanza di uno di due tipi non correlati. Per esempio, un&#8217;eccezione o un risultato &#8220;di successo&#8221;. Nel pattern matching, <code>Either</code> può corrispondere ai suoi due sottotipi <code>Left</code> e <code>Right</code>. (&Egrave; analogo a <code>Option</code>, con <code>Some</code> e <code>None</code>.) Per gestire le eccezioni con questo idioma, la convenzione prevede di usare <code>Left</code> per l&#8217;eccezione.</p></td>
-</tr>
+<td align=left valign=top><p><code>Either[+T1, +T2]</code>
+<td align=left valign=top><p><code>AnyRef</code>
+<td align=left valign=top><p>Usato soprattutto come tipo di ritorno quando un metodo potrebbe restituire un&#8217;istanza di uno di due tipi non correlati. Per esempio, un&#8217;eccezione o un risultato &#8220;di successo&#8221;. Nel pattern matching, <code>Either</code> può corrispondere ai suoi due sottotipi <code>Left</code> e <code>Right</code>. (&Egrave; analogo a <code>Option</code>, con <code>Some</code> e <code>None</code>.) Per gestire le eccezioni con questo idioma, la convenzione prevede di usare <code>Left</code> per l&#8217;eccezione.
 <tr>
-<td align=left valign=top><p><code>FunctionN[-T<sub>1</sub>, -T<sub>2</sub>, &hellip;, -T<sub>N</sub>, +R]</code></p></td>
-<td align=left valign=top><p><code>AnyRef</code></p></td>
-<td align=left valign=top><p>Tratto che rappresenta una funzione che accetta <code>N</code> argomenti, ognuno dei quali può avere il proprio tipo, e restituisce un valore di tipo <code>R</code>. (Sono definiti tratti per <code>N</code> che va da 0 a 22.) Le <em>annotazioni di varianza</em> (<code>+</code> e <code>-</code>) davanti ai tipi verranno spiegate nella sezione <a href=cap-12.html#VarianceUnderInheritance>Varianza in caso di ereditarietà</a> del capitolo 12.</p></td>
-</tr>
+<td align=left valign=top><p><code>FunctionN[-T<sub>1</sub>, -T<sub>2</sub>, &hellip;, -T<sub>N</sub>, +R]</code>
+<td align=left valign=top><p><code>AnyRef</code>
+<td align=left valign=top><p>Tratto che rappresenta una funzione che accetta <code>N</code> argomenti, ognuno dei quali può avere il proprio tipo, e restituisce un valore di tipo <code>R</code>. (Sono definiti tratti per <code>N</code> che va da 0 a 22.) Le <em>annotazioni di varianza</em> (<code>+</code> e <code>-</code>) davanti ai tipi verranno spiegate nella sezione <a href=cap-12.html#VarianceUnderInheritance>Varianza in caso di ereditarietà</a> del capitolo 12.
 <tr>
-<td align=left valign=top><p><code>Iterable[+T]</code></p></td>
-<td align=left valign=top><p><code>AnyRef</code></p></td>
-<td align=left valign=top><p>Tratto che contiene metodi per operare su collezioni di istanze. Gli utenti implementano il metodo astratto <code>elements</code> per restituire un&#8217;istanza di <code>Iterable</code>.</p></td>
-</tr>
+<td align=left valign=top><p><code>Iterable[+T]</code>
+<td align=left valign=top><p><code>AnyRef</code>
+<td align=left valign=top><p>Tratto che contiene metodi per operare su collezioni di istanze. Gli utenti implementano il metodo astratto <code>elements</code> per restituire un&#8217;istanza di <code>Iterable</code>.
 <tr>
-<td align=left valign=top><p><code>List[+T]</code></p></td>
-<td align=left valign=top><p><code>Seq[T]</code></p></td>
-<td align=left valign=top><p>Classe <code>sealed abstract</code> per collezioni ordinate con una semantica di lista nello stile della programmazione funzionale. &Egrave; la collezione di gran lunga più usata in Scala, quindi è definita nel package <code>scala</code> piuttosto che in uno dei package delle collezioni. (In Scala 2.8, in realtà, è definita in <code>scala.collection.immutable</code>, e il <code>package object scala</code> ne contiene un &#8220;alias&#8221;.) Ha due sottoclassi: <code>case object Nil</code>, che estende <code>List[Nothing]</code> e rappresenta una lista vuota, e <code>case final class ::[T]</code>, che rappresenta una lista non vuota caratterizzata da un elemento come testa e una lista come coda; la coda è <code>Nil</code> se la lista contiene un solo elemento.</p></td>
-</tr>
+<td align=left valign=top><p><code>List[+T]</code>
+<td align=left valign=top><p><code>Seq[T]</code>
+<td align=left valign=top><p>Classe <code>sealed abstract</code> per collezioni ordinate con una semantica di lista nello stile della programmazione funzionale. &Egrave; la collezione di gran lunga più usata in Scala, quindi è definita nel package <code>scala</code> piuttosto che in uno dei package delle collezioni. (In Scala 2.8, in realtà, è definita in <code>scala.collection.immutable</code>, e il <code>package object scala</code> ne contiene un &#8220;alias&#8221;.) Ha due sottoclassi: <code>case object Nil</code>, che estende <code>List[Nothing]</code> e rappresenta una lista vuota, e <code>case final class ::[T]</code>, che rappresenta una lista non vuota caratterizzata da un elemento come testa e una lista come coda; la coda è <code>Nil</code> se la lista contiene un solo elemento.
 <tr>
-<td align=left valign=top><p><code>Nothing</code></p></td>
-<td align=left valign=top><p><em>tutti gli altri tipi</em></p></td>
-<td align=left valign=top><p><code>Nothing</code> è il sottotipo di <em>tutti</em> gli altri tipi. Non ne esistono istanze. Viene usato principalmente per definire altri tipi in maniera type-safe, come lo speciale sottotipo <code>Nil</code> di <code>List</code>. Si veda anche la sezione <a href=cap-12.html#NothingAndNull><code>Nothing</code> e <code>Null</code></a> nel capitolo 12.</p></td>
-</tr>
+<td align=left valign=top><p><code>Nothing</code>
+<td align=left valign=top><p><em>tutti gli altri tipi</em>
+<td align=left valign=top><p><code>Nothing</code> è il sottotipo di <em>tutti</em> gli altri tipi. Non ne esistono istanze. Viene usato principalmente per definire altri tipi in maniera type-safe, come lo speciale sottotipo <code>Nil</code> di <code>List</code>. Si veda anche la sezione <a href=cap-12.html#NothingAndNull><code>Nothing</code> e <code>Null</code></a> nel capitolo 12.
 <tr>
-<td align=left valign=top><p><code>Null</code></p></td>
-<td align=left valign=top><p><em>tutti i tipi riferimento</em></p></td>
-<td align=left valign=top><p><code>Null</code> ha una sola istanza, <code>null</code>, che corrisponde al concetto di <code>null</code> della macchina virtuale sottostante.</p></td>
-</tr>
+<td align=left valign=top><p><code>Null</code>
+<td align=left valign=top><p><em>tutti i tipi riferimento</em>
+<td align=left valign=top><p><code>Null</code> ha una sola istanza, <code>null</code>, che corrisponde al concetto di <code>null</code> della macchina virtuale sottostante.
 <tr>
-<td align=left valign=top><p><code>Option[T]</code></p></td>
-<td align=left valign=top><p><code>Product</code></p></td>
-<td align=left valign=top><p>Racchiude un elemento opzionale. &Egrave; un tipo <code>sealed abstract</code> e le uniche istanze permesse sono quelle dei suoi tipi derivati: <code>case class Some[T]</code>, che racchiude un&#8217;istanza di <code>T</code>, e <code>case object None</code>, che estende <code>Option[Nothing]</code>.</p></td>
-</tr>
+<td align=left valign=top><p><code>Option[T]</code>
+<td align=left valign=top><p><code>Product</code>
+<td align=left valign=top><p>Racchiude un elemento opzionale. &Egrave; un tipo <code>sealed abstract</code> e le uniche istanze permesse sono quelle dei suoi tipi derivati: <code>case class Some[T]</code>, che racchiude un&#8217;istanza di <code>T</code>, e <code>case object None</code>, che estende <code>Option[Nothing]</code>.
 <tr>
-<td align=left valign=top><p><code>Predef</code></p></td>
-<td align=left valign=top><p><code>AnyRef</code></p></td>
-<td align=left valign=top><p>Un <code>object</code> che definisce e importa molti tipi e metodi di uso comune. Si veda la sezione <a href=#PredefObject>L&#8217;oggetto <code>Predef</code></a> all&#8217;inizio di questo capitolo per i dettagli.</p></td>
-</tr>
+<td align=left valign=top><p><code>Predef</code>
+<td align=left valign=top><p><code>AnyRef</code>
+<td align=left valign=top><p>Un <code>object</code> che definisce e importa molti tipi e metodi di uso comune. Si veda la sezione <a href=#PredefObject>L&#8217;oggetto <code>Predef</code></a> all&#8217;inizio di questo capitolo per i dettagli.
 <tr>
-<td align=left valign=top><p><code>Product</code></p></td>
-<td align=left valign=top><p><code>AnyRef</code></p></td>
-<td align=left valign=top><p>Tratto che contiene metodi per determinare l&#8217;arità e ottenere l&#8217;elemento di posto <code>n</code> in un &#8220;prodotto cartesiano&#8221;. Sono definiti sottotratti di <code>Product</code>, chiamati <code>ProductN</code>, per la dimensione <code>N</code> che va da 1 a 22.</p></td>
-</tr>
+<td align=left valign=top><p><code>Product</code>
+<td align=left valign=top><p><code>AnyRef</code>
+<td align=left valign=top><p>Tratto che contiene metodi per determinare l&#8217;arità e ottenere l&#8217;elemento di posto <code>n</code> in un &#8220;prodotto cartesiano&#8221;. Sono definiti sottotratti di <code>Product</code>, chiamati <code>ProductN</code>, per la dimensione <code>N</code> che va da 1 a 22.
 <tr>
-<td align=left valign=top><p><code>ScalaObject</code></p></td>
-<td align=left valign=top><p><code>AnyRef</code></p></td>
-<td align=left valign=top><p>Tratto usato come <em>mixin</em> e aggiunto a tutte le istanze dei tipi riferimento di Scala.</p></td>
-</tr>
+<td align=left valign=top><p><code>ScalaObject</code>
+<td align=left valign=top><p><code>AnyRef</code>
+<td align=left valign=top><p>Tratto usato come <em>mixin</em> e aggiunto a tutte le istanze dei tipi riferimento di Scala.
 <tr>
-<td align=left valign=top><p><code>Seq[+T]</code></p></td>
-<td align=left valign=top><p><code>Collection[T]</code></p></td>
-<td align=left valign=top><p>Tratto per le collezioni ordinate.</p></td>
-</tr>
+<td align=left valign=top><p><code>Seq[+T]</code>
+<td align=left valign=top><p><code>Collection[T]</code>
+<td align=left valign=top><p>Tratto per le collezioni ordinate.
 <tr>
-<td align=left valign=top><p><code>TupleN</code></p></td>
-<td align=left valign=top><p><code>ProductN</code></p></td>
-<td align=left valign=top><p>Classi <code>case</code> separate per l&#8217;arità <code>N</code> che va da 1 a 22. Le tuple supportano la sintassi <em>letterale</em> <code>(x1, x2, &hellip;, xN)</code>.</p></td>
-</tr>
+<td align=left valign=top><p><code>TupleN</code>
+<td align=left valign=top><p><code>ProductN</code>
+<td align=left valign=top><p>Classi <code>case</code> separate per l&#8217;arità <code>N</code> che va da 1 a 22. Le tuple supportano la sintassi <em>letterale</em> <code>(x1, x2, &hellip;, xN)</code>.
 </tbody>
 </table>
 </div>
@@ -796,51 +762,42 @@ C1 :  List(C1, ScalaObject, AnyRef, Any)</code></pre>
 <col align=left>
 </colgroup>
 <thead valign=top><tr>
-<th align=left valign=top>Passo</th>
-<th align=left valign=top>Linearizzazione </th>
-<th align=left valign=top>Descrizione</th>
-</tr></thead>
+<th align=left valign=top>Passo
+<th align=left valign=top>Linearizzazione
+<th align=left valign=top>Descrizione
 <tbody valign=top>
 <tr>
-<td align=left valign=top><p>1</p></td>
-<td align=left valign=top><p><code>C2</code></p></td>
-<td align=left valign=top><p>Aggiungiamo il tipo dell&#8217;istanza.</p></td>
-</tr>
+<td align=left valign=top><p>1
+<td align=left valign=top><p><code>C2</code>
+<td align=left valign=top><p>Aggiungiamo il tipo dell&#8217;istanza.
 <tr>
-<td align=left valign=top><p>2</p></td>
-<td align=left valign=top><p><code>C2, T3, C1</code></p></td>
-<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>T3</code> (il più lontano sulla destra).</p></td>
-</tr>
+<td align=left valign=top><p>2
+<td align=left valign=top><p><code>C2, T3, C1</code>
+<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>T3</code> (il più lontano sulla destra).
 <tr>
-<td align=left valign=top><p>3</p></td>
-<td align=left valign=top><p><code>C2, T3, C1, T2, C1</code></p></td>
-<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>T2</code>.</p></td>
-</tr>
+<td align=left valign=top><p>3
+<td align=left valign=top><p><code>C2, T3, C1, T2, C1</code>
+<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>T2</code>.
 <tr>
-<td align=left valign=top><p>4</p></td>
-<td align=left valign=top><p><code>C2, T3, C1, T2, C1, T1, C1</code></p></td>
-<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>T1</code>.</p></td>
-</tr>
+<td align=left valign=top><p>4
+<td align=left valign=top><p><code>C2, T3, C1, T2, C1, T1, C1</code>
+<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>T1</code>.
 <tr>
-<td align=left valign=top><p>5</p></td>
-<td align=left valign=top><p><code>C2, T3, C1, T2, C1, T1, C1, C2A, T2, C1</code></p></td>
-<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>C2A</code>.</p></td>
-</tr>
+<td align=left valign=top><p>5
+<td align=left valign=top><p><code>C2, T3, C1, T2, C1, T1, C1, C2A, T2, C1</code>
+<td align=left valign=top><p>Aggiungiamo la linearizzazione di <code>C2A</code>.
 <tr>
-<td align=left valign=top><p>6</p></td>
-<td align=left valign=top><p><code>C2, T3, T2, T1, C2A, T2, C1</code></p></td>
-<td align=left valign=top><p>Rimuoviamo i duplicati di <code>C1</code>, tutti tranne <em>l&#8217;ultimo</em> <code>C1</code>.</p></td>
-</tr>
+<td align=left valign=top><p>6
+<td align=left valign=top><p><code>C2, T3, T2, T1, C2A, T2, C1</code>
+<td align=left valign=top><p>Rimuoviamo i duplicati di <code>C1</code>, tutti tranne <em>l&#8217;ultimo</em> <code>C1</code>.
 <tr>
-<td align=left valign=top><p>7</p></td>
-<td align=left valign=top><p><code>C2, T3, T1, C2A, T2, C1</code></p></td>
-<td align=left valign=top><p>Rimuoviamo i duplicati di <code>T2</code>, tutti tranne <em>l&#8217;ultimo</em> <code>T2</code>.</p></td>
-</tr>
+<td align=left valign=top><p>7
+<td align=left valign=top><p><code>C2, T3, T1, C2A, T2, C1</code>
+<td align=left valign=top><p>Rimuoviamo i duplicati di <code>T2</code>, tutti tranne <em>l&#8217;ultimo</em> <code>T2</code>.
 <tr>
-<td align=left valign=top><p>8</p></td>
-<td align=left valign=top><p><code>C2, T3, T1, C2A, T2, C1, ScalaObject, AnyRef, Any</code></p></td>
-<td align=left valign=top><p>Abbiamo finito!</p></td>
-</tr>
+<td align=left valign=top><p>8
+<td align=left valign=top><p><code>C2, T3, T1, C2A, T2, C1, ScalaObject, AnyRef, Any</code>
+<td align=left valign=top><p>Abbiamo finito!
 </tbody>
 </table>
 </div>
