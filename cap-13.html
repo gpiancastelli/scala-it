@@ -22,7 +22,7 @@ body{counter-reset:h1 13}
 
 <p>In Java, le annotazioni sono dichiarate usando convenzioni particolari, come per esempio dichiarando le annotazioni con la parola chiave <code>@interface</code> anziché <code>class</code> o <code>interface</code>. Ecco la dichiarazione di un'annotazione presa dalla libreria Contract4J <a href=apa.html#Contract4J>[Contract4J]</a> che usa le annotazioni per supportare la <em>progettazione per contratto</em> in Java (si veda anche la sezione <a href=#DesignByContractExample>Una progettazione migliore con la progettazione per contratto</a> più avanti). Alcuni commenti sono stati rimossi e i rimanenti tradotti, per chiarezza.
 
-<pre><code>// code-examples/AppDesign/annotations/Pre.java
+<pre><code>// <a href=esempi/cap-13/Pre.java>esempi/cap-13/Pre.java</a>
 
 package org.contract4j5.contract;
 import java.lang.annotation.Documented;
@@ -56,7 +56,7 @@ public @interface Pre {
 
 <p>Ecco un esempio in Scala che usa <code>@Pre</code> e mostra diversi modi di specificare i parametri <code>value</code> e <code>message</code>.
 
-<pre><code>// code-examples/AppDesign/annotations/pre-example.scala
+<pre><code>// <a href=esempi/cap-13/pre-example.scala>esempi/cap-13/pre-example.scala</a>
 
 import org.contract4j5.contract._
 
@@ -108,7 +108,7 @@ class SerialVersionUID(uid: Long) extends StaticAnnotation</code></pre>
 
 <p>Tutti i parametri del costruttore devono essere espressioni costanti, comprese stringhe, letterali classe, enumerazioni Java, espressioni numeriche e array monodimensionali di questi tipi. Tuttavia, il compilatore permette di usare anche clausole di annotazione con altri argomenti, come valori booleani e <span class=wtf>mappe</span>, come mostrato in questo esempio.
 
-<pre><code>// code-examples/AppDesign/annotations/anno-example.scala
+<pre><code>// <a href=esempi/cap-13/anno-example.scala>esempi/cap-13/anno-example.scala</a>
 
 import scala.StaticAnnotation
 
@@ -371,7 +371,7 @@ def process(x: Option[int]) = (x: @unchecked) match {
 
 <p>Diamo un'occhiata a un esempio riguardante <code>java.io.IOException</code>, che è un'eccezione controllata. La classe Scala riportata di seguito stampa il contenuto di un <code>java.io.File</code>.
 
-<pre><code>// code-examples/AppDesign/annotations/file-printer.scala
+<pre><code>// <a href=esempi/cap-13/file-printer.scala>esempi/cap-13/file-printer.scala</a>
 
 import java.io._
 
@@ -402,7 +402,7 @@ class FilePrinter(val file: File) {
 
 <p><span class=wtf>By the way</span>, notate che <code>loop</code> usa una ricorsione in coda in stile funzionale anziché un ciclo. Nessuna variabile è stata modificata nella produzione di questa uscita! (A dire il vero, non sappiamo cosa succeda realmente all'interno delle classi di I/O di Java&hellip;)
 
-<pre><code>// code-examples/AppDesign/annotations/FilePrinterMain.java
+<pre><code>// <a href=esempi/cap-13/FilePrinterMain.java>esempi/cap-13/FilePrinterMain.java</a>
 
 import java.io.*;
 
@@ -468,7 +468,7 @@ thrown in body of corresponding try statement
 
 <p>Vi ricordate gli script per i metodi <abbr>HTTP</abbr> che abbiamo realizzato nella sezione <a href=cap-7.html#SealedClassHierarchies>Gerarchie di classi sigillate</a> del capitolo 7? Avevamo definito l'insieme dei metodi di <abbr>HTTP</abbr> 1.1 usando una gerarchia sigillata di classi <code>case</code>.
 
-<pre><code>// code-examples/ObjectSystem/sealed/http-script.scala
+<pre><code>// <a href=esempi/cap-7/sealed/http-script.scala>esempi/cap-7/sealed/http-script.scala</a>
 
 sealed abstract class HttpMethod()
 case class Connect(body: String) extends HttpMethod
@@ -505,7 +505,7 @@ methods.foreach { method =&gt; handle(method) }</code></pre>
 
 <p>In quell'esempio, ogni metodo aveva un attributo <code>body</code> per il corpo del messaggio. Qui ipotizzeremo che il corpo venga gestito in altri modi: ci interessa solo identificare il tipo di metodo <abbr>HTTP</abbr>. Quindi, ecco una classe <code>Enumeration</code> per i metodi di <abbr>HTTP</abbr> 1.1.
 
-<pre><code>// code-examples/AppDesign/enumerations/http-enum-script.scala
+<pre><code>// <a href=esempi/cap-13/http-enum-script.scala>esempi/cap-13/http-enum-script.scala</a>
 
 object HttpMethod extends Enumeration {
   type Method = Value
@@ -557,7 +557,7 @@ Main$$anon$1$HttpMethod(6), Main$$anon$1$HttpMethod(7)}</samp></pre>
 
 <p>Siete probabilmente abituati a usare quei nomi con le enumerazioni Java o .NET. Sfortunatamente, non possiamo recuperare quei nomi dai valori nella enumerazione Scala, almeno dato il modo in cui abbiamo dichiarato <code>HttpMethod</code>. Tuttavia, ci sono due modi in cui possiamo cambiare l'implementazione per ottenere le stringhe con i nomi. Nel primo approccio, passiamo il nome a <code>Value</code> quando creiamo i campi.
 
-<pre><code>// code-examples/AppDesign/enumerations/http-enum2-script.scala
+<pre><code>// <a href=esempi/cap-13/http-enum2-script.scala>esempi/cap-13/http-enum2-script.scala</a>
 
 object HttpMethod extends Enumeration {
   type Method = Value
@@ -603,7 +603,7 @@ Trace: 7
 
 <p>Nel secondo approccio, passiamo la lista di nomi al costruttore <code>Enumeration</code>.
 
-<pre><code>// code-examples/AppDesign/enumerations/http-enum3-script.scala
+<pre><code>// <a href=esempi/cap-13/http-enum3-script.scala>esempi/cap-13/http-enum3-script.scala</a>
 
 object HttpMethod extends Enumeration(
     "Connect", "Delete", "Get", "Head", "Options", "Post", "Put", "Trace") {
@@ -643,7 +643,7 @@ println(HttpMethod)</code></pre>
 
 <p>Rivisitiamo lo script per i metodi <abbr>HTTP</abbr>, che usa una gerarchia sigillata di classi <code>case</code>, confrontandolo con la versione scritta in precedenza che usa un'istanza di <code>Enumeration</code>. Dato che la versione con l'enumerazione non gestisce il corpo del messaggio, modifichiamo la versione con la gerarchia sigillata di classi <code>case</code> in modo che si avvicini alla versione con l'enumerazione: eliminiamo la gestione del corpo del messaggio e aggiungiamo i metodi <code>name</code> e <code>id</code>.
 
-<pre><code>// code-examples/AppDesign/enumerations/http-case-script.scala
+<pre><code>// <a href=esempi/cap-13/http-case-script.scala>esempi/cap-13/http-case-script.scala</a>
 
 sealed abstract class HttpMethod(val id: Int) {
   def name = getClass getSimpleName
@@ -732,7 +732,7 @@ stateCapitals.get("North Hinterlandia") match {
 
 <p>Per esempio, rivisitiamo il nostro esempio precedente relativo alla stampa di un file realizzato nella sezione <a href=#Annotations>Annotazioni</a>. Riorganizzeremo la classe <code>FilePrinter</code> e il driver Java in uno script combinato. Affronteremo due problemi: avvolgeremo <code>LineNumberReader.readLine</code> in un metodo che restituisce <code>Option</code> anziché <code>null</code>, e racchiuderemo l'eccezione controllata <code>IOException</code> in una nostra eccezione non controllata che chiameremo <code>ScalaIOException</code>.
 
-<pre><code>// code-examples/AppDesign/options-nulls/file-printer-refactored-script.scala
+<pre><code>// <a href=esempi/cap-13/file-printer-refactored-script.scala>esempi/cap-13/file-printer-refactored-script.scala</a>
 
 import java.io._
 
@@ -794,7 +794,7 @@ args.foreach { fileName =&gt;
 
 <p>Quando <code>Option</code> viene usata in combinazione con le espressioni <code>for</code> possiamo godere di un altro vantaggio: la rimozione automatica degli elementi <code>None</code> dalle espressioni, sotto la maggior parte delle condizioni <a href=apa.html#Pollak2007>[Pollak2007]</a>, <a href=apa.html#Spiewak2009c>[Spiewak2009c]</a>. Considerate questa prima versione di uno script che usa <code>Option</code> in una espressione <code>for</code>.
 
-<pre><code>// code-examples/AppDesign/options-nulls/option-for-comp-v1-script.scala
+<pre><code>// <a href=esempi/cap-13/option-for-comp-v1-script.scala>esempi/cap-13/option-for-comp-v1-script.scala</a>
 
 case class User(userName: String, name: String, email: String, bio: String)
 
@@ -960,7 +960,7 @@ e1 foreach ( case p1 =&gt; for (p2 &lt;- e2 ...) eN )       // traduzione</code>
 
 <p>Considerate l'esempio seguente, che mostra un <em>componente</em> nel package <code>encodestring</code>.
 
-<pre><code>// code-examples/AppDesign/abstractions/encoded-string.scala
+<pre><code>// <a href=esempi/cap-13/encoded-string.scala>esempi/cap-13/encoded-string.scala</a>
 
 package encodedstring {
 
@@ -1011,7 +1011,7 @@ package encodedstring {
 
 <p>Lo script riportato di seguito mostra il componente in azione.
 
-<pre><code>// code-examples/AppDesign/abstractions/encoded-string-script.scala
+<pre><code>// <a href=esempi/cap-13/encoded-string-script.scala>esempi/cap-13/encoded-string-script.scala</a>
 
 import encodedstring._
 import encodedstring.EncodedString._
@@ -1072,7 +1072,7 @@ scala&gt;</samp></pre>
 
 <p>Per esempio, nella sezione <a href=cap-6.html#OverridingAbstractTypes>Ridefinire i tipi astratti</a> del capitolo 6 abbiamo esaminato la nostra seconda versione del pattern Observer.
 
-<pre><code>// code-examples/AdvOOP/observer/observer2.scala
+<pre><code>// <a href=esempi/cap-6/observer/observer2.scala>esempi/cap-6/observer/observer2.scala</a>
 
 package observer
 
@@ -1110,7 +1110,7 @@ trait SubjectForFunctionalObservers extends AbstractSubject {
 
 <p>Per semplificare l'esempio, concentriamoci solo sulla forma <code>receiveUpdate</code> dell'osservatore, che in precedenza avevamo implementato con <code>SubjectForReceiveUpdateObservers</code>. Ecco un <span class=wtf>rework</span> del nostro pattern che segue approssimativamente un esempio contenuto in <a href=apa.html#Odersky2005>[Odersky2005]</a>. Notate che, dal momento in cui l'articolo è stato scritto, la sintassi di Scala è abbastanza cambiata.
 
-<pre><code>// code-examples/AppDesign/abstractions/observer3-wont-compile.scala
+<pre><code>// <a href=esempi/cap-13/observer3-wont-compile.scala>esempi/cap-13/observer3-wont-compile.scala</a>
 // Non verrà compilato!
 
 package observer
@@ -1147,7 +1147,7 @@ one error found</samp></pre>
 
 <p>Abbiamo esaminato la composizione attraverso le <em>annotazioni self-type</em> nel capitolo 12, e ora usiamo quella funzionalità per risolvere il nostro attuale problema di compilazione. Ecco ancora lo stesso codice, ma questa volta con una annotazione self-type.
 
-<pre><code>// code-examples/AppDesign/abstractions/observer3.scala
+<pre><code>// <a href=esempi/cap-13/observer3.scala>esempi/cap-13/observer3.scala</a>
 
 package observer
 
@@ -1177,7 +1177,7 @@ abstract class SubjectObserver {
 
 <p>Ora che abbiamo una implementazione generica del pattern, possiamo specializzarla per osservare i clic sui pulsanti.
 
-<pre><code>// code-examples/AppDesign/abstractions/button-observer3.scala
+<pre><code>// <a href=esempi/cap-13/button-observer3.scala>esempi/cap-13/button-observer3.scala</a>
 
 package ui
 import observer._
@@ -1204,7 +1204,7 @@ object ButtonSubjectObserver extends SubjectObserver {
 
 <p>L'ultimo pezzo del puzzle consiste nel definire un osservatore concreto. Come prima, conteremo i clic sul pulsante. Tuttavia, per enfatizzare il valore di avere un tipo specifico di istanza passato all'osservatore, <code>Button</code> in questo caso, <span class=wtf>we'll enhance</span> l'osservatore per tenere traccia dei clic su più pulsanti usando una mappa le cui chiavi siano le etichette dei pulsanti. Le conversioni di tipo non ci servono!
 
-<pre><code>// code-examples/AppDesign/abstractions/button-click-observer3.scala
+<pre><code>// <a href=esempi/cap-13/button-click-observer3.scala>esempi/cap-13/button-click-observer3.scala</a>
 
 package ui
 import observer._
@@ -1222,7 +1222,7 @@ class ButtonClickObserver extends ButtonSubjectObserver.ButtonObserver {
 
 <p>Infine, ecco una specifica per esercitare il codice.
 
-<pre><code>// code-examples/AppDesign/abstractions/button-observer3-spec.scala
+<pre><code>// <a href=esempi/cap-13/button-observer3-spec.scala>esempi/cap-13/button-observer3-spec.scala</a>
 
 package ui
 import org.specs._
@@ -1279,7 +1279,7 @@ object ButtonObserver3Spec extends Specification {
 
 <p>Prendiamo come esempio il nostro tratto <code>VetoableClicks</code> usato nella sezione <a href=cap-4.html#StackableTraits>Tratti impilabili</a> del capitolo 4, dove i clic sui pulsanti venivano contati e i clic aggiuntivi venivano vietati dopo che un certo numero di clic era avvenuto. La nostra semplice classe <code>Button</code> contribuiva solo una <em>dimensione</em> <code>label</code>, mentre <code>VetoableClicks</code> contribuiva una <em>dimensione</em> <code>count</code> e una costante <code>maxAllowed</code>. Ecco una ricapitolazione di questi tipi, raccolti insieme in un singolo script che esercita anche il codice.
 
-<pre><code>// code-examples/AppDesign/abstractions/vetoable-clicks1-script.scala
+<pre><code>// <a href=esempi/cap-13/vetoable-clicks1-script.scala>esempi/cap-13/vetoable-clicks1-script.scala</a>
 
 trait Clickable {
   def click()
@@ -1326,7 +1326,7 @@ clic!</samp></pre>
 
 <p>Indipendentemente dal fatto che un tratto contribuisca o meno dimensioni allo stato, un tratto può anche modificare i valori possibili per una dimensione contribuita da un tratto differente o dalla classe genitore. Per vedere un esempio, riorganizziamo lo script per spostare <code>count</code> nel tratto <code>Clickable</code>.
 
-<pre><code>// code-examples/AppDesign/abstractions/vetoable-clicks2-script.scala
+<pre><code>// <a href=esempi/cap-13/vetoable-clicks2-script.scala>esempi/cap-13/vetoable-clicks2-script.scala</a>
 
 trait Clickable {
   private var clicks = 0
@@ -1393,7 +1393,7 @@ for (i &lt;- 1 to 3 ) button2.click()</code></pre>
 
 <p>Esaminiamo un esempio di questo pattern usando la gerarchia di classi <code>Shape</code> che abbiamo visto in precedenza. Cominceremo con la versione a classi <code>case</code> illustrata nella sezione <a href=cap-6.html#CaseClasses>Classi <code>case</code></a> del capitolo 6.
 
-<pre><code>// code-examples/AdvOOP/shapes/shapes-case.scala
+<pre><code>// <a href=esempi/cap-6/shapes/shapes-case.scala>esempi/cap-6/shapes/shapes-case.scala</a>
 
 package shapes {
   case class Point(x: Double, y: Double)
@@ -1421,7 +1421,7 @@ package shapes {
 
 <p>Prima di tutto, riorganizziamo la gerarchia di <code>Shape</code> per supportare il pattern <em>Visitor</em>, seguendo l'esempio contenuto in <a href=apa.html#GOF1995>[GOF1995]</a>.
 
-<pre><code>// code-examples/AppDesign/patterns/shapes-visitor.scala
+<pre><code>// <a href=esempi/cap-13/shapes-visitor.scala>esempi/cap-13/shapes-visitor.scala</a>
 
 package shapes {
   trait ShapeVisitor {
@@ -1459,7 +1459,7 @@ package shapes {
 
 <p>Ecco un visitatore concreto che supporta la nostra operazione <code>draw</code> originale.
 
-<pre><code>// code-examples/AppDesign/patterns/shapes-drawing-visitor.scala
+<pre><code>// <a href=esempi/cap-13/shapes-drawing-visitor.scala>esempi/cap-13/shapes-drawing-visitor.scala</a>
 
 package shapes {
   class ShapeDrawingVisitor extends ShapeVisitor {
@@ -1476,7 +1476,7 @@ package shapes {
 
 <p>Per ogni metodo <code>visit</code>, la classe &#8220;disegna&#8221; l'istanza di <code>Shape</code> in maniera appropriata. Infine, ecco uno script che esercita il codice.
 
-<pre><code>// code-examples/AppDesign/patterns/shapes-drawing-visitor-script.scala
+<pre><code>// <a href=esempi/cap-13/shapes-drawing-visitor-script.scala>esempi/cap-13/shapes-drawing-visitor-script.scala</a>
 
 import shapes._
 
@@ -1503,7 +1503,7 @@ Triangle.draw: Triangle(Point(0.0,0.0),Point(1.0,0.0),Point(0.0,1.0))</samp></pr
 
 <p>Scala non supporta i tipi aperti, naturalmente, ma offre alcune alternative. Il primo approccio che esamineremo combina il pattern matching con le conversioni implicite. Cominciamo col riorganizzare il codice di <code>ShapeVisitor</code> per rimuovere la logica del pattern Visitor.
 
-<pre><code>// code-examples/AppDesign/patterns/shapes.scala
+<pre><code>// <a href=esempi/cap-13/shapes.scala>esempi/cap-13/shapes.scala</a>
 
 package shapes2 {
   case class Point(x: Double, y: Double)
@@ -1521,7 +1521,7 @@ package shapes2 {
 
 <p>Se volessimo invocare <code>draw</code> come un metodo su qualsiasi istanza di <code>Shape</code>, allora dovremmo usare una conversione implicita verso una classe avvolgente che dispone del metodo <code>draw</code>.
 
-<pre><code>// code-examples/AppDesign/patterns/shapes-drawing-implicit.scala
+<pre><code>// <a href=esempi/cap-13/shapes-drawing-implicit.scala>esempi/cap-13/shapes-drawing-implicit.scala</a>
 
 package shapes2 {
   class ShapeDrawer(val shape: Shape) {
@@ -1543,7 +1543,7 @@ package shapes2 {
 
 <p>Questo script esercita il codice.
 
-<pre><code>// code-examples/AppDesign/patterns/shapes-drawing-implicit-script.scala
+<pre><code>// <a href=esempi/cap-13/shapes-drawing-implicit-script.scala>esempi/cap-13/shapes-drawing-implicit-script.scala</a>
 
 import shapes2._
 
@@ -1569,7 +1569,7 @@ list foreach { _.draw }</code></pre>
 
 <p>Se, d'altra parte, non ci importa molto di usare la sintassi orientata agli oggetti nella invocazione di <code>shape.draw</code>, potremmo eliminare la conversione implicita ed eseguire lo stesso pattern matching che viene fatto nel metodo <code>ShapeDrawer.draw</code>. Questo approccio potrebbe risultare più semplice, in particolare quando il comportamento aggiuntivo può essere isolato in un unico punto. In effetti, questo approccio sarebbe un approccio funzionale convenzionale, come illustrato nello script seguente.
 
-<pre><code>// code-examples/AppDesign/patterns/shapes-drawing-pattern-script.scala
+<pre><code>// <a href=esempi/cap-13/shapes-drawing-pattern-script.scala>esempi/cap-13/shapes-drawing-pattern-script.scala</a>
 
 import shapes2._
 
@@ -1646,7 +1646,7 @@ Triangle.draw: Triangle(Point(0.0,0.0),Point(1.0,0.0),Point(0.0,1.0))
 
 <p>Per concludere, esaminiamo una delle altre opzioni disponibili in alcuni contesti. Se avete il controllo completo su come le forme geometriche vengono costruite, per esempio tramite una singola factory, potete modificare la factory per mescolare tratti che aggiungono nuovi comportamenti <span class=wtf>as needed</span>.
 
-<pre><code>// code-examples/AppDesign/patterns/shapes-drawing-factory.scala
+<pre><code>// <a href=esempi/cap-13/shapes-drawing-factory.scala>esempi/cap-13/shapes-drawing-factory.scala</a>
 
 package shapes2 {
   trait Drawing {
@@ -1691,7 +1691,7 @@ package shapes2 {
 
 <p>Lo script seguente esercita la factory.
 
-<pre><code>// code-examples/AppDesign/patterns/shapes-drawing-factory-script.scala
+<pre><code>// <a href=esempi/cap-13/shapes-drawing-factory-script.scala>esempi/cap-13/shapes-drawing-factory-script.scala</a>
 
 import shapes2._
 
@@ -1721,8 +1721,8 @@ Welcome to Scala version 2.8.0.final (Java &hellip;).
 Type in expressions to have them evaluated.
 Type :help for more information.
 
-scala&gt; :load design-patterns/shapes-drawing-factory-script.scala
-Loading design-patterns/shapes-drawing-factory-script.scala...
+scala&gt; :load shapes-drawing-factory-script.scala
+Loading shapes-drawing-factory-script.scala...
 import shapes2._
 p00: shapes2.Point = Point(0.0,0.0)
 p10: shapes2.Point = Point(1.0,0.0)
@@ -1764,7 +1764,7 @@ scala&gt;</code></pre>
 
 <p>Costruiamo un semplice modello a componenti per un client Twitter estramamente semplificato. Vogliamo una interfaccia utente configurabile, una memoria locale configurabile per i messaggi passati, e una connessione configurabile al servizio offerto da Twitter. Ognuno di questi &#8220;componenti&#8221; verrà specificato separatamente, insieme a un componente cliente che funzionerà come &#8220;middleware&#8221; per legare insieme le parti dell'applicazione. Il componente cliente dipenderà dagli altri componenti. Quando creaimo un cliente concreto, lo configuereremo nei pezzi concreti degli altri componenti di cui abbiamo bisogno.
 
-<pre><code>// code-examples/AppDesign/dep-injection/twitter-client.scala
+<pre><code>// <a href=esempi/cap-13/twitter-client.scala>esempi/cap-13/twitter-client.scala</a>
 
 package twitterclient
 import java.util.Date
@@ -1874,7 +1874,7 @@ trait TwitterClientComponent {
 
 <p>Ora definitiamo un client Twitter concreto che usa una interfaccia testuale a riga di comando, una cache locale in memoria, e finge di interagire con il servizio Twitter.
 
-<pre><code>// code-examples/AppDesign/dep-injection/twitter-text-client.scala
+<pre><code>// <a href=esempi/cap-13/twitter-text-client.scala>esempi/cap-13/twitter-text-client.scala</a>
 
 package twitterclient
 
@@ -1929,7 +1929,7 @@ class TextClient(userProfile: TwitterUserProfile)
 
 <p>Mettiamo alla prova il nostro client usando lo script seguente.
 
-<pre><code>// code-examples/AppDesign/dep-injection/twitter-text-client-script.scala
+<pre><code>// <a href=esempi/cap-13/twitter-text-client-script.scala>esempi/cap-13/twitter-text-client-script.scala</a>
 
 import twitterclient._
 
@@ -1975,7 +1975,7 @@ Cronologia dei messaggi:
 
 <p>Scala non offre un supporto esplicito per la progettazione per contratto, ma esistono diversi metodi di <code>Predef</code> che pososno essere usati a questo scopo. L'esempio seguente mostra come usare <code>require</code> e <code>assume</code> per far rispettare un contratto.
 
-<pre><code>// code-examples/AppDesign/design-by-contract/bank-account.scala
+<pre><code>// <a href=esempi/cap-13/bank-account.scala>esempi/cap-13/bank-account.scala</a>
 
 class BankAccount(val balance: Double) {
   require(balance &gt;= 0.0)
@@ -1994,7 +1994,7 @@ class BankAccount(val balance: Double) {
 
 <p>La specifica seguente conferma che il &#8220;contratto&#8221; viene rispettato.
 
-<pre><code>// code-examples/AppDesign/design-by-contract/bank-account-spec.scala
+<pre><code>// <a href=esempi/cap-13/bank-account-spec.scala>esempi/cap-13/bank-account-spec.scala</a>
 
 import org.specs._
 
