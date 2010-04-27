@@ -143,52 +143,52 @@ class Account(val balance: Double)</code></pre>
 <p class=tt>Tabella 13.1. Le annotazioni Scala derivate da <code>Annotation</code>.
 <table summary="Le annotazioni Scala derivate da Annotation." border=0>
 <colgroup>
-<col align="left">
-<col align="left">
-<col align="left">
+<col align=left>
+<col align=left>
+<col align=left>
 </colgroup>
-<thead valign="top"><tr>
-<th align="left" valign="top">Nome
-<th align="left" valign="top">Equivalente Java
-<th align="left" valign="top">Descrizione
+<thead valign=top><tr>
+<th align=left valign=top>Nome
+<th align=left valign=top>Equivalente Java
+<th align=left valign=top>Descrizione
 </thead>
-<tbody valign="top">
+<tbody valign=top>
 <tr>
-<td align="left" valign="top"><p><code>ClassfileAnnotation</code>
-<td align="left" valign="top"><p>Annotazione con <code>@Retention(RetentionPolicy.RUNTIME)</code>
-<td align="left" valign="top"><p>Il tratto genitore per le annotazioni che dovrebbero essere conservate nel file di classe per l'accesso a tempo di esecuzione&nbsp;&mdash;&nbsp;ma in realtà non funziona con il <abbr>JDK</abbr>!
+<td align=left valign=top><p><code>ClassfileAnnotation</code>
+<td align=left valign=top><p>Annotazione con <code>@Retention(RetentionPolicy.RUNTIME)</code>
+<td align=left valign=top><p>Il tratto genitore per le annotazioni che dovrebbero essere conservate nel file di classe per l'accesso a tempo di esecuzione&nbsp;&mdash;&nbsp;ma in realtà non funziona con il <abbr>JDK</abbr>!
 <tr>
-<td align="left" valign="top"><p><code>BeanDescription</code>
-<td align="left" valign="top"><p><code>BeanDescriptor</code> (classe)
-<td align="left" valign="top"><p>Un'annotazione per i componenti <em>JavaBeans</em> che associa a un tipo o a un membro una breve descrizione (fornita all'annotazione come argomento) che verrà inclusa tra le informazioni generate per il componente.
+<td align=left valign=top><p><code>BeanDescription</code>
+<td align=left valign=top><p><code>BeanDescriptor</code> (classe)
+<td align=left valign=top><p>Un'annotazione per i componenti <em>JavaBeans</em> che associa a un tipo o a un membro una breve descrizione (fornita all'annotazione come argomento) che verrà inclusa tra le informazioni generate per il componente.
 <tr>
-<td align="left" valign="top"><p><code>BeanDisplayName</code>
-<td align="left" valign="top"><p><code>BeanDescriptor</code> (classe)
-<td align="left" valign="top"><p>Un'annotazione per i componenti <em>JavaBeans</em> che associa a un tipo o a un membro un nome (fornito all'annotazione come argomento) che verrà incluso tra le informazioni generate per il componente.
+<td align=left valign=top><p><code>BeanDisplayName</code>
+<td align=left valign=top><p><code>BeanDescriptor</code> (classe)
+<td align=left valign=top><p>Un'annotazione per i componenti <em>JavaBeans</em> che associa a un tipo o a un membro un nome (fornito all'annotazione come argomento) che verrà incluso tra le informazioni generate per il componente.
 <tr>
-<td align="left" valign="top"><p><code>BeanInfo</code>
-<td align="left" valign="top"><p><code>BeanInfo</code> (classe)
-<td align="left" valign="top"><p>Un marcatore usato per indicare che una classe <code>BeanInfo</code> dovrebbe essere generata per la classe Scala annotata. Le dichiarazioni <code>val</code> diventano proprietà a sola lettura; le dichiarazioni <code>var</code> diventano proprietà a lettura e scrittura; le dichiarazioni <code>def</code> diventano metodi.
+<td align=left valign=top><p><code>BeanInfo</code>
+<td align=left valign=top><p><code>BeanInfo</code> (classe)
+<td align=left valign=top><p>Un marcatore usato per indicare che una classe <code>BeanInfo</code> dovrebbe essere generata per la classe Scala annotata. Le dichiarazioni <code>val</code> diventano proprietà a sola lettura; le dichiarazioni <code>var</code> diventano proprietà a lettura e scrittura; le dichiarazioni <code>def</code> diventano metodi.
 <tr>
-<td align="left" valign="top"><p><code>BeanInfoSkip</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un marcatore usato per indicare che le informazioni del componente non dovrebbero essere generate per il membro annotato.
+<td align=left valign=top><p><code>BeanInfoSkip</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un marcatore usato per indicare che le informazioni del componente non dovrebbero essere generate per il membro annotato.
 <tr>
-<td align="left" valign="top"><p><code>StaticAnnotation</code>
-<td align="left" valign="top"><p>Campi statici, <code>@Target(ElementType.TYPE)</code>
-<td align="left" valign="top"><p>Il tratto genitore per le annotazioni che dovrebbero definire metadati &#8220;statici&#8221; ed essere visibili attraverso i confini delle unità di compilazione.
+<td align=left valign=top><p><code>StaticAnnotation</code>
+<td align=left valign=top><p>Campi statici, <code>@Target(ElementType.TYPE)</code>
+<td align=left valign=top><p>Il tratto genitore per le annotazioni che dovrebbero definire metadati &#8220;statici&#8221; ed essere visibili attraverso i confini delle unità di compilazione.
 <tr>
-<td align="left" valign="top"><p><code>TypeConstraint</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un tratto applicabile come annotazione ad altre annotazioni che definiscono vincoli su un tipo, basandosi solo sulle informazioni definite all'interno del tipo stesso anziché su informazioni esterne relative al contesto in cui il tipo viene definito o usato. Il compilatore può sfruttare questa restrizione per riscrivere il vincolo. Attualmente la libreria Scala non contiene annotazioni che usano questo tratto.
+<td align=left valign=top><p><code>TypeConstraint</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un tratto applicabile come annotazione ad altre annotazioni che definiscono vincoli su un tipo, basandosi solo sulle informazioni definite all'interno del tipo stesso anziché su informazioni esterne relative al contesto in cui il tipo viene definito o usato. Il compilatore può sfruttare questa restrizione per riscrivere il vincolo. Attualmente la libreria Scala non contiene annotazioni che usano questo tratto.
 <tr>
-<td align="left" valign="top"><p><code>unchecked</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un marcatore da applicare al selettore in una istruzione di pattern matching (per esempio, la <code>x</code> in <code>x match {&hellip;}</code>) per omettere un messaggio di avvertimento del compilatore nel caso in cui le clausole <code>case</code> non siano &#8220;esaustive&#8221;. Durante l'esecuzione può ancora avvenire un errore di tipo <code>MatchError</code> se non esiste alcuna corrispondenza per un valore di <code>x</code> nelle clausole <code>case</code>. Si veda l'esempio più avanti.
+<td align=left valign=top><p><code>unchecked</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un marcatore da applicare al selettore in una istruzione di pattern matching (per esempio, la <code>x</code> in <code>x match {&hellip;}</code>) per omettere un messaggio di avvertimento del compilatore nel caso in cui le clausole <code>case</code> non siano &#8220;esaustive&#8221;. Durante l'esecuzione può ancora avvenire un errore di tipo <code>MatchError</code> se non esiste alcuna corrispondenza per un valore di <code>x</code> nelle clausole <code>case</code>. Si veda l'esempio più avanti.
 <tr>
-<td align="left" valign="top"><p><code>unsealed</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Deprecata, usate <code>@unchecked</code> al suo posto.
+<td align=left valign=top><p><code>unsealed</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Deprecata, usate <code>@unchecked</code> al suo posto.
 </tbody>
 </table>
 </div>
@@ -199,88 +199,88 @@ class Account(val balance: Double)</code></pre>
 <p class=tt>Tabella 13.2. Le annotazioni Scala derivate da <code>StaticAnnotation</code>.
 <table summary="Le annotazioni Scala derivate da StaticAnnotation." border=0>
 <colgroup>
-<col align="left">
-<col align="left">
-<col align="left">
+<col align=left>
+<col align=left>
+<col align=left>
 </colgroup>
-<thead valign="top"><tr>
-<th align="left" valign="top">Nome
-<th align="left" valign="top">Equivalente Java
-<th align="left" valign="top">Descrizione
+<thead valign=top><tr>
+<th align=left valign=top>Nome
+<th align=left valign=top>Equivalente Java
+<th align=left valign=top>Descrizione
 </thead>
-<tbody valign="top">
+<tbody valign=top>
 <tr>
-<td align="left" valign="top"><p><code>BeanProperty</code>
-<td align="left" valign="top"><p>Convenzioni <em>JavaBeans</em>
-<td align="left" valign="top"><p>Un marcatore applicabile ai campi (compresi i parametri del costruttore dichiarati con una parola chiave <code>val</code> o <code>var</code>) che induce il compilatore a generare metodi di &#8220;lettura&#8221; e &#8220;scrittura&#8221; nello stile <em>JavaBeans</em>. Il metodo di scrittura viene generato solo per le dichiarazioni <code>var</code>. Si veda a questo proposito la sezione <a href=cap-14.html#JavaBeanProperties>Proprietà JavaBeans</a> nel capitolo 14.
+<td align=left valign=top><p><code>BeanProperty</code>
+<td align=left valign=top><p>Convenzioni <em>JavaBeans</em>
+<td align=left valign=top><p>Un marcatore applicabile ai campi (compresi i parametri del costruttore dichiarati con una parola chiave <code>val</code> o <code>var</code>) che induce il compilatore a generare metodi di &#8220;lettura&#8221; e &#8220;scrittura&#8221; nello stile <em>JavaBeans</em>. Il metodo di scrittura viene generato solo per le dichiarazioni <code>var</code>. Si veda a questo proposito la sezione <a href=cap-14.html#JavaBeanProperties>Proprietà JavaBeans</a> nel capitolo 14.
 <tr>
-<td align="left" valign="top"><p><code>cloneable</code>
-<td align="left" valign="top"><p><code>java.lang.Cloneable</code> (interfaccia)
-<td align="left" valign="top"><p>Un marcatore per indicare che una classe può essere clonata.
+<td align=left valign=top><p><code>cloneable</code>
+<td align=left valign=top><p><code>java.lang.Cloneable</code> (interfaccia)
+<td align=left valign=top><p>Un marcatore per indicare che una classe può essere clonata.
 <tr>
-<td align="left" valign="top"><p><code>cps</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Genera il bytecode usando un modello di esecuzione basato sul passaggio di continuazioni (versione 2.8).
+<td align=left valign=top><p><code>cps</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Genera il bytecode usando un modello di esecuzione basato sul passaggio di continuazioni (versione 2.8).
 <tr>
-<td align="left" valign="top"><p><code>deprecated</code>
-<td align="left" valign="top"><p><code>java.lang.Deprecated</code>
-<td align="left" valign="top"><p>Un marcatore applicabile a qualsiasi definizione per indicare che l'elemento definito è obsoleto. Il compilatore genererà un messaggio di avvertimento quando l'elemento viene usato.
+<td align=left valign=top><p><code>deprecated</code>
+<td align=left valign=top><p><code>java.lang.Deprecated</code>
+<td align=left valign=top><p>Un marcatore applicabile a qualsiasi definizione per indicare che l'elemento definito è obsoleto. Il compilatore genererà un messaggio di avvertimento quando l'elemento viene usato.
 <tr>
-<td align="left" valign="top"><p><code>inline</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un marcatore applicabile ai metodi per chiedere al compilatore di impegnarsi &#8220;molto duramente&#8221; a espandere il metodo nei punti in cui viene invocato.
+<td align=left valign=top><p><code>inline</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un marcatore applicabile ai metodi per chiedere al compilatore di impegnarsi &#8220;molto duramente&#8221; a espandere il metodo nei punti in cui viene invocato.
 <tr>
-<td align="left" valign="top"><p><code>native</code>
-<td align="left" valign="top"><p><code>native</code> (parola chiave)
-<td align="left" valign="top"><p>Un marcatore per indicare che il metodo è implementato sotto forma di codice &#8220;nativo&#8221;. Il compilatore non genererà il corpo del metodo, ma il controllo di tipo sulle invocazioni del metodo verrà comunque effettuato.
+<td align=left valign=top><p><code>native</code>
+<td align=left valign=top><p><code>native</code> (parola chiave)
+<td align=left valign=top><p>Un marcatore per indicare che il metodo è implementato sotto forma di codice &#8220;nativo&#8221;. Il compilatore non genererà il corpo del metodo, ma il controllo di tipo sulle invocazioni del metodo verrà comunque effettuato.
 <tr>
-<td align="left" valign="top"><p><code>noinline</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un marcatore applicabile ai metodi usato per impedire al compilatore di espandere il metodo anche quando questa operazione sembra innocua.
+<td align=left valign=top><p><code>noinline</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un marcatore applicabile ai metodi usato per impedire al compilatore di espandere il metodo anche quando questa operazione sembra innocua.
 <tr>
-<td align="left" valign="top"><p><code>remote</code>
-<td align="left" valign="top"><p><code>java.rmi.Remote</code> (interfaccia)
-<td align="left" valign="top"><p>Un marcatore usato per indicare che la classe può essere invocata da una <abbr>JVM</abbr> remota.
+<td align=left valign=top><p><code>remote</code>
+<td align=left valign=top><p><code>java.rmi.Remote</code> (interfaccia)
+<td align=left valign=top><p>Un marcatore usato per indicare che la classe può essere invocata da una <abbr>JVM</abbr> remota.
 <tr>
-<td align="left" valign="top"><p><code>serializable</code>
-<td align="left" valign="top"><p><code>java.io.Serializable</code> (interfaccia)
-<td align="left" valign="top"><p>Un marcatore usato per indicare che la classe può essere serializzata.
+<td align=left valign=top><p><code>serializable</code>
+<td align=left valign=top><p><code>java.io.Serializable</code> (interfaccia)
+<td align=left valign=top><p>Un marcatore usato per indicare che la classe può essere serializzata.
 <tr>
-<td align="left" valign="top"><p><code>SerialVersionUID</code>
-<td align="left" valign="top"><p>Un campo <em>statico</em> <code>serialVersionUID</code> in una classe
-<td align="left" valign="top"><p>Definisce un identificatore unico globale ai fini della serializzazione. Il costruttore dell'annotazione accetta un numero <code>Long</code> come argomento per rappresentare l'identificatore unico.
+<td align=left valign=top><p><code>SerialVersionUID</code>
+<td align=left valign=top><p>Un campo <em>statico</em> <code>serialVersionUID</code> in una classe
+<td align=left valign=top><p>Definisce un identificatore unico globale ai fini della serializzazione. Il costruttore dell'annotazione accetta un numero <code>Long</code> come argomento per rappresentare l'identificatore unico.
 <tr>
-<td align="left" valign="top"><p><code>switch</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un'annotazione da applicare a un'espressione di pattern matching, come per esempio <code>(x: @switch) match {&#8230;}</code>. Quando è presente, il compilatore verificherà che il costrutto sia stato compilato sotto forma di un'istruzione <code>switch</code> basata su tabella o su ricerca, generando un errore se il costrutto è stato compilato sotto forma di una serie di espressioni condizionali, che sono meno efficienti. Disponibile solo a partire da Scala 2.8.
+<td align=left valign=top><p><code>switch</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un'annotazione da applicare a un'espressione di pattern matching, come per esempio <code>(x: @switch) match {&#8230;}</code>. Quando è presente, il compilatore verificherà che il costrutto sia stato compilato sotto forma di un'istruzione <code>switch</code> basata su tabella o su ricerca, generando un errore se il costrutto è stato compilato sotto forma di una serie di espressioni condizionali, che sono meno efficienti. Disponibile solo a partire da Scala 2.8.
 <tr>
-<td align="left" valign="top"><p><code>specialized</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un'annotazione da applicare ai parametri di tipo nei tipi e nei metodi parametrici. Induce il compilatore a generare versioni ottimizzate del tipo o del metodo per i tipi <code>AnyVal</code> corrispondenti ai tipi primitivi della piattaforma. Opzionalmente, è possibile limitare i tipi <code>AnyVal</code> per i quali verranno generate le implementazioni specializzate (si veda più avanti per una discussione in merito). Disponibile solo a partire da Scala 2.8.
+<td align=left valign=top><p><code>specialized</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un'annotazione da applicare ai parametri di tipo nei tipi e nei metodi parametrici. Induce il compilatore a generare versioni ottimizzate del tipo o del metodo per i tipi <code>AnyVal</code> corrispondenti ai tipi primitivi della piattaforma. Opzionalmente, è possibile limitare i tipi <code>AnyVal</code> per i quali verranno generate le implementazioni specializzate (si veda più avanti per una discussione in merito). Disponibile solo a partire da Scala 2.8.
 <tr>
-<td align="left" valign="top"><p><code>tailrec</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un'annotazione applicabile ai metodi per indurre il compilatore a verificare che il metodo sia stato ottimizzato per la ricorsione in coda. Quando è presente, il compilatore genererà un errore se il metodo non può essere ottimizzato in un ciclo. Questo può succedere, per esempio, quando il metodo non è qualificato come <code>private</code> o <code>final</code>, quando può essere ridefinito, e quando l'invocazione ricorsiva non è realmente l'ultime istruzione del metodo. Disponibile solo a partire da Scala 2.8.
+<td align=left valign=top><p><code>tailrec</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un'annotazione applicabile ai metodi per indurre il compilatore a verificare che il metodo sia stato ottimizzato per la ricorsione in coda. Quando è presente, il compilatore genererà un errore se il metodo non può essere ottimizzato in un ciclo. Questo può succedere, per esempio, quando il metodo non è qualificato come <code>private</code> o <code>final</code>, quando può essere ridefinito, e quando l'invocazione ricorsiva non è realmente l'ultime istruzione del metodo. Disponibile solo a partire da Scala 2.8.
 <tr>
-<td align="left" valign="top"><p><code>throws</code>
-<td align="left" valign="top"><p><code>throws</code> (parola chiave)
-<td align="left" valign="top"><p>Indica quali eccezioni vengono lanciate dal metodo annotato (si veda la discussione più avanti).
+<td align=left valign=top><p><code>throws</code>
+<td align=left valign=top><p><code>throws</code> (parola chiave)
+<td align=left valign=top><p>Indica quali eccezioni vengono lanciate dal metodo annotato (si veda la discussione più avanti).
 <tr>
-<td align="left" valign="top"><p><code>transient</code>
-<td align="left" valign="top"><p><code>transient</code> (parola chiave)
-<td align="left" valign="top"><p>Contrassegna un metodo come &#8220;transiente&#8221;.
+<td align=left valign=top><p><code>transient</code>
+<td align=left valign=top><p><code>transient</code> (parola chiave)
+<td align=left valign=top><p>Contrassegna un metodo come &#8220;transiente&#8221;.
 <tr>
-<td align="left" valign="top"><p><code>uncheckedStable</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un marcatore applicabile a un valore che si suppone stabile anche se il suo tipo è volatile (cioè annotato con <code>@volatile</code>).
+<td align=left valign=top><p><code>uncheckedStable</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un marcatore applicabile a un valore che si suppone stabile anche se il suo tipo è volatile (cioè annotato con <code>@volatile</code>).
 <tr>
-<td align="left" valign="top"><p><code>uncheckedVariance</code>
-<td align="left" valign="top"><p><em>nessuno</em>
-<td align="left" valign="top"><p>Un marcatore applicato a un argomento di tipo che è volatile, quando è usato in un tipo parametrico, per omettere il controllo della varianza.
+<td align=left valign=top><p><code>uncheckedVariance</code>
+<td align=left valign=top><p><em>nessuno</em>
+<td align=left valign=top><p>Un marcatore applicato a un argomento di tipo che è volatile, quando è usato in un tipo parametrico, per omettere il controllo della varianza.
 <tr>
-<td align="left" valign="top"><p><code>volatile</code>
-<td align="left" valign="top"><p><code>volatile</code> (parola chiave, solo per i campi)
-<td align="left" valign="top"><p>Un marcatore applicabile a un singolo campo (o a un intero tipo, nel qual caso ha effetto su tutti i suoi campi) per indicare che il campo può essere modificato da un altro thread.
+<td align=left valign=top><p><code>volatile</code>
+<td align=left valign=top><p><code>volatile</code> (parola chiave, solo per i campi)
+<td align=left valign=top><p>Un marcatore applicabile a un singolo campo (o a un intero tipo, nel qual caso ha effetto su tutti i suoi campi) per indicare che il campo può essere modificato da un altro thread.
 </tbody>
 </table>
 </div>
