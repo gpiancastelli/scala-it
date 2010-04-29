@@ -28,7 +28,7 @@ body{counter-reset:h1 12}
 
 <p>Prima di tutto, potete usare gli stessi metodi che potreste usare nel codice Java o .NET. Lo script seguente mostra alcuni dei metodi di riflessione disponibili sulla <abbr>JVM</abbr>, attraverso <code>java.lang.Object</code> e <code>java.lang.Class</code>.
 
-<pre><code>// code-examples/TypeSystem/reflection/jvm-script.scala
+<pre><code>// <a href=esempi/cap-12/jvm-script.scala>esempi/cap-12/jvm-script.scala</a>
 
 trait T[A] {
   val vT: A
@@ -106,7 +106,7 @@ res1: java.lang.Class[_] = class C</samp></pre>
 
 <p>Un <code>Manifest</code> si dichiara come un argomento implicito di un metodo o di un tipo di cui volete catturare le informazioni di tipo cancellate. A differenza della maggior parte degli argomenti impliciti, l'utente non ha bisogno di implementare un valore o un metodo <code>Manifest</code> che sia visibile nell'ambito in cui viene usato, perché è il compilatore che ne genera uno automaticamente. Ecco un esempio che illustra alcuni punti di forza e di debolezza dei manifesti.
 
-<pre><code>// code-examples/TypeSystem/manifests/manifest-script.scala
+<pre><code>// <a href=esempi/cap-12/manifest-script.scala>esempi/cap-12/manifest-script.scala</a>
 
 import scala.reflect.Manifest
 
@@ -200,7 +200,7 @@ val positiveInts = List(1, 2, 3, 4, 5, 6, 7, &hellip;)</code></pre>
 
 <p>Quindi, cosa significa tutto questo in realtà? Diamo un'occhiata a un esempio per capire il comportamento della varianza. Se avete già esperienza nella <em>progettazione per contratto</em> <a href=apa.html#DesignByContract>[DesignByContract]</a>, potreste aiutarvi a ricordare come funziona, che è molto simile. (Parleremo brevemente della <em>progettazione per contratto</em> nella sezione <a href=cap-13.html#DesignByContractExample>Una progettazione migliore con la progettazione per contratto</a> del capitolo 13.) Questo script illustra il comportamento della varianza in caso di ereditarietà.
 
-<pre><code>// code-examples/TypeSystem/variances/func-script.scala
+<pre><code>// <a href=esempi/cap-12/func-script.scala>esempi/cap-12/func-script.scala</a>
 // Non verrà compilato!
 
 class CSuper                { def msuper = println("CSuper") }
@@ -229,7 +229,7 @@ var f: C =&gt; C = (c: C)      =&gt; new C       // #1
 
 <p>Qual è il comportamento corretto in questo caso? Ecco il momento in cui ragionare in termini di <em>progettazione per contratto</em> può venirci in aiuto. Vediamo come un cliente potrebbe usare alcune di queste definizioni di <code>f</code>.
 
-<pre><code>// code-examples/TypeSystem/variances/func2-script.scala
+<pre><code>// <a href=esempi/cap-12/func2-script.scala>esempi/cap-12/func2-script.scala</a>
 // Non verrà compilato!
 
 class CSuper                { def msuper = println("CSuper") }
@@ -290,7 +290,7 @@ useF((c: CSub)   =&gt; {println(c.msub); new CSuper})   // #7: ERRORE!</code></p
 
 <p>Tutti i tipi parametrici che abbiamo visto finora sono stati tipi immutabili. Cosa possiamo dire del comportamento di varianza dei tipi mutabili? La risposta breve è che è permessa solo il comportamento <em>invariante</em>. Considerate questo esempio.
 
-<pre><code>// code-examples/TypeSystem/variances/mutable-type-variance-script.scala
+<pre><code>// <a href=esempi/cap-12/mutable-type-variance-script.scala>esempi/cap-12/mutable-type-variance-script.scala</a>
 // Non verrà compilato!
 // I tipi parametrici mutabili non possono avere annotazioni di varianza
 
@@ -330,7 +330,7 @@ two errors found</samp></pre>
 
 <p>Diamo un'occhiata a un esempio Java di una versione semplificata dei tipi Scala <code>Option</code>, <code>Some</code> e <code>None</code>.
 
-<pre><code>// code-examples/TypeSystem/variances/Option.java
+<pre><code>// <a href=esempi/cap-12/variances/Option.java>esempi/cap-12/variances/Option.java</a>
 
 package variances;
 
@@ -344,7 +344,7 @@ abstract public class Option&lt;T&gt; {
   }
 }</code></pre>
 
-<pre><code>// code-examples/TypeSystem/variances/Some.java
+<pre><code>// <a href=esempi/cap-12/variances/Some.java>esempi/cap-12/variances/Some.java</a>
 
 package variances;
 
@@ -365,7 +365,7 @@ public class Some&lt;T&gt; extends Option&lt;T&gt; {
   }
 }</code></pre>
 
-<pre><code>// code-examples/TypeSystem/variances/None.java
+<pre><code>// <a href=esempi/cap-12/variances/None.java>esempi/cap-12/variances/None.java</a>
 
 package variances;
 
@@ -382,11 +382,11 @@ public class None&lt;T&gt; extends Option&lt;T&gt; {
 
 <p>Ecco un esempio che usa questa gerarchia di <code>Option</code> in Java.
 
-<pre><code>// code-examples/TypeSystem/variances/OptionExample.java
+<pre><code>// <a href=esempi/cap-12/variances/OptionExample.java>esempi/cap-12/variances/OptionExample.java</a>
 
 package variances;
 import java.io.*;
-import shapes.*;  // From "Introducing Scala" chapter
+import shapes.*;  // Dal capitolo "Una introduzione a Scala"
 
 public class OptionExample {
   static String[] shapeNames = {"Rettangolo", "Cerchio", "Triangolo", "Sconosciuto"};
@@ -428,7 +428,7 @@ public class OptionExample {
 
 <p>Il metodo <code>OptionExample.main</code> usa la gerarchia di forme geometriche introdotta nel <a href=cap-1.html>capitolo 1</a> e che qui abbiamo aggiornato per sfruttare funzionalità imparate nel corso del libro, come le classi <code>case</code>.
 
-<pre><code>// code-examples/TypeSystem/shapes/shapes.scala
+<pre><code>// <a href=esempi/cap-12/shapes.scala>esempi/cap-12/shapes.scala</a>
 
 package shapes {
   case class Point(x: Double, y: Double) {
@@ -525,7 +525,7 @@ Sconosciuto? None</samp></pre>
 
 <p>Il metodo <code>::</code> può aggiungere in testa a una lista un oggetto di un tipo diverso da <code>A</code>, il tipo degli elementi contenuti nella lista originale. Il compilatore inferirà il supertipo comune più vicino per <code>A</code> e il parametro <code>x</code> e lo userà come <code>B</code>. Ecco un esempio che aggiunge in testa a una lista un oggetto di un tipo diverso.
 
-<pre><code>// code-examples/TypeSystem/bounds/list-ab-script.scala
+<pre><code>// <a href=esempi/cap-12/list-ab-script.scala>esempi/cap-12/list-ab-script.scala</a>
 
 val languages = List("Scala", "Java", "Ruby", "C#", "C++", "Python")
 val list = 3.14 :: languages
@@ -545,7 +545,7 @@ println(list)</code></pre>
 
 <p>Dato che combina tutte queste caratteristiche, vale la pena di dare un'occhiata alla implementazione della classe <code>List</code> nella libreria Scala. Illustra diversi idiomi utili per le strutture dati immutabili in stile funzionale che sono pienamente type-safe e comunque flessibili. Non vi mostreremo l'implementazione completa, e ometteremo <code>object List</code>, numerosi metodi nella classe <code>List</code> e i commenti usati per generare la documentazione <em>Scaladoc</em>. Vi incoraggiamo a guardare da voi l'implementazione completa di <code>List</code>, scaricando la distribuzione del codice sorgente dal sito web del linguaggio <a href=apa.html#Scala>[Scala]</a> oppure <span class=wtf>browsing to</span> l'implementazione attraverso la pagina <em>Scaladoc</em> di <code>List</code>. Per evitare confusione con <code>scala.List</code>, useremo un nostro package e un nostro nome, <code>AbbrevList</code>.
 
-<pre><code>// code-examples/TypeSystem/bounds/abbrev-list.scala
+<pre><code>// <a href=esempi/cap-12/abbrev-list.scala>esempi/cap-12/abbrev-list.scala</a>
 // Adattato da scala/List.scala nella distribuzione di Scala 2.7.5
 
 package bounds.abbrevlist
@@ -659,7 +659,7 @@ res1: bounds.abbrevlist.AbbrevList[Int] = ::(1,::(2,::(3,AbbrevNil)))</samp></pr
 
 <p>Per rendere tutto questo più concreto, usiamo i limiti di vista per implementare una classe <code>LinkedList</code> che contenga nodi, in cui ogni istanza di <code>Node</code> ha un <code>payload</code> e un riferimento all'istanza di <code>Node</code> successiva. nella lista. Per prima cosa, ecco la gerarchia di nodi.
 
-<pre><code>// code-examples/TypeSystem/bounds/node.scala
+<pre><code>// <a href=esempi/cap-12/node.scala>esempi/cap-12/node.scala</a>
 
 package bounds
 
@@ -684,7 +684,7 @@ object NilNode extends Node[Nothing] {
 
 <p>Lo script seguente definisce un tipo <code>LinkedList</code> che usa istanze di <code>Node</code>.
 
-<pre><code>// code-examples/TypeSystem/bounds/view-bounds-script.scala
+<pre><code>// <a href=esempi/cap-12/view-bounds-script.scala>esempi/cap-12/view-bounds-script.scala</a>
 
 import bounds._
 
@@ -767,7 +767,7 @@ QUATTRO! :: 3 :: 2 :: 1 :: *</samp></pre>
 
 <p>Riprendiamo la nostra versione del pattern Observer che sfrutta i tipi astratti, vista nel <a href=cap-6.html>capitolo 6</a>.
 
-<pre><code>// code-examples/AdvOOP/observer/observer2.scala
+<pre><code>// <a href=esempi/cap-6/observer/observer2.scala>esempi/cap-6/observer/observer2.scala</a>
 
 package observer
 
@@ -799,7 +799,7 @@ trait SubjectForFunctionalObservers extends AbstractSubject {
 
 <p>Possiamo anche avere <em>limiti inferiori di tipo</em> (sottoclassi) e possiamo usare la maggior parte dei <em>tipi valore</em> (si veda la sezione <a href=#ValueTypes>Tipi valore</a> più avanti) nelle espressioni dei limiti. Ecco un esempio che illustra le opzioni più comuni.
 
-<pre><code>// code-examples/TypeSystem/abstracttypes/abs-type-examples-script.scala
+<pre><code>// <a href=esempi/cap-12/abs-type-examples-script.scala>esempi/cap-12/abs-type-examples-script.scala</a>
 
 trait exampleTrait {
   type t1               // Senza vincoli
@@ -842,7 +842,7 @@ object example extends exampleTrait {
 
 <p>Infine, i tipi astratti non possono avere annotazioni di varianza.
 
-<pre><code>// code-examples/TypeSystem/abstracttypes/abs-type-variances-wont-compile.scala
+<pre><code>// <a href=esempi/cap-12/abs-type-variances-wont-compile.scala>esempi/cap-12/abs-type-variances-wont-compile.scala</a>
 // Non verrà compilato!
 
 trait T1 { val name1: String }
@@ -909,7 +909,7 @@ class C extends T3 {
 
 <p>Abbiamo usato gli argomenti del costruttore nel breve esempio della classe <code>BulkReader</code> presentato nella sezione <a href=cap-2.html#AbstractTypesAndParameterizedTypes>Tipi astratti e tipi parametrici</a> del capitolo 2.
 
-<pre><code>// code-examples/TypeLessDoMore/abstract-types-script.scala
+<pre><code>// <a href=esempi/cap-2/abstract-types-script.scala>esempi/cap-2/abstract-types-script.scala</a>
 
 import java.io._
 
@@ -946,7 +946,7 @@ println( new FileBulkReader(new File("abstract-types-script.scala")).read )</cod
 
 <p>Considerate l'esempio seguente.
 
-<pre><code>// code-examples/TypeSystem/typepaths/type-path-wont-compile.scala
+<pre><code>// <a href=esempi/cap-12/type-path-wont-compile.scala>esempi/cap-12/type-path-wont-compile.scala</a>
 // Non verrà compilato!
 
 trait Service {
@@ -1123,7 +1123,7 @@ x: java.lang.Object with T1 with T2{type z = String; def zv: this.z} = $anon$1@9
 
 <p>Alcuni tipi parametrici possono accettare due argomenti di tipo, per esempio <code>scala.Either[+A,+B]</code>. Scala vi consente di dichiarare istanze di questi tipi usando una notazione infissa, per esempio <code>a Either b</code>. Considerate l'uso di <code>Either</code> che viene fatto nello script seguente.
 
-<pre><code>// code-examples/TypeSystem/valuetypes/infix-types-script.scala
+<pre><code>// <a href=esempi/cap-12/infix-types-script.scala>esempi/cap-12/infix-types-script.scala</a>
 
 def attempt(operation: =&gt; Boolean): Throwable Either Boolean = try {
   Right(operation)
@@ -1171,7 +1171,7 @@ trait Function3[-T1, -T2, -T3, +R] extends AnyRef {
 
 <p>Quando definite un valore funzione, il compilatore istanzia l'oggetto <code>FunctionN</code> appropriato e usa la vostra definizione di funzione come corpo di <code>apply</code>.
 
-<pre><code>// code-examples/TypeSystem/valuetypes/function-types-script.scala
+<pre><code>// <a href=esempi/cap-12/function-types-script.scala>esempi/cap-12/function-types-script.scala</a>
 
 val capitalizer = (s: String) =&gt; s.toUpperCase
 
@@ -1186,7 +1186,7 @@ println(List("Programmare", "in", "Scala") map capitalizer2)</code></pre>
 
 <p>Abbiamo parlato in precedenza del metodo <code>curry</code> nella sezione <a href=cap-8.html#Currying>Currying</a> del capitolo 8. Essa restituisce una nuova funzione con <code>N</code> liste di argomenti, ognuna delle quali ha un singolo argomento preso dalla lista di argomenti originale di <code>N</code> argomenti. Si noti che lo stesso metodo <code>apply</code> viene invocato.
 
-<pre><code>// code-examples/TypeSystem/valuetypes/curried-function-script.scala
+<pre><code>// <a href=esempi/cap-12/curried-function-script.scala>esempi/cap-12/curried-function-script.scala</a>
 
 val f  = (x: Double, y: Double, z: Double) =&gt; x * y / z
 val fc = f.curry
@@ -1223,7 +1223,7 @@ println( answer3 + " == " + answer2 + "? " + (answer3 == answer2))</code></pre>
 
 <p>Le <em>proiezioni di tipo</em> sono un modo per fare riferimento a una dichiarazione di tipo annidata in un altro tipo.
 
-<pre><code>// code-examples/TypeSystem/valuetypes/type-projection-script.scala
+<pre><code>// <a href=esempi/cap-12/type-projection-script.scala>esempi/cap-12/type-projection-script.scala</a>
 
 trait T {
   type t &lt;: AnyRef
@@ -1258,7 +1258,7 @@ val x: c.x.type = c.x</code></pre>
 
 <p>Le <em>annotazioni self-type</em> vi permettono di specificare aspettative ulteriori sul tipo di <code>this</code> e possono essere usate per creare alias di <code>This</code>. Consideriamo prima quest'ultimo caso.
 
-<pre><code>// code-examples/TypeSystem/selftype/this-alias-script.scala
+<pre><code>// <a href=esempi/cap-12/this-alias-script.scala>esempi/cap-12/this-alias-script.scala</a>
 
 class C1 { self =&gt;
   def talk(message: String) = println("C1.talk: " + message)
@@ -1283,7 +1283,7 @@ C1.talk: C3.talk: Mondo</samp></pre>
 
 <p>Se l'annotazione self-type ha tipi nell'annotazione, otteniamo alcuni benefici piuttosto differenti.
 
-<pre><code>// code-examples/TypeSystem/selftype/selftype-script.scala
+<pre><code>// <a href=esempi/cap-12/selftype-script.scala>esempi/cap-12/selftype-script.scala</a>
 
 trait Persistence {
   def startPersistence: Unit
@@ -1351,7 +1351,7 @@ MyApp.run</code></pre>
 
 <p>Nel nostro caso, non pensiamo davvero a un'applicazione come se <em>fosse</em> un'interfaccia utente, un database, <i class=baa>&amp;</i>c. Pensiamo a un'applicazione come a una composizione di queste cose. Si noti che nella maggior parte dei linguaggi orientati agli oggetti questa dipendenza composizionale verrebbe espressa con i campi, in particolare se il vostro linguaggio non supporta la composizione dei mixin, come Java. Per esempio, potreste scrivere <code>App</code> in Java come segue.
 
-<pre><code>// code-examples/TypeSystem/selftype/JavaApp.java
+<pre><code>// <a href=esempi/cap-12/selftype/JavaApp.java>esempi/cap-12/selftype/JavaApp.java</a>
 
 package selftype;
 
@@ -1397,7 +1397,7 @@ public abstract class JavaApp {
 
 <p>Scala non supporta questo tipo di risoluzione dei metodi, ma vi consente di specificare che un oggetto deve aderire a una certa <em>struttura</em>: che deve contenere certi tipi, campi, o metodi, senza preoccuparsi dell'effettivo tipo dell'oggetto. Abbiamo incontrato i tipi strutturali per la prima volta all'inizio del <a href=cap-4.html>capitolo 4</a>. Ecco l'esempio che abbiamo visto allora, una variazione del pattern Observer.
 
-<pre><code>// code-examples/Traits/observer/observer.scala
+<pre><code>// <a href=esempi/cap-4/observer/observer.scala>esempi/cap-4/observer/observer.scala</a>
 
 package observer
 
@@ -1429,7 +1429,7 @@ trait Subject {
 
 <p>Considerate il caso del pattern matching su oggetti di tipo <code>List[A]</code>. Potrebbe piacervi scrivere codice come il seguente.
 
-<pre><code>// code-examples/TypeSystem/existentials/type-erasure-wont-work.scala
+<pre><code>// <a href=esempi/cap-12/type-erasure-wont-work.scala>esempi/cap-12/type-erasure-wont-work.scala</a>
 // Attenzione: non funziona come potreste aspettarvi
 
 object ProcessList {
@@ -1502,7 +1502,7 @@ object ProcessList {
 
 <p>Scala non è ritardato per default (e non c'è alcun valore o parola chiave <code>infinity</code>) ma la libreria contiene una classe <code>Stream</code> che supporta la valutazione ritardata e quindi può supportare strutture dati infinite. Vi mostreremo un'implementazione della sequenza di Fibonacci tra un momento. Prima, però, ecco un esempio più semplice che usa i flussi per rappresentare tutti gli interi positivi, tutti gli interi dispari positivi e tutti gli interi pari positivi.
 
-<pre><code>// code-examples/TypeSystem/lazy/lazy-ints-script.scala
+<pre><code>// <a href=esempi/cap-12/lazy-ints-script.scala>esempi/cap-12/lazy-ints-script.scala</a>
 
 def from(n: Int): Stream[Int] = Stream.cons(n, from(n+1))
 
@@ -1524,7 +1524,7 @@ evens.take(10).print</code></pre>
 
 <p>Tornando alla sequenza di Fibonacci, ne esiste una famosa definizione che usa sequenze infinite ritardate che sfruttano l'operazione <code>zip</code> (si veda per esempio <a href=apa.html#Abelson1996>[Abelson1996]</a>). La nostra discussione per Scala è adattata da <a href=apa.html#Ortiz2007>[Ortiz2007]</a>.
 
-<pre><code>// code-examples/TypeSystem/lazy/lazy-fibonacci-script.scala
+<pre><code>// <a href=esempi/cap-12/lazy-fibonacci-script.scala>esempi/cap-12/lazy-fibonacci-script.scala</a>
 
 lazy val fib: Stream[Int] =
   Stream.cons(0, Stream.cons(1, fib.zip(fib.tail).map(p =&gt; p._1 + p._2)))
@@ -1551,7 +1551,7 @@ fib.take(10).print</code></pre>
 
 <p>Un altro tipo ritardato di Scala, anche se finito, è <code>Range</code>. Tipicamente, scrivete intervalli letterali come <code>1 to 1000</code>. <code>Range</code> è ritardato, quindi quell'intervallo così ampio non consuma troppe risorse. Tuttavia, questa caratteristica può condurre a problemi complicati a meno che non facciate attenzione, come documentato da <a href=apa.html#Smith2009b>[Smith2009b]</a> e dai commentatori. Usando l'esempio descritto là, considerate questa funzione per restituire una sequenza <code>Seq</code> di tre numeri interi casuali.
 
-<pre><code>// code-examples/TypeSystem/lazy/lazy-range-danger-script.scala
+<pre><code>// <a href=esempi/cap-12/lazy-range-danger-script.scala>esempi/cap-12/lazy-range-danger-script.scala</a>
 
 def mkRandomInts() = {
   val randInts = for {
