@@ -160,28 +160,28 @@ val positiveInts = List(1, 2, 3, 4, 5, 6, 7, &hellip;)</code></pre>
 <p class=tt>Tabella 12.1. Annotazioni di varianza di tipo e loro significato.
 <table summary="Annotazioni di varianza di tipo e loro significato." border=0>
 <colgroup>
-<col align="left">
-<col align="left">
-<col align="left">
+<col align=left>
+<col align=left>
+<col align=left>
 </colgroup>
-<thead valign="top"><tr>
-<th align="left" valign="top">Annotazione
-<th align="left" valign="top">Equivalente Java
-<th align="left" valign="top">Descrizione
+<thead valign=top><tr>
+<th align=left valign=top>Annotazione
+<th align=left valign=top>Equivalente Java
+<th align=left valign=top>Descrizione
 </thead>
-<tbody valign="top">
+<tbody valign=top>
 <tr>
-<td align="left" valign="top"><p><code>+</code>
-<td align="left" valign="top"><p><code>? extends T</code>
-<td align="left" valign="top"><p>Estensione <em>covariante</em>. Per esempio, <code>List[T</code><sub>sub</sub><code>]</code> è un sottotipo di <code>List[T]</code>.
+<td align=left valign=top><p><code>+</code>
+<td align=left valign=top><p><code>? extends T</code>
+<td align=left valign=top><p>Estensione <em>covariante</em>. Per esempio, <code>List[T</code><sub>sub</sub><code>]</code> è un sottotipo di <code>List[T]</code>.
 <tr>
-<td align="left" valign="top"><p><code>-</code>
-<td align="left" valign="top"><p><code>? super T</code>
-<td align="left" valign="top"><p>Estensione <em>controvariante</em>. Per esempio, <code>X[T</code><sup>sup</sup><code>]</code> è un sottotipo di <code>X[T]</code>.
+<td align=left valign=top><p><code>-</code>
+<td align=left valign=top><p><code>? super T</code>
+<td align=left valign=top><p>Estensione <em>controvariante</em>. Per esempio, <code>X[T</code><sup>sup</sup><code>]</code> è un sottotipo di <code>X[T]</code>.
 <tr>
-<td align="left" valign="top"><p><em>nessuna</em>
-<td align="left" valign="top"><p><code>T</code>
-<td align="left" valign="top"><p>Estensione <em>invariante</em>. Per esempio, non è possibile sostituire <code>Y[T</code><sup>sup</sup><code>]</code> o <code>Y[T</code><sub>sub</sub><code>]</code> al posto di <code>Y[T]</code>.
+<td align=left valign=top><p><em>nessuna</em>
+<td align=left valign=top><p><code>T</code>
+<td align=left valign=top><p>Estensione <em>invariante</em>. Per esempio, non è possibile sostituire <code>Y[T</code><sup>sup</sup><code>]</code> o <code>Y[T</code><sub>sub</sub><code>]</code> al posto di <code>Y[T]</code>.
 </tbody>
 </table>
 </div>
@@ -1455,28 +1455,28 @@ object ProcessList {
 <p class=tt>Tabella 12.2. Esempi di tipi esistenziali
 <table summary="Esempi di tipi esistenziali." border=0>
 <colgroup>
-<col align="left">
-<col align="left">
-<col align="left">
+<col align=left>
+<col align=left>
+<col align=left>
 </colgroup>
-<thead valign="top"><tr>
-<th align="left" valign="top">Sintassi abbreviata
-<th align="left" valign="top">Sintassi completa
-<th align="left" valign="top">Descrizione
+<thead valign=top><tr>
+<th align=left valign=top>Sintassi abbreviata
+<th align=left valign=top>Sintassi completa
+<th align=left valign=top>Descrizione
 </thead>
-<tbody valign="top">
+<tbody valign=top>
 <tr>
-<td align="left" valign="top"><p><code>List[_]</code>
-<td align="left" valign="top"><p><code>List[T] forSome { type T }</code>
-<td align="left" valign="top"><p><code>T</code> può essere qualunque sottotipo di <code>Any</code>.
+<td align=left valign=top><p><code>List[_]</code>
+<td align=left valign=top><p><code>List[T] forSome { type T }</code>
+<td align=left valign=top><p><code>T</code> può essere qualunque sottotipo di <code>Any</code>.
 <tr>
-<td align="left" valign="top"><p><code>List[_ &lt;: scala.actors.AbstractActor]</code>
-<td align="left" valign="top"><p><code>List[T] forSome { type T &lt;: scala.actors.AbstractActor }</code>
-<td align="left" valign="top"><p><code>T</code> può essere qualunque sottotipo di <code>AbstractActor</code>.
+<td align=left valign=top><p><code>List[_ &lt;: scala.actors.AbstractActor]</code>
+<td align=left valign=top><p><code>List[T] forSome { type T &lt;: scala.actors.AbstractActor }</code>
+<td align=left valign=top><p><code>T</code> può essere qualunque sottotipo di <code>AbstractActor</code>.
 <tr>
-<td align="left" valign="top"><p><code>List[_ &gt;: MyFancyActor &lt;: scala.actors.AbstractActor]</code>
-<td align="left" valign="top"><p><code>List[T] forSome { type T &gt;: MyFancyActor &lt;: scala.actors.AbstractActor }</code>
-<td align="left" valign="top"><p><code>T</code> può essere qualunque sottotipo di <code>AbstractActor</code> fino al sottotipo <code>MyFancyActor</code> incluso.
+<td align=left valign=top><p><code>List[_ &gt;: MyFancyActor &lt;: scala.actors.AbstractActor]</code>
+<td align=left valign=top><p><code>List[T] forSome { type T &gt;: MyFancyActor &lt;: scala.actors.AbstractActor }</code>
+<td align=left valign=top><p><code>T</code> può essere qualunque sottotipo di <code>AbstractActor</code> fino al sottotipo <code>MyFancyActor</code> incluso.
 </tbody>
 </table>
 </div>
