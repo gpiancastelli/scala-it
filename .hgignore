@@ -2,7 +2,6 @@ syntax: glob
 *.pyc
 build
 notes.txt
-*.zip
 *.markdown
 TODO
 programming-scala
