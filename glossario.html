@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<meta charset=utf-8>
+<title>Glossario - Programmare in Scala</title>
+<link rel=stylesheet href=styles.css>
+<style>
+h1:before{content:''}
+</style>
+<script>_gaq=[['_setAccount','UA-10482652-1'],['_trackPageview']];(function(){var g=document.createElement('script');g.src='//www.google-analytics.com/ga.js';g.setAttribute('async','true');document.documentElement.firstChild.appendChild(g);})();</script>
+
+<div id=book>
+<p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#glossario>Programmare in Scala</a> <span class=u>&#8227;</span>
+
+<h1>Glossario</h1>
+
+<dl>
+<dt id=glossentry-tag><code>$tag</code>
+<dd>
+<p>Un metodo dichiarato dal tratto <code>ScalaObject</code> e usato internamente da Scala. Non accetta argomenti e restituisce un intero. Viene correntemente utilizzato per ottimizzare il pattern matching, ma potrebbe essere rimosso in una futura versione di Scala. Pur essendo normalmente invisibile nel codice Scala (in quanto generato automaticamente dal compilatore), il codice Java che estende un qualche tratto o una qualche classe Scala potrebbe aver bisogno di implementare questo metodo.
+
+<dt id=glossentry-abstraction>Astrazione
+<dd>
+<p>Lo stato <span class=wtf>outwardly visible</span>, le trasformazioni di stato e le altre operazioni supportate da un tipo. Questi elementi sono separati dalla implementazione <em>incapsulata</em> dell'astrazione, in termini di campi e metodi. In Scala, i <em>tratti</em> e le <em>classi astratte</em> vengono spesso usati per definire astrazioni e opzionalmente implementarle. I <em>tipi concreti</em> forniscono implementazioni complete.
+
+<dt id=glossentry-abstract-type>Tipo astratto
+<dd>
+<ol>
+<li>Una <em>classe</em> o un <em>tratto</em> con uno o più metodi, campi, o tipi dichiarati, ma indefiniti. I tipi astratti non possono essere istanziati. Li si confronti con i <em>tipi concreti</em>
+<li>Una dichiarazione <code>type</code> all'interno di una <em>classe</em> o di un <em>tratto</em> astratti. <!-- TODO astratto è riferito alla dichiarazione o alle classi/tratti? -->
+</ol>
+
+<dt id=glossentry-actor>Attore
+<dd>
+<p>Una entità autonoma capace di inviare e ricevere messaggi nel <em>modello di concorrenza ad attori</em>.
+
+<dt id=glossentry-actor-model-of-concurrency>Modello di concorrenza ad attori
+<dd><!-- TODO controllare come ho tradotto "mailbox" -->
+<p>Un modello di concorrenza in cui <em>attori</em> autonomi coordinano il proprio lavoro scambiando messaggi. I messaggi di un attore vengono memorizzati in una <em>mailbox</em> fino a quando l'attore li elabora.
+
+<dt id=glossentry-annotated-type>Tipo annotato
+<dd>
+<p>Qualsiasi tipo a cui siano state applicate una o più annotazioni (precedute dal carattere <code>@</code>).
+
+<dt id=glossentry-annotation>Annotazione
+<dd>
+<p>Un modo di allegare &#8220;metadati&#8221; a una dichiarazione in modo che il compilatore o altri strumenti siano in grado di sfruttarli per la generazione di codice, la verifica e la validazione, <i class=baa>&amp;</i>c. In Scala (come in Java) un'annotazione è una classe. Quando viene usata, è preceduta dal carattere <code>@</code>.
+<p>Qualsiasi dichiarazione di tipo esplicita viene anche chiamata <em>annotazione di tipo</em>.
+<p>Una o più aggiunte a una dichiarazione di tipo che specificano il comportamento della varianza in caso di ereditarietà, i limiti e le viste.
+
+<dt id=glossentry-application>Applicazione
+<dd>
+<p>In Scala, qualsiasi <code>object</code> con un metodo <code>main</code> che è invocato dalla <abbr>JVM</abbr> o dal <abbr>CLR</abbr> di .NET all'avvio di un nuovo processo.
+
+<dt id=glossentry-arity>Arità
+<dd>
+<p>Il numero di argomenti di una funzione.
+
+<dt id=glossentry-aspect-oriented-programming>Programmazione orientata agli aspetti
+<dd> <!-- TODO come ho tradotto "cross-cutting concerns" nel punto originale? -->
+<p>(A volte chiamata <em>sviluppo del software orientato agli aspetti</em>.) Un approccio agli <em>interessi trasversali</em> in cui gli interessi vengono progettati e implementati in modo &#8220;modulare&#8221; (cioè con un incapsulamento appropriato, assenza di duplicazione, <i class=baa>&amp;</i>c.), poi integrati in tutti i punti di esecuzione rilevanti in modo robusto e conciso, per esempio con mezzi dichiarativi o imperativi. In termini di <abbr>AOP</abbr>, i punti di esecuzione vengono chiamati <em>punti di unione</em>, un insieme di punti di unione viene chiamato <em>punto di taglio</em> e il nuovo comportamento che viene eseguito prima, dopo o &#8220;durante&#8221; l'esecuzione di un punto di unione viene chiamato <em>consiglio</em>. <em>AspectJ</em> <a href=apa.html#AspectJ>[AspectJ]</a> è il <span class=wtf>toolkit</span> <abbr>AOP</abbr> più noto. I <em>tratti</em> di Scala possono essere usati per implementare funzionalità simili agli aspetti.
+
+<dt id=glossentry-aspectj>AspectJ
+<dd>
+<p>Una estensione di Java che supporta la <em>programmazione orientata agli aspetti</em>. AspectJ supporta due forme di sintassi: una sintassi estesa basata su quella di Java e una sintassi Java &#8220;pura&#8221 che usa le annotazioni Java per indicare i <em>punti di taglio</em> e i <em>consigli</em> di un aspetto. Il comportamento di un aspetto (cioè i consigli) può essere incorporato nel codice bersaglio a tempo di compilazione, o in un passo di &#8220;<span class=wtf>weaving</span>&#8221; successivo alla compilazione, o a tempo di caricamento delle classi.
+
+<dt id=glossentry-attribute>Attributo
+<dd>
+<p>Un altro nome per indicare un <em>campo</em>, usato per convenzione in molti linguaggi di programmazione orientati agli ogetti. Scala segue la convenzione Java di preferire il termine <em>campo</em> al termine <em>attributo</em>.
+
+<dt id=glossentry-auxiliary-constructor>Costruttore ausiliario
+<dd>
+<p>Un costruttore secondario di una classe, dichiarato come un metodo di nome <code>this</code> senza tipo di ritorno. Un costruttore ausiliario deve invocare il <em>costruttore principale</em> o un costruttore ausiliario precedentemente definito come prima o unica istruzione nel corpo del proprio metodo.
+
+<dt id=glossentry-base-type>Tipo base
+<dd>
+<p>Un sinonimo di <em>tipo genitore</em>.
+
+<dt id=glossentry-behavior-driven-development>Sviluppo guidato dal comportamento
+<dd>
+<p>Uno stile di <em>sviluppo guidato dal collaudo</em> (<abbr>TDD</abbr>) che enfatizza il ruolo dei test nel guidare la comprensione dei requisiti per il codice. Seguite lo stesso processo del <abbr>TDD</abbr>, dove i &#8220;test&#8221; vengono scritti prima del codice. La differenza è che i test automatici vengono scritti in un formato che li fa somigliare più a specifiche dei requisiti (o del comportamento) e meno a test per la conformità del codice ai requisiti. Tuttavia, il formato della specifica è ancora eseguibile e fornisce ancora i servizi di collaudo per la verifica, valutazione e regressione offerti dai test nel <abbr>TDD</abbr>.
+
+<dt id=glossentry-bound-variable>Variabile legata
+<dd>
+<p>Una <em>variabile</em> che viene dichiarata come argomento di un letterale funzione. Viene &#8220;legata&#8221; a un valore quando la <em>chiusura</em> creata a partire dal letterale funzione è invocata.
+
+<dt id=glossentry-by-name-parameter>Parametro per nome
+<dd><!-- TODO Come ho chiamato i "by-name parameter" originariamente? --> <!-- TODO &#8658;? -->
+<p>Un parametro <em>per nome</em> somiglia a un valore funzione che non accetta parametri, ma anziché essere dichiarato con la firma <code>p: () &#8658; R</code>, dove <code>R</code> è il tipo di ritorno, è dichiarato con la firma <code>p: &#8658;; R</code>. I parametri con nome vengono valutati ogni volta che viene fatto loro riferimento nella funzione, anziché essere valutati <em>una sola volta</em> appena prima di invocare la funzione, come accade per i <em>parametri per valore</em>. Possono risultare utili, per esempio, per una funzione progettata per sembrare un costrutto di controllo che accetta un &#8220;blocco&#8221;, non una funzione con argomenti espliciti per i parametri (si pensi a come appare un ciclo <em>while</em>, per esempio). L'argomento di funzione che ha un comportamento simile a un blocco sarebbe un parametro per nome.
+
+<dt id=glossentry-by-value-parameter>Parametro per valore
+<dd><!-- TODO Come ho chiamato i "by-value parameter" originariamente? -->
+<p>Un parametro <em>per valore</em> è il tipico genere di parametro di metodo che viene valutato prima di essere passato al metodo. Lo si confronti con un <em>parametro per nome</em>.
+
+<dt id=glossentry-call-by-name>Invocazione per nome
+<dd>
+<p>Si veda la voce <em>parametro per nome</em>.
+
+<dt id=glossentry-call-by-value>Invocazione per valore
+<dd>
+<p>Si veda la voce <em>parametro per valore</em>.
+
+<dt id=glossentry-call-site>Punto di invocazione
+<dd>
+<p>Si veda la voce <em>punto di dichiarazione</em>.
+
+<dt id=glossentry-case><code>case</code>
+<dd>
+<p>La parola chiave usata nelle espressioni di <em>pattern matching</em> per testare un oggetto contro un <em>estrattore</em>, un controllo di tipo, <i class=baa>&amp;</i>c.
+
+<dt id=glossentry-case-class>Classe <code>case</code>
+<dd>
+<p>Una classe dichiarata con la parola chiave <code>case</code>. Il compilatore Scala definisce automaticamente i metodi <code>equals</code>, <code>hashCode</code> e <code>toString</code> per la classe e crea un <em>oggetto associato</em> con un metodo factory <code>apply</code> e un metodo estrattore <code>unapply</code>. Le classi <code>case</code> sono particolarmente convenienti da usare nelle clausole delle espressioni di <em>pattern matching</em>.
+
+<dt id=glossentry-child-type>Tipo figlio
+<dd>
+<p>Una classe o un tratto che estende una classe o un tratto <em>genitore</em>. A volte viene chiamato <em>sottotipo</em> o <em>tipo derivato</em>. Si veda la voce <em>ereditarietà</em>.
+
+<dt id=glossentry-client>Cliente
+<dd>
+<p>Un termine informale usato in tutto il libro per indicare una parte di codice che ne usa un'altra come <abbr>API</abbr>, <i class=baa>&amp;</i>c.
+
+<dt id=glossentry-class>Classe
+<dd>
+<p>Un modello per <em>istanze</em> che avranno gli stessi campi, rappresentanti valori di stato, e gli stessi metodi. Le classi Scala supportano l'ereditarietà <em>singola</em> e zero o più <em>mixin</em> sotto forma di tratti. Si confronti con <em>tipo</em>.
+
+<dt id=glossentry-closure>Chiusura
+<dd>
+<p>In Scala, un'istanza che è stata creata da un <em>letterale funzione</em> con tutte le <em>variabili libere</em> referenziate nel letterale funzione legate a variabili con lo stesso nome nell'ambito di visibilità in cui il letterale funzione è stato definito. In altre parole, l'istanza si &#8220;chiude&#8221; nel senso che le variabili libere vengono legate. Dato che sono istanze, le chiusure sono valori <em>di prima classe</em>. Possono essere passate ad altre funzioni per personalizzare il loro comportamento. Per esempio, <code>List.foreach</code> accetta una chiusura che viene applicata a ogni elemento nella lista. Si vedano anche le voci <em>variabili legate</em> e <em>letterali funzione</em>.
+
+<dt id=glossentry-comments>Commenti
+<dd>
+<p>Scala segue le stesse convenzioni per i commenti di Java, C#, C++, <i class=baa>&amp;</i>c. Un <code>// commento</code> prosegue fino al termine della riga, mentre un <code>/* commento */</code> può oltrepassare i confini della singola riga.
+
+<dt id=glossentry-companion-class>Classe associata
+<dd>
+<p>Una classe dichiarata con lo stesso nome di un <code>object</code> e definita nello stesso file sorgente. Si veda anche la voce <em>oggetto associato</em>.
+
+<dt id=glossentry-companion-object>Oggetto associato
+<dd>
+<p>Un <code>object</code> dichiarato con lo stesso nome di una classe (che viene considerata la sua <em>classe associata</em>) e definito nello stesso file sorgente. Gli oggetti associati sono dove vengono definiti metodi e campi che sarebbero statici nelle classi Java, come i metodi factory, i metodi <code>apply</code> e <code>unapply</code> sfruttati dal pattern matching, <i class=baa>&amp;</i>c.
+
+<dt id=glossentry-component>Componente
+<dd>
+<p>Per i nostri scopi, un aggregato di tipi coesivi che espone servizi attraverso astrazioni ben definite, allo stesso tempo incapsulando i dettagli di implementazione e minimizzando le dipendenze nei confronti di altri componenti. Si noti che esiste un ampio spettro di definizioni per il termine <em>componente</em> in informatica e nell'industria.
+
+<dt id=glossentry-compound-type>Tipo composto
+<dd>
+<p>Il tipo reale di una dichiarazione della forma <code>T1 extends T2 with T3 with &hellip; TN { R }</code>, dove <code>R</code> è il <em>raffinamento</em> (corpo). Le definizioni in <code>R</code> influenzano il tipo.
+
+<dt id=glossentry-concrete-type>Tipo concreto
+<dd>
+<p>Una <em>classe</em>, un <em>tratto</em>, o un <em>oggetto</em> i cui metodi, campi e tipi siano tutti definiti. Dai tipi concreti è possibile creare <em>istanze</em>. Li si confronti con i <em>tipi astratti</em>.
+
+<dt id=glossentry-contract>Contratto
+<dd>
+<p>Il protocollo e i requisiti che esistono tra un modulo (per esempio, una classe, un tratto, un oggetto, o persino una funzione o un metodo) e i clienti del modulo. Più precisamente, si veda la voce <em>progettazione per contratto</em>.
+
+<dt id=glossentry-context-free-grammar>Grammatica libera dal contesto
+<dd>
+<p>Un tipo di grammatica per un linguaggio in cui ogni <em>nonterminale</em> può essere specificato come una <em>produzione</em> priva di riferimenti a informazioni di contesto aggiuntive. Cioè, ogni nonterminale può apparire da solo nella parte sinistra della produzione che lo specifica.
+
+<dt id=glossentry-contravariance-or-contravariant>Controvarianza o controvariante
+<dd>
+<p>Nel contesto del comportamento di varianza per i <em>tipi parametrici</em> in caso di ereditarietà, se un parametro <code>A</code> è <em>controvariante</em> in un tipo parametrico <code>T[-A]</code>, allora <code>-</code> è la <em>annotazione di varianza</em> e il tipo <code>T[B]</code> è un <em>supertipo</em> di <code>T[A]</code> se <code>B</code> è un <em>sottotipo</em> di <code>A</code>. Si vedano anche le voci <em>covarianza</em> e <em>invarianza</em>.
+
+<dt id=glossentry-covariance-or-covariant>Covarianza o covariante
+<dd>
+<p>Nel contesto del comportamento di varianza dei <em>tipi parametrici</em> in caso di ereditarietà, se un parametro <code>A</code> è <em>covariante</em> in un tipo parametrico <code>T[+A]</code>, allora <code>+</code> è la <em>annotazione di varianza</em> e un tipo <code>T[B]</code> è un <em>sottotipo</em> di <code>T[A]</code> se <code>B</code> è un <em>sottotipo</em> di <code>A</code>. Si vedano anche le voci <em>controvarianza</em> e <em>invarianza</em>.
+<!-- TODO Come ho tradotto "cross-cutting concerns" in originale? (2) -->
+<dt id=glossentry-cross-cutting-concerns>Interessi trasversali
+<dd>
+<p>&#8220;Interessi&#8221; (tipi di requisiti, questioni di progettazione o di implementazione) che non <span class=wtf>fit</span> negli stessi confini della decomposizione modulare principale. Gli stessi comportamenti devono essere invocati in maniera coerente in particolari punti di esecuzione su un insieme di oggetti e funzioni. Per esempio, la stesa strategia di persistenza che usa un <abbr>ORM</abbr> (Object-Relational Mapping) deve essere usata coerentemente per un insieme di classi, non solo per una singola classe. Perciò, tali &#8220;interessi&#8221; vengono chiamati &#8220;trasversali&#8221;. Supportare questi interessi non dovrebbe coinvolgere duplicazione di codice, <i class=baa>&amp;</i>c. Si veda anche la voce <em>Programmazione orientata agli aspetti</em>.
+
+<dt id=glossentry-currying>Currying
+<dd>
+<p>L'operazione di convertire una funzione a N argomenti in una sequenza di N funzioni a un argomento, dove ogni funzione tranne l'ultima restituisce una nuova funzione che accetta un singolo argomento che restituisce una nuova funzione, e così via, fino all'ultima funzione che accetta un singolo argomento e restituisce un valore.
+
+<dt id=glossentry-declaration-site>Punto di dichiarazione
+<dd>
+<p>In riferimento al modo in cui viene specificato il comportamento di <em>varianza</em> dei tipi parametrici in Scala, questo viene fatto quando i tipi vengono <em>dichiarati</em>, cioè nel <em>punto di dichiarazione</em>. In Java, viene fatto quando i tipi vengono <em>invocati</em> (cioè, usati), quindi nel <em>punto di invocazione</em>.
+<!-- TODO Programmazione vs. paradigma ? -->
+<dt id=glossentry-declarative-programming>Programmazione dichiarativa
+<dd>
+<p>La qualità di molti programmi <em>funzionali</em> e <em>linguaggi domain-specific</em> dove il codice consiste in istruzioni che dichiarano relazioni tra valori e tipi, piuttosto che dirigere il sistema a prendere una particolare sequenza di azioni. Si confronti con la <em>programmazione imperativa</em>.
+
+<dt id=glossentry-default-argument-value>Valore predefinito per gli argomenti
+<dd>
+<p>L'abilità di definire un valore predefinito per un argomento di un metodo che verrà usato se il chiamante non specifica un valore. Solo per Scala 2.8. Si vedano anche le voci <em>argomento implicito</em> e <em>argomento con nome</em>.
+
+<dt id=glossentry-dependency-injection>Iniezione di dipendenza
+<dd>
+<p>Una forma di <em>inversione del controllo</em> dove le dipendenze esterne di un oggetto gli vengono passate, programmaticamente o attraverso un framework <abbr>DI</abbr> che viene guidato da informazioni di configurazione. Perciò, l'oggetto rimane &#8220;passivo&#8221; piuttosto che assumere un ruolo attivo nel risolvere le dipendenze. Il meccanismo di iniezione usa gli argomenti del costruttore o i metodi per impostare il valore dei campi forniti dall'oggetto. L'iniezione di dipendenza minimizza le dipendeze tra gli oggetti, che devono conoscere solo le astrazioni delle loro dipendenze.
+
+<dt id=glossentry-derived-type>Tipo derivato
+<dd>
+<p>Un sinonimo per <em>tipo figlio</em>
+
+<dt id=glossentry-design-by-contract>Progettazione per contratto
+<dd>
+<p>Una metodologia di progettazione per classi e moduli inventata da Bertrand Meyer per il linguaggio Eiffel. Per ogni punto di ingresso, gli ingressi validi vengono specificati in modo programmatico, in modo da essere convalidati durante il collaudo. Queste specifiche sono chiamate <em>precondizioni</em>. Similmente, supponendo che le precondizioni siano rispettate, le specifiche sui risultati garantiti sono chiamate <em>postcondizioni</em> e vengono specificate in modo eseguibile. Possono anche essere specificate <em>invarianti</em> che dovrebbero essere vere in ingresso e in uscita.
+
+<dt id=glossentry-design-pattern>Pattern di progettazione
+<dd>
+<p>Una soluzione a un problema nel suo contesto. Un idioma di codice o una <span class=wtf>design structure</span> che soddisfa le necessità di un problema che occorre di frequente, di un vincolo, di un requisito, <i class=baa>&amp;</i>c.
+
+<dt id=glossentry-domain-specific-language>Linguaggio domain-specific
+<dd>
+<p>Un linguaggio di programmazione personalizzato che assomiglia ai termini, agli idiomi e alle espressioni di un particolare dominio. Un <abbr>DSL</abbr> <em>interno</em> è una forma idiomatica di un linguaggio di programmazione <span class=wtf>general-purpose</span>, cioè non è necesario creare un riconoscitore particolare per il linguaggio, ma il codice scritto in un <abbr>DSL</abbr> di questo tipo è scritto nel linguaggio <span class=wtf>general-purpose</span> e riconosciuto come qualsiasi altro codice. Un <abbr>DSL</abbr> <em>esterno</em> è un linguaggio con una propria grammatica e un proprio riconoscitore.
+
+<dt id=glossentry-duck-typing>Duck typing
+<dd>
+<p>Un termine usato per indicare il modo in cui la risoluzione dei metodi funziona in un linguaggio <em>dinamicamente tipato</em>. Finché un oggetto accetta l'invocazione di un metodo (l'invio di un messaggio), l'interprete è soddisfatto. &#8220;Se cammina come un'anatra e parla come un'anatra, è un'anatra!#&8221; Lo si confronti con l'uso dei <em>tipi strutturali</em> in alcuni linguaggi <em>staticamente tipati</em> come Scala.
+
+<dt id=glossentry-dynamic-typing>Tipizzazione dinamica
+<dd>
+<p>Parlando per sommi capi, il legame ritardato delle informazioni di tipo, talvolta espresso come il legame al valore assegnato a un riferimento piuttosto che al riferimento stesso. Lo si confronti con <em>tipizzazione statica</em>.
+
+<dt id=glossentry-encapsulation>Incapsulamento
+<dd>
+<p>Restringere la visibilità dei membri di un tipo in modo da renderli invisibili ai clienti del tipo quando dovrebbero esserlo. Questo è un modo di esporre solo l'<em>astrazione</em> supportata dal tipo, nascondendo i dettagli di implementazione e quindi prevenendo l'accesso indesiderato a essi da parte dei clienti e mantenendo l'<em>astrazione</em> esposta dal tipo coerente e minimale.
+
+<dt id=glossentry-event>Evento
+<dd>
+<p>La notifica di un cambiamento di stato nella <em>concorrenza basata su eventi</em>.
+
+<dt id=glossentry-event-based-concurrency>Concorrenza basata su eventi
+<dd>
+<p>Una forma di concorrenza ad alte prestazioni in cui vengono usati eventi per segnalare i cambiamenti di stato significativi e vengono usati <span class=wtf>handlers</span> per rispondere agli eventi.
+
+<dt id=glossentry-existential-types>Tipi esistenziali
+<dd>
+<p>Un modo di esprimere la presenza di un tipo senza conoscerne il valore concreto, a volte perché non può essere noto. Viene usato principalmente per supportare alcuni aspetti del sistema di tipi di Java all'interno di quello di Scala, compresi la <em>cancellazione di tipo</em>, i <em>tipi &#8220;grezzi&#8221;</em> (per esempio, le collezioni nelle versioni Java precedenti a Java 5) e la <em>varianza di tipo</em> nel <em>punto di invocazione</em>.
+
+<dt id=glossentry-extractor>Estrattore
+<dd>
+<p>Un metodo <code>unapply</code> definito in un <em>oggetto associato</em> che viene usato per estrarre i valori costituenti per i campi in un oggetto. Viene usato più comunemente nelle espressioni di <em>pattern matching</em>.
+
+<dt id=glossentry-field>Campo
+<dd>
+<p>Una dichiarazione <code>val</code> o <code>var</code> in un tipo che rappresenta una parte dello stato, se non tutto, di una istanza del tipo corrispondente.
+
+<dt id=glossentry-final><code>final</code>
+<dd>
+<p>Parola chiave per dichiarazioni. Per i tipi, <code>final</code> previene gli utenti dall'estendere il tipo. Per i membri di tipo, <code>final</code> previene gli utenti dal ridefinire i membri.
+
+<dt id=glossentry-first-class>Entità di prima classe
+<dd>
+<p>Una &#8220;entità&#8221; è di prima classe in un linguaggio quando potete assegnarne istanze alle variabili, passarne istanze come parametri di funzione e restituirle come valore di ritorno dalle funzioni. L'espressione viene spesso usata per fare riferimento alle <em>funzioni</em>, che sono valori di prima classe in Scala e in altri linguaggi di <em>programmazione funzionale</em>.
+
+<dt id=glossentry-for-comprehension>Descrizione <code>for</code>
+<dd>
+<p>Un altro nome per le espressioni <code>for</code> di Scala.
+
+<dt id=glossentry-formal-parameter>Parametro formale
+<dd>
+<p>Un altro nome per indicare un argomento di una funzione, usato nel contesto del legare le <em>variabili libere</em> nella funzione.
+
+<dt id=glossentry-free-variable>Variabile libera
+<dd>
+<p>Una <em>variabile</em> a cui viene fatto riferimento in un <em>letterale funzione</em> ma che non è stata passata come argomento. Di conseguenza, deve essere &#8220;legata&#8221; a una variabile definita con lo stessonome nel contesto in cui il letterale funzione è definito, in modo da formare una <em>chiusura</em>.
+
+<dt id=glossentry-function>Funzione
+<dd>
+<p>In Scala, il termine <em>funzione</em> viene usato per una funzione che non è legata a un  oggetto o a una classe particolare. Si confronti con <em>metodo</em>. Le funzioni sono istanze dei tipi <code>FunctionN</code>, dove <code>N</code> è l'<em>arità</em> della funzione.
+
+<dt id=glossentry-function-literal>Letterale funzione
+<dd>
+<p>Il termine usato in Scala per indicare un'espressione di <em>funzione</em> anonima da cui vengono create le <em>chiusure</em>.
+
+<dt id=glossentry-function-type>Tipo funzione
+<dd>
+<p>In Scala, tutte le funzioni sono istanze dei tipi <code>FunctionN[-T1, T2, &hellip;, TN, +R]</code>, dove <code>N</code> è il numero di parametri (supportati da <code>0</code> fino a <code>22</code>). La sintassi <code>(T1, T2, &hellip;, TN)</code> per la firma del tipo è usata per dichiarare istance concrete, cioè letterali funzione.
+
+<dt id=glossentry-functional-programming>Programmazione funzionale
+<dd>
+<p>Una forma di programmazione che imita il modo in cui le variabili e le funzioni matematiche lavorano. Le funzioni matematiche sono <em>prive di effetti collaterali</em> e si possono comporre a partire da altre funzioni. Le variabili vengono assegnate una sola volta. Le funzioni possono essere assegnate a variabili e restituite da altre funzioni.
+
+<dt id=glossentry-generator>Generatore
+<dd>
+<p>Espressioni come <code>i &lt;- listOfInts</code> nelle descrizioni <code>for</code>. In questo esempio, ogni passaggio attraverso il ciclo <em>genera</em> un nuovo valore <code>i</code> preso dalla lista <code>listOfInts</code>.
+
+<dt id=glossentry-generics>Generici
+<dd>
+<p>Un altro termine per <em>tipi parametrici</em>, usato più spessoin Java che in Scala.
+
+<dt id=glossentry-higher-order-functions>Funzioni di ordine superiore
+<dd>
+<p>Funzioni che accettano altre funzioni come argomenti o restituiscono un valore funzione.
+
+<dt id=glossentry-immutable-value>Valore immutabile
+<dd>
+<p>Un valore che non può essere modificato dopo che è stato inizializzato. Lo si confronti con un <em>valore mutabile</em>.
+<!-- TODO Programmazione vs. paradigma ? -->
+<dt id=glossentry-imperative-programming>Programmazione imperativa
+<dd>
+<p>La qualità di molti programmi <em>orientati agli oggetti</em> e &#8220;procedurali&#8221; dove il codice consiste di istruizioni che dirigono il sistema a prendere una particolare sequenza di azioni. Si confronti con la <em>programmazione dichiarativa</em>.
+
+<dt id=glossentry-implicit><code>implicit</code>
+<dd>
+<p>Una parola chiave di Scala usata per contrassegnare un metodo o una funzione come idonea per essere usata come <em>conversione di tipo implicita</em>. La parola chiave viene anche usata per indicare un <em>argomento implicito</em>.
+
+<dt id=glossentry-implicit-type-conversion>Conversione di tipo implicita
+<dd>
+<p>Un metodo o un valore funzione contrassegnato dalla parola chiave <em>implicit</em> che lo indica come idoneo per essere usato per convertire implicitamente un tipo ogni volta che è visibile nell'ambito e una conversione è necessaria (per esempio, per il pattern <em>decora la mia libreria</em>).
+
+<dt id=glossentry-implicit-argument>Argomento implicito
+<dd>
+<p>Argomenti di metodo che sono opzioni per l'utente da specificare e indicati con la parola chiave <code>implicit</code>. Se l'utente non specifica un valore per l'argomento, si usa un valore predefinito, che è un valore <span class=wtf>in-scope</span> delo stesso tipo o il risultato della invocazione di un metodo visibile senza argomenti che restituisce un'istanza dello stesso tipo. Si veda anche la voce <em>valore predefinito di un argomento</em>.
+
+<dt id=glossentry-infinite-data-structure>Struttura dati infinita
+<dd>
+<p>Una struttura dati che rappresenta una collezione di valori senza termine, ma che è in grado di falro senza esaurire le risorse di sistema. I valori non vengono calcolati fino a quando non viene richiesto alla struttura dati di produrli. Fintanto che vengono richiesti sottoinsiemi finiti di valori, l'esaurimento delle risorse viene evitato.
+
+<dt id=glossentry-infix-notation>Notazione infissa
+<dd>
+<p>Una sintassi supportata dal compilatore per metodi con un solo argomento. Il metodo può essere invocato senza il punto tra l'oggetto e il nome del metodo e senza le parentesi attorno all'argomento. Quando viene usata con metodi il cui nome è composto esclusivamente da <em>caratteri operatore</em>, la sintassi offre una forma di <em>sovraccarico degli operatori</em>. A volte viene chiamata <em>notazione operazionale</em>. Si veda anche la voce <em>notazione postfissa</em>.
+
+<dt id=glossentry-infix-type>Tipo infisso
+<dd>
+<p>Quando un tipo parametrico della forma <code>Op[A,B]</code> viene usato per istanziare un tipo, può anche essere scritto come <code>A Op B</code>. Per esempio, <code>Or[Throwable,Boolean]</code> può essere scritto come <code>Throwable Or Boolean</code>.
+
+<dt id=glossentry-inheritance>Ereditarietà
+<dd>
+<p>Una forte relazione tra una classe o un tratto e un'altra classe o un altro tratto. La classe o il tratto <em>derivato</em> incorpora i membri della clase o tratto <em>genitore</em> come se fossero stati definiti nel derivato. Il derivato può ridefinire i membri ereditati (nella maggior parte dei casi). Le istanze del derivato sono <em>sostituibili</em> alle istanze del genitore.
+
+<dt id=glossentry-instance-or-instantiate>Istanza o istanziare
+<dd>
+<p>Un <em>oggetto</em> creato invocando il costruttore di una <em>classe</em>. La parola <em>oggetto</em> è un sinonimo di istanza nella maggior parte dei linguaggi orientati agli oggetti, ma in Scala il termine <em>oggetto</em> viene usato per fare riferimento a un <code>object</code> dichiarato esplicitamente, e il termine <em>istanza</em> (insieme al verbo <em>istanziare</em>) viene riservato per il caso più generale.
+<p>L'istanziazione può anche fare riferimento alla creazione di un <em>tipo concreto</em> a partire da un <em>tipo parametrico</em> specificando i tipi concreti per i parametri di tipo.
+
+<dt id=glossentry-invariance-and-invariant>Invarianza e invariante
+<dd>
+<p>Nel contesto del comportamento di varianza per i <em>tipi parametrici</em> in caso di ereditarietà, se un parametro <code>A</code> è <em>invariante</em> in un tipo parametrico <code>T[A]</code> allora non è presente alcuna <em>annotazione di varianza</em> e un tipo <code>T[B]</code> è un <em>sottotipo</em> di <code>T[A]</code> se e solo se <code>B</code> è uguale ad <code>A</code>. Questo significa che i tipi non possono essere cambiati. Si vedano anche le voci <em>covarianza</em> e <em>controvarianza</em>.
+<p>Nel contesto della <em>progettazione per contratto</em>, un'asserzione che dovrebbe essere vera prima e dopo l'esecuzione di un metodo.
+
+<dt id=glossentry-inversion-of-control>Inversione del controllo
+<dd>
+<p>L'idea che un oggetto non dovrebbe istanziare le proprie copie delle dipendenze esterne, ma piuttosto affidarsi ad altri meccanismi per ottenere quelle dipendenze. L'inversione del controllo promuove un disaccoppiamento migliore e la collaudabilità, dato che gli oggetti conoscono solo le astrazioni delle proprie dipendenze, non gli specifici implementatori concreti delle dipendenze. Una forma debole di inversione del controllo è quando un oggetto invoca una factory, un <span class=wtf>locator</span> di servizio, <i class=baa>&amp;</i>c. per ottenere le dipendenze. Perciò, l'oggetto ha ancora un ruolo attivo ed è accoppiato al &#8220;fornitore&#8221;. La forma più forte di inversione del controllo è l'<em>iniezione di dipendenza</em>, dove l'oggetto rimane &#8220;passivo&#8221;.
+
+<dt id=glossentry-lazy><code>lazy</code>
+<dd>
+<p>Le variabili immutabili (<code>val</code>) possono essere dichiarate <code>lazy</code>, indicando che verranno valutate solo al momento di leggerle. Questa funzionalità è utile per valutazioni costose che potrebbero non essere necessarie.
+<p>Le strutture dati ritardate, cioè dichiarate come <code>lazy</code>, possono anche essere usate per definire strutture dati infinite in grado di evitare l'esaurimento delle risorse di sistema fino a quando solo un sottoinsieme finito della struttura viene valutato. Le classi <code>Stream</code> e <code>Range</code> sono entrambe a valutazione ritardata. Si confronti con <em>rigoroso</em>.
+
+<dt id=glossentry-linearization>Linearizzazione
+<dd>
+<p>L'algoritmo usato per risolvere la ricerca di un membro in un tipo, come nel caso della ridefinizione dei metodi, incluse le invocazioni a <code>super</code>.
+
+<dt id=glossentry-literal>Letterale
+<dd>
+<p>Usato per fare riferimento a espressioni di valori &#8220;letterali&#8221;, come numeri (per esempio <code>1</code>, <code>3.14</code>), stringhe (per esempio <code>"Ciao Scala"</code>), tuple (per esempio, <code>(1, 2, 3)</code>) e <em>letterali funzione</em> (per esempio, <code>(x) &#8658; x + x</code>).
+
+<dt id="glossentry-lower-type-bounds">Limiti inferiori di tipo
+<dd>
+<p>Si veda la voce <em>limiti di tipo</em>.
+<!-- TODO Come ho tradotto "mailbox" (sempre che l'abbia fatto) in originale? -->
+<dt id=glossentry-mailbox>Mailbox
+<dd>
+<p>La coda in cui i messaggi di un <em>attore</em> vengono memorizzati fino a quando l'attore non li elabora nel <em>modello di concorrenza ad attori</em>.
+
+<dt id=glossentry-main><code>main</code>
+<dd>
+<p>Il punto di entrata di un'applicazione invocato dall'interprete viene chiamato <code>main</code>. Il nome risale al linguaggio C. In Scala, il <em>metodo</em> <code>main</code> deve essere definito in un <code>object</code>. Java, al contrario, richiede che il metodo <code>main</code> sia definito come un metodo statico in una classe.
+
+<dt id=glossentry-mapreduce>MapReduce
+<dd>
+<p>Una strategia dividi-e-conquista per elaborare in parallelo insiemi di dati di grandi dimensioni. Nella fase di &#8220;mappaggio&#8221; i dati vengono suddivisi in sottoinsiemi su cui i calcoli desiderati verranno effettuati. Nella fase di &#8220;riduzione&#8221; i risultati dei calcoli sui sottoinsiemi vengono combinati nel risultato finale. I framework MapReduce <span class=wtf>handle</span> i dettagli della gestione delle operazioni e dei nodi su cui vengono eseguite, compreso il riavvio delle operazioni che falliscono per qualche ragione. L'utente del framework deve solo scrivere gli algoritmi per mappare e ridurre gli insiemi di dati ed effettuare i calcoli sui sottoinsiemi.
+
+<dt id=glossentry-member>Membro
+<dd>
+<p>Un termine generico per un <em>tipo</em>, <em>campo</em>, o <em>metodo</em> dichiarato in una <em>classe</em> o in un <em>tratto</em>.
+
+<dt id="glossentry-memoization">Memoizzazione
+<dd>
+<p>Una forma di <span class=wtf>caching</span> che ottimizza l'invocazione delle funzioni. I risultati delle invocazioni di una funzione vengono memorizzati in modo che, quando viene ripetuta un'invocazione con gli stessi ingressi, i risultati salvati possano essere restituiti invece di reinvocare nuovamente la funzione.
+
+<dt id=glossentry-message>Messaggio
+<dd>
+<p>Nel <em>modello di concorrenza ad attori</em>, i messaggi vengono scambiati tra gli attori per coordinare il loro lavoro.
+<p>Nella programmazione orientata agli oggetti, l'invocazione dei metodi viene talvolta chiamata &#8220;invio di un messaggio a un oggetto&#8221;, specialmente in certi linguaggi come Smalltalk e, in una certa misura, Ruby.
+
+<dt id=glossentry-method>Metodo
+<dd>
+<p>Una <em>funzione</em> che viene associata esclusivamente a un'istanza, definita in una <em>classe</em>, in un <em>tratto</em> o in un <em>oggetto</em>. I metodi possono essere invocati solo tramite la sintassi <code>oggetto.metodo</code>.
+
+<dt id=glossentry-mixin>Mixin
+<dd>
+<p>Una incapsulazione <span class=wtf>narrowly-focused</span> di stato e comportamento che è più utile come aggiunta allo stato e al comportamento di un altro oggetto piuttosto che <span class=wtf>standing on its own</span>. In Scala i mixin vengono implementati usando i <em>tratti</em>.
+
+<dt id=glossentry-multiple-inheritance>Ereditarietà multipla
+<dd>
+<p>In alcuni linguaggi, a esclusione di Scala, un tipo può estendere più di una classe genitore. Si confronti con <em>ereditarietà singola</em>.
+
+<dt id=glossentry-mutable-value>Valore mutabile
+<dd>
+<p>Un valore che può essere modificato dopo essere stato inizializzato. Si confronti con <em>valore immutabile</em>.
+
+<dt id=glossentry-named-argument>Argomento con nome
+<dd>
+<p>L'abilità di fare riferimento a un argomento di un metodo tramite il nome quando si invoca il metodo, utile in combinazione con i <em>valori predefiniti degli argomenti</em> per minimizzare il numero di argometni che devono essere specificati dal chiamante.
+
+<dt id=glossentry-nonterminal>Nonterminale
+<dd>
+<p>Un elemento in una grammatica che richiede ulteriore decomposizoine in uno o più <em>nonterminali</em> (inclusa la possibilità di un riferimento ricorsivo a se stesso) e <em>terminali</em>.
+
+<dt id=glossentry-object>Oggetto
+<dd>
+<p>Un'unità coesiva con un particolare stato, possibili transizioni di stato, e comportamenti. In Scala, la parola chiave <code>object</code> viene usata per dichiarare esplicitamente un oggetto <em>singleton</em>, usando la stessa sintassi della dichiarazione di una classe, eccetto che per l'assenza di parametri del costruttore e di costruttori ausiliari (perché gli <code>object</code> vengono istanziati dalla macchina virtuale sottostante, non dal codice dell'utente). Per evitare confusione con gli <code>object</code>, si usa il termine <em>istanza</em> per fare riferimento in modo generico sia alle istanze di <em>classi</em> sia agli <code>object</code>.
+
+<dt id=glossentry-object-oriented-programming>Programmazione orientata agli oggetti
+<dd>
+<p>Una forma di programmazione che incapsula i valori di stato e le operazioni su quello stato, esponendo un'astrazione coesiva ai clienti dell'oggetto e allo stesso tempo nascondendo i dettagli interni della implementazione. La <abbr>OOP</abbr> supporta anche l'ereditarietà per definire specializzazioni e relazioni &#8220;familiari&#8221; tra i tipi.
+
+<dt id=glossentry-operator-characters>Caratteri operatore
+<dd>
+<p>Caratteri come <code>&lt;</code>, <code>*</code>, <i class=baa>&amp;</i>c. che non sono lettere, cifre, o caratteri riservati come le parentesi tonde, le parentesi graffe, le parentesi quadre, il punto e virgola, i due punti, o la virgola. Questi caratteri possono essere usati nei nomi dei metodi per implementare una forma di <em>sovraccarico degli operatori</em>.
+
+<dt id=glossentry-operator-notation>Notazione operazionale
+<dd>
+<p>Si veda la voce <em>notazione infissa</em>.
+
+<dt id=glossentry-operator-overloading>Sovraccarico degli operatori
+<dd>
+<p>La caratteristica di alcuni linguaggi in cui gli operatori matematici standard come <code>*</code>, <code>/</code>, <code>&lt;</code>, <i class=baa>&amp;</i>c. possono essere ridefiniti dagli utenti per i propri tipi personalizzati. In Scala, una forma di sovraccarico degli operatori è supportata permettendo l'uso di caratteri operatore nei nomi dei metodi e permettendo l'invocazione di metodi con un solo argomento tramite <em>notazione infissa</em>. La &#8220;precedenza tra gli operatori&#8221; per questi metodi è determinata dal primo carattere; per esempio, il metodo <code>*&lt;</code> avrà precedenza più alta rispetto al metodo <code>+&lt;</code>.
+
+<dt id=glossentry-overloaded-functions>Funzioni sovraccaricate
+<dd>
+<p>Due o più funzioni definite nello stesso ambito (per esempio, come metodi in un tipo o come funzioni &#8220;pure&#8221;) che hanno lo stesso nome ma <em>firme</em> diverse.
+
+<dt id=glossentry-package-objects>Oggetti package
+<dd>
+<p>Un genere speciale di dichiarazioni di oggetti che dichiarano membri che dovrebbero esere visibili nell'ambito del package nominato. Per esempio, per la dichiarazione <code>package object math { type Complex = &hellip; }</code>, il tipo <code>Complex</code> può essere referenziato come <code>math.Complex</code>. Solo per Scala 2.8.
+
+<dt id=glossentry-packrat-parsers>Riconoscitori spazzino
+<dd>
+<p>Riconoscitori per le <em class=wtf>parsing expression grammars</em> (<abbr>PEG</abbr>) <a href=apa.html#Ford>[Ford]</a>. Hanno diversi vantaggi, come la mancanza di ambituità e buone caratteristiche prestazionali. La libreria di riconoscimento combinatorio inclusa in Scala 2.8 aggiungerà il supporto per la creazione di riconoscitori spazzino.
+
+<dt id=glossentry-parameterized-types>Tipi parametrici
+<dd>
+<p>L'analogo Scala dei <em>generici</em> Java. I tipi parametrici vengono definiti con parametri segnaposto per i tipi che usano. Quando un'istanza di un tipo parametrico viene creata, i tipi specifici devono essere specificati per sostituire tutti i parametri di tipo. Si veda anche la voce <em>costruttore di tipo</em>.
+
+<dt id=glossentry-parent-type>Tipo genitore
+<dd>
+<p>Una classe o un tratto da cui è <em>derivata</em> un'altra classe o un altro tratto. Viene anche chiamato <em>supertipo</em> o <em>tipo base</em>. Si veda la voce <em>ereditarietà</em>.
+
+<dt id=glossentry-parsing-expression-grammars-pegs class=wtf>Parsing expression grammars (<abbr>PEG</abbr>)
+<dd>
+<p>Un'alternativa alle <em>grammatiche libere da contesto</em> che offre la garanzia di un tempo di riconoscimento lineare usando la <em>memoizzazione</em> e grammatiche non ambigue <a href=apa.html#PEG>[PEG]</a>.
+
+<dt id=glossentry-partial-application>Applicazione parziale
+<dd>
+<p>Associata al <em>currying</em>, dove un sottoinsieme degli argomenti di una funzione curry vengono applicati producendo una nuova funzione che accetta i restanti argomenti.
+
+<dt id=glossentry-partial-function>Funzione parziale
+<dd>
+<p>Una funzione che non è valida per l'interno insieme di valori dei suoi argomenti. A seconda del contesto, le espressioni di pattern matching possono essere convertite dal compilatore in funzioni parziali.
+
+<dt id=glossentry-path-dependent-type>Tipo dipendente dal percorso
+<dd>
+<p>Un tipo annidato <code>T</code> è unico sulla base del proprio &#8220;percorso&#8221;, la lista gerarchica e intervallata da punti formata del package che lo racchiude, i tipi che lo racchiudono, e infine il tipo <code>T</code> stesso. Le istanze di <code>T</code> possono avere tipi divesri e incompatibili: per esempio, se <code>T</code> è annidato in un tratto e il tratto appare nella <em>linearizzazione</em> di tipi differenti, allora le istanze in quei tipi saranno di tipo diverso.
+
+<dt id=glossentry-pattern-matching>Pattern matching
+<dd>
+<p>Espressioni <code>case</code>, di solito in una espressione <code>match</code>, che confrontano un oggetto contro possibili tipi, estrattori di tipo, espressioni regolari, <i class=baa>&amp;</i>c. per determinare come gestirlo in modo opportuno.
+
+<dt id=glossentry-pimp-my-library>Decora la mia libreria
+<dd>
+<p>Il nome di un pattern di progettazione che sembra aggiungere nuovi metodi a un tipo. Usa una <em>conversione di tipo implicita</em> per racchiudere automaticamente il tipo in un tipo avvolgente, nel caso il tipo avvolgente abbia i metodi desiderati.
+
+<dt id=glossentry-precondition>Precondizione
+<dd>
+<p>Un'asserzione che dovrebbe essere vera nel momento in cui si entra in un metodo o in accede a un altro punto di entrata. Si veda la voce <em>progettazione per contratto</em>.
+
+<dt id=glossentry-postcondition>Postcondizione
+<dd>
+<p>Un'asserzione che dovrebbe essere vera nel momento in cui si esce da un metodo o da un altro punto di confine. Si veda la voce <em>progettazione per contratto</em>.
+
+<dt id=glossentry-postfix-notation>Notazione postfissa
+<dd>
+<p>Una sintassi supportata dal compilatore per i metodi senza argomenti, a volte chiamati metodi <em class=wtf>nullary</em>. Il metodo può essere invocato senza il punto tra l'oggetto e il suo nome. Si veda anche la voce <em>notazione infissa</em>.
+
+<dt id=glossentry-primary-constructor>Costruttore principale
+<dd>
+<p>Il costruttore principale di una classe, consistente del corpo della classe con la liasta di parametri specificata dopo il nome della classe. Si veda anche la voce <em>costruttore ausiliario</em>.
+
+<dt id=glossentry-primitive-type>Tipo primitivo
+<dd>
+<p>Un tipo che non è un oggetto per la piattaforma sottostante (<abbr>JVM</abbr> e <abbr>CLR</abbr>). Scala non ha tipi primitivi a livello del codice sorgente. Invece, usa i <em>tipi valore</em>, che sono sottoclassi di <code>AnyVal</code>, per avvolgere i tipi primitivi della piattaforma, offrendo una semantica da oggetto a livello del codice, usando le operazioni di trasformazione tra tipi primitivi e tipi oggetto a livello di bytecode per ottimizzare le prestazioni.
+
+<dt id=glossentry-production>Produzione
+<dd>
+<p>Un termine usato per ogni parte di una grammatica che decompone uno specifico <em>nonterminale</em> in altri nonterminali (possibilmente includendo un riferimento ricorsivo al nonterminale originale) e <em>terminali</em>.
+
+<dt id=glossentry-pure>Pura
+<dd>
+<p>Usata nel contesto delle funzioni per significare che sono <em>prive di effetti collaterali</em>. Si veda anche la voce <em>trasparenza referenziale</em>.
+
+<dt id=glossentry-recursion>Ricorsione
+<dd>
+<p>Quando una funzione invoca se stessa come parte della propria computazione. Una condizione di terminazione è richiesta per evitare una ricorsione infinita. Si veda anche la voce <em>ricorsione in coda</em>.
+
+<dt id=glossentry-reference-type>Tipo riferimento
+<dd>
+<p>Un tipo le cui istanze sono implementate come oggetti sulla piattaforma sottostante. Tutti i tipi riferimento estendono <code>AnyRef</code>.
+
+<dt id=glossentry-referential-transparency>Trasparenza referenziale
+<dd>
+<p>La proprietà di un'espressione, come una funzione, dove uò essere sostituita con il suo valore senza modificare il comportamento del codice. Questo può essere fatto con le funzioni <em>prive di effetti collaterali</em> quando gli ingressi sono gli stessi. Il vantaggio principale della trasparenza referenziale è che è molto facile ragionare sul comportamento di una funzione, senza dover capire il contesto in cui viene invocata. Questo rende le funzioni più facili da collaudare, riorganizzare e riutilizzare.
+
+<dt id=glossentry-refinement>Raffinamento
+<dd>
+<p>Il termine usato per aggiungere o ridefinire membri nel corpo di un tipo per un <em>tipo composto</em>.
+
+<dt id=glossentry-reified-types>Tipi reificati
+<dd>
+<p>Dove gli specifici tipi usati quando si istanzia un tipo generico vengono conservati nel bytecode in omdo che l'informazione sia disponibile a tempo di esecuzione. Questa è una proprietà del bytecode .NET ma non del bytecode sulla <abbr>JVM</abbr>, che usa la <em>cancellazione di tipo</em>. Per minimizzare le incompatibilità, sia la versione Java di Scala che la versione .NET usano la <em>cancellazione di tipo</em>.
+
+<dt id=glossentry-repl><abbr>REPL</abbr>
+<dd>
+<p>Un nome dato agli interpreti interattivi di un linguaggio, come il comando <kbd>scala</kbd> in modalità interattiva. <abbr>REPL</abbr> è l'acronimo di <em>Read-Evaluate-Print Loop</em> (ciclo di lettura-valutazione-scrittura).
+
+<dt id=glossentry-scaladocs>Scaladoc
+<dd>
+<p>La documentazione delle <abbr>API</abbr> generata a partire dal codice sorgente Scala usando lo strumento <code>scaladoc</code>, analoga alla documentazione <em>Javadoc</em> di Java.
+
+<dt id=glossentry-scope>Ambito (di visibilità)
+<dd>
+<p>Un confine di <em>visibilità</em> definito, che vincola quali tipi e i loro membri sono visibili al suo interno.
+
+<dt id=glossentry-sealed><code>sealed</code>
+<dd>
+<p>Parola chiave per le classi genitore quando <em>tutte</em> le sottoclassi dirette permesse sono definite nello stesso file sorgente.
+
+<dt id=glossentry-self-type-annotation>Annotazione self-type
+<dd>
+<p>Una dichiarazione in un tratto o in una classe che modifica il proprio tipo, a volte definendo un alias per <code>this</code> (per convenzione, si usa il nome <code>self</code>). Un tipo esplicito per la classe corrente può essere usato per indicare dipendenze nei confronti di altri tratti che dovranno essere mescolati in un'istanza concreta per risolvere tali dipendenze. In alcuni casi queste dipendenze vengono usate per garantire che un'istanza del tipo corrente possa essere usata come istanza di un tipo dipendente in certi contesti (si veda come queste annotazioni sono state usate nel pattern Observer nella sezione <a href=cap-13.html#SelfTypeAnnotationsAndAbstractTypeMembers>Annotazioni self-type e membri tipo astratti</a> del capitolo 13).
+
+<dt id=glossentry-side-effect-free>Prive di effetti collaterali
+<dd>
+<p>Funzioni o espressioni che non hanno effetti collaterali, nel senso che non modificano né lo stato globale né quello di alcun oggetto.
+
+<dt id=glossentry-signature>Firma
+<dd>
+<p>Per una funzione, il nome, i tipi dei parametri e il tipo di ritorno. Per un <em>metodo</em>, la firma include anche il tipo che definisce il metodo.
+
+<dt id=glossentry-single-inheritance>Ereditarietà singola
+<dd>
+<p>Una classe, oggetto, o tratto può estendere solo una classe genitore. La si confronti con la <em>ereditarietà multipla</em>.
+
+<dt id=glossentry-singleton>Singleton
+<dd>
+<p>Una classe di cui esiste una sola istanza. In Scala, le class singleton vengono dichiarate usando la parola chiave <code>object</code> anziché <code>class</code>.
+
+<dt id=glossentry-singleton-types>Tipi singleton
+<dd>
+<p>Il designatore di tipo unico che esclude dipendenze dal percorso. Se <code>p1</code> e <code>p2</code> sono due tipi dipendenti dal percorso differenti, i loro tipi singleton <code>p1.type</code> e <code>p2.type</code> potrebbero essere uguali. Si confronti con gli oggetti <em>singleton</em>. Nello specifico, i tipi singleton non sono i tipi degli oggetti singleton, ma gli oggetti singleton sono dotati di un tipo singleton.
+
+<dt id=glossentry-stable-types>Tipi stabili
+<dd>
+<p>Usati nel contesto dei <em>tipi dipendenti dal percorso</em>, tutti gli elementi di un percorso tranne l'ultimo devono essere <em>stabili</em>, che <span class=wtf>roughly</span> significa che devono essere package, oggetti singleton, o dichiarazioni di tipo che sono alias dei precedenti. <!-- TODO Vedi la traduzione originale per quest'ultimo pezzo. -->
+
+<dt id=glossentry-state>Stato
+<dd>
+<p>Come in &#8220;lo stato di un oggetto&#8221;, dove informalmente significa l'insieme di tutti i valori correnti dei <em>campi</em> di un oggetto.
+
+<dt id=glossentry-static-typing>Tipizzazione statica
+<dd>
+<p>Parlando per sommi capi, legame avido delle informazioni di tipo, a volte riferito come legame del tipo a un riferimento piuttosto che al valore assegnato al riferimento.
+
+<dt id=glossentry-strict>Rigoroso
+<dd>
+<p>Usato per fare riferimento a strutture dati non <em>ritardate</em>, cioè definite &#8220;avidamente&#8221; dalle espressioni usate per costruirle.
+
+<dt id=glossentry-structural-type>Tipo strutturale
+<dd>
+<p>Un <em>tipo strutturale</em> è come un tipo anonimo, dove solo la &#8220;struttura&#8221; che un tipo candidato deve supportare è specificata, come i <em>membri</em> che devono essere presenti. I tipi strutturali non nominano i tipi candidati a cui portrebbero corrispondere, né i tipi candidati devono condividere un <em>tratto</em> o una <em>classe</em> genitore comune con il tipo strutturale. PErciò, i tipi strutturali sono l'analogo type-safe del <em>duck typing</em> presente nei linguaggi dinamicamente tipati come Ruby.
+
+<dt id=glossentry-subtype>Sottotipo
+<dd>
+<p>Un sinonimo di <em>tipo derivato</em>.
+
+<dt id=glossentry-supertype>Supertipo
+<dd>
+<p>Un sinonimo di <em>tipo genitore</em>.
+
+<dt id=glossentry-symbol>Simbolo
+<dd>
+<p>Una stringa internata. I letterali simbolo vengono scritti usando un singolo apice, come in <code>'nome</code>.
+
+<dt id=glossentry-tail-call-recursion>Ricorsione in coda
+<dd>
+<p>Una forma di ricorsione in cui una funzione invoca se stessa come <em>ultima</em> istruzione, cioè senza effettuare ulteriori operazioni con il risultato della chiamata ricorsiva. Il compilatore Scala ottimizzerà le ricorsioni in coda trasformandole in un ciclo.
+
+<dt id=glossentry-test-driven-development>Sviluppo guidato dal comportamento
+<dd>
+<p>Una disciplina di sviluppo in cui nessuna nuova funzionalità viene implementata fino a quando un test per essa sia stato scritto che passerà una volta che la funzionalità è stata implementata. Si veda anche la voce <em>sviluppo guidato dal comportamento</em>.
+
+<dt id=glossentry-terminal>Terminale
+<dd>
+<p>Un lessema di una grammatica, come una parola chiave, che non richiede decomposizioni ulteriori. Si veda anche la voce <em>nonterminale</em>.
+
+<dt id=glossentry-test-double>Controfigura
+<dd>
+<p>Quando si collauda il comportamento di un oggetto, una controfigura è un altro oggetto che soddisfa una dipendenza nell'oggetto sottoposto al collaudo. La controfigura può essere d'aiuto nel processo di collaudo, offrendo dati e comportamento controllati e modificando l'interazione tra l'oggetto sottoposto al collaudo e la controfigura. Tipi specifici di controfigura includono i &#8220;<span class=wtf>fakes</span>&#8221;, gli oggetti &#8220;finti&#8221; (in inglese, mock) e &#8220;<span class=wtf>stubs</span>&#8221;.
+
+<dt id=glossentry-trait>Tratto
+<dd>
+<p>Un'incapsulazione simile a una classe di stato (campi) e comportamento (metodi) che viene usata per la composizione dei <em>mixin</em>. Zero o più tratti possono essere mescolati nelle dichiarazioni di classe o direttamente quando i creano le istanze, creando effettivamente una classe anonima.
+
+<dt id=glossentry-trampoline>Trampolino
+<dd><!-- TODO Aiutarsi con la traduzione originale nel capitolo appropriato -->
+<p>Un ciclo che scorre una lista di funzioni, invocandole tutte una per una. La metafora di lanciare le funzioni da un trampolino è la sorgente del nome. Può essere usato per riscrivere una forma di ricorsione in cui una funzione non invoca se stessa, ma invoca una funzione diversa che richiama quella originale, e così via, avanti e indietro. Esiste una proposta per includere un'implementazione del trampolino nel compilatore della versione 2.8 di Scala.
+
+<dt id=glossentry-tuple>Tupla
+<dd>
+<p>Un raggruppamento di due o più elementi di tipi arbitrari in un &#8220;prodotto cartesiano&#8221;, senza prima definire la classe che li contiene. I valori tupla letterali vengono scritti tra parentesi e separati da virgole, come in <code>(x1, x2, &hellip;, xN)</code>. Sono valori di <em>prima classe</em>, quindi potete assegnarli a variabili, passarli a funzioni come valori e restituirli da funzioni. Le tuple sono rappresentate dalle classi <code>TupleN</code>, per <code>N</code> che va da <code>2</code> a <code>22</code>, estremi inclusi.
+
+<dt id=glossentry-type>Tipo
+<dd>
+<p>Una categorizzazione di stati permessi e operazioni su quegli stati, incluse trasformazioni da uno stato all'altro. Il tipo di un'istanza è la combinazione delle sue <em>classi</em> dichiarate (nominate esplicitamente o anonime), dei <em>tratti</em> mescolati e dei tipi specifici usati per risolvere qualsiasi parametro se la classe o il tratto è un <em>tipo parametrico</em>. In Scala, <code>type</code> è anche una parola chiave. Quando indicata nel testo, a volte usiamo il termine tipo per fare riferimento in modo generico a una <em>classe</em>, a un <em>oggetto</em>, o a un <em>tratto</em>.
+
+<dt id=glossentry-type-annotation>Annotazione di tipo
+<dd>
+<p>Una dichiarazione esplicita del tipo di un valore, come in <code>count: Int</code>, dove <code>Int</code> è l'annotazione di tipo. Un'annotazione di tipo viene richiesta quando l'<em>inferenza di tipo</em> non può essere usata. In Scala, i parametri di funzione richiedono le annotazioni di tipo e le annotazioni sono richieste in alcuni altri contesti in cui il tipo non può essere inferito, per esempio per i tipi di ritorno di alcune funzioni.
+
+<dt id=glossentry-type-bounds>Limiti di tipo
+<dd>
+<p>Vincoli sui tipi permessi che possono essere usati per un parametro in un <em>tipo parametrico</em> o assegnati a un <em>tipo astratto</em>. In Scala, l'espressione <code>A &lt;: B</code> definisce un <em>limite superiore</em> su <code>A</code>, deve essere un <em>sottotipo</em> di <code>B</code> o uguale a esso. L'espressione <code>A &gt;: B</code> definisce un <em>limite inferiore</em> su <code>A</code>, deve essere un <em>supertipo</em> di <code>B</code> o uguale a esso.
+
+<dt id=glossentry-type-constructor>Costruttore di tipo
+<dd>
+<p>Informalmente, un <em>tipo parametrico</em> viene talvolta chiamato un costruttore di tipo, sebbene anche un tipo &#8220;non parametrico&#8221; sia in realtà un costruttore di tipo, ma privo di parametri. L'analogia con la costruzione di istanze è che specificate specifici tipi concreti per i parametri per creare un nuovo tipo concreto, proprio come specificate valori al costruttore di un'istanza per creare un'istanza.
+
+<dt id=glossentry-type-designators>Designatori di tipo
+<dd>
+<p>Gli identificatori convenzionali di tipo usati comunemente, come <code>class Person</code>, <code>object O { type t }</code>, <i class=baa>&amp;</i>c. Rappresentano effettivamente una notazione abbreviata per le <em>proiezioni di tipo</em>.
+
+<dt id=glossentry-type-erasure>Cancellazione di tipo
+<dd>
+<p>Una proprietà del modello dei tipi generici sulla <abbr>JVM</abbr>. Quando un tipo viene creato a partire da un generico, l'informazione sui tipi specifici sostituiti ai parametri di tipo non viene memorizzata nel bytecode e quindi non è disponibile a tempo di esecuzione. Scala deve seguire lo stesso modello, perciò le istanze di <code>List[String]</code> e di <code>List[Int]</code>, per esempio, sono indistinguibili. Si confronti con la voce <em>tipi reificati</em>.
+
+<dt id=glossentry-type-inference>Inferenza di tipo
+<dd>
+<p>Inferire il tipo di un valore sulla base del contesto in cui viene usato anziché affidarsi ad <em>annotazioni di tipo</em> esplicite. A volte viene chiamata <em>tipizzazione implicita</em>.
+
+<dt id=glossentry-type-projections>Proiezioni di tipo
+<dd>
+<p>Un modo di fare riferimento a un tipo annidato all'interno di un altro tipo. Per esempio, se un tipo <code>t</code> è dichiarato in una classe <code>C</code>, allora la proiezione di tipo per <code>t</code> è <code>C#t</code>.
+
+<dt id=glossentry-type-variance>Varianza di tipo
+<dd>
+<p>Quando un <em>tipo parametrico</em> viene dichiarato, il comportamento della varianza in caso di ereditarietà per ogni parametro di tipo può essere specificato usando una <em>annotazione di varianza di tipo</em> sul simbolo del tipo.
+
+<dt id=glossentry-type-variance-annotation>Annotazione di varianza di tipo
+<dd>
+<p>Applicato a un parametro di tipo in un tipo parametrico, il simbolo <code>+</code> davanti al simbolo del tipo viene usato per indicare la <em>covarianza</em>. Un simbolo <code>-</code> davanti al simbolo del tipo viene usato per indicare la <em>controvarianza</em>. L'assenza di qualsiasi simbolo è usata per indicare l'<em>invarianza</em>, che è il comportamento predefinito.
+
+<dt id=glossentry-upper-type-bounds>Limiti superiori di tipo
+<dd>
+<p>Si veda la voce <em>limiti di tipo</em>.
+
+<dt id=glossentry-value>Valore
+<dd>
+<p>Lo stato effettivo di un'istanza, di solito nel contesto di una variable che fa riferimento all'istanza. Si veda anche la voce <em>tipo valore</em>.
+
+<dt id=glossentry-value-object>Oggetto valore
+<dd>
+<p>Un oggetto o istanza immutabile.
+
+<dt id=glossentry-value-type>Tipo valore
+<dd>
+<p>Una sottoclasse di <code>AnyVal</code> che avvolge il corrispondente tipo &#8220;primitivo&#8221; della piattaforma sottostante (<abbr>JVM</abbr> o <abbr>CLR</abbr>). I tipi valore sono <code>Boolean</code>, <code>Char</code>, <code>Byte</code>, <code>Double</code>, <code>Float</code>, <code>Long</code>, <code>Int</code> e <code>Short</code>. (Anche <code>Unit</code> è un tipo valore.) Tutti sono dichiarati <code>abstract final</code> così non possono essere usati in espressioni come <code>new V</code>. Invece, i programmi specificano valori letterali, come <code>3.14</code> per un'istanza di <code>Double</code> o usano i metodi che restituiscono nuovi valori. L'interprete Scala gestisce l'istanziazione di queste sottoclassi. Tutte le istanze di tipi valore sono <em>oggetti valore</em> immutabili.
+<p>Il termine <em>tipo valore</em> viene anche usato per indicare le categorie di tipi per le istanze, cioè il tipo di ogni istanza deve cadere in una tra diverse categorie:: <em>tipi annotati</em>, <em>tipi composti</em>, <em>tipi funzione</em>, <em>tipi infissi</em>, <em>tipi parametrici</em>, <em>tuple</em>, <em>designatori di tipo</em>, <em>proiezioni di tipo</em>, <em>tipi singleton</em>.
+
+<dt id=glossentry-variable>Variabile
+<dd>
+<p>Un riferimento con nome a un valore. Se la variabile viene dichiarata con la parola chiave <code>val</code>, non è possibile assegnare un nuovo valore alla variabile. Se la variabile viene dichiarata con la parola chiave <code>var</code>, è possibile assegnare un nuovo valore alla variabile. Il valore a cui una variabile fa riferimento deve essere di tipo compatibile al tipo dichiarato o inferito per la variabile.
+
+<dt id=glossentry-view>Vista
+<dd>
+<p>Un valore implicito di tipo funzione che converte un tipo <code>A</code> in un tipo <code>B</code>. La funzione è di tipo <code>A =&gt; B</code> o <code>(=&gt; A) =&gt; B</code> (in quest'ultimo caso, <code>(=&gt; A)</code> è un <em>parametro per nome</em>). Un metodo per la <em>conversione di tipo implicita</em> con la stessa firma visibile nell'ambito corrente può anche essere usato come vista.
+
+<dt id=glossentry-view-bounds>Limiti di vista
+<dd>
+<p>Una specifica di tipo della forma <code>A &lt;% B</code>, che dice che qualsiasi tipo può essere usato per <code>A</code> a condizione che nell'ambito di visibilità esista una <em>vista</em> in grado di convertire un'istanza di <code>A</code> in un'istanza di <code>B</code>.
+
+<dt id=glossentry-visibility>Visibilità
+<dd>
+<p>L'<em>ambito</em> in cui un <em>tipo</em> o un <em>membro</em> dichiarato è visibile ad altri tipi e membri.
+</dl>
+
+<p class=v><a rel=prev href=cap-14.html title='indietro a &#8220;Strumenti, librerie e IDE per Scala&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=vuota.html><span class=u>&#x261E;</span></a>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
+&copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
+</div>
