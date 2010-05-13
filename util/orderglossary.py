@@ -12,12 +12,12 @@ defs = dl.getchildren()
 
 data = {}
 for dt, dd in (defs[i:i+2] for i in xrange(0, len(defs), 2)):
-    text = dt.text if dt.text is not None else ''
+    text = dt.text.lower() if dt.text is not None else ''
     for child in dt.getchildren():
         if child.text is not None:
-            text += child.text
+            text += child.text.lower()
     if dt.tail is not None:
-        text += tail.text
+        text += tail.text.lower()
     data[text.strip()] = (dt, dd)
     dl.remove(dt)
     dl.remove(dd)
