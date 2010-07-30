@@ -244,7 +244,7 @@ println(list2)</code></pre>
 <pre><code>val list2 = ("Chiunque" :: ("dovrebbe" :: ("leggere" :: list1)))
 val list2 = list1.::("leggere").::("dovrebbe").::("Chiunque")</code></pre>
 
-<p>In termini di prestazioni, l&#8217;aggiunta in testa è O(1). Vedremo perché quando esamineremo da vicino l&#8217;implementazione di <code>List</code> nella sezione <a href=cap-12.html#ACloserLookAtLists>Uno sguardo ravvicinato alle liste</a> del capitolo 12, dopo che avremo imparato qualcosa in più sui <em>tipi parametrici</em> in Scala.
+<p>In termini di prestazioni, l&#8217;aggiunta in testa è O(1). Vedremo perché quando esamineremo da vicino l&#8217;implementazione di <code>List</code> nella sezione <a href=cap-12.html#ACloserLookAtLists>Uno sguardo più attento alle liste</a> del capitolo 12, dopo che avremo imparato qualcosa in più sui <em>tipi parametrici</em> in Scala.
 
 <p>A differenza di alcune altre collezioni, Scala definisce <code>List</code> solo come tipo immutabile. Tuttavia, definisce anche alcuni tipi di lista mutabili, come <code>ListBuffer</code> e <code>LinkedList</code>.
 
@@ -748,7 +748,7 @@ println(name.capitalize.reverse)</code></pre>
 
 <p>La parola chiave <code>implicit</code> dice al compilatore che può usare questo metodo per una conversione &#8220;implicita&#8221; da <code>String</code> a <code>RichString</code> ogni volta che quest&#8217;ultima è necessaria. Il compilatore ha notato un tentativo di invocare il metodo <code>capitalize</code> e ha determinato che <code>RichString</code> è dotata di questo metodo; poi ha esaminato l&#8217;ambito di visibilità corrente per cercare un metodo <code>implicit</code> che convertisse <code>String</code> in <code>RichString</code>, trovando <code>stringWrapper</code>.
 
-<p>Come vedremo nella sezione <a href=cap-12.html#ViewsAndViewBounds>Viste e limiti di vista</a> del capitolo 12, a volte questi metodi di conversione vengono chiamati <em>viste</em>, nel senso che il nostro metodo <code>stringWrapper</code> offre una vista da <code>String</code> a <code>RichString</code>.
+<p>Come vedremo nella sezione <a href=cap-12.html#ViewsAndViewBounds>Viste e limiti sulle viste</a> del capitolo 12, a volte questi metodi di conversione vengono chiamati <em>viste</em>, nel senso che il nostro metodo <code>stringWrapper</code> offre una vista da <code>String</code> a <code>RichString</code>.
 
 <p><code>Predef</code> definisce molti altri metodi di conversione implicita, la maggior parte dei quali segue la convenzione nominale <code>vecchio2Nuovo</code>, dove <code>vecchio</code> è il tipo di oggetto disponibile e <code>Nuovo</code> è il tipo desiderato. Tuttavia, non c&#8217;è alcuna restrizione sui nomi dei metodi di conversione. Un certo numero di altre classi avvolgenti &#8220;ricche&#8221; viene definito nel package <code>scala.runtime</code>.
 
@@ -913,7 +913,7 @@ c2d.value = 10, inverse = Infinity</code></pre>
 
 <pre><samp>Fib = 1, 1, 2, 3, 5, 8, &hellip;</samp></pre>
 
-<p>Alcuni linguaggi funzionali puri sono ritardati per default, quindi imitano questo comportamento nella maniera più fedele possibile. Questo può funzionare senza esaurire le risorse della macchina se l&#8217;utente non cerca mai di utilizzare più di un sottoinsieme finito di questi valori. Scala non è un linguaggio ritardato per default, ma fornisce un supporto per lavorare con strutture dati infinite. Affronteremo questo argomento nella sezione <a href=cap-12.html#InfiniteDataStructuresAndLaziness>Strutture dati infinite e ritardo</a> del capitolo 12.
+<p>Alcuni linguaggi funzionali puri sono ritardati per default, quindi imitano questo comportamento nella maniera più fedele possibile. Questo può funzionare senza esaurire le risorse della macchina se l&#8217;utente non cerca mai di utilizzare più di un sottoinsieme finito di questi valori. Scala non è un linguaggio ritardato per default, ma fornisce un supporto per lavorare con strutture dati infinite. Affronteremo questo argomento nella sezione <a href=cap-12.html#InfiniteDataStructuresAndLaziness>Strutture dati infinite ed esecuzione ritardata</a> del capitolo 12.
 
 <h2 id=FunctionalComponentAbstractions>Riepilogo: le astrazioni per i componenti funzionali</h2>
 

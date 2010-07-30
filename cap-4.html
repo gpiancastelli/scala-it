@@ -98,7 +98,7 @@ trait Subject {
 
 <p>La prima riga definisce un tipo per <code>Observer</code>. Questo è un <em>tipo strutturale</em> della forma <code>{ def receiveUpdate(subject: Any) }</code>. I tipi strutturali specificano solo la struttura che un sottotipo deve supportare; potete pensarli come tipi &#8220;anonimi&#8221;.
 
-<p>In questo caso, il tipo strutturale è definito da un metodo con una firma particolare. Qualsiasi tipo che sia dotato di un metodo con questa firma può essere usato come osservatore. Impareremo di più sui tipi strutturali nel <a href=cap-12.html>capitolo 12</a>. Se vi state chiedendo perché non abbiamo usato <code>Subject</code> come tipo dell&#8217;argomento invece di <code>Any</code>, rivisiteremo questa scelta nella sezione <a href=cap-13.html#SelfTypeAnnotationsAndAbstractTypeMembers>Annotazioni <em>selftype</em> e membri di tipo astratto</a> del capitolo 13.
+<p>In questo caso, il tipo strutturale è definito da un metodo con una firma particolare. Qualsiasi tipo che sia dotato di un metodo con questa firma può essere usato come osservatore. Impareremo di più sui tipi strutturali nel <a href=cap-12.html>capitolo 12</a>. Se vi state chiedendo perché non abbiamo usato <code>Subject</code> come tipo dell&#8217;argomento invece di <code>Any</code>, rivisiteremo questa scelta nella sezione <a href=cap-13.html#SelfTypeAnnotationsAndAbstractTypeMembers>Annotazioni <em>self-type</em> e membri tipo astratti</a> del capitolo 13.
 
 <p>Per ora, la cosa principale da notare è come questo tipo strutturale minimizzi le dipendenze tra il tratto <code>Subject</code> e qualsiasi potenziale utente del tratto.
 
