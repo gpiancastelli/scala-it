@@ -5,9 +5,8 @@
 <style>
 body{counter-reset:h1 11}
 </style>
-<!--
 <script>_gaq=[['_setAccount','UA-10482652-1'],['_trackPageview']];(function(){var g=document.createElement('script');g.src='//www.google-analytics.com/ga.js';g.setAttribute('async','true');document.documentElement.firstChild.appendChild(g);})();</script>
--->
+
 <div id=book>
 <p>Voi siete qui: <a href=index.html>Inizio</a> <span class=u>&#8227;</span> <a href=indice.html#cap-11>Programmare in Scala</a> <span class=u>&#8227;</span>
 
@@ -15,7 +14,7 @@ body{counter-reset:h1 11}
 
 <p>Un <em>linguaggio domain-specific</em> è un linguaggio di programmazione che imita i termini, gli idiomi e le espressioni usate dagli esperti di un particolare dominio. Il codice scritto in un <abbr>DSL</abbr> si legge come prosa strutturata per il dominio. Idealmente, un esperto di dominio con poca esperienza di programmazione può leggere, capire e convalidare questo codice. A volte, un esperto di dominio potrebbe essere in grado di scrivere codice in un <abbr>DSL</abbr> anche se non è un programmatore di professione.
 
-<p>I <abbr>DSL</abbr> sono un argomento vasto. Sfioreremo solo la superficie dei <abbr>DSL</abbr> e dell'impressionante supporto fornito per loro da Scala. Per maggiori informazioni sui <abbr>DSL</abbr> in generale, si vedano <a href=apa.html#Fowler2009>[Fowler2009]</a>, <a href=apa.html#Ford2009>[Ford2009]</a> e <a href=apa.html#Deursen>[Deursen]</a>. Lo strumento <kbd>sake</kbd>, usato per assemblare gli esempi del libro, adopera un <abbr>DSL</abbr> simile al venerabile <kbd>make</kbd> e al suo cugino Ruby <kbd>rake</kbd>. (Si veda il file <span class=file>README</span> nell'archivio di codice scaricabile per i dettagli.) Per altri esempi di <abbr>DSL</abbr> &#8220;interni&#8221; ed &#8220;esterni&#8221; in Scala, si vedano <a href=apa.html#Ghosh2008a>[Ghosh2008a]</a> e <a href=apa.html#Ghosh2008b>[Ghosh2008b]</a>. Per quanto riguarda il materiale avanzato sui <abbr>DSL</abbr> che usano Scala, <a href=apa.html#Hofer2008>[Hofer2008]</a> esamina la sostituzione polimorfica di implementazioni alternative per le astrazioni di un <abbr>DSL</abbr>, utilizzabile per attività di analisi, ottimizzazione, composizione, <i class=baa>&amp;</i>c.
+<p>I <abbr>DSL</abbr> sono un argomento vasto. Sfioreremo solo la superficie dei <abbr>DSL</abbr> e dell&#8217;impressionante supporto fornito per loro da Scala. Per maggiori informazioni sui <abbr>DSL</abbr> in generale, si vedano <a href=apa.html#Fowler2009>[Fowler2009]</a>, <a href=apa.html#Ford2009>[Ford2009]</a> e <a href=apa.html#Deursen>[Deursen]</a>. Lo strumento <kbd>sake</kbd>, usato per assemblare gli esempi del libro, adopera un <abbr>DSL</abbr> simile al venerabile <kbd>make</kbd> e al suo cugino Ruby <kbd>rake</kbd>. (Si veda il file <span class=file>README</span> nell&#8217;archivio di codice scaricabile per i dettagli.) Per altri esempi di <abbr>DSL</abbr> &#8220;interni&#8221; ed &#8220;esterni&#8221; in Scala, si vedano <a href=apa.html#Ghosh2008a>[Ghosh2008a]</a> e <a href=apa.html#Ghosh2008b>[Ghosh2008b]</a>. Per quanto riguarda il materiale avanzato sui <abbr>DSL</abbr> che usano Scala, <a href=apa.html#Hofer2008>[Hofer2008]</a> esamina la sostituzione polimorfica di implementazioni alternative per le astrazioni di un <abbr>DSL</abbr>, utilizzabile per attività di analisi, ottimizzazione, composizione, <i class=baa>&amp;</i>c.
 
 <p>I <abbr>DSL</abbr> ben progettati offrono diversi vantaggi.
 
@@ -25,35 +24,35 @@ body{counter-reset:h1 11}
 <dt>Efficienza
 <dd>Dato che i dettagli di implementazione sono incapsulati, un <abbr>DSL</abbr> ottimizza lo sforzo richiesto per creare o modificare le funzionalità di una applicazione.
 <dt>Comunicazione
-<dd>Un <abbr>DSL</abbr> aiuta gli sviluppatori a capire il dominio, e gli esperti di dominio a verificare che l'implementazione soddisfi i requisiti.
+<dd>Un <abbr>DSL</abbr> aiuta gli sviluppatori a capire il dominio, e gli esperti di dominio a verificare che l&#8217;implementazione soddisfi i requisiti.
 <dt>Qualità
-<dd>Un <abbr>DSL</abbr> minimizza il &#8220;disadattamento di impedenza&#8221; tra i requisiti funzionali, nel modo in cui vengono espressi dagli esperti del dominio, e il codice sorgente dell'implementazione, limitando così i potenziali errori.
+<dd>Un <abbr>DSL</abbr> minimizza il &#8220;disadattamento di impedenza&#8221; tra i requisiti funzionali, nel modo in cui vengono espressi dagli esperti del dominio, e il codice sorgente dell&#8217;implementazione, limitando così i potenziali errori.
 </dl>
 
 <p>Tuttavia, i <abbr>DSL</abbr> hanno anche diversi svantaggi.
 
 <dl>
 <dt>Difficoltà nel creare un buon <abbr>DSL</abbr>
-<dd>Un buon <abbr>DSL</abbr> è più difficile da progettare rispetto alle <abbr>API</abbr> tradizionali, anche se le difficoltà nel progettare una <abbr>API</abbr> elegante, efficace e facile da usare non mancano. Le <abbr>API</abbr> tendono a seguire gli idiomi del linguaggio di programmazione allo scopo di favorire l'uniformità, che per una <abbr>API</abbr> è una caratteristica importante. Al contrario, ogni <abbr>DSL</abbr> dovrebbe riflettere gli idiomi linguistici specifici del proprio dominio. Il progettista di <abbr>DSL</abbr> gode di una maggiore libertà di azione, ma questo significa anche che è molto più difficile determinare le scelte di progettazione &#8220;migliori&#8221;.
+<dd>Un buon <abbr>DSL</abbr> è più difficile da progettare rispetto alle <abbr>API</abbr> tradizionali, anche se le difficoltà nel progettare una <abbr>API</abbr> elegante, efficace e facile da usare non mancano. Le <abbr>API</abbr> tendono a seguire gli idiomi del linguaggio di programmazione allo scopo di favorire l&#8217;uniformità, che per una <abbr>API</abbr> è una caratteristica importante. Al contrario, ogni <abbr>DSL</abbr> dovrebbe riflettere gli idiomi linguistici specifici del proprio dominio. Il progettista di <abbr>DSL</abbr> gode di una maggiore libertà di azione, ma questo significa anche che è molto più difficile determinare le scelte di progettazione &#8220;migliori&#8221;.
 <dt>Manutenzione di lungo termine
 <dd>I <abbr>DSL</abbr> possono richiedere una manutenzione più frequente nel lungo termine per tenere conto dei cambiamenti nel dominio. Inoltre, gli sviluppatori avranno bisogno di più tempo per imparare a usare e a mantenere un <abbr>DSL</abbr>.
 </dl>
 
-<p>Tuttavia, quando l'impiego di un <abbr>DSL</abbr> in un'applicazione è appropriato, come nel caso in cui venga usato frequentemente per implementare e modificare funzionalità, un <abbr>DSL</abbr> ben progettato può rivelarsi uno strumento potente per costruire applicazioni flessibili e robuste.
+<p>Tuttavia, quando l&#8217;impiego di un <abbr>DSL</abbr> in un&#8217;applicazione è appropriato, come nel caso in cui venga usato frequentemente per implementare e modificare funzionalità, un <abbr>DSL</abbr> ben progettato può rivelarsi uno strumento potente per costruire applicazioni flessibili e robuste.
 
-<p>Dal punto di vista dell'implementazione, i <abbr>DSL</abbr> vengono spesso classificati come <em>interni</em> ed <em>esterni</em>.
+<p>Dal punto di vista dell&#8217;implementazione, i <abbr>DSL</abbr> vengono spesso classificati come <em>interni</em> ed <em>esterni</em>.
 
 <p>Un <abbr>DSL</abbr> <em>interno</em> (a volte detto <em>integrato</em>) è uno stile idiomatico di scrittura del codice in un linguaggio di programmazione generico come Scala. I <abbr>DSL</abbr> interni non necessitano di alcun riconoscitore specifico, ma vengono riconosciuti proprio come qualsiasi altro programma scritto nel linguaggio generico. Al contrario, un <abbr>DSL</abbr> <em>esterno</em> è un linguaggio personalizzato con la propria grammatica e il proprio riconoscitore.
 
-<p>I <abbr>DSL</abbr> interni sono più facili da creare perché non richiedono un riconoscitore speciale. D'altra parte, i vincoli del linguaggio sottostante limitano le modalità con cui esprimere i concetti del dominio. I <abbr>DSL</abbr> esterni rimuovono questo vincolo: potete progettare il linguaggio come preferite, purché siate in grado di scriverne un riconoscitore affidabile. Lo svantaggio di un <abbr>DSL</abbr> esterno è la necessità di creare e usare un riconoscitore personalizzato.
+<p>I <abbr>DSL</abbr> interni sono più facili da creare perché non richiedono un riconoscitore speciale. D&#8217;altra parte, i vincoli del linguaggio sottostante limitano le modalità con cui esprimere i concetti del dominio. I <abbr>DSL</abbr> esterni rimuovono questo vincolo: potete progettare il linguaggio come preferite, purché siate in grado di scriverne un riconoscitore affidabile. Lo svantaggio di un <abbr>DSL</abbr> esterno è la necessità di creare e usare un riconoscitore personalizzato.
 
-<p>I <abbr>DSL</abbr> esistono da molto tempo: per esempio, i <abbr>DSL</abbr> interni scritti in Lisp sono vecchi quanto lo stesso Lisp. L'interesse per i <abbr>DSL</abbr> si è recentemente intensificato, in parte grazie alla comunità Ruby perché i <abbr>DSL</abbr> sono molto facili da implementare in quel linguaggio. Come vedremo, Scala offre un supporto eccellente per la creazione di <abbr>DSL</abbr> interni ed esterni.
+<p>I <abbr>DSL</abbr> esistono da molto tempo: per esempio, i <abbr>DSL</abbr> interni scritti in Lisp sono vecchi quanto lo stesso Lisp. L&#8217;interesse per i <abbr>DSL</abbr> si è recentemente intensificato, in parte grazie alla comunità Ruby perché i <abbr>DSL</abbr> sono molto facili da implementare in quel linguaggio. Come vedremo, Scala offre un supporto eccellente per la creazione di <abbr>DSL</abbr> interni ed esterni.
 
 <h2 id=InternalDSLs><abbr>DSL</abbr> interni</h2>
 
-<p>Creiamo un <abbr>DSL</abbr> interno per un'applicazione di contabilità che calcola la busta paga di un impiegato per ogni periodo di retribuzione quindicinale. La busta paga conterrà lo stipendio <em>netto</em> dell'impiegato, che è lo stipendio <em>lordo</em> meno le <em>ritenute</em> per le tasse, i premi di assicurazione (almeno in alcuni paesi), i contributi per la pensione, <i class=baa>&amp;</i>c.
+<p>Creiamo un <abbr>DSL</abbr> interno per un&#8217;applicazione di contabilità che calcola la busta paga di un impiegato per ogni periodo di retribuzione quindicinale. La busta paga conterrà lo stipendio <em>netto</em> dell&#8217;impiegato, che è lo stipendio <em>lordo</em> meno le <em>ritenute</em> per le tasse, i premi di assicurazione (almeno in alcuni paesi), i contributi per la pensione, <i class=baa>&amp;</i>c.
 
-<p>Per capire meglio le differenze tra il codice che usa i <abbr>DSL</abbr> e il codice che non li usa, proviamo a risolvere il problema con entrambe le tecniche. Ecco come si potrebbe calcolare la busta paga di due impiegati senza l'aiuto di un <abbr>DSL</abbr>.
+<p>Per capire meglio le differenze tra il codice che usa i <abbr>DSL</abbr> e il codice che non li usa, proviamo a risolvere il problema con entrambe le tecniche. Ecco come si potrebbe calcolare la busta paga di due impiegati senza l&#8217;aiuto di un <abbr>DSL</abbr>.
 
 <pre><code>// <a href=esempi/cap-11/payroll/api/payroll-api-script.scala>esempi/cap-11/payroll/api/payroll-api-script.scala</a>
 
@@ -81,9 +80,9 @@ List(buck, jane).foreach { employee =&gt;
 
 <p>Per ogni impiegato, lo script calcola lo stipendio lordo per il periodo di retribuzione, le ritenute e il risultato netto. Questi valori vengono memorizzati in un oggetto <code>Paycheck</code>, che poi viene stampato. Prima di descrivere i tipi che stiamo usando, esaminiamo alcune caratteristiche del ciclo <code>foreach</code> che svolge le operazioni.
 
-<p>Per prima cosa, si noti che c'è molto &#8220;rumore&#8221;: il ciclo cita continuamente <var>employee</var> e <var>biweeklyGross</var>, per esempio. Un <abbr>DSL</abbr> ci aiuterà a minimizzare questa rumorosità e a concentrarci su ciò che sta realmente accadendo.
+<p>Per prima cosa, si noti che c&#8217;è molto &#8220;rumore&#8221;: il ciclo cita continuamente <var>employee</var> e <var>biweeklyGross</var>, per esempio. Un <abbr>DSL</abbr> ci aiuterà a minimizzare questa rumorosità e a concentrarci su ciò che sta realmente accadendo.
 
-<p>Secondo, il codice è imperativo: dice &#8220;dividi questo, aggiungi quello&#8221; e così via. Vedremo che i nostri <abbr>DSL</abbr> sembrano simili, ma il loro stile è più dichiarativo, in quanto nascondono le modalità operative all'utente.
+<p>Secondo, il codice è imperativo: dice &#8220;dividi questo, aggiungi quello&#8221; e così via. Vedremo che i nostri <abbr>DSL</abbr> sembrano simili, ma il loro stile è più dichiarativo, in quanto nascondono le modalità operative all&#8217;utente.
 
 <p>Ecco la semplice classe <code>Paycheck</code> usata nello script.
 
@@ -111,7 +110,7 @@ case class Name(first: String, last: String)
 
 case class Employee(name: Name, annualGrossSalary: Money)</code></pre>
 
-<p>Il tipo <code>Money</code> gestisce i calcoli, l'arrotondamento a quattro posti decimali, <i class=baa>&amp;</i>c. Ignora la valuta, tranne che nel metodo <code>toString</code>. I calcoli finanziari appropriati sono notoriamente difficili da eseguire correttamente per le transazioni reali. Questa implementazione non è perfettamente accurata, ma lo è abbastanza per i nostri scopi. <a href=apa.html#MoneyInJava>[MoneyInJava]</a> offre informazioni utili su come effettuare calcoli monetari reali.
+<p>Il tipo <code>Money</code> gestisce i calcoli, l&#8217;arrotondamento a quattro posti decimali, <i class=baa>&amp;</i>c. Ignora la valuta, tranne che nel metodo <code>toString</code>. I calcoli finanziari appropriati sono notoriamente difficili da eseguire correttamente per le transazioni reali. Questa implementazione non è perfettamente accurata, ma lo è abbastanza per i nostri scopi. <a href=apa.html#MoneyInJava>[MoneyInJava]</a> offre informazioni utili su come effettuare calcoli monetari reali.
 
 <pre><code>// <a href=esempi/cap-11/payroll/money.scala>esempi/cap-11/payroll/money.scala</a>
 
@@ -177,7 +176,7 @@ object Type2Money {
   implicit def int2Money(i: Int)                 = Money(i)
 }</code></pre>
 
-<p>Notate l'uso di <code>scala.BigDecimal</code>, che avvolge <code>java.math.BigDecimal</code>, come tipo per memorizzare le cifre finanziarie.
+<p>Notate l&#8217;uso di <code>scala.BigDecimal</code>, che avvolge <code>java.math.BigDecimal</code>, come tipo per memorizzare le cifre finanziarie.
 
 <p>Le ritenute vengono calcolate usando quattro metodi di utilità contenuti in <code>payroll.api.DeductionsCalculator</code>.
 
@@ -196,9 +195,9 @@ object DeductionsCalculator {
   def retirementFundContributions(empl: Employee, gross: Money) = gross * .10
 }</code></pre>
 
-<p>Ogni metodo potrebbe usare le informazioni sull'impiegato e lo stipendio lordo per il periodo di retribuzione, ma in questo caso usiamo algoritmi molto semplici basati solo sullo stipendio lordo, tranne che per i premi di assicurazione, qui trattati come un valore fisso.
+<p>Ogni metodo potrebbe usare le informazioni sull&#8217;impiegato e lo stipendio lordo per il periodo di retribuzione, ma in questo caso usiamo algoritmi molto semplici basati solo sullo stipendio lordo, tranne che per i premi di assicurazione, qui trattati come un valore fisso.
 
-<p>L'esecuzione dello script per la <abbr>API</abbr> del libro paga produce l'uscita seguente.
+<p>L&#8217;esecuzione dello script per la <abbr>API</abbr> del libro paga produce l&#8217;uscita seguente.
 
 <pre><samp>(665) $ scala -cp ... payroll-api-script.scala
 Buck Trends: Paycheck($3076.92,$1346.15,$1730.77)
@@ -206,11 +205,11 @@ Jane Doe: Paycheck($3461.54,$1576.92,$1884.62)</samp></pre>
 
 <h3 id=APayrollInternalDSL>Un <abbr>DSL</abbr> interno per il libro paga</h3>
 
-<p>Il codice precedente funziona abbastanza bene, ma supponiamo di volerlo mostrare all'Ufficio Contabilità per confermare che stiamo calcolando correttamente le buste paga. Molto probabilmente, i contabili si perderanno negli idiomi di Scala. Supponiamo anche che sia necessario personalizzare frequentemente questo algoritmo, per esempio per adeguarlo a differenti tipi di impiegato (salariato, a ore, <i class=baa>&amp;</i>c.) o per modificare il calcolo delle ritenute. Idealmente, vorremmo mettere i contabili in grado di effettuare da soli queste personalizzazioni senza ricorrere al nostro aiuto.
+<p>Il codice precedente funziona abbastanza bene, ma supponiamo di volerlo mostrare all&#8217;Ufficio Contabilità per confermare che stiamo calcolando correttamente le buste paga. Molto probabilmente, i contabili si perderanno negli idiomi di Scala. Supponiamo anche che sia necessario personalizzare frequentemente questo algoritmo, per esempio per adeguarlo a differenti tipi di impiegato (salariato, a ore, <i class=baa>&amp;</i>c.) o per modificare il calcolo delle ritenute. Idealmente, vorremmo mettere i contabili in grado di effettuare da soli queste personalizzazioni senza ricorrere al nostro aiuto.
 
-<p>Potremmo raggiungere i nostri scopi se riuscissimo a esprimere l'algoritmo in un <abbr>DSL</abbr> sufficientemente intuitivo per un contabile. Siamo in grado di trasformare il nostro esempio di <abbr>API</abbr> in un <abbr>DSL</abbr> di questo tipo?
+<p>Potremmo raggiungere i nostri scopi se riuscissimo a esprimere l&#8217;algoritmo in un <abbr>DSL</abbr> sufficientemente intuitivo per un contabile. Siamo in grado di trasformare il nostro esempio di <abbr>API</abbr> in un <abbr>DSL</abbr> di questo tipo?
 
-<p>Tornando allo script per la <abbr>API</abbr> del libro paga, cosa succede se nascondiamo la maggior parte dei riferimenti espliciti a informazioni di contesto, come l'impiegato, lo stipendio lordo e il valori delle ritenute? Considerate il testo seguente.
+<p>Tornando allo script per la <abbr>API</abbr> del libro paga, cosa succede se nascondiamo la maggior parte dei riferimenti espliciti a informazioni di contesto, come l&#8217;impiegato, lo stipendio lordo e il valori delle ritenute? Considerate il testo seguente.
 
 <pre>Rules to calculate an employee's paycheck:
   employee's gross salary for 2 weeks
@@ -222,7 +221,7 @@ Jane Doe: Paycheck($3461.54,$1576.92,$1884.62)</samp></pre>
 
 <p>Queste righe si leggono come normale inglese,<sup id=fnn-1><a href=#fn-1>1</a></sup> non come codice. Abbiamo incluso alcune parole &#8220;superflue&#8221; (chiamate <em>bubble words</em> in <a href=apa.html#Ford2009>[Ford2009]</a>) che aumentano la leggibilità ma non corrispondono necessariamente a qualcosa di essenziale, come <code>to</code>, <code>an</code>, <code>is</code>, <code>for</code>, <code>of</code> e <code>which</code>. Nel nostro <abbr>DSL</abbr> in Scala elimineremo alcune di queste parole superflue e ne manterremo altre.
 
-<p>Confrontando questa versione con lo script della <abbr>API</abbr> del libro paga, il rumore che nasconde le parti essenziali dell'algoritmo è molto inferiore, in quanto abbiamo minimizzato i riferimenti espliciti alle informazioni di contesto: menzioniamo <code>employee</code> solo due volte; menzioniamo <code>gross</code> cinque volte, ma sperabilmente in modi &#8220;intuitivi&#8221;.
+<p>Confrontando questa versione con lo script della <abbr>API</abbr> del libro paga, il rumore che nasconde le parti essenziali dell&#8217;algoritmo è molto inferiore, in quanto abbiamo minimizzato i riferimenti espliciti alle informazioni di contesto: menzioniamo <code>employee</code> solo due volte; menzioniamo <code>gross</code> cinque volte, ma sperabilmente in modi &#8220;intuitivi&#8221;.
 
 <p>Potremmo costruire molti <abbr>DSL</abbr> interni in Scala che somigliano a questo <abbr>DSL</abbr> <em>ad hoc</em>. Eccone uno, sempre contenuto in uno script, che produce la stessa uscita di prima.
 
@@ -249,7 +248,7 @@ List(buck, jane).foreach { employee =&gt;
   format("%s %s: %s\n", employee.name.first, employee.name.last, check)
 }</code></pre>
 
-<p>Analizzeremo l'implementazione passo per passo, ma prima riassumiamo le caratteristiche di Scala che ci permettono di implementare questo <abbr>DSL</abbr>.
+<p>Analizzeremo l&#8217;implementazione passo per passo, ma prima riassumiamo le caratteristiche di Scala che ci permettono di implementare questo <abbr>DSL</abbr>.
 
 <h3 id=InternalDSLs-InfixOperatorNotation>Notazione infissa per gli operatori</h3>
 
@@ -261,19 +260,19 @@ List(buck, jane).foreach { employee =&gt;
 
 <pre><code>employee.salary_for(2.weeks).minus_deductions_for { gross =&gt;</code></pre>
 
-<p>Ora potete capire perché prima abbiamo scritto <code>2.weeks</code>, dato che il risultato di questa espressione viene passato a <code>salary_for</code>. Senza il punto, l'espressione infissa verrebbe riconosciuta come <code>employee.salary_for(2).weeks&#8230;</code>; ma non c'è alcun metodo <code>weeks</code> in <code>Int</code>, naturalmente. Rivisiteremo questa espressione fra un momento.
+<p>Ora potete capire perché prima abbiamo scritto <code>2.weeks</code>, dato che il risultato di questa espressione viene passato a <code>salary_for</code>. Senza il punto, l&#8217;espressione infissa verrebbe riconosciuta come <code>employee.salary_for(2).weeks&#8230;</code>; ma non c&#8217;è alcun metodo <code>weeks</code> in <code>Int</code>, naturalmente. Rivisiteremo questa espressione fra un momento.
 
-<p>La concatenazione di metodi viene spesso impiegata in casi come questo, dove ogni metodo restituisce <code>this</code> in modo che possiate continuare a invocare metodi sulla stessa istanza. Notate che la restituzione di <code>this</code> consente alle invocazioni di metodo di avvenire in qualsiasi ordine. Se avete bisogno di imporre un ordine particolare, allora restituite un'istanza di tipo differente. Per esempio, se <code>minus_deductions_for</code> deve essere invocato dopo <code>salary_for</code>, allora <code>salary_for</code> dovrebbe restituire una nuova istanza.
+<p>La concatenazione di metodi viene spesso impiegata in casi come questo, dove ogni metodo restituisce <code>this</code> in modo che possiate continuare a invocare metodi sulla stessa istanza. Notate che la restituzione di <code>this</code> consente alle invocazioni di metodo di avvenire in qualsiasi ordine. Se avete bisogno di imporre un ordine particolare, allora restituite un&#8217;istanza di tipo differente. Per esempio, se <code>minus_deductions_for</code> deve essere invocato dopo <code>salary_for</code>, allora <code>salary_for</code> dovrebbe restituire una nuova istanza.
 
-<p>Dato che la concatenazione è così facile, avremmo potuto creare metodi separati per <code>salary</code>, <code>for</code>, <code>minus</code> e <code>deductions</code>, prendendoci la libertà di scrivere l'espressione seguente.
+<p>Dato che la concatenazione è così facile, avremmo potuto creare metodi separati per <code>salary</code>, <code>for</code>, <code>minus</code> e <code>deductions</code>, prendendoci la libertà di scrivere l&#8217;espressione seguente.
 
 <pre><code>employee salary for 2.weeks minus deductions for { gross =&gt;</code></pre>
 
 <p>Notate che le invocazioni di <code>for</code> sono precedute da invocazioni differenti con significati molto diversi. Quindi, se durante tutto il procedimento venisse usata la stessa istanza, essa dovrebbe tenere traccia del &#8220;flusso&#8221; internamente. Concatenare istanze differenti eliminerebbe questo problema. Tuttavia, dato che non deve avvenire nessuna computazione tra queste parole, abbiamo scelto la forma più semplice in cui le parole sono unite tra loro da un trattino basso <code>_</code>.
 
-<h3 id=InternalDSLs-ImplicitConversions-UserDefinedTypes>Conversioni implicite e tipi definiti dall'utente</h3>
+<h3 id=InternalDSLs-ImplicitConversions-UserDefinedTypes>Conversioni implicite e tipi definiti dall&#8217;utente</h3>
 
-<p>Tornando a <code>2.weeks</code>, dato che <code>Int</code> non ha un metodo <code>weeks</code>, impieghiamo una conversione implicita verso un'istanza di <code>Duration</code> che racchiude un intero usato per specificare una quantità.
+<p>Tornando a <code>2.weeks</code>, dato che <code>Int</code> non ha un metodo <code>weeks</code>, impieghiamo una conversione implicita verso un&#8217;istanza di <code>Duration</code> che racchiude un intero usato per specificare una quantità.
 
 <pre><code>// <a href=esempi/cap-11/payroll/dsl/duration.scala>esempi/cap-11/payroll/dsl/duration.scala</a>
 
@@ -293,11 +292,11 @@ case class Duration(val amount: Int) {
 
 <h3 id=InternalDSLs-Apply>Metodi <code>apply</code></h3>
 
-<p>Nella nostra implementazione, un certo numero di oggetti usa <code>apply</code> per invocare un determinato comportamento. L'oggetto <code>rules</code> incapsula il processo di costruzione delle regole per il calcolo dei pagamenti. Il metodo <code>apply</code> di questo oggetto accetta un letterale funzione <code>Employee =&gt; Paycheck</code>.
+<p>Nella nostra implementazione, un certo numero di oggetti usa <code>apply</code> per invocare un determinato comportamento. L&#8217;oggetto <code>rules</code> incapsula il processo di costruzione delle regole per il calcolo dei pagamenti. Il metodo <code>apply</code> di questo oggetto accetta un letterale funzione <code>Employee =&gt; Paycheck</code>.
 
 <h3 id=_payroll_rules_dsl_implementation>Implementazione delle regole di pagamento come <abbr>DSL</abbr></h3>
 
-<p>Ora esploriamo l'implementazione, attraversandola a partire dall'oggetto <code>rules</code>.
+<p>Ora esploriamo l&#8217;implementazione, attraversandola a partire dall&#8217;oggetto <code>rules</code>.
 
 <pre><code>// <a href=esempi/cap-11/payroll/dsl/payroll.scala>esempi/cap-11/payroll/dsl/payroll.scala</a>
 
@@ -323,15 +322,15 @@ object rules {
 import rules._
 &hellip;</code></pre>
 
-<p>Il letterale funzione passato come argomento a <code>rules.apply</code> viene usato per costruire un oggetto <code>PayrollBuilderRules</code> che elaborerà le regole specificate. Questo avviene proprio all'inizio del <abbr>DSL</abbr>.
+<p>Il letterale funzione passato come argomento a <code>rules.apply</code> viene usato per costruire un oggetto <code>PayrollBuilderRules</code> che elaborerà le regole specificate. Questo avviene proprio all&#8217;inizio del <abbr>DSL</abbr>.
 
 <pre><code>val payrollCalculator = rules { employee =&gt; &hellip;</code></pre>
 
-<p>L'oggetto <code>rules</code> definisce anche i metodi di conversione implicita. Il primo viene usato dall'espressione <code>2.weeks</code> e converte <code>2</code> in un'istanza di <code>Duration</code>, come abbiamo detto in precedenza. L'altro metodo viene usato più avanti nel <abbr>DSL</abbr> per abilitare la conversione trasparente di <code>Double</code>, <code>Employee</code>, <i class=baa>&amp;</i>c. in istanze avvolgenti che descriveremo tra breve.
+<p>L&#8217;oggetto <code>rules</code> definisce anche i metodi di conversione implicita. Il primo viene usato dall&#8217;espressione <code>2.weeks</code> e converte <code>2</code> in un&#8217;istanza di <code>Duration</code>, come abbiamo detto in precedenza. L&#8217;altro metodo viene usato più avanti nel <abbr>DSL</abbr> per abilitare la conversione trasparente di <code>Double</code>, <code>Employee</code>, <i class=baa>&amp;</i>c. in istanze avvolgenti che descriveremo tra breve.
 
-<p>Notate che l'oggetto <code>rules</code> viene importato in modo che queste conversioni siano visibili nel resto del file corrente. &Egrave; necessario importarlo anche nei file che usano il <abbr>DSL</abbr>.
+<p>Notate che l&#8217;oggetto <code>rules</code> viene importato in modo che queste conversioni siano visibili nel resto del file corrente. &Egrave; necessario importarlo anche nei file che usano il <abbr>DSL</abbr>.
 
-<p><code>PayrollBuilderRules</code> è la prima delle nostre istanze avvolgenti. Si occupa di valutare il letterale funzione per l'intero insieme di regole all'interno di un blocco <code>try</code>/<code>catch</code>.
+<p><code>PayrollBuilderRules</code> è la prima delle nostre istanze avvolgenti. Si occupa di valutare il letterale funzione per l&#8217;intero insieme di regole all&#8217;interno di un blocco <code>try</code>/<code>catch</code>.
 
 <pre><code>// <a href=esempi/cap-11/payroll/dsl/payroll.scala>esempi/cap-11/payroll/dsl/payroll.scala</a>
 &hellip;
@@ -350,9 +349,9 @@ protected[dsl] class PayrollBuilderRules(rules: Employee =&gt; Paycheck) {
 }
 &hellip;</code></pre>
 
-<p>La protezione dell'accesso a <code>PayrollBuilderRules</code> è necessaria per evitare che i clienti lo usino direttamente. Tuttavia, l'eccezione rimane pubblica in modo da usarla nelle clausole <code>catch</code>. (&Egrave; possibile scegliere se avvolgere un'eccezione lanciata in un'eccezione &#8220;domain-specific&#8221;, come si vede dal codice.)
+<p>La protezione dell&#8217;accesso a <code>PayrollBuilderRules</code> è necessaria per evitare che i clienti lo usino direttamente. Tuttavia, l&#8217;eccezione rimane pubblica in modo da usarla nelle clausole <code>catch</code>. (&Egrave; possibile scegliere se avvolgere un&#8217;eccezione lanciata in un&#8217;eccezione &#8220;domain-specific&#8221;, come si vede dal codice.)
 
-<p>Notate che dobbiamo passare l'impiegato come un'istanza di &#8220;contesto&#8221; all'interno del letterale funzione. Abbiamo detto che è preferibile rendere quanto più possibile implicito il contesto. Le nostre classi di implementazione, come <code>PayrollBuilderRules</code>, sono accomunate dall'idea di conservare l'informazione di contesto in istanze avvolgenti minimizzandone la visibilità nel <abbr>DSL</abbr>. In alternativa sarebbe possibile memorizzare il contesto in oggetti singleton utilizzabili anche da altre istanze, ma sfortunatamente questo approccio si espone a problemi di sicurezza con i thread.
+<p>Notate che dobbiamo passare l&#8217;impiegato come un&#8217;istanza di &#8220;contesto&#8221; all&#8217;interno del letterale funzione. Abbiamo detto che è preferibile rendere quanto più possibile implicito il contesto. Le nostre classi di implementazione, come <code>PayrollBuilderRules</code>, sono accomunate dall&#8217;idea di conservare l&#8217;informazione di contesto in istanze avvolgenti minimizzandone la visibilità nel <abbr>DSL</abbr>. In alternativa sarebbe possibile memorizzare il contesto in oggetti singleton utilizzabili anche da altre istanze, ma sfortunatamente questo approccio si espone a problemi di sicurezza con i thread.
 
 <p>Per capire cosa vogliamo dire riguardo al contesto, considerate il punto del nostro script che usa il <abbr>DSL</abbr> del libro paga in cui vengono specificate le ritenute.
 
@@ -363,11 +362,11 @@ protected[dsl] class PayrollBuilderRules(rules: Employee =&gt; Paycheck) {
   retirementFundContributions are (10.  percent_of gross)
 }</code></pre>
 
-<p>Considerate i premi assicurativi, per i quali viene ritenuta una quota fissa pari a <code>Money(500)</code>. Perché non abbiamo semplicemente scritto <code>insurancePremiums are 500.</code>? A quanto pare, dobbiamo &#8220;intrufolare&#8221; l'istanza <var>gross</var> nell'espressione, in qualche modo. Il nome <var>gross</var> la identifica come un'istanza di <code>Money</code> che rappresenta lo stipendio dell'impiegato per il periodo di retribuzione. <em>DSL birichini!!!</em> In realtà è un'istanza della classe di utilità <code>DeudctionsBuilder</code> a memorizzare l'intera busta paga, incluso lo stipendio lordo e l'istanza dell'impiegato. Il nome <var>gross</var> viene usato semplicemente perché aumenta la leggibilità delle frasi in cui è presente.
+<p>Considerate i premi assicurativi, per i quali viene ritenuta una quota fissa pari a <code>Money(500)</code>. Perché non abbiamo semplicemente scritto <code>insurancePremiums are 500.</code>? A quanto pare, dobbiamo &#8220;intrufolare&#8221; l&#8217;istanza <var>gross</var> nell&#8217;espressione, in qualche modo. Il nome <var>gross</var> la identifica come un&#8217;istanza di <code>Money</code> che rappresenta lo stipendio dell&#8217;impiegato per il periodo di retribuzione. <em>DSL birichini!!!</em> In realtà è un&#8217;istanza della classe di utilità <code>DeudctionsBuilder</code> a memorizzare l&#8217;intera busta paga, incluso lo stipendio lordo e l&#8217;istanza dell&#8217;impiegato. Il nome <var>gross</var> viene usato semplicemente perché aumenta la leggibilità delle frasi in cui è presente.
 
-<p>Questo blocco calcola le ritenute e le trattiene dallo stipendio lordo per determinare lo stipendio netto. L'istanza <var>gross</var> gestisce questo processo. Non c'è &#8220;comunicazione&#8221; tra le quattro righe del letterale funzione. Inoltre, <var>federalIncomeTax</var>, <var>insurancePremiums</var>, <i class=baa>&amp;</i>c. sono oggetti senza alcuna relazione con <code>DeductionsBuilder</code> (come vedremo fra breve). Sarebbe fantastico se potessero essere membri di <code>DeductionsBuilder</code> o magari di qualche altra istanza avvolgente che incapsula questo ambito, perché allora ogni riga rappresenterebbe una chiamata di metodo su una o sull'altra classe avvolgente. Sfortunatamente questo non è possibile, quindi ogni riga deve specificare l'istanza <var>gross</var> per mantenere continuità. Abbiamo fatto i salti mortali per supportare la sintassi e rendere disponibile <var>gross</var> allo stesso tempo, come necessario.
+<p>Questo blocco calcola le ritenute e le trattiene dallo stipendio lordo per determinare lo stipendio netto. L&#8217;istanza <var>gross</var> gestisce questo processo. Non c&#8217;è &#8220;comunicazione&#8221; tra le quattro righe del letterale funzione. Inoltre, <var>federalIncomeTax</var>, <var>insurancePremiums</var>, <i class=baa>&amp;</i>c. sono oggetti senza alcuna relazione con <code>DeductionsBuilder</code> (come vedremo fra breve). Sarebbe fantastico se potessero essere membri di <code>DeductionsBuilder</code> o magari di qualche altra istanza avvolgente che incapsula questo ambito, perché allora ogni riga rappresenterebbe una chiamata di metodo su una o sull&#8217;altra classe avvolgente. Sfortunatamente questo non è possibile, quindi ogni riga deve specificare l&#8217;istanza <var>gross</var> per mantenere continuità. Abbiamo fatto i salti mortali per supportare la sintassi e rendere disponibile <var>gross</var> allo stesso tempo, come necessario.
 
-<p>Quindi, abbiamo escogitato la convenzione per cui i numeri &#8220;grezzi&#8221;, come le ritenute assicurative, devono essere qualificati dalla particolare valuta usata per lo stipendio lordo. Tra un attimo vedremo come funziona l'espressione <code>500. in gross.currency</code>. &Egrave; una specie di &#8220;hack&#8221;, ma si legge bene e risolve il nostro problema di progettazione.
+<p>Quindi, abbiamo escogitato la convenzione per cui i numeri &#8220;grezzi&#8221;, come le ritenute assicurative, devono essere qualificati dalla particolare valuta usata per lo stipendio lordo. Tra un attimo vedremo come funziona l&#8217;espressione <code>500. in gross.currency</code>. &Egrave; una specie di &#8220;hack&#8221;, ma si legge bene e risolve il nostro problema di progettazione.
 
 <p>Ecco una possibile forma alternativa che avrebbe evitato il problema.
 
@@ -378,7 +377,7 @@ protected[dsl] class PayrollBuilderRules(rules: Employee =&gt; Paycheck) {
   builder retirementFundContributions (10.  percent_of gross)
 }</code></pre>
 
-<p>Ora l'utilizzo di <var>builder</var> è più esplicito, e <code>federalIncomeTax</code>, <code>insurancePremiums</code>, <i class=baa>&amp;</i>c. sono metodi dell'assemblatore. Abbiamo optato per uno stile più leggibile, venendo penalizzati da un'implementazione più difficile da realizzare. A volte sentirete l'espressione <em>interfaccia fluida</em> per fare riferimento a <abbr>DSL</abbr> che enfatizzano la leggibilità.
+<p>Ora l&#8217;utilizzo di <var>builder</var> è più esplicito, e <code>federalIncomeTax</code>, <code>insurancePremiums</code>, <i class=baa>&amp;</i>c. sono metodi dell&#8217;assemblatore. Abbiamo optato per uno stile più leggibile, venendo penalizzati da un&#8217;implementazione più difficile da realizzare. A volte sentirete l&#8217;espressione <em>interfaccia fluida</em> per fare riferimento a <abbr>DSL</abbr> che enfatizzano la leggibilità.
 
 <p>Ecco la nostra classe <code>GrossPayBuilder</code>.
 
@@ -401,7 +400,7 @@ protected[dsl] class GrossPayBuilder(val employee: Employee) {
 }
 &hellip;</code></pre>
 
-<p>Ricordatevi che <code>rules</code> definisce un metodo di conversione implicita da <code>Employee</code> verso questo tipo. La conversione viene operata dall'espressione <code>employee salary_for</code>, in modo che il metodo <code>GrossPayBuilder.salary_for</code> possa essere invocato. <code>GrossPayBuilder</code> inizializza <var>gross</var> e gli aggiunge nuovi valori ogni volta che <code>salary_for</code> viene invocato; il metodo presume di accumulare lo stipendio lordo a incrementi di giorni. Infine, <code>salary_for</code> restituisce <code>this</code> per supportare la concatenazione.
+<p>Ricordatevi che <code>rules</code> definisce un metodo di conversione implicita da <code>Employee</code> verso questo tipo. La conversione viene operata dall&#8217;espressione <code>employee salary_for</code>, in modo che il metodo <code>GrossPayBuilder.salary_for</code> possa essere invocato. <code>GrossPayBuilder</code> inizializza <var>gross</var> e gli aggiunge nuovi valori ogni volta che <code>salary_for</code> viene invocato; il metodo presume di accumulare lo stipendio lordo a incrementi di giorni. Infine, <code>salary_for</code> restituisce <code>this</code> per supportare la concatenazione.
 
 <p>Il calcolo delle ritenute è la parte più complessa. Quando <code>minus_deductions_for</code> viene usato nel <abbr>DSL</abbr>, innesca la conversione implicita da <code>GrossPayBuilder</code> a <code>DeductionsBuilder</code> definita in <code>rules</code>.
 
@@ -428,11 +427,11 @@ protected[dsl] class DeductionsBuilder(gpb: GrossPayBuilder) {
 }
 &hellip;</code></pre>
 
-<p><code>DeductionsBuilder</code> salva l'impiegato dell'istanza di <code>GrossPayBuilder</code> ricevuta, che non lo memorizza come campo, e inizializza anche il valore di <var>paycheck</var> usando lo stipendio lordo calcolato.
+<p><code>DeductionsBuilder</code> salva l&#8217;impiegato dell&#8217;istanza di <code>GrossPayBuilder</code> ricevuta, che non lo memorizza come campo, e inizializza anche il valore di <var>paycheck</var> usando lo stipendio lordo calcolato.
 
 <p>Notate che il metodo <code>currency</code> restituisce semplicemente <code>this</code>. Non abbiamo bisogno di fare nulla con la valuta effettiva quando questo metodo viene invocato. Invece, esso viene usato per supportare un idioma di progettazione che discuteremo più avanti.
 
-<p><code>minus_deductions_for</code> svolge il lavoro importante: invoca il letterale funzione con le singole regole e poi restituisce l'istanza di <code>Paycheck</code> completata, che in definitiva è quanto viene restituito da <code>rules.apply</code>.
+<p><code>minus_deductions_for</code> svolge il lavoro importante: invoca il letterale funzione con le singole regole e poi restituisce l&#8217;istanza di <code>Paycheck</code> completata, che in definitiva è quanto viene restituito da <code>rules.apply</code>.
 
 <p>I nostri due metodi rimanenti sono usati per calcolare le singole ritenute. Vengono invocati da <code>DeductionsBuilderDeductionHelper</code>, come mostrato nel codice seguente.
 
@@ -461,14 +460,14 @@ protected[dsl] class DeductionsBuilderDeductionHelper(val factor: Double) {
   }
 }</code></pre>
 
-<p>Ora vediamo che <code>federalIncomeTax</code> <i class=baa>&amp;</i>c. sono oggetti singleton. Notate i metodi &#8220;sinonimi&#8221; <code>is</code> e <code>are</code>: abbiamo usato <code>is</code> per gli oggetti con un nome singolare, come <code>federalIncomeTax</code>, e <code>are</code> per gli oggetti con un nome plurale, come <code>insurancePremiums</code> . In effetti, dato che entrambi i metodi delegano le proprie funzioni ad <code>apply</code>, le parole <code>is</code> e <code>are</code> sono effettivamente &#8220;superflue&#8221; e l'utente potrebbe ometterle. In altre parole, le due righe seguenti sono equivalenti nel nostro <abbr>DSL</abbr>.
+<p>Ora vediamo che <code>federalIncomeTax</code> <i class=baa>&amp;</i>c. sono oggetti singleton. Notate i metodi &#8220;sinonimi&#8221; <code>is</code> e <code>are</code>: abbiamo usato <code>is</code> per gli oggetti con un nome singolare, come <code>federalIncomeTax</code>, e <code>are</code> per gli oggetti con un nome plurale, come <code>insurancePremiums</code> . In effetti, dato che entrambi i metodi delegano le proprie funzioni ad <code>apply</code>, le parole <code>is</code> e <code>are</code> sono effettivamente &#8220;superflue&#8221; e l&#8217;utente potrebbe ometterle. In altre parole, le due righe seguenti sono equivalenti nel nostro <abbr>DSL</abbr>.
 
 <pre><code>federalIncomeTax is (25. percent_of gross)
 federalIncomeTax    (25. percent_of gross)</code></pre>
 
-<p>Il metodo <code>apply</code> prende <code>DeductionsBuilder</code> e non ci fa nulla! In effetti, nel momento in cui <code>apply</code> viene invocato, le ritenute sono già state calcolate e considerate nella busta paga. Questo implica che le espressioni come <code>federalIncomeTax is</code> sono effettivamente zucchero sintattico (almeno per il modo in cui questo <abbr>DSL</abbr> è stato implementato), una forma elaborata di commento che se non altro ha il vantaggio di controllare il tipo dei vari &#8220;generi&#8221; di ritenute consentite. Naturalmente, con l'evolversi dell'implementazione, queste istanze potrebbero svolgere un lavoro reale.
+<p>Il metodo <code>apply</code> prende <code>DeductionsBuilder</code> e non ci fa nulla! In effetti, nel momento in cui <code>apply</code> viene invocato, le ritenute sono già state calcolate e considerate nella busta paga. Questo implica che le espressioni come <code>federalIncomeTax is</code> sono effettivamente zucchero sintattico (almeno per il modo in cui questo <abbr>DSL</abbr> è stato implementato), una forma elaborata di commento che se non altro ha il vantaggio di controllare il tipo dei vari &#8220;generi&#8221; di ritenute consentite. Naturalmente, con l&#8217;evolversi dell&#8217;implementazione, queste istanze potrebbero svolgere un lavoro reale.
 
-<p>Per capire perché <code>DeductionCalculator.apply</code> è vuoto, consideriamo <code>DeductionsBuilderDeductionHelper</code>. Ricordatevi che l'oggetto <code>rules</code> è dotato di un metodo di conversione che trasforma un <code>Double</code> in un <code>DeductionsBuilderDeductionHelper</code>. Una volta che abbiamo un'istanza di questo tipo possiamo invocare il metodo <code>in</code> o il metodo <code>percent_of</code>. Ogni riga nel letterale funzione delle ritenute sfrutta questa istanza.
+<p>Per capire perché <code>DeductionCalculator.apply</code> è vuoto, consideriamo <code>DeductionsBuilderDeductionHelper</code>. Ricordatevi che l&#8217;oggetto <code>rules</code> è dotato di un metodo di conversione che trasforma un <code>Double</code> in un <code>DeductionsBuilderDeductionHelper</code>. Una volta che abbiamo un&#8217;istanza di questo tipo possiamo invocare il metodo <code>in</code> o il metodo <code>percent_of</code>. Ogni riga nel letterale funzione delle ritenute sfrutta questa istanza.
 
 <p>Per esempio, <code>(25. percent_of gross)</code> è pressappoco equivalente ai passi seguenti.
 
@@ -478,27 +477,27 @@ federalIncomeTax    (25. percent_of gross)</code></pre>
 <li><code>gross.addDeductionsPercentageOfGross(factor)</code>
 </ol>
 
-<p>In altre parole, abbiamo usato <code>DeductionsBuilderDeductionHelper</code> per convertire un'espressione della forma <code>Double metodo DeductionsBuilder</code> in un'espressione della forma <code>DeductionsBuilder metodo2 Double</code>. <code>DeductionsBuilder</code> accumula tutte le ritenute nella busta paga che stiamo assemblando.
+<p>In altre parole, abbiamo usato <code>DeductionsBuilderDeductionHelper</code> per convertire un&#8217;espressione della forma <code>Double metodo DeductionsBuilder</code> in un&#8217;espressione della forma <code>DeductionsBuilder metodo2 Double</code>. <code>DeductionsBuilder</code> accumula tutte le ritenute nella busta paga che stiamo assemblando.
 
-<p>L'espressione <code>500. in gross.currency</code> funziona quasi allo stesso modo. <code>DeductionsBuilder.currency</code> è in effetti un'altra parola superflua; restituisce semplicemente <code>this</code>, ma fornisce un idioma leggibile per il <abbr>DSL</abbr>. Il metodo <code>in</code> converte semplicemente l'istanza di <code>Double</code> in un'istanza di <code>Money</code> e la passa a <code>DeductionsBuilder.addDeductions</code>.
+<p>L&#8217;espressione <code>500. in gross.currency</code> funziona quasi allo stesso modo. <code>DeductionsBuilder.currency</code> è in effetti un&#8217;altra parola superflua; restituisce semplicemente <code>this</code>, ma fornisce un idioma leggibile per il <abbr>DSL</abbr>. Il metodo <code>in</code> converte semplicemente l&#8217;istanza di <code>Double</code> in un&#8217;istanza di <code>Money</code> e la passa a <code>DeductionsBuilder.addDeductions</code>.
 
 <p>Quindi <code>DeductionCalculator.apply</code> non fa nulla, perché nel momento in cui <code>apply</code> viene invocato tutto il lavoro è già stato fatto.
 
 <h3 id=InternalDSLsFinalThoughts><abbr>DSL</abbr> interni: considerazioni conclusive</h3>
 
-<p>In definitiva, è meglio l'implementazione originale sotto forma di <abbr>API</abbr> o l'implementazione sotto forma di <abbr>DSL</abbr>? L'implementazione del <abbr>DSL</abbr> è complessa. Come ogni linguaggio, verificarne la robustezza può essere complicato. Gli utenti proveranno molte combinazioni di espressioni e probabilmente non capiranno i messaggi di errore del compilatore che si riferiscono ai meccanismi interni nascosti dietro il <abbr>DSL</abbr>.
+<p>In definitiva, è meglio l&#8217;implementazione originale sotto forma di <abbr>API</abbr> o l&#8217;implementazione sotto forma di <abbr>DSL</abbr>? L&#8217;implementazione del <abbr>DSL</abbr> è complessa. Come ogni linguaggio, verificarne la robustezza può essere complicato. Gli utenti proveranno molte combinazioni di espressioni e probabilmente non capiranno i messaggi di errore del compilatore che si riferiscono ai meccanismi interni nascosti dietro il <abbr>DSL</abbr>.
 
 <p>Progettare un <abbr>DSL</abbr> di qualità è difficile. Con una <abbr>API</abbr>, potete seguire le convenzioni della libreria Scala per i tipi, i nomi dei metodi, <i class=baa>&amp;</i>c. Tuttavia, con un <abbr>DSL</abbr>, state provando a imitare il linguaggio di un nuovo dominio: farlo correttamente non è facile.
 
-<p>Ne vale la pena, però. Un <abbr>DSL</abbr> ben progettato minimizza lo sforzo di tradurre i requisiti in codice, migliorando così le comunicazioni sui requisiti con i soggetti interessati. I <abbr>DSL</abbr> agevolano anche il cambiamento rapido delle funzionalità e nascondono i dettagli di implementazione che potrebbero creare confusione. Come sempre, dovreste effettuare un'analisi costi/benefici quando decidete se usare o meno un <abbr>DSL</abbr>.
+<p>Ne vale la pena, però. Un <abbr>DSL</abbr> ben progettato minimizza lo sforzo di tradurre i requisiti in codice, migliorando così le comunicazioni sui requisiti con i soggetti interessati. I <abbr>DSL</abbr> agevolano anche il cambiamento rapido delle funzionalità e nascondono i dettagli di implementazione che potrebbero creare confusione. Come sempre, dovreste effettuare un&#8217;analisi costi/benefici quando decidete se usare o meno un <abbr>DSL</abbr>.
 
-<p>Supponendo che abbiate preso la decisione di &#8220;procedere&#8221;, un problema comune nella progettazione di un <abbr>DSL</abbr> è il <em>problema della conclusione</em> <a href=apa.html#Ford2009>[Ford2009]</a>. Come fate a sapere quando l'assemblaggio dello stato di un'istanza si è concluso, e che tale istanza è pronta per essere usata?
+<p>Supponendo che abbiate preso la decisione di &#8220;procedere&#8221;, un problema comune nella progettazione di un <abbr>DSL</abbr> è il <em>problema della conclusione</em> <a href=apa.html#Ford2009>[Ford2009]</a>. Come fate a sapere quando l&#8217;assemblaggio dello stato di un&#8217;istanza si è concluso, e che tale istanza è pronta per essere usata?
 
-<p>Noi abbiamo risolto il problema in due modi. Per prima cosa, abbiamo annidato i passi di computazione in un letterale funzione. Nel momento in cui <code>rules(employee)</code> viene chiamato, la costruzione della busta paga è completa. In più, tutti i passi vengono valutati in maniera &#8220;avida&#8221;: non è necessario inserire tutte le regole e poi eseguirle alla fine. L'unico requisito di ordinamento era la necessità di calcolare lo stipendio lordo come prima cosa, dato che è il valore su cui si basano le ritenute. Abbiamo imposto l'ordine di invocazione corretto usando istanze di tipi differenti.
+<p>Noi abbiamo risolto il problema in due modi. Per prima cosa, abbiamo annidato i passi di computazione in un letterale funzione. Nel momento in cui <code>rules(employee)</code> viene chiamato, la costruzione della busta paga è completa. In più, tutti i passi vengono valutati in maniera &#8220;avida&#8221;: non è necessario inserire tutte le regole e poi eseguirle alla fine. L&#8217;unico requisito di ordinamento era la necessità di calcolare lo stipendio lordo come prima cosa, dato che è il valore su cui si basano le ritenute. Abbiamo imposto l&#8217;ordine di invocazione corretto usando istanze di tipi differenti.
 
 <p>Ci sono casi in cui non potete valutare i passi di assemblaggio in maniera avida. Per esempio, un <abbr>DSL</abbr> che costruisce una query SQL non può eseguire una query dopo ogni singolo passo del processo di costruzione. In questo caso, la valutazione deve attendere fino a quando la query non è costruita completamente.
 
-<p>Al contrario, se i passi di computazione del vostro <abbr>DSL</abbr> sono privi di stato, l'invocazione di metodi concatenati funziona alla perfezione; in questo caso, non è importante sapere quando l'invocazione dei metodi concatenati si conclude. Se concatenate metodi che assemblano uno stato, dovrete aggiungere una qualche sorta di metodo conclusivo e contare sul fatto che gli utenti lo usino sempre alla fine.
+<p>Al contrario, se i passi di computazione del vostro <abbr>DSL</abbr> sono privi di stato, l&#8217;invocazione di metodi concatenati funziona alla perfezione; in questo caso, non è importante sapere quando l&#8217;invocazione dei metodi concatenati si conclude. Se concatenate metodi che assemblano uno stato, dovrete aggiungere una qualche sorta di metodo conclusivo e contare sul fatto che gli utenti lo usino sempre alla fine.
 
 <h2 id=ExternalDSLsWithCombinatorParsers><abbr>DSL</abbr> esterni con la combinazione di riconoscitori</h2>
 
@@ -508,11 +507,11 @@ federalIncomeTax    (25. percent_of gross)</code></pre>
 
 <p>Gli operatori di riconoscimento (anche detti <em>combinatori</em>) sono blocchi di costruzione per riconoscitori. I riconoscitori che gestiscono specifici tipi di ingresso, come per esempio numeri in virgola mobile, numeri interi, <i class=baa>&amp;</i>c., possono essere combinati insieme per formare altri riconoscitori per espressioni più grandi. Un framework di combinazione rende più facile comporre i riconoscitori per gestire le sequenze di termini, i casi alternativi, la ripetizione, i termini opzionali, <i class=baa>&amp;</i>c.
 
-<p>Impareremo di più sulle tecniche di riconoscimento e la relativa terminologia man mano che procediamo. Una esposizione completa delle tecniche di riconoscimento esula dall'ambito di questo libro, ma i nostri esempi dovrebbero esservi utili come punto di partenza. In <a href=apa.html#Spiewak2009b>[Spiewak2009b]</a>, <a href=apa.html#Ghosh2008a>[Ghosh2008a]</a> e <a href=apa.html#Odersky2008>[Odersky2008]</a> potete trovare ulteriori esempi di riconoscitori scritti usando la libreria di operatori di riconoscimento di Scala.
+<p>Impareremo di più sulle tecniche di riconoscimento e la relativa terminologia man mano che procediamo. Una esposizione completa delle tecniche di riconoscimento esula dall&#8217;ambito di questo libro, ma i nostri esempi dovrebbero esservi utili come punto di partenza. In <a href=apa.html#Spiewak2009b>[Spiewak2009b]</a>, <a href=apa.html#Ghosh2008a>[Ghosh2008a]</a> e <a href=apa.html#Odersky2008>[Odersky2008]</a> potete trovare ulteriori esempi di riconoscitori scritti usando la libreria di operatori di riconoscimento di Scala.
 
 <h3 id=APayrollExternalDSL>Un <abbr>DSL</abbr> esterno per il libro paga</h3>
 
-<p>Per illustrare la combinazione di riconoscitori, riutilizzeremo il caso appena discusso per i <abbr>DSL</abbr> interni alterandone leggermente la grammatica, dato che il nostro <abbr>DSL</abbr> esterno non deve rispettare la sintassi di Scala. Altre modifiche semplificheranno la costruzione del riconoscitore. Ecco un esempio d'uso scritto usando il <abbr>DSL</abbr> esterno.
+<p>Per illustrare la combinazione di riconoscitori, riutilizzeremo il caso appena discusso per i <abbr>DSL</abbr> interni alterandone leggermente la grammatica, dato che il nostro <abbr>DSL</abbr> esterno non deve rispettare la sintassi di Scala. Altre modifiche semplificheranno la costruzione del riconoscitore. Ecco un esempio d&#8217;uso scritto usando il <abbr>DSL</abbr> esterno.
 
 <pre><samp>paycheck for employee "Buck Trends" is salary for 2 weeks minus deductions for {
   federal income tax            is  25.  percent of gross,
@@ -533,9 +532,9 @@ federalIncomeTax    (25. percent_of gross)</code></pre>
 }
 &hellip;</code></pre>
 
-<p>Nel nostro nuovo <abbr>DSL</abbr>, inseriamo uno specifico impiegato nello script. Non pretendiamo che un utente effettui una copia di questo script per ogni impiegato: una naturale estensione che non perseguiremo permetterebbe all'utente di effettuare un ciclo su tutti gli impiegati stipendiati contenuti in un database, per esempio.
+<p>Nel nostro nuovo <abbr>DSL</abbr>, inseriamo uno specifico impiegato nello script. Non pretendiamo che un utente effettui una copia di questo script per ogni impiegato: una naturale estensione che non perseguiremo permetterebbe all&#8217;utente di effettuare un ciclo su tutti gli impiegati stipendiati contenuti in un database, per esempio.
 
-<p>Alcune differenze sono &#8220;gratuite&#8221;; avremmo potuto usare la stessa sintassi vista in precedenza. Questi cambiamenti includono la rimozione del trattino basso tra le parole in alcune espressioni e l'espansione delle parole in <em>camel-case</em> in parole separate da spazi; cioè, abbiamo trasformato alcune parole singole in espressioni con più parole. Grazie a queste modifiche l'implementazione basata sugli operatori di riconoscimento risulterà più semplice, ma le stesse espressioni con più parole avrebbero reso molto più complessa l'implementazione del <abbr>DSL</abbr> interno.
+<p>Alcune differenze sono &#8220;gratuite&#8221;; avremmo potuto usare la stessa sintassi vista in precedenza. Questi cambiamenti includono la rimozione del trattino basso tra le parole in alcune espressioni e l&#8217;espansione delle parole in <em>camel-case</em> in parole separate da spazi; cioè, abbiamo trasformato alcune parole singole in espressioni con più parole. Grazie a queste modifiche l&#8217;implementazione basata sugli operatori di riconoscimento risulterà più semplice, ma le stesse espressioni con più parole avrebbero reso molto più complessa l&#8217;implementazione del <abbr>DSL</abbr> interno.
 
 <p>Le &#8220;variabili locali&#8221; come <var>employee</var> e <var>gross</var> non servono più. Queste parole compaiono ancora nel <abbr>DSL</abbr>, ma il nostro riconoscitore terrà traccia internamente delle istanze corrispondenti.
 
@@ -589,15 +588,15 @@ doubleNumber = &hellip;</samp></pre>
 
 <p>Non abbiamo precisato i dettagli per i numeri decimali, i numeri in virgola mobile e le lettere consentite nel nome degli impiegati, elidendo semplicemente quelle definizioni. Gestiremo questi dettagli più avanti.
 
-<p>Ogni riga nella grammatica definisce una <em>regola di produzione</em>. La fine di una definizione viene segnalata con un punto e virgola. Sul lato sinistro del segno di uguale compare un simbolo <em>non terminale</em>. Il lato destro è composto da simboli terminali (per esempio le stringhe letterali e i caratteri appena menzionati) che non richiedono un'analisi ulteriore, da altri simboli non terminali (tra cui è possibile includere un riferimento ricorsivo al simbolo non terminale presente sul lato sinistro) e da operatori che esprimono relazioni tra le entità. Si noti che le forme della grammatica possono essere decomoposte in maniera gerarchica; pur non essendo un grafo diretto aciclico, generalmente parlando, una grammatica di questo tipo può contenere cicli.
+<p>Ogni riga nella grammatica definisce una <em>regola di produzione</em>. La fine di una definizione viene segnalata con un punto e virgola. Sul lato sinistro del segno di uguale compare un simbolo <em>non terminale</em>. Il lato destro è composto da simboli terminali (per esempio le stringhe letterali e i caratteri appena menzionati) che non richiedono un&#8217;analisi ulteriore, da altri simboli non terminali (tra cui è possibile includere un riferimento ricorsivo al simbolo non terminale presente sul lato sinistro) e da operatori che esprimono relazioni tra le entità. Si noti che le forme della grammatica possono essere decomoposte in maniera gerarchica; pur non essendo un grafo diretto aciclico, generalmente parlando, una grammatica di questo tipo può contenere cicli.
 
-<p>La nostra è una grammatica libera da contesto perché ogni regola di produzione ha un singolo simbolo non terminale sul lato sinistro del segno di uguale, cioè non è necessaria alcuna informazione di contesto aggiuntiva per specificare l'applicabilità e il significato della produzione.
+<p>La nostra è una grammatica libera da contesto perché ogni regola di produzione ha un singolo simbolo non terminale sul lato sinistro del segno di uguale, cioè non è necessaria alcuna informazione di contesto aggiuntiva per specificare l&#8217;applicabilità e il significato della produzione.
 
 <p>Le regole di produzione come <code>toBe = "is" | "are"</code> indicano una corrispondenza con la produzione <code>is</code> (un simbolo terminale, in questo caso) <em>oppure</em> con la produzione <code>are</code>. Questo è un esempio di <em>composizione alternativa</em>.
 
-<p>Quando le produzioni sul lato destro di un'altra produzione sono separate da spazi bianchi, come per esempio <code>prod1 prod2</code>, tutte le produzioni devono apparire sequenzialmente per ottenere una corrispondenza. (La maggior parte dei formati <abbr>EBNF</abbr> richiede una virgola per separare queste entità.) Quindi, queste espressioni sono simili a &#8220;congiunzioni&#8221;, ma la <em>composizione sequenziale</em> è talmente comune che non viene usato nessun operatore <code>&amp;</code> come analogo di <code>|</code> per la composizione alternativa.
+<p>Quando le produzioni sul lato destro di un&#8217;altra produzione sono separate da spazi bianchi, come per esempio <code>prod1 prod2</code>, tutte le produzioni devono apparire sequenzialmente per ottenere una corrispondenza. (La maggior parte dei formati <abbr>EBNF</abbr> richiede una virgola per separare queste entità.) Quindi, queste espressioni sono simili a &#8220;congiunzioni&#8221;, ma la <em>composizione sequenziale</em> è talmente comune che non viene usato nessun operatore <code>&amp;</code> come analogo di <code>|</code> per la composizione alternativa.
 
-<p>La regola di produzione che contiene <code>"{" deductItem { "," deductItem } "}"</code> mostra come specificare ripetizioni opzionali (zero o più). Questa espressione corrisponde a un carattere letterale <code>{</code>, seguito da <code>deductItem</code> (un'altra produzione), seguita da zero o più espressioni che consistono in una virgola letterale e in un'altra produzione <code>deductItem</code>, terminando infine con un carattere letterale <code>}</code>. A volte si usa un asterisco per indicare elementi ripetuti zero o più volte, come per esempio in <code>prod *</code>. Per gli elementi ripetuti almeno una volta, si può usare <code>prod +</code>.
+<p>La regola di produzione che contiene <code>"{" deductItem { "," deductItem } "}"</code> mostra come specificare ripetizioni opzionali (zero o più). Questa espressione corrisponde a un carattere letterale <code>{</code>, seguito da <code>deductItem</code> (un&#8217;altra produzione), seguita da zero o più espressioni che consistono in una virgola letterale e in un&#8217;altra produzione <code>deductItem</code>, terminando infine con un carattere letterale <code>}</code>. A volte si usa un asterisco per indicare elementi ripetuti zero o più volte, come per esempio in <code>prod *</code>. Per gli elementi ripetuti almeno una volta, si può usare <code>prod +</code>.
 
 <p>Infine, se la nostra grammatica contenesse entità opzionali, potremmo racchiuderle tra parentesi quadre. Ci sono altri tipi di possibili operatori di composizione (supportati dalla libreria Scala), alcuni dei quali verranno discussi più avanti. Si veda la voce <code>Parsers</code> in <a href=apa.html#ScalaAPI2008>[ScalaAPI2008]</a> per maggiori dettagli.
 
@@ -663,7 +662,7 @@ class PayrollParserCombinatorsV1 extends JavaTokenParsers {
 
 <pre><code>def paycheck = empl ~ gross ~ deduct</code></pre>
 
-<p>Si usa un altro combinatore di composizione sequenziale <code>&#8764;&gt;</code> quando non è più necessario conservare il risultato della produzione sulla <em>sinistra</em>. Per esempio, quando elaboriamo la produzione <code>empl</code>, vogliamo tenere solo il risultato del riconoscimento dell'ultima produzione, <code>employeeName</code>.
+<p>Si usa un altro combinatore di composizione sequenziale <code>&#8764;&gt;</code> quando non è più necessario conservare il risultato della produzione sulla <em>sinistra</em>. Per esempio, quando elaboriamo la produzione <code>empl</code>, vogliamo tenere solo il risultato del riconoscimento dell&#8217;ultima produzione, <code>employeeName</code>.
 
 <pre><code>def empl = "paycheck" ~&gt; "for" ~&gt; "employee" ~&gt; employeeName</code></pre>
 
@@ -671,7 +670,7 @@ class PayrollParserCombinatorsV1 extends JavaTokenParsers {
 
 <pre><code>def tax = fedState &lt;~ "income" &lt;~ "tax"</code></pre>
 
-<p>L'uso pesante che facciamo del combinatore sequenziale <code>&lt;&#8764;</code> nelle varie produzioni relative alle ritenute indica che non stiamo tenendo traccia della natura di ogni ritenuta, ma solo della quantità. Un'applicazione reale per il calcolo delle buste paga stamperebbe questa informazione, naturalmente, ma qui noi miriamo alla semplicità. Come esercizio, riflettete su come modificare <code>PayrollParserCombinatorsV1</code> e le sue versioni successive, che vedremo più avanti, per tenere traccia di questa informazione: conservereste necessariamente le stringhe riconosciute oppure impieghereste una strategia diversa?
+<p>L&#8217;uso pesante che facciamo del combinatore sequenziale <code>&lt;&#8764;</code> nelle varie produzioni relative alle ritenute indica che non stiamo tenendo traccia della natura di ogni ritenuta, ma solo della quantità. Un&#8217;applicazione reale per il calcolo delle buste paga stamperebbe questa informazione, naturalmente, ma qui noi miriamo alla semplicità. Come esercizio, riflettete su come modificare <code>PayrollParserCombinatorsV1</code> e le sue versioni successive, che vedremo più avanti, per tenere traccia di questa informazione: conservereste necessariamente le stringhe riconosciute oppure impieghereste una strategia diversa?
 
 <p>La &#8220;disgiunzione&#8221; viene espressa con il metodo <code>|</code>, proprio come nella grammatica.
 
@@ -685,7 +684,7 @@ class PayrollParserCombinatorsV1 extends JavaTokenParsers {
 
 <p>Come per le ripetizioni, esiste un metodo <code>opt</code> per i termini opzionali, che però non stiamo usando.
 
-<p><code>PayrollParserCombinatorsV1</code> estende <code>JavaTokenParsers</code>, che estende <code>RegexParsers</code>, che estende il tratto radice <code>Parsers</code> per i riconoscitori. &Egrave; risaputo che ogni tentativo di riconoscere grammatiche non banali usando solo le espressioni regolari tende a fallire piuttosto velocemente. Tuttavia, le espressioni regolari possono essere molto efficaci per riconoscere i singoli termini all'interno di un framework di analisi sintattica. Nel nostro esempio, sfruttiamo le produzioni di <code>JavaTokenParsers</code> per riconoscere le stringhe tra virgolette (usate per il nome dell'impiegato), i letterali decimali e i letterali in virgola mobile.
+<p><code>PayrollParserCombinatorsV1</code> estende <code>JavaTokenParsers</code>, che estende <code>RegexParsers</code>, che estende il tratto radice <code>Parsers</code> per i riconoscitori. &Egrave; risaputo che ogni tentativo di riconoscere grammatiche non banali usando solo le espressioni regolari tende a fallire piuttosto velocemente. Tuttavia, le espressioni regolari possono essere molto efficaci per riconoscere i singoli termini all&#8217;interno di un framework di analisi sintattica. Nel nostro esempio, sfruttiamo le produzioni di <code>JavaTokenParsers</code> per riconoscere le stringhe tra virgolette (usate per il nome dell&#8217;impiegato), i letterali decimali e i letterali in virgola mobile.
 
 <p>Facciamo una prova! Ecco una specifica che esercita il riconoscitore in due casi, con e senza le ritenute.
 
@@ -742,23 +741,23 @@ p.parseAll(p.paycheck, input) match {
 
 <p>Il metodo <code>parseAll</code> è definito in una classe genitore. Invochiamo il metodo di produzione a livello radice, <code>paycheck</code>, poi passiamo a <code>parseAll</code> il suo valore di ritorno come primo argomento e la stringa da riconoscere come secondo argomento.
 
-<p>Se il processo di riconoscimento ha successo, il suo risultato viene restituito come un'istanza di tipo <code>p.Success[+T]</code>, una classe <code>case</code> dichiarata nel tratto <code>Parsers</code>. Il prefisso <code>p.</code> indica che <code>p.Success</code> è un <em>tipo dipendente dal percorso</em>, di cui parleremo nella sezione <a href=cap-12.html#PathDependentTypes>Tipi dipendenti dal percorso</a> del capitolo 12. Per ora vi basti sapere che, anche se <code>Success</code> è definito nel tratto <code>Parsers</code>, il tipo reale dell'istanza dipende dall'istanza di <code>PayrollParserCombinatorsV1</code> che abbiamo creato. In altre parole, se avessimo un altro riconoscitore <code>p2</code> di tipo <code>MyOtherParser</code>, allora <code>p2.Success[String]</code> sarebbe differente da <code>p.Success[String]</code> e non sarebbe possibile sostituire l'uno con l'altro.
+<p>Se il processo di riconoscimento ha successo, il suo risultato viene restituito come un&#8217;istanza di tipo <code>p.Success[+T]</code>, una classe <code>case</code> dichiarata nel tratto <code>Parsers</code>. Il prefisso <code>p.</code> indica che <code>p.Success</code> è un <em>tipo dipendente dal percorso</em>, di cui parleremo nella sezione <a href=cap-12.html#PathDependentTypes>Tipi dipendenti dal percorso</a> del capitolo 12. Per ora vi basti sapere che, anche se <code>Success</code> è definito nel tratto <code>Parsers</code>, il tipo reale dell&#8217;istanza dipende dall&#8217;istanza di <code>PayrollParserCombinatorsV1</code> che abbiamo creato. In altre parole, se avessimo un altro riconoscitore <code>p2</code> di tipo <code>MyOtherParser</code>, allora <code>p2.Success[String]</code> sarebbe differente da <code>p.Success[String]</code> e non sarebbe possibile sostituire l&#8217;uno con l&#8217;altro.
 
-<p>L'istanza di <code>Success</code> contiene due campi: il risultato del riconoscimento, che è un'istanza di tipo <code>T</code> (assegnata a <var>r</var> nella clausola <code>case</code>), e la parte rimanente della stringa in ingresso da riconoscere, che sarà vuota dopo un riconoscimento avvenuto con successo (a quel punto abbiamo riconosciuto l'intera stringa). Questa stringa viene assegnata a <code>_</code>.
+<p>L&#8217;istanza di <code>Success</code> contiene due campi: il risultato del riconoscimento, che è un&#8217;istanza di tipo <code>T</code> (assegnata a <var>r</var> nella clausola <code>case</code>), e la parte rimanente della stringa in ingresso da riconoscere, che sarà vuota dopo un riconoscimento avvenuto con successo (a quel punto abbiamo riconosciuto l&#8217;intera stringa). Questa stringa viene assegnata a <code>_</code>.
 
-<p>Se il riconoscimento fallisce, l'istanza restituita è di tipo <code>p.Failure</code> oppure <code>p.Error</code>, che il nostro esempio gestisce con una clausola <code>case</code> generica. Entrambi i tipi derivano da <code>p.NoSuccess</code>, che contiene campi per un messaggio di errore e per l'ingresso non consumato al momento del fallimento. Un risultato di tipo <code>p.Failure</code> in un riconoscitore innescherà il <em>backtracking</em> in modo che il framework di riconoscimento provi un riconoscitore differente, se è possibile. Un risultato di tipo <code>p.Error</code> non innesca il backtracking e viene usato per segnalare problemi più gravi.
+<p>Se il riconoscimento fallisce, l&#8217;istanza restituita è di tipo <code>p.Failure</code> oppure <code>p.Error</code>, che il nostro esempio gestisce con una clausola <code>case</code> generica. Entrambi i tipi derivano da <code>p.NoSuccess</code>, che contiene campi per un messaggio di errore e per l&#8217;ingresso non consumato al momento del fallimento. Un risultato di tipo <code>p.Failure</code> in un riconoscitore innescherà il <em>backtracking</em> in modo che il framework di riconoscimento provi un riconoscitore differente, se è possibile. Un risultato di tipo <code>p.Error</code> non innesca il backtracking e viene usato per segnalare problemi più gravi.
 
 <p>Per completezza, sia <code>p.Success</code> sia <code>p.NoSuccess</code> derivano da <code>p.ParseResult</code>.
 
-<p>Rimangono due grandi domande ancora senza risposta: cosa restituiscono effettivamente i metodi delle produzioni, e qual è il tipo dell'istanza restituita come risultato in <code>p.Success</code>?
+<p>Rimangono due grandi domande ancora senza risposta: cosa restituiscono effettivamente i metodi delle produzioni, e qual è il tipo dell&#8217;istanza restituita come risultato in <code>p.Success</code>?
 
 <p>I metodi di produzione restituiscono riconoscitori. Nel nostro esempio, la maggior parte dei metodi restituisce <code>p.Parser[String]</code> (ancora una volta, un tipo dipendente dal percorso). Tuttavia, dato che il metodo <code>deduct</code> gestisce la ripetizione (invocando il metodo <code>repsep</code>), in effetti esso restituisce <code>p.Parser[List[String]]</code>. Quando questo riconoscitore viene usato restituisce <code>List[String]</code>, che contiene una stringa per ogni corrispondenza nella ripetizione.
 
-<p>Quindi, l'invocazione di <code>p.parseAll(p.paycheck, input)</code> che abbiamo visto riconosce la stringa <var>input</var> usando il riconoscitore restituito da <code>p.paycheck</code>. Questo ci porta alla seconda domanda: qual è il risultato di un riconoscimento riuscito?
+<p>Quindi, l&#8217;invocazione di <code>p.parseAll(p.paycheck, input)</code> che abbiamo visto riconosce la stringa <var>input</var> usando il riconoscitore restituito da <code>p.paycheck</code>. Questo ci porta alla seconda domanda: qual è il risultato di un riconoscimento riuscito?
 
-<p>Per vedere ciò che viene restituito, compilate il file che contiene <code>PayrollParserCombinatorsV1</code> indicato all'inizio di questa sezione, e invocate l'interprete <kbd>scala</kbd> con l'opzione <code>-cp</code> per includere la directory dove sono stati creati i file di classe (questa directory si chiamerà <tt>build</tt> se avete usato il processo di assemblaggio definito nell'archivio degli esempi di codice).
+<p>Per vedere ciò che viene restituito, compilate il file che contiene <code>PayrollParserCombinatorsV1</code> indicato all&#8217;inizio di questa sezione, e invocate l&#8217;interprete <kbd>scala</kbd> con l&#8217;opzione <code>-cp</code> per includere la directory dove sono stati creati i file di classe (questa directory si chiamerà <tt>build</tt> se avete usato il processo di assemblaggio definito nell&#8217;archivio degli esempi di codice).
 
-<p>Una volta nell'interprete, digitate le seguenti espressioni dopo il prompt <code>scala&gt;</code>. (Potete anche trovare queste espressioni nel file <span class=file>payroll-parser-comb-script.scala</span> incluso nell'archivio degli esempi di codice.)
+<p>Una volta nell&#8217;interprete, digitate le seguenti espressioni dopo il prompt <code>scala&gt;</code>. (Potete anche trovare queste espressioni nel file <span class=file>payroll-parser-comb-script.scala</span> incluso nell&#8217;archivio degli esempi di codice.)
 
 <pre><samp>scala&gt; import scala.util.parsing.combinator._
 import scala.util.parsing.combinator._
@@ -799,11 +798,11 @@ res6: p.ParseResult[p.~[p.~[String,p.~[String,String]],List[String]]] =
 
 scala&gt;</samp></pre>
 
-<p>Importiamo i tipi necessari e creiamo un'istanza di <code>PayrollParserCombinatorsV1</code>. Poi invochiamo diversi metodi di produzione per vedere che tipo di <code>Parser</code> restituiscono. I primi tre, cioè <code>empl</code>, <code>weekDays</code> e <code>doubleNumber</code>, restituiscono <code>p.Parser[String]</code>.
+<p>Importiamo i tipi necessari e creiamo un&#8217;istanza di <code>PayrollParserCombinatorsV1</code>. Poi invochiamo diversi metodi di produzione per vedere che tipo di <code>Parser</code> restituiscono. I primi tre, cioè <code>empl</code>, <code>weekDays</code> e <code>doubleNumber</code>, restituiscono <code>p.Parser[String]</code>.
 
-<p>Notate ciò che viene scritto sul lato destro dell'uscita per i primi tre riconoscitori: <code>empl</code>, <code>weeksDays</code> e <code>doubleNumber</code> mostrano rispettivamente <code>Parser (&#8764;&gt;)</code>, <code>Parser (|)</code> e <code>Parser ()</code>. I riconoscitori restituiti riflettono le definizioni delle regole di produzione, dove <code>empl</code> termina con un combinatore della forma <code>prod1 &#8764;&gt; prod2</code> e <code>weeksDays</code> termina con un combinatore della forma <code>prod1 | prod2</code>, mentre <code>doubleNumber</code> restituisce un riconoscitore per una singola produzione.
+<p>Notate ciò che viene scritto sul lato destro dell&#8217;uscita per i primi tre riconoscitori: <code>empl</code>, <code>weeksDays</code> e <code>doubleNumber</code> mostrano rispettivamente <code>Parser (&#8764;&gt;)</code>, <code>Parser (|)</code> e <code>Parser ()</code>. I riconoscitori restituiti riflettono le definizioni delle regole di produzione, dove <code>empl</code> termina con un combinatore della forma <code>prod1 &#8764;&gt; prod2</code> e <code>weeksDays</code> termina con un combinatore della forma <code>prod1 | prod2</code>, mentre <code>doubleNumber</code> restituisce un riconoscitore per una singola produzione.
 
-<p>Dato che <code>deduct</code> consiste di operatori che gestiscono la ripetizione, il riconoscitore restituito da <code>deduct</code> è di tipo <code>p.Parser[List[String]]</code>, come avevamo detto in precedenza. Il lato destro dell'uscita è <code>Parser (&lt;&#8764;)</code>, perché la definizione di <code>deduct</code> termina con <code>prod1 &lt;&#8764; prod2</code>.
+<p>Dato che <code>deduct</code> consiste di operatori che gestiscono la ripetizione, il riconoscitore restituito da <code>deduct</code> è di tipo <code>p.Parser[List[String]]</code>, come avevamo detto in precedenza. Il lato destro dell&#8217;uscita è <code>Parser (&lt;&#8764;)</code>, perché la definizione di <code>deduct</code> termina con <code>prod1 &lt;&#8764; prod2</code>.
 
 <p>Le cose si fanno più interessanti quando esaminiamo la produzione a livello radice, <code>paycheck</code>. Cosa dovrebbe significare <code>p.Parser[p.&#8764;[p.&#8764;[String,p.&#8764;[String,String]],List[String]]] = Parser (&#8764;)</code>? Dunque, il lato destro dovrebbe essere facile da capire ora; la definizione di <code>paycheck</code> termina con <code>prod1 &#8764; prod2</code>. Che cosa rappresenta il parametro di tipo di <code>p.Parser</code> sul lato sinistro del segno di uguale?
 
@@ -813,28 +812,28 @@ scala&gt;</samp></pre>
   override def toString = "(" + _1 + "~" + _2 + ")"
 }</code></pre>
 
-<p>Nel nostro esempio, l'effettivo tipo dipendente dal percorso è <code>p.&#8764;[+a,+b]</code>. Quindi, il parametro di tipo <code>T</code> in <code>p.Parser[T]</code> è <code>p.&#8764;[p.&#8764;[String,p.&#8764;[String,String]],List[String]]</code>, che rappresenta un albero gerarchico di tipi.
+<p>Nel nostro esempio, l&#8217;effettivo tipo dipendente dal percorso è <code>p.&#8764;[+a,+b]</code>. Quindi, il parametro di tipo <code>T</code> in <code>p.Parser[T]</code> è <code>p.&#8764;[p.&#8764;[String,p.&#8764;[String,String]],List[String]]</code>, che rappresenta un albero gerarchico di tipi.
 
-<p>Suddividiamolo in parti e leggiamolo dall'interno verso l'esterno. Notate che ci sono tre <code>p.&#8764;</code>. Cominceremo con il tipo più interno, <code>p.&#8764;[String,String]</code>, e ne tracceremo una corrispondenza con la dichiarazione di tipo che abbiamo visto in uscita nella sessione di <kbd>scala</kbd>, <code>"Buck Trends"&#8764;(2&#8764;weeks&#8764;List())</code>.
+<p>Suddividiamolo in parti e leggiamolo dall&#8217;interno verso l&#8217;esterno. Notate che ci sono tre <code>p.&#8764;</code>. Cominceremo con il tipo più interno, <code>p.&#8764;[String,String]</code>, e ne tracceremo una corrispondenza con la dichiarazione di tipo che abbiamo visto in uscita nella sessione di <kbd>scala</kbd>, <code>"Buck Trends"&#8764;(2&#8764;weeks&#8764;List())</code>.
 
-<p>Il tipo <code>p.&#8764;[String,String]</code> corrisponde al riconoscitore che gestisce espressioni come <code>2 weeks</code>. Quindi, l'istanza creata quando analizziamo la nostra stringa di esempio è l'istanza <code>p.&#8764;("2", "weeks")</code>. L'invocazione del metodo <code>p.&#8764;.toString</code> produce l'uscita <code>(2~weeks)</code>.
+<p>Il tipo <code>p.&#8764;[String,String]</code> corrisponde al riconoscitore che gestisce espressioni come <code>2 weeks</code>. Quindi, l&#8217;istanza creata quando analizziamo la nostra stringa di esempio è l&#8217;istanza <code>p.&#8764;("2", "weeks")</code>. L&#8217;invocazione del metodo <code>p.&#8764;.toString</code> produce l&#8217;uscita <code>(2~weeks)</code>.
 
-<p>Muovendoci di un livello verso l'esterno, abbiamo <code>p.&#8764;[String,p.&#8764;[String,String]]</code>. Questa combinazione riconosce <code>paycheck for employee "Buck Trends" is salary for 2 weeks</code>. Ricordatevi che scartiamo <code>paycheck for employee</code> e <code>is salary for</code>, tenendo solo le parti <code>"Buck Trends"</code> e <code>2 weeks</code>. Quindi l'istanza creata è <code>p.&#8764;("Buck Trends", p.&#8764;("2", "weeks"))</code>. Una nuova invocazione di <code>toString</code> produce come risultato la stringa <code>("Buck Trends"&#8764;(2&#8764;weeks))</code>.
+<p>Muovendoci di un livello verso l&#8217;esterno, abbiamo <code>p.&#8764;[String,p.&#8764;[String,String]]</code>. Questa combinazione riconosce <code>paycheck for employee "Buck Trends" is salary for 2 weeks</code>. Ricordatevi che scartiamo <code>paycheck for employee</code> e <code>is salary for</code>, tenendo solo le parti <code>"Buck Trends"</code> e <code>2 weeks</code>. Quindi l&#8217;istanza creata è <code>p.&#8764;("Buck Trends", p.&#8764;("2", "weeks"))</code>. Una nuova invocazione di <code>toString</code> produce come risultato la stringa <code>("Buck Trends"&#8764;(2&#8764;weeks))</code>.
 
-<p>Infine, al livello più esterno, abbiamo <code>p.&#8764;[p.&#8764;[String,p.&#8764;[String,String]],List[String]]</code>, di cui abbiamo già esaminato tutto tranne l'ultimo <code>List[String]</code>, che proviene dalla produzione <code>deduct</code>.
+<p>Infine, al livello più esterno, abbiamo <code>p.&#8764;[p.&#8764;[String,p.&#8764;[String,String]],List[String]]</code>, di cui abbiamo già esaminato tutto tranne l&#8217;ultimo <code>List[String]</code>, che proviene dalla produzione <code>deduct</code>.
 
 <pre><code>def deduct = "minus" ~&gt; "deductions" ~&gt; "for" ~&gt;
              "{" ~&gt; repsep(deductItem, "," ) &lt;~ "}"</code></pre>
 
-<p>Scartiamo tutto tranne la lista di zero o più <code>deductItem</code>. Nel nostro esempio non ce ne sono, quindi otteniamo una lista vuota per la quale <code>toString</code> restituisce <code>List()</code>. Di conseguenza, l'invocazione di <code>p.&#8764;.toString</code> sul nostro tipo più esterno, quello che parametrizza <code>p.Parser</code>, restituisce la stringa <code>"Buck Trends"&#8764;(2&#8764;weeks&#8764;List())</code>. Abbiamo finito!
+<p>Scartiamo tutto tranne la lista di zero o più <code>deductItem</code>. Nel nostro esempio non ce ne sono, quindi otteniamo una lista vuota per la quale <code>toString</code> restituisce <code>List()</code>. Di conseguenza, l&#8217;invocazione di <code>p.&#8764;.toString</code> sul nostro tipo più esterno, quello che parametrizza <code>p.Parser</code>, restituisce la stringa <code>"Buck Trends"&#8764;(2&#8764;weeks&#8764;List())</code>. Abbiamo finito!
 
-<p>Be', non proprio. Non abbiamo ancora calcolato un vero stipendio per la retribuzione del vecchio Buck. Ora completeremo la nostra implementazione.
+<p>Be&#8217;, non proprio. Non abbiamo ancora calcolato un vero stipendio per la retribuzione del vecchio Buck. Ora completeremo la nostra implementazione.
 
 <h3 id=_generating_paychecks_with_the_external_dsl>Generare le buste paga con un <abbr>DSL</abbr> esterno</h3>
 
-<p>Durante il riconoscimento del <abbr>DSL</abbr> vogliamo cercare l'impiegato per nome, recuperare il suo stipendio lordo per il periodo di retribuzione specificato e poi calcolare le ritenute man mano che procediamo. Quando il riconoscitore restituito da <code>paycheck</code> termina le proprie operazioni, desideriamo restituire un'istanza di <code>Pair</code> che contenga l'istanza di <code>Employee</code> e l'istanza di <code>Paycheck</code> completa.
+<p>Durante il riconoscimento del <abbr>DSL</abbr> vogliamo cercare l&#8217;impiegato per nome, recuperare il suo stipendio lordo per il periodo di retribuzione specificato e poi calcolare le ritenute man mano che procediamo. Quando il riconoscitore restituito da <code>paycheck</code> termina le proprie operazioni, desideriamo restituire un&#8217;istanza di <code>Pair</code> che contenga l&#8217;istanza di <code>Employee</code> e l&#8217;istanza di <code>Paycheck</code> completa.
 
-<p>Riutilizzeremo classi &#8220;di dominio&#8221; come <code>Employee</code>, <code>Money</code>, <code>Paycheck</code>, <i class=baa>&amp;</i>c. dalle sezioni precedenti di questo capitolo. Per effettuare i calcoli su richiesta, creeremo una seconda iterazione di <code>PayrollParserCombinatorsV1</code> che chiameremo <code>PayrollParserCombinators</code>. Modificheremo i riconoscitori restituiti da alcuni metodi di produzione per restituire nuovi tipi di riconoscitore. Svolgeremo anche alcune attività di ordinaria amministrazione come memorizzare i dati di contesto durante l'esecuzione, nel caso ce ne sia bisogno. La nostra implementazione non sarà thread-safe; vorrete assicurarvi che un solo thread possa accedere a un dato <code>PayrollParserCombinators</code>. Potremmo renderla più robusta, ma farlo non rientra tra gli scopi di questo esercizio.
+<p>Riutilizzeremo classi &#8220;di dominio&#8221; come <code>Employee</code>, <code>Money</code>, <code>Paycheck</code>, <i class=baa>&amp;</i>c. dalle sezioni precedenti di questo capitolo. Per effettuare i calcoli su richiesta, creeremo una seconda iterazione di <code>PayrollParserCombinatorsV1</code> che chiameremo <code>PayrollParserCombinators</code>. Modificheremo i riconoscitori restituiti da alcuni metodi di produzione per restituire nuovi tipi di riconoscitore. Svolgeremo anche alcune attività di ordinaria amministrazione come memorizzare i dati di contesto durante l&#8217;esecuzione, nel caso ce ne sia bisogno. La nostra implementazione non sarà thread-safe; vorrete assicurarvi che un solo thread possa accedere a un dato <code>PayrollParserCombinators</code>. Potremmo renderla più robusta, ma farlo non rientra tra gli scopi di questo esercizio.
 
 <p>Ecco la versione finale del nostro <code>PayrollParserCombinators</code>.
 
@@ -937,9 +936,9 @@ class PayrollParserCombinators(val employees: Map[Name, Employee])
 
 <p>Per semplicità useremo una mappa di impiegati &#8220;noti&#8221;, in cui le chiavi sono istanze di <code>Name</code>, che abbiamo salvato in un campo di <code>PayrollParserCombinators</code>. Una implementazione reale userebbe probabilmente un database di qualche tipo.
 
-<p>Ci sono altri due campi: <code>currentEmployee</code>, che memorizza l'impiegato su cui stiamo lavorando, e <code>grossAmount</code>, che memorizza lo stipendio lordo dell'impiegato per il periodo di retribuzione. Entrambi i campi hanno un <em>odore di cattiva progettazione</em>. Sono mutabili; e sono impostati solo una volta durante ogni riconoscimento, ma non nel momento in cui vengono dichiarati, bensì solo quando analizziamo l'ingresso che ci permette di calcolarli. Potreste avere anche notato che, se la stessa istanza di <code>PayrollParserCombinators</code> viene usata più di una volta, quei campi non vengono riportati ai loro valori predefiniti. Senza dubbio sarebbe possibile usare il <abbr>DSL</abbr> per scrivere programmi maliziosi che sfruttano questo difetto.
+<p>Ci sono altri due campi: <code>currentEmployee</code>, che memorizza l&#8217;impiegato su cui stiamo lavorando, e <code>grossAmount</code>, che memorizza lo stipendio lordo dell&#8217;impiegato per il periodo di retribuzione. Entrambi i campi hanno un <em>odore di cattiva progettazione</em>. Sono mutabili; e sono impostati solo una volta durante ogni riconoscimento, ma non nel momento in cui vengono dichiarati, bensì solo quando analizziamo l&#8217;ingresso che ci permette di calcolarli. Potreste avere anche notato che, se la stessa istanza di <code>PayrollParserCombinators</code> viene usata più di una volta, quei campi non vengono riportati ai loro valori predefiniti. Senza dubbio sarebbe possibile usare il <abbr>DSL</abbr> per scrivere programmi maliziosi che sfruttano questo difetto.
 
-<p>Queste debolezze non sono inerenti alla combinazione di riconoscitori, ma riflettono le semplificazioni che abbiamo adottato per i nostri scopi. Come esercizio, potreste provare a migliorare l'implementazione eliminandole.
+<p>Queste debolezze non sono inerenti alla combinazione di riconoscitori, ma riflettono le semplificazioni che abbiamo adottato per i nostri scopi. Come esercizio, potreste provare a migliorare l&#8217;implementazione eliminandole.
 
 <p>Abbiamo aggiunto annotazioni <code>@return</code> nello stile Javadoc alla maggior parte delle produzioni per chiarire che cosa restituiscono ora. In alcuni casi, le produzioni sono rimaste inalterate, in quanto le istanze originali dei riconoscitori vanno bene così come sono. La maggior parte delle modifiche riflette il nostro desiderio di calcolare la busta paga man mano che procediamo.
 
@@ -950,13 +949,13 @@ def paycheck = empl ~ gross ~ deduct ^^ {
   case e ~ g ~ d =&gt; (e, Paycheck(g, g - d, d))
 }</code></pre>
 
-<p>Ora restituiamo un'istanza di <code>Pair</code> con l'impiegato e la busta paga calcolata. La combinazione <code>empl &#8764; gross &#8764; deduct</code> restituirebbe ancora <code>Parser[String]</code> (trascureremo il prefisso dipendente dal percorso per ora), ma abbiamo aggiunto un nuovo operatore <code>^^</code>, usato seguendo lo schema <code>prod1 ^^ func1</code>, dove <code>func1</code> è una funzione. Se <code>prod1</code> ha successo, allora viene restituito il risultato dell'applicazione di <code>func1</code> al risultato di <code>prod1</code>; cioè, restituiamo <code>func1(prod1)</code>.
+<p>Ora restituiamo un&#8217;istanza di <code>Pair</code> con l&#8217;impiegato e la busta paga calcolata. La combinazione <code>empl &#8764; gross &#8764; deduct</code> restituirebbe ancora <code>Parser[String]</code> (trascureremo il prefisso dipendente dal percorso per ora), ma abbiamo aggiunto un nuovo operatore <code>^^</code>, usato seguendo lo schema <code>prod1 ^^ func1</code>, dove <code>func1</code> è una funzione. Se <code>prod1</code> ha successo, allora viene restituito il risultato dell&#8217;applicazione di <code>func1</code> al risultato di <code>prod1</code>; cioè, restituiamo <code>func1(prod1)</code>.
 
-<p>In <code>paycheck</code>, diamo all'operatore un letterale funzione che esegue il pattern matching per estrarre i tre risultati da <code>empl</code>, <code>gross</code> e <code>deduct</code>, rispettivamente. Creiamo una tupla di due elementi (un'istanza di <code>Pair</code>) che contiene l'istanza <code>e</code> di <code>Employee</code> e l'istanza di <code>Paycheck</code> calcolata a partire dallo stipendio lordo per il periodo di retribuzione (in <code>g</code>) e dalla somma di tutte le ritenute (in <code>d</code>).
+<p>In <code>paycheck</code>, diamo all&#8217;operatore un letterale funzione che esegue il pattern matching per estrarre i tre risultati da <code>empl</code>, <code>gross</code> e <code>deduct</code>, rispettivamente. Creiamo una tupla di due elementi (un&#8217;istanza di <code>Pair</code>) che contiene l&#8217;istanza <code>e</code> di <code>Employee</code> e l&#8217;istanza di <code>Paycheck</code> calcolata a partire dallo stipendio lordo per il periodo di retribuzione (in <code>g</code>) e dalla somma di tutte le ritenute (in <code>d</code>).
 
-<p>&Egrave; importante mettere in chiaro che la funzione anonima passata come argomento a <code>^^</code> restituisce una tupla <code>(Employee, Paycheck)</code>, ma che il metodo di produzione <code>paycheck</code> restiuisce <code>Parser[(Employee, Paycheck)]</code>. In effetti, questo è stato vero fin dall'inizio, quando la nostra prima versione lavorava su istanze di <code>String</code>, e rimarrà vero per tutte le regole di produzione in <code>PayrollParserCombinators</code>.
+<p>&Egrave; importante mettere in chiaro che la funzione anonima passata come argomento a <code>^^</code> restituisce una tupla <code>(Employee, Paycheck)</code>, ma che il metodo di produzione <code>paycheck</code> restiuisce <code>Parser[(Employee, Paycheck)]</code>. In effetti, questo è stato vero fin dall&#8217;inizio, quando la nostra prima versione lavorava su istanze di <code>String</code>, e rimarrà vero per tutte le regole di produzione in <code>PayrollParserCombinators</code>.
 
-<p>La produzione <code>empl</code> presume che il nome e il cognome dell'impiegato siano dati. (Ovviamente, questo non sarebbe adeguato per un'applicazione reale.)
+<p>La produzione <code>empl</code> presume che il nome e il cognome dell&#8217;impiegato siano dati. (Ovviamente, questo non sarebbe adeguato per un&#8217;applicazione reale.)
 
 <pre><code>/** @return Parser[Employee] */
 def empl = "paycheck" ~&gt; "for" ~&gt; "employee" ~&gt; employeeName ^^ { name =&gt;
@@ -968,9 +967,9 @@ def empl = "paycheck" ~&gt; "for" ~&gt; "employee" ~&gt; employeeName ^^ { name 
    currentEmployee
 }</code></pre>
 
-<p>Per costruire il nome le virgolette incluse devono essere rimosse, perciò il metodo comincia estraendo la sottostringa che elimina il primo e l'ultimo carattere. Il nome viene usato per cercare l'istanza di <code>Employee</code> nella mappa, salvando il valore corrispondente nel campo <code>currentEmployee</code>. In generale, la gestione degli errori in <code>PayrollParserCombinators</code> non è &#8220;elegante&#8221;. Tuttavia, il metodo <code>empl</code> gestisce il caso in cui non venga trovato alcun impiegato con il nome specificato, lanciando all'occorrenza una eccezione di tipo <code>UnknownEmployee</code>.
+<p>Per costruire il nome le virgolette incluse devono essere rimosse, perciò il metodo comincia estraendo la sottostringa che elimina il primo e l&#8217;ultimo carattere. Il nome viene usato per cercare l&#8217;istanza di <code>Employee</code> nella mappa, salvando il valore corrispondente nel campo <code>currentEmployee</code>. In generale, la gestione degli errori in <code>PayrollParserCombinators</code> non è &#8220;elegante&#8221;. Tuttavia, il metodo <code>empl</code> gestisce il caso in cui non venga trovato alcun impiegato con il nome specificato, lanciando all&#8217;occorrenza una eccezione di tipo <code>UnknownEmployee</code>.
 
-<p>Il resto delle produzioni funziona in modo simile. A volte, un riconoscitore converte una stringa in ingresso in un numero <code>Int</code> (per esempio, <code>duration</code>) o in un'istanza di <code>Money</code> (per esempio, <code>gross</code>). Un caso interessante è quello di <code>deduct</code>: il riconoscitore ripiega la lista di ritenute in una singola ritenuta usando l'addizione. Il metodo <code>foldLeft</code> prende due liste di argomenti: la prima contiene un singolo argomento che specifica il valore iniziale, in questo caso l'istanza di <code>Money</code> che rappresenta zero; la seconda lista di argomenti contiene un singolo letterale funzione che accetta come argomenti il valore accumulato dall'operazione di ripiegamento e un elemento della lista. In questo caso, vogliamo restituire la somma degli argomenti, perciò <code>foldLeft</code> itera sulla collezione <code>items</code>, sommando insieme ogni elemento. Si veda la sezione <a href=cap-8.html#TraversingMappingFilteringFolding>Operazioni comuni sulle strutture dati funzionali</a> nel capitolo 8 per maggiori informazioni su <code>foldLeft</code> e sulle operazioni correlate.
+<p>Il resto delle produzioni funziona in modo simile. A volte, un riconoscitore converte una stringa in ingresso in un numero <code>Int</code> (per esempio, <code>duration</code>) o in un&#8217;istanza di <code>Money</code> (per esempio, <code>gross</code>). Un caso interessante è quello di <code>deduct</code>: il riconoscitore ripiega la lista di ritenute in una singola ritenuta usando l&#8217;addizione. Il metodo <code>foldLeft</code> prende due liste di argomenti: la prima contiene un singolo argomento che specifica il valore iniziale, in questo caso l&#8217;istanza di <code>Money</code> che rappresenta zero; la seconda lista di argomenti contiene un singolo letterale funzione che accetta come argomenti il valore accumulato dall&#8217;operazione di ripiegamento e un elemento della lista. In questo caso, vogliamo restituire la somma degli argomenti, perciò <code>foldLeft</code> itera sulla collezione <code>items</code>, sommando insieme ogni elemento. Si veda la sezione <a href=cap-8.html#TraversingMappingFilteringFolding>Operazioni comuni sulle strutture dati funzionali</a> nel capitolo 8 per maggiori informazioni su <code>foldLeft</code> e sulle operazioni correlate.
 
 <p>Le produzioni <code>weeks</code> e <code>days</code> ci ricordano che stiamo usando operatori di riconoscimento basati su espressioni regolari. (Stiamo anche usando <code>stringLiteral</code>, <code>decimalNumber</code> e <code>floatingPointNumber</code>, forniti da <code>JavaTokenParsers</code>). Notate che <code>weeks</code> e <code>days</code> ignorano la stringa riconosciuta e restituiscono semplicemente un fattore moltiplicativo usato per determinare i giorni totali del periodo di retribuzione nella regola di produzione <code>duration</code>.
 
@@ -1038,17 +1037,17 @@ object PayrollParserCombinatorsSpec
   }
 }</code></pre>
 
-<p>Se calcolate a mano quali dovrebbero essere i risultati dalle stringhe di ingresso, vedrete che l'implementazione calcola correttamente la busta paga.
+<p>Se calcolate a mano quali dovrebbero essere i risultati dalle stringhe di ingresso, vedrete che l&#8217;implementazione calcola correttamente la busta paga.
 
-<p>Oltre ai numerosi piccoli dettagli che differiscono tra questa implementazione del <abbr>DSL</abbr> esterno e l'implementazione precedente del <abbr>DSL</abbr> interno, c'è una notevole differenza concettuale tra le due implementazioni. Qui stiamo calcolando la busta paga man mano che riconosciamo il codice scritto nel <abbr>DSL</abbr> esterno. Nel caso del <abbr>DSL</abbr> interno, generiamo un oggetto per calcolare gli stipendi quando riconosciamo il <abbr>DSL</abbr>, dopodiché lo usiamo per un impiegato alla volta. Qui avremmo potuto fare la stessa cosa, ma abbiamo scelto un approccio più semplice allo scopo di concentrarci sul riconoscitore. In più, come abbiamo già detto, non siamo stati altrettanto attenti alla sicurezza per i thread e ad altri problemi di implementazione.
+<p>Oltre ai numerosi piccoli dettagli che differiscono tra questa implementazione del <abbr>DSL</abbr> esterno e l&#8217;implementazione precedente del <abbr>DSL</abbr> interno, c&#8217;è una notevole differenza concettuale tra le due implementazioni. Qui stiamo calcolando la busta paga man mano che riconosciamo il codice scritto nel <abbr>DSL</abbr> esterno. Nel caso del <abbr>DSL</abbr> interno, generiamo un oggetto per calcolare gli stipendi quando riconosciamo il <abbr>DSL</abbr>, dopodiché lo usiamo per un impiegato alla volta. Qui avremmo potuto fare la stessa cosa, ma abbiamo scelto un approccio più semplice allo scopo di concentrarci sul riconoscitore. In più, come abbiamo già detto, non siamo stati altrettanto attenti alla sicurezza per i thread e ad altri problemi di implementazione.
 
 <h3 id=ExternalDSLsFinalThoughts><abbr>DSL</abbr> interni vs. esterni: considerazioni finali</h3>
 
-<p>Scala vi offre un ricco supporto per creare <abbr>DSL</abbr> interni ed esterni. Tuttavia, un <abbr>DSL</abbr> non banale può essere difficile da implementare e correggere. Per gli esempi in questo capitolo, l'implementazione con gli operatori di riconoscimento è stata più facile da progettare e scrivere rispetto all'implementazione per il <abbr>DSL</abbr> interno, ma abbiamo visto che correggere il <abbr>DSL</abbr> interno era più semplice.
+<p>Scala vi offre un ricco supporto per creare <abbr>DSL</abbr> interni ed esterni. Tuttavia, un <abbr>DSL</abbr> non banale può essere difficile da implementare e correggere. Per gli esempi in questo capitolo, l&#8217;implementazione con gli operatori di riconoscimento è stata più facile da progettare e scrivere rispetto all&#8217;implementazione per il <abbr>DSL</abbr> interno, ma abbiamo visto che correggere il <abbr>DSL</abbr> interno era più semplice.
 
-<p>Dovete anche considerare quanto deve essere robusto il riconoscitore quando riceve un ingresso non valido. A seconda del livello di sofisticatezza degli utenti del <abbr>DSL</abbr>, potreste aver bisogno di fornire messaggi molto informativi quando avviene un errore, specialmente se i vostri utenti non sono programmatori. La libreria di operatori di riconoscimento di Scala 2.8 offrirà un supporto migliorato per segnalare gli errori e riprendere l'esecuzione rispetto alla libreria inclusa nelle versioni 2.7.X.
+<p>Dovete anche considerare quanto deve essere robusto il riconoscitore quando riceve un ingresso non valido. A seconda del livello di sofisticatezza degli utenti del <abbr>DSL</abbr>, potreste aver bisogno di fornire messaggi molto informativi quando avviene un errore, specialmente se i vostri utenti non sono programmatori. La libreria di operatori di riconoscimento di Scala 2.8 offrirà un supporto migliorato per segnalare gli errori e riprendere l&#8217;esecuzione rispetto alla libreria inclusa nelle versioni 2.7.X.
 
-<p>La libreria di Scala 2.8 fornirà anche un supporto per scrivere riconoscitori &#8220;spazzino&#8221; (in inglese, <em>packrat</em>) in grado di implementare <em>grammatiche di espressioni analitiche</em> (o <abbr>PEG</abbr>, dall'inglese <em>parsing expression grammars</em>) non ambigue. L'implementazione dei riconoscitori spazzino in Scala 2.8 supporta anche la <em>memoizzazione</em>, che vi aiuta a migliorare le prestazioni, tra gli altri benefici. Se avete bisogno di un riconoscitore veloce, un riconoscitore spazzino vi permetterà di fare maggiori progressi prima che abbiate bisogno di considerare strumenti più specializzati come i generatori automatici di riconoscitori.
+<p>La libreria di Scala 2.8 fornirà anche un supporto per scrivere riconoscitori &#8220;spazzino&#8221; (in inglese, <em>packrat</em>) in grado di implementare <em>grammatiche di espressioni analitiche</em> (o <abbr>PEG</abbr>, dall&#8217;inglese <em>parsing expression grammars</em>) non ambigue. L&#8217;implementazione dei riconoscitori spazzino in Scala 2.8 supporta anche la <em>memoizzazione</em>, che vi aiuta a migliorare le prestazioni, tra gli altri benefici. Se avete bisogno di un riconoscitore veloce, un riconoscitore spazzino vi permetterà di fare maggiori progressi prima che abbiate bisogno di considerare strumenti più specializzati come i generatori automatici di riconoscitori.
 
 <h2 id=_recap_and_what_s_next_3>Riepilogo, e poi?</h2>
 
@@ -1075,6 +1074,6 @@ object PayrollParserCombinatorsSpec
 </ol>
 
 <p class=v><a rel=prev href=cap-10.html title='indietro a &#8220;Assemblare XML in Scala&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=cap-12.html title='avanti a &#8220;Il sistema di tipi di Scala&#8221;'><span class=u>&#x261E;</span></a>
-<p class=c>&copy; 2008&ndash;9 O'Reilly Media<br>
+<p class=c>&copy; 2008&ndash;9 O&#8217;Reilly Media<br>
 &copy; 2009&ndash;10 Giulio Piancastelli per la traduzione italiana
 </div>

@@ -12,15 +12,15 @@ body{counter-reset:h1 13}
 
 <h1>La progettazione di applicazioni</h1>
 
-<p>In questo capitolo esamineremo gli aspetti pratici dello sviluppo di applicazioni in Scala. Analizzeremo alcune caratteristiche del linguaggio e della <abbr>API</abbr> di cui finora non abbiamo parlato, discuteremo di pattern di progettazione e di idiomi comuni, infine rivisiteremo i <em>tratti</em> nell'ottica della strutturazione efficace del codice.
+<p>In questo capitolo esamineremo gli aspetti pratici dello sviluppo di applicazioni in Scala. Analizzeremo alcune caratteristiche del linguaggio e della <abbr>API</abbr> di cui finora non abbiamo parlato, discuteremo di pattern di progettazione e di idiomi comuni, infine rivisiteremo i <em>tratti</em> nell&#8217;ottica della strutturazione efficace del codice.
 
 <h2 id=Annotations>Annotazioni</h2>
 
 <p>Al pari di Java e .NET, Scala supporta le <em>annotazioni</em> come meccanismo per aggiungere <em>metadati</em> alle dichiarazioni. Le annotazioni vengono largamente impiegate dagli strumenti adottati per realizzare le tipiche applicazioni aziendali e di rete: per esempio, alcuni framework <abbr>ORM</abbr><sup id=fnn-1><a href=#fn-1>1</a></sup> usano le annotazioni sui tipi e sui loro membri per fornire al compilatore informazioni riguardanti la persistenza degli oggetti. Anche se Scala dispone di meccanismi alternativi per gli usi più comuni delle annotazioni in Java e .NET, esse possono rivelarsi essenziali per interagire con le librerie che, su queste piattaforme, ne sfruttano tutte le proprietà. Per fortuna, è possibile usare le annotazioni Java e .NET nel codice Scala.
 
-<p>Il modo in cui le annotazioni Scala vengono interpretate dipende dall'ambiente a tempo di esecuzione. In questa sezione ci concentreremo sull'ambiente offerto dal <abbr>JDK</abbr>.
+<p>Il modo in cui le annotazioni Scala vengono interpretate dipende dall&#8217;ambiente a tempo di esecuzione. In questa sezione ci concentreremo sull&#8217;ambiente offerto dal <abbr>JDK</abbr>.
 
-<p>In Java le annotazioni si dichiarano usando convenzioni particolari, per esempio adoperando la parola chiave <code>@interface</code> al posto di <code>class</code> o <code>interface</code>. Ecco la dichiarazione di un'annotazione estratta dalla libreria Contract4J <a href=apa.html#Contract4J>[Contract4J]</a> che usa le annotazioni per supportare la <em>progettazione per contratto</em> in Java (si veda anche la sezione <a href=#DesignByContractExample>Una progettazione migliore con la progettazione per contratto</a> più avanti). Alcuni commenti sono stati rimossi dal codice e, per chiarezza, i rimanenti sono stati tradotti.
+<p>In Java le annotazioni si dichiarano usando convenzioni particolari, per esempio adoperando la parola chiave <code>@interface</code> al posto di <code>class</code> o <code>interface</code>. Ecco la dichiarazione di un&#8217;annotazione estratta dalla libreria Contract4J <a href=apa.html#Contract4J>[Contract4J]</a> che usa le annotazioni per supportare la <em>progettazione per contratto</em> in Java (si veda anche la sezione <a href=#DesignByContractExample>Una progettazione migliore con la progettazione per contratto</a> più avanti). Alcuni commenti sono stati rimossi dal codice e, per chiarezza, i rimanenti sono stati tradotti.
 
 <pre><code>// <a href=esempi/cap-13/Pre.java>esempi/cap-13/Pre.java</a>
 
@@ -48,9 +48,9 @@ public @interface Pre {
   String message() default "";
 }</code></pre>
 
-<p>L'annotazione <code>@Pre</code> viene usata per specificare le &#8220;precondizioni&#8221; che devono essere soddisfatte quando si <em>entra</em> in un metodo o in un costruttore, o <em>prima</em> di usare un parametro passato a un metodo o a un costruttore. Le condizioni vengono specificate sotto forma di una stringa che in realtà è una porzione di codice sorgente, scritta in un linguaggio di scripting come Groovy o JRuby, la cui valutazione deve dare come risultato <code>true</code> oppure <code>false</code>. Il nome della variabile che contiene questa stringa, <code>value</code>, è quello adottato come convenzione per indicare il campo più importante di un'annotazione. L'altro campo, <code>message</code>, rappresenta un messaggio opzionale da usare quando viene presentato un fallimento.
+<p>L&#8217;annotazione <code>@Pre</code> viene usata per specificare le &#8220;precondizioni&#8221; che devono essere soddisfatte quando si <em>entra</em> in un metodo o in un costruttore, o <em>prima</em> di usare un parametro passato a un metodo o a un costruttore. Le condizioni vengono specificate sotto forma di una stringa che in realtà è una porzione di codice sorgente, scritta in un linguaggio di scripting come Groovy o JRuby, la cui valutazione deve dare come risultato <code>true</code> oppure <code>false</code>. Il nome della variabile che contiene questa stringa, <code>value</code>, è quello adottato come convenzione per indicare il campo più importante di un&#8217;annotazione. L&#8217;altro campo, <code>message</code>, rappresenta un messaggio opzionale da usare quando viene presentato un fallimento.
 
-<p>Alla dichiarazione vengono applicate altre annotazioni: per esempio, l'annotazione <code>@Retention</code> con il valore <code>RetentionPolicy.RUNTIME</code> significa che le informazioni relative a ogni occorrenza di <code>@Pre</code> saranno conservate nel file di classe per essere usate a tempo di esecuzione.
+<p>Alla dichiarazione vengono applicate altre annotazioni: per esempio, l&#8217;annotazione <code>@Retention</code> con il valore <code>RetentionPolicy.RUNTIME</code> significa che le informazioni relative a ogni occorrenza di <code>@Pre</code> saranno conservate nel file di classe per essere usate a tempo di esecuzione.
 
 <p>Ecco un esempio di come usare <code>@Pre</code> in Scala, specificando i parametri <code>value</code> e <code>message</code> in modi diversi.
 
@@ -74,33 +74,33 @@ class SSN(
     value.matches("""^\s*\d{3}-\d{2}-\d{4}\s*$""")
 }</code></pre>
 
-<p>Nella classe <code>Person</code>, l'annotazione <code>@Pre</code> accetta come argomento una semplice stringa, contenente la &#8220;precondizione&#8221; che un nome passato da un utente deve soddisfare: questo valore non può essere <code>null</code> e non può essere di lunghezza zero. Come in Java, se all'annotazione viene passato un singolo argomento, questo viene assegnato al campo <code>value</code>.
+<p>Nella classe <code>Person</code>, l&#8217;annotazione <code>@Pre</code> accetta come argomento una semplice stringa, contenente la &#8220;precondizione&#8221; che un nome passato da un utente deve soddisfare: questo valore non può essere <code>null</code> e non può essere di lunghezza zero. Come in Java, se all&#8217;annotazione viene passato un singolo argomento, questo viene assegnato al campo <code>value</code>.
 
 <p>Una simile annotazione <code>@Pre</code> viene usata per il terzo argomento <code>ssn</code>, il numero di previdenza sociale. In entrambi i casi, al campo <code>message</code> viene assegnata una stringa vuota, specificata come valore predefinito nella definizione di <code>Pre</code>.
 
-<p>L'annotazione <code>@Pre</code> usata per l'età mostra come specificare valori per più di un campo usando le parentesi graffe anziché le parentesi tonde. La sintassi dei campi somiglia a quella di una dichiarazione <code>val</code> priva delle informazioni di tipo, in quanto i tipi possono essere sempre inferiti! Di conseguenza, è possibile usare la sintassi abbreviata per <code>value</code> e specificare comunque i valori per gli altri campi.
+<p>L&#8217;annotazione <code>@Pre</code> usata per l&#8217;età mostra come specificare valori per più di un campo usando le parentesi graffe anziché le parentesi tonde. La sintassi dei campi somiglia a quella di una dichiarazione <code>val</code> priva delle informazioni di tipo, in quanto i tipi possono essere sempre inferiti! Di conseguenza, è possibile usare la sintassi abbreviata per <code>value</code> e specificare comunque i valori per gli altri campi.
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>Se <code>Person</code> fosse una classe Java, questa annotazione sarebbe identica, eccetto che per l'assenza della parola chiave <code>val</code> e l'uso delle parentesi tonde.
+<p><span class=u>&#x261E;</span>Se <code>Person</code> fosse una classe Java, questa annotazione sarebbe identica, eccetto che per l&#8217;assenza della parola chiave <code>val</code> e l&#8217;uso delle parentesi tonde.
 </blockquote>
 
-<p>L'annotazione <code>@Pre</code> sul parametro del costruttore della classe <code>SSN</code> mostra la sintassi alternativa per assegnare valori a più di un campo. Il campo <code>value</code> viene specificato come prima, tramite una lista di parametri contenente un elemento; il campo <code>message</code> viene inizializzato nel blocco successivo, racchiuso tra parentesi graffe.
+<p>L&#8217;annotazione <code>@Pre</code> sul parametro del costruttore della classe <code>SSN</code> mostra la sintassi alternativa per assegnare valori a più di un campo. Il campo <code>value</code> viene specificato come prima, tramite una lista di parametri contenente un elemento; il campo <code>message</code> viene inizializzato nel blocco successivo, racchiuso tra parentesi graffe.
 
 <p>Per collaudare questo script sarebbe necessario installare e configurare Conctract4J. Fate riferimento a <a href=apa.html#Contract4J>[Contract4J]</a> per scoprire come effettuare queste operazioni.
 
-<p>Anziché usare una sintassi speciale, le annotazioni Scala vengono dichiarate come normali classi. In questo modo si evita un &#8220;caso particolare&#8221; nel linguaggio, ma come vedremo si perdono anche alcune delle caratteristiche offerte dalle annotazioni Java. Ecco un'annotazione di esempio, <code>SerialVersionUID</code>, tratta dalla libreria Scala (ancora una volta con i commenti rimossi, per chiarezza).
+<p>Anziché usare una sintassi speciale, le annotazioni Scala vengono dichiarate come normali classi. In questo modo si evita un &#8220;caso particolare&#8221; nel linguaggio, ma come vedremo si perdono anche alcune delle caratteristiche offerte dalle annotazioni Java. Ecco un&#8217;annotazione di esempio, <code>SerialVersionUID</code>, tratta dalla libreria Scala (ancora una volta con i commenti rimossi, per chiarezza).
 
 <pre><code>package scala
 
 class SerialVersionUID(uid: Long) extends StaticAnnotation</code></pre>
 
-<p>L'annotazione <code>@SerialVersionUID</code> viene applicata a una classe per definire un identificatore unico globale sotto forma di numero <code>Long</code>. Quando si usa questa annotazione, l'identificatore viene specificato come un argomento del costruttore; in una classe Java, quello stesso numero verrebbe assegnato a un campo <code>static</code> chiamato <code>serialVersionUID</code>. Questo è un esempio di un'annotazione Scala che corrisponde a un costrutto Java diverso da un'annotazione.
+<p>L&#8217;annotazione <code>@SerialVersionUID</code> viene applicata a una classe per definire un identificatore unico globale sotto forma di numero <code>Long</code>. Quando si usa questa annotazione, l&#8217;identificatore viene specificato come un argomento del costruttore; in una classe Java, quello stesso numero verrebbe assegnato a un campo <code>static</code> chiamato <code>serialVersionUID</code>. Questo è un esempio di un&#8217;annotazione Scala che corrisponde a un costrutto Java diverso da un&#8217;annotazione.
 
 <p><code>SerialVersionUID</code> estende il tratto <code>scala.StaticAnnotation</code>, usato come genitore per tutte le annotazioni che dovrebbero essere visibili durante i controlli di tipo, anche attraverso i confini delle unità di compilazione. A sua volta, <code>scala.StaticAnnotation</code> estende <code>scala.Annotation</code>, che è il genitore di tutte le annotazioni Scala.
 
-<p>Nella dichiarazione del parametro <code>uid</code> non compare alcuna parola chiave <code>val</code>: <code>uid</code> non viene dichiarato come campo perché il dato dell'annotazione non è destinato a essere usato dal programma, ma solo da strumenti esterni come <kbd>scalac</kbd>. Questo significa anche che non c'è alcun modo di definire valori nelle annotazioni di Scala 2.7.X, in quanto il supporto per gli argomenti impliciti è assente. Tuttavia, si potrebbe ricorrere agli argomenti predefiniti introdotti in Scala 2.8.0 (non sono ancora stati implementati al momento della scrittura, quindi non ci è stato possibile verificare).
+<p>Nella dichiarazione del parametro <code>uid</code> non compare alcuna parola chiave <code>val</code>: <code>uid</code> non viene dichiarato come campo perché il dato dell&#8217;annotazione non è destinato a essere usato dal programma, ma solo da strumenti esterni come <kbd>scalac</kbd>. Questo significa anche che non c&#8217;è alcun modo di definire valori nelle annotazioni di Scala 2.7.X, in quanto il supporto per gli argomenti impliciti è assente. Tuttavia, si potrebbe ricorrere agli argomenti predefiniti introdotti in Scala 2.8.0 (non sono ancora stati implementati al momento della scrittura, quindi non ci è stato possibile verificare).
 
-<p>Come per le annotazioni Java, la clausola che contiene un'annotazione Scala viene applicata alla definizione che precede. Potete usare più di una clausola per una singola definizione, e l'ordine in cui compaiono le clausole non è significativo. La sintassi da usare per scrivere queste clausole è <code>@Annotazione</code>, se il costruttore dell'annotazione non accetta argomenti, oppure <code>@Annotazione(arg1, &hellip; argN)</code>, se il costruttore accetta un numero N di argomenti. L'annotazione deve essere una sottoclasse di <code>scala.Annotation</code>.
+<p>Come per le annotazioni Java, la clausola che contiene un&#8217;annotazione Scala viene applicata alla definizione che precede. Potete usare più di una clausola per una singola definizione, e l&#8217;ordine in cui compaiono le clausole non è significativo. La sintassi da usare per scrivere queste clausole è <code>@Annotazione</code>, se il costruttore dell&#8217;annotazione non accetta argomenti, oppure <code>@Annotazione(arg1, &hellip; argN)</code>, se il costruttore accetta un numero N di argomenti. L&#8217;annotazione deve essere una sottoclasse di <code>scala.Annotation</code>.
 
 <p>Tutti i parametri del costruttore devono essere espressioni costanti, comprese stringhe, letterali classe, enumerazioni Java, espressioni numeriche, e array monodimensionali di questi tipi. Tuttavia, il compilatore permette di usare anche clausole di annotazione con altri argomenti, come valori booleani e mappe, in modo simile a quanto presentato in questo esempio.
 
@@ -116,7 +116,7 @@ class Persist(tableName: String, params: Map[String,Any])
 @Persist("ACCOUNTS", Map(("dbms", "MySql"), ("writeAutomatically", true)))
 class Account(val balance: Double)</code></pre>
 
-<p>Stranamente, se tentate di usare la normale sintassi per i letterali <code>Map</code> mostrata nel commento, il compilatore genera un errore lamentando la mancanza del metodo <code>-&gt;</code> nella classe <code>String</code>. La conversione implicita verso <code>ArrowAssoc</code> che abbiamo esaminato nella sezione <a href=cap-7.html#PredefObject>L'oggetto <code>Predef</code></a> del capitolo 7 non viene invocata, perciò dovete usare una lista di oggetti <code>Tuple</code>, che è il tipo effettivo dell'argomento atteso da <code>Map.apply</code>.
+<p>Stranamente, se tentate di usare la normale sintassi per i letterali <code>Map</code> mostrata nel commento, il compilatore genera un errore lamentando la mancanza del metodo <code>-&gt;</code> nella classe <code>String</code>. La conversione implicita verso <code>ArrowAssoc</code> che abbiamo esaminato nella sezione <a href=cap-7.html#PredefObject>L&#8217;oggetto <code>Predef</code></a> del capitolo 7 non viene invocata, perciò dovete usare una lista di oggetti <code>Tuple</code>, che è il tipo effettivo dell&#8217;argomento atteso da <code>Map.apply</code>.
 
 <p>Il tratto <code>scala.ClassfileAnnotation</code> è un altro figlio di <code>scala.Annotation</code>, progettato per essere esteso da annotazioni che dovrebbero venire conservate nel file di classe in modo da rimanere disponibili a tempo di esecuzione. Tuttavia, se usate questo tratto con la versione di Scala per il <abbr>JDK</abbr>, il compilatore genererà errori simili a quello riportato di seguito.
 
@@ -125,13 +125,13 @@ class Account(val balance: Double)</code></pre>
             you want, you must write the annotation class in Java.
 &hellip;</samp></pre>
 
-<p>Perciò se desiderate la visibilità a tempo di esecuzione dovete implementare l'annotazione in Java, potendola poi usare tranquillamente nel codice Scala al pari di qualsiasi altra annotazione Java. Al momento, forse per ovvie ragioni, la libreria Scala non definisce annotazioni derivate da <code>ClassfileAnnotation</code>.
+<p>Perciò se desiderate la visibilità a tempo di esecuzione dovete implementare l&#8217;annotazione in Java, potendola poi usare tranquillamente nel codice Scala al pari di qualsiasi altra annotazione Java. Al momento, forse per ovvie ragioni, la libreria Scala non definisce annotazioni derivate da <code>ClassfileAnnotation</code>.
 
 <blockquote class=warning>
 <p><span class=u>&#x2762;</span>Evitate <code>ClassfileAnnotation</code> e implementate in Java le annotazioni che richiedono di essere conservate a tempo di esecuzione.
 </blockquote>
 
-<p>Per le versioni 2.7.X di Scala è necessario tenere presente un'altra importante limitazione: le annotazioni non possono essere annidate. Questo diventa un problema quando usate annotazioni <abbr>JPA</abbr> nel codice Scala, per esempio, come si vede in <a href=apa.html#JPAScala>[JPAScala]</a>. Tuttavia, la versione 2.8 di Scala rimuove questa limitazione.
+<p>Per le versioni 2.7.X di Scala è necessario tenere presente un&#8217;altra importante limitazione: le annotazioni non possono essere annidate. Questo diventa un problema quando usate annotazioni <abbr>JPA</abbr> nel codice Scala, per esempio, come si vede in <a href=apa.html#JPAScala>[JPAScala]</a>. Tuttavia, la versione 2.8 di Scala rimuove questa limitazione.
 
 <blockquote class=warning>
 <p><span class=u>&#x2762;</span>Le annotazioni si possono annidare solo in Scala 2.8.
@@ -156,15 +156,15 @@ class Account(val balance: Double)</code></pre>
 <tr>
 <td align=left valign=top><p><code>ClassfileAnnotation</code>
 <td align=left valign=top><p>Annotazione con <code>@Retention(RetentionPolicy.RUNTIME)</code>
-<td align=left valign=top><p>Il tratto genitore per le annotazioni che dovrebbero essere conservate nel file di classe per l'accesso a tempo di esecuzione&nbsp;&mdash;&nbsp;ma in realtà non funziona con il <abbr>JDK</abbr>!
+<td align=left valign=top><p>Il tratto genitore per le annotazioni che dovrebbero essere conservate nel file di classe per l&#8217;accesso a tempo di esecuzione&nbsp;&mdash;&nbsp;ma in realtà non funziona con il <abbr>JDK</abbr>!
 <tr>
 <td align=left valign=top><p><code>BeanDescription</code>
 <td align=left valign=top><p><code>BeanDescriptor</code> (classe)
-<td align=left valign=top><p>Un'annotazione per i componenti <em>JavaBeans</em> che associa a un tipo o a un membro una breve descrizione (fornita all'annotazione come argomento) che verrà inclusa tra le informazioni generate per il componente.
+<td align=left valign=top><p>Un&#8217;annotazione per i componenti <em>JavaBeans</em> che associa a un tipo o a un membro una breve descrizione (fornita all&#8217;annotazione come argomento) che verrà inclusa tra le informazioni generate per il componente.
 <tr>
 <td align=left valign=top><p><code>BeanDisplayName</code>
 <td align=left valign=top><p><code>BeanDescriptor</code> (classe)
-<td align=left valign=top><p>Un'annotazione per i componenti <em>JavaBeans</em> che associa a un tipo o a un membro un nome (fornito all'annotazione come argomento) che verrà incluso tra le informazioni generate per il componente.
+<td align=left valign=top><p>Un&#8217;annotazione per i componenti <em>JavaBeans</em> che associa a un tipo o a un membro un nome (fornito all&#8217;annotazione come argomento) che verrà incluso tra le informazioni generate per il componente.
 <tr>
 <td align=left valign=top><p><code>BeanInfo</code>
 <td align=left valign=top><p><code>BeanInfo</code> (classe)
@@ -180,11 +180,11 @@ class Account(val balance: Double)</code></pre>
 <tr>
 <td align=left valign=top><p><code>TypeConstraint</code>
 <td align=left valign=top><p><em>nessuno</em>
-<td align=left valign=top><p>Un tratto applicabile come annotazione ad altre annotazioni che definiscono vincoli su un tipo, basandosi solo sulle informazioni definite all'interno del tipo stesso anziché su informazioni esterne relative al contesto in cui il tipo viene definito o usato. Il compilatore può sfruttare questa restrizione per riscrivere il vincolo. Attualmente la libreria Scala non contiene annotazioni che usano questo tratto.
+<td align=left valign=top><p>Un tratto applicabile come annotazione ad altre annotazioni che definiscono vincoli su un tipo, basandosi solo sulle informazioni definite all&#8217;interno del tipo stesso anziché su informazioni esterne relative al contesto in cui il tipo viene definito o usato. Il compilatore può sfruttare questa restrizione per riscrivere il vincolo. Attualmente la libreria Scala non contiene annotazioni che usano questo tratto.
 <tr>
 <td align=left valign=top><p><code>unchecked</code>
 <td align=left valign=top><p><em>nessuno</em>
-<td align=left valign=top><p>Un marcatore da applicare al selettore in una istruzione di pattern matching (per esempio, la <code>x</code> in <code>x match {&hellip;}</code>) per omettere un messaggio di avvertimento del compilatore nel caso in cui le clausole <code>case</code> non siano &#8220;esaustive&#8221;. Durante l'esecuzione può ancora avvenire un errore di tipo <code>MatchError</code> se non esiste alcuna corrispondenza per un valore di <code>x</code> nelle clausole <code>case</code>. Si veda l'esempio più avanti.
+<td align=left valign=top><p>Un marcatore da applicare al selettore in una istruzione di pattern matching (per esempio, la <code>x</code> in <code>x match {&hellip;}</code>) per omettere un messaggio di avvertimento del compilatore nel caso in cui le clausole <code>case</code> non siano &#8220;esaustive&#8221;. Durante l&#8217;esecuzione può ancora avvenire un errore di tipo <code>MatchError</code> se non esiste alcuna corrispondenza per un valore di <code>x</code> nelle clausole <code>case</code>. Si veda l&#8217;esempio più avanti.
 <tr>
 <td align=left valign=top><p><code>unsealed</code>
 <td align=left valign=top><p><em>nessuno</em>
@@ -224,7 +224,7 @@ class Account(val balance: Double)</code></pre>
 <tr>
 <td align=left valign=top><p><code>deprecated</code>
 <td align=left valign=top><p><code>java.lang.Deprecated</code>
-<td align=left valign=top><p>Un marcatore applicabile a qualsiasi definizione per indicare che l'elemento definito è obsoleto. Il compilatore genererà un messaggio di avvertimento quando l'elemento viene usato.
+<td align=left valign=top><p>Un marcatore applicabile a qualsiasi definizione per indicare che l&#8217;elemento definito è obsoleto. Il compilatore genererà un messaggio di avvertimento quando l&#8217;elemento viene usato.
 <tr>
 <td align=left valign=top><p><code>inline</code>
 <td align=left valign=top><p><em>nessuno</em>
@@ -248,19 +248,19 @@ class Account(val balance: Double)</code></pre>
 <tr>
 <td align=left valign=top><p><code>SerialVersionUID</code>
 <td align=left valign=top><p>Un campo <em>statico</em> <code>serialVersionUID</code> in una classe
-<td align=left valign=top><p>Definisce un identificatore unico globale ai fini della serializzazione. Il costruttore dell'annotazione accetta un numero <code>Long</code> come argomento per rappresentare l'identificatore unico.
+<td align=left valign=top><p>Definisce un identificatore unico globale ai fini della serializzazione. Il costruttore dell&#8217;annotazione accetta un numero <code>Long</code> come argomento per rappresentare l&#8217;identificatore unico.
 <tr>
 <td align=left valign=top><p><code>switch</code>
 <td align=left valign=top><p><em>nessuno</em>
-<td align=left valign=top><p>Un'annotazione da applicare a un'espressione di pattern matching, come per esempio <code>(x: @switch) match {&#8230;}</code>. Quando è presente, il compilatore verificherà che il costrutto sia stato compilato sotto forma di una istruzione <code>switch</code> basata su tabella o su ricerca, generando un errore se il costrutto è stato compilato sotto forma di una serie di espressioni condizionali, che sono meno efficienti. Disponibile solo a partire da Scala 2.8.
+<td align=left valign=top><p>Un&#8217;annotazione da applicare a un&#8217;espressione di pattern matching, come per esempio <code>(x: @switch) match {&#8230;}</code>. Quando è presente, il compilatore verificherà che il costrutto sia stato compilato sotto forma di una istruzione <code>switch</code> basata su tabella o su ricerca, generando un errore se il costrutto è stato compilato sotto forma di una serie di espressioni condizionali, che sono meno efficienti. Disponibile solo a partire da Scala 2.8.
 <tr>
 <td align=left valign=top><p><code>specialized</code>
 <td align=left valign=top><p><em>nessuno</em>
-<td align=left valign=top><p>Un'annotazione da applicare ai parametri di tipo nei tipi e nei metodi parametrici. Induce il compilatore a generare versioni ottimizzate del tipo o del metodo per i tipi <code>AnyVal</code> corrispondenti ai tipi primitivi della piattaforma. Opzionalmente, è possibile limitare i tipi <code>AnyVal</code> per i quali verranno generate le implementazioni specializzate (si veda più avanti per una discussione in merito). Disponibile solo a partire da Scala 2.8.
+<td align=left valign=top><p>Un&#8217;annotazione da applicare ai parametri di tipo nei tipi e nei metodi parametrici. Induce il compilatore a generare versioni ottimizzate del tipo o del metodo per i tipi <code>AnyVal</code> corrispondenti ai tipi primitivi della piattaforma. Opzionalmente, è possibile limitare i tipi <code>AnyVal</code> per i quali verranno generate le implementazioni specializzate (si veda più avanti per una discussione in merito). Disponibile solo a partire da Scala 2.8.
 <tr>
 <td align=left valign=top><p><code>tailrec</code>
 <td align=left valign=top><p><em>nessuno</em>
-<td align=left valign=top><p>Un'annotazione applicabile ai metodi per indurre il compilatore a verificare che il metodo sia stato ottimizzato per la ricorsione in coda. Quando è presente, il compilatore genererà un errore se il metodo non può essere ottimizzato in un ciclo. Questo può succedere, per esempio, quando il metodo non è qualificato come <code>private</code> o <code>final</code>, quando può essere ridefinito, e quando l'invocazione ricorsiva non è realmente l'ultima istruzione del metodo. Disponibile solo a partire da Scala 2.8.
+<td align=left valign=top><p>Un&#8217;annotazione applicabile ai metodi per indurre il compilatore a verificare che il metodo sia stato ottimizzato per la ricorsione in coda. Quando è presente, il compilatore genererà un errore se il metodo non può essere ottimizzato in un ciclo. Questo può succedere, per esempio, quando il metodo non è qualificato come <code>private</code> o <code>final</code>, quando può essere ridefinito, e quando l&#8217;invocazione ricorsiva non è realmente l&#8217;ultima istruzione del metodo. Disponibile solo a partire da Scala 2.8.
 <tr>
 <td align=left valign=top><p><code>throws</code>
 <td align=left valign=top><p><code>throws</code> (parola chiave)
@@ -285,7 +285,7 @@ class Account(val balance: Double)</code></pre>
 </table>
 </div>
 
-<p>Tra le annotazioni disponibili solo a partire dalla versione 2.8 di Scala considerate <code>@tailrec</code>, usata nell'esempio seguente.
+<p>Tra le annotazioni disponibili solo a partire dalla versione 2.8 di Scala considerate <code>@tailrec</code>, usata nell&#8217;esempio seguente.
 
 <pre><code>import scala.annotation.tailrec
 
@@ -296,7 +296,7 @@ def fib(i: Int): Int = i match {
 }
 println(fib(5))</code></pre>
 
-<p>Notate che <code>fib</code> effettua il calcolo dei numeri di Fibonacci in maniera ricorsiva, ma la funzione non è ricorsiva in coda perché l'invocazione a se stessa non è l'ultima operazione eseguita nella seconda clausola <code>case</code>. Infatti, dopo essersi richiamata due volte, la funzione esegue una somma, perciò non è possibile effettuare l'ottimizzazione per la ricorsione in coda su questo metodo, e quando il compilatore vede l'annotazione <code>@tailrec</code> genera un errore informandoci del problema, come potete verificare se tentate di eseguire lo script.
+<p>Notate che <code>fib</code> effettua il calcolo dei numeri di Fibonacci in maniera ricorsiva, ma la funzione non è ricorsiva in coda perché l&#8217;invocazione a se stessa non è l&#8217;ultima operazione eseguita nella seconda clausola <code>case</code>. Infatti, dopo essersi richiamata due volte, la funzione esegue una somma, perciò non è possibile effettuare l&#8217;ottimizzazione per la ricorsione in coda su questo metodo, e quando il compilatore vede l&#8217;annotazione <code>@tailrec</code> genera un errore informandoci del problema, come potete verificare se tentate di eseguire lo script.
 
 <pre><samp>&hellip; 4: error: could not optimize @tailrec annotated method
 def fib(i: Int): Int = i match {
@@ -313,7 +313,7 @@ def fib(i: Int): Int = (i: @switch) match {
 }
 println(fib(5))</code></pre>
 
-<p>Questa volta annotiamo la variabile <code>i</code> nell'istruzione <code>match</code>, inducendo il compilatore a generare un errore nel caso non sia in grado di generare un costrutto <code>switch</code> nel bytecode a partire dai casi dell'istruzione <code>match</code>. In genere, i costrutti <code>switch</code> sono più efficienti rispetto alle espressioni condizionali. L'esecuzione di questo script produce l'uscita seguente.
+<p>Questa volta annotiamo la variabile <code>i</code> nell&#8217;istruzione <code>match</code>, inducendo il compilatore a generare un errore nel caso non sia in grado di generare un costrutto <code>switch</code> nel bytecode a partire dai casi dell&#8217;istruzione <code>match</code>. In genere, i costrutti <code>switch</code> sono più efficienti rispetto alle espressioni condizionali. L&#8217;esecuzione di questo script produce l&#8217;uscita seguente.
 
 <pre><samp>&hellip; 3: error: could not emit switch for @switch annotated match
 def fib(i: Int): Int = (i: @switch) match {
@@ -322,7 +322,7 @@ one error found</samp></pre>
 
 <p>Evidentemente è necessario generare blocchi condizionali anziché un costrutto <code>switch</code>, a causa della guardia <code>if i &lt;= 1</code> che abbiamo inserito nella prima clausola <code>case</code>.
 
-<p>Diamo ora un'occhiata a un esempio di <code>@unchecked</code> in azione, adattato dalla pagina <em>Scaladoc</em> relativa a questa annotazione. Considerate il seguente frammento di codice.
+<p>Diamo ora un&#8217;occhiata a un esempio di <code>@unchecked</code> in azione, adattato dalla pagina <em>Scaladoc</em> relativa a questa annotazione. Considerate il seguente frammento di codice.
 
 <pre><code>&hellip;
 def process(x: Option[int]) = x match {
@@ -345,27 +345,27 @@ def process(x: Option[int]) = (x: @unchecked) match {
 }
 &hellip;</code></pre>
 
-<p>Grazie all'annotazione <code>@unchecked</code> applicata a <code>x</code> nel modo illustrato, il messaggio di avvertimento non viene emesso. Tuttavia, se <code>x</code> dovesse mai valere <code>None</code>, allora verrà lanciata una eccezione di tipo <code>MatchError</code>.
+<p>Grazie all&#8217;annotazione <code>@unchecked</code> applicata a <code>x</code> nel modo illustrato, il messaggio di avvertimento non viene emesso. Tuttavia, se <code>x</code> dovesse mai valere <code>None</code>, allora verrà lanciata una eccezione di tipo <code>MatchError</code>.
 
-<p>L'annotazione <code>@specialized</code> è un'altra delle annotazioni relative all'ottimizzazione aggiunte nella versione 2.8 di Scala e rappresenta una pratica soluzione di compromesso tra l'efficienza in termini di spazio e le prestazioni. In Java e in Scala l'implementazione di un tipo o di un metodo parametrico viene generata nel punto in cui è stato dichiarato (come abbiamo detto nella sezione <a href=cap-12.html#ParameterizedTypes>Capire i tipi parametrici</a> del capitolo 12), a differenza di quanto accade in C++, dove si sfrutta un <em>template</em> per generare l'implementazione dei parametri di tipo reali nei punti in cui il template viene usato. L'approccio del C++ ha il vantaggio di permettere la generazione di implementazioni ottimizzate per i tipi primitivi, ma ha lo svantaggio di produrre codice ipertrofico a causa di tutte le istanziazioni dei template.
+<p>L&#8217;annotazione <code>@specialized</code> è un&#8217;altra delle annotazioni relative all&#8217;ottimizzazione aggiunte nella versione 2.8 di Scala e rappresenta una pratica soluzione di compromesso tra l&#8217;efficienza in termini di spazio e le prestazioni. In Java e in Scala l&#8217;implementazione di un tipo o di un metodo parametrico viene generata nel punto in cui è stato dichiarato (come abbiamo detto nella sezione <a href=cap-12.html#ParameterizedTypes>Capire i tipi parametrici</a> del capitolo 12), a differenza di quanto accade in C++, dove si sfrutta un <em>template</em> per generare l&#8217;implementazione dei parametri di tipo reali nei punti in cui il template viene usato. L&#8217;approccio del C++ ha il vantaggio di permettere la generazione di implementazioni ottimizzate per i tipi primitivi, ma ha lo svantaggio di produrre codice ipertrofico a causa di tutte le istanziazioni dei template.
 
-<p>La generazione di implementazioni &#8220;a richiesta&#8221; non è adatta ai linguaggi per la <abbr>JVM</abbr>, principalmente a causa della mancanza del passo di &#8220;collegamento&#8221; compiuto dal <em>linker</em> nei linguaggi compilati, durante il quale possono essere determinate le istanziazioni richieste di un template. Di solito, un tipo o un metodo parametrico Scala verrà tradotto in una singola implementazione usando <code>Any</code> per i parametri di tipo (in parte a causa della cancellazione di tipo a livello di bytecode); i generici Java funzionano allo stesso modo. Tuttavia, se il tipo o il metodo vengono usati con uno dei tipi <code>AnyVal</code>, per esempio <code>Int</code>, l'implementazione sarà penalizzata da inefficienti operazioni di conversione tra i tipi primitivi della piattaforma e i corrispondenti tipi oggetto avvolgenti.
+<p>La generazione di implementazioni &#8220;a richiesta&#8221; non è adatta ai linguaggi per la <abbr>JVM</abbr>, principalmente a causa della mancanza del passo di &#8220;collegamento&#8221; compiuto dal <em>linker</em> nei linguaggi compilati, durante il quale possono essere determinate le istanziazioni richieste di un template. Di solito, un tipo o un metodo parametrico Scala verrà tradotto in una singola implementazione usando <code>Any</code> per i parametri di tipo (in parte a causa della cancellazione di tipo a livello di bytecode); i generici Java funzionano allo stesso modo. Tuttavia, se il tipo o il metodo vengono usati con uno dei tipi <code>AnyVal</code>, per esempio <code>Int</code>, l&#8217;implementazione sarà penalizzata da inefficienti operazioni di conversione tra i tipi primitivi della piattaforma e i corrispondenti tipi oggetto avvolgenti.
 
-<p>Come alternativa, si potrebbe generare un'implementazione separata per ogni <code>AnyVal</code> corrispondente a un tipo primitivo, provocando però la già citata ipertrofia del codice se si considera, in particolare, quanto sarebbe raro per un'applicazione usare tutte quelle implementazioni. I creatori di Scala hanno dovuto affrontare questo dilemma, riuscendo infine a trovare un accomodamento.
+<p>Come alternativa, si potrebbe generare un&#8217;implementazione separata per ogni <code>AnyVal</code> corrispondente a un tipo primitivo, provocando però la già citata ipertrofia del codice se si considera, in particolare, quanto sarebbe raro per un&#8217;applicazione usare tutte quelle implementazioni. I creatori di Scala hanno dovuto affrontare questo dilemma, riuscendo infine a trovare un accomodamento.
 
-<p>L'annotazione <code>@specialized</code> rappresenta un pratico compromesso: l'utente può usarla per segnalare al compilatore che l'efficienza a tempo di esecuzione è più importante dell'efficienza in termini di spazio, inducendolo quindi a generare le implementazioni separate per ogni tipo primitivo corrispondente a <code>AnyVal</code>. Qui di seguito riportiamo un esempio di come usare l'annotazione.
+<p>L&#8217;annotazione <code>@specialized</code> rappresenta un pratico compromesso: l&#8217;utente può usarla per segnalare al compilatore che l&#8217;efficienza a tempo di esecuzione è più importante dell&#8217;efficienza in termini di spazio, inducendolo quindi a generare le implementazioni separate per ogni tipo primitivo corrispondente a <code>AnyVal</code>. Qui di seguito riportiamo un esempio di come usare l&#8217;annotazione.
 
 <pre><code>class SpecialCollection[@specialized +T](&hellip;) {
   &hellip;
 }</code></pre>
 
-<p>Al momento della scrittura, l'implementazione degli assemblaggi &#8220;notturni&#8221; di Scala 2.8 supporta solo la generazione di implementazioni specializzate per <code>Int</code> e <code>Double</code>, ma per il rilascio finale della versione 2.8 si prevede di supportare anche gli altri tipi derivati da <code>AnyVal</code>, oltre a offrire all'utente la possibilità di specificare i tipi per i quali richiedere la generazione delle implementazioni ottimizzate, evitandogli così di ritrovarsi con implementazioni inutilizzate per qualche sottoclasse di <code>AnyVal</code>. Si veda la documentazione <em>Scaladoc</em> della versione 2.8 definitiva per i dettagli sull'insieme di caratteristiche effettivamente supportate.
+<p>Al momento della scrittura, l&#8217;implementazione degli assemblaggi &#8220;notturni&#8221; di Scala 2.8 supporta solo la generazione di implementazioni specializzate per <code>Int</code> e <code>Double</code>, ma per il rilascio finale della versione 2.8 si prevede di supportare anche gli altri tipi derivati da <code>AnyVal</code>, oltre a offrire all&#8217;utente la possibilità di specificare i tipi per i quali richiedere la generazione delle implementazioni ottimizzate, evitandogli così di ritrovarsi con implementazioni inutilizzate per qualche sottoclasse di <code>AnyVal</code>. Si veda la documentazione <em>Scaladoc</em> della versione 2.8 definitiva per i dettagli sull&#8217;insieme di caratteristiche effettivamente supportate.
 
-<p>Un'altra annotazione prevista per la versione 2.8 è <code>@cps</code>, il cui nome è l'acronimo dell'inglese <em>continuation passing style</em> (stile a passaggio di continuazioni). Sarà una direttiva interpretata da un plug-in del compilatore che attiverà la generazione di bytecode basato sulle continuazioni per le invocazioni dei metodi al posto del bytecode predefinito basato su un modello a stack. L'annotazione non avrà effetto a meno che non venga usato il corrispondente plug-in di <kbd>scalac</kbd>. Non appena sarà disponibile, consultate la documentazione della versione definitiva di Scala 2.8 per ottenere maggiori informazioni su questa funzione.
+<p>Un&#8217;altra annotazione prevista per la versione 2.8 è <code>@cps</code>, il cui nome è l&#8217;acronimo dell&#8217;inglese <em>continuation passing style</em> (stile a passaggio di continuazioni). Sarà una direttiva interpretata da un plug-in del compilatore che attiverà la generazione di bytecode basato sulle continuazioni per le invocazioni dei metodi al posto del bytecode predefinito basato su un modello a stack. L&#8217;annotazione non avrà effetto a meno che non venga usato il corrispondente plug-in di <kbd>scalac</kbd>. Non appena sarà disponibile, consultate la documentazione della versione definitiva di Scala 2.8 per ottenere maggiori informazioni su questa funzione.
 
-<p>Per comprendere l'annotazione <code>@throws</code> è importante ricordare che Scala, a differenza di Java, non dispone di eccezioni controllate, né di una clausola <code>throws</code> per le dichiarazioni di metodo. Questo non costituisce un problema nel caso in cui un metodo Scala invochi un metodo Java che dichiara di lanciare un'eccezione controllata, in quanto Scala tratterà questa eccezione come non controllata. Tuttavia, supponete che il metodo Scala in questione non catturi l'eccezione ma la lasci passare: cosa succede se questo metodo Scala viene invocato da altro codice Java?
+<p>Per comprendere l&#8217;annotazione <code>@throws</code> è importante ricordare che Scala, a differenza di Java, non dispone di eccezioni controllate, né di una clausola <code>throws</code> per le dichiarazioni di metodo. Questo non costituisce un problema nel caso in cui un metodo Scala invochi un metodo Java che dichiara di lanciare un&#8217;eccezione controllata, in quanto Scala tratterà questa eccezione come non controllata. Tuttavia, supponete che il metodo Scala in questione non catturi l&#8217;eccezione ma la lasci passare: cosa succede se questo metodo Scala viene invocato da altro codice Java?
 
-<p>Diamo un'occhiata a un esempio in cui si verifica questa situazione, relativa all'eccezione controllata <code>java.io.IOException</code>. La classe Scala riportata di seguito stampa il contenuto di un <code>java.io.File</code>.
+<p>Diamo un&#8217;occhiata a un esempio in cui si verifica questa situazione, relativa all&#8217;eccezione controllata <code>java.io.IOException</code>. La classe Scala riportata di seguito stampa il contenuto di un <code>java.io.File</code>.
 
 <pre><code>// <a href=esempi/cap-13/file-printer.scala>esempi/cap-13/file-printer.scala</a>
 
@@ -394,9 +394,9 @@ class FilePrinter(val file: File) {
   }
 }</code></pre>
 
-<p>L'annotazione <code>@throws</code> viene applicata al metodo <code>print</code> e l'argomento del suo costruttore è un singolo oggetto <code>java.lang.Class[Any]</code>, in questo caso <code>classOf[IOException]</code> poiché i metodi della <abbr>API</abbr> Java di I/O usati da <code>print</code> e il metodo privato <code>loop</code> potrebbero lanciare questa eccezione.
+<p>L&#8217;annotazione <code>@throws</code> viene applicata al metodo <code>print</code> e l&#8217;argomento del suo costruttore è un singolo oggetto <code>java.lang.Class[Any]</code>, in questo caso <code>classOf[IOException]</code> poiché i metodi della <abbr>API</abbr> Java di I/O usati da <code>print</code> e il metodo privato <code>loop</code> potrebbero lanciare questa eccezione.
 
-<p>Notate che <code>loop</code> usa una ricorsione in coda in stile funzionale anziché un ciclo. Nessuna variabile è stata modificata durante la produzione del testo in uscita! (A dire il vero, non sappiamo cosa succeda realmente all'interno delle classi di I/O di Java&hellip;)
+<p>Notate che <code>loop</code> usa una ricorsione in coda in stile funzionale anziché un ciclo. Nessuna variabile è stata modificata durante la produzione del testo in uscita! (A dire il vero, non sappiamo cosa succeda realmente all&#8217;interno delle classi di I/O di Java&hellip;)
 
 <p>Ecco una classe Java che usa <code>FilePrinter</code> in un metodo <code>main</code>.
 
@@ -422,7 +422,7 @@ public class FilePrinterMain {
 
 <pre><samp>scala -cp build FilePrinterMain annotations/FilePrinterMain.java</samp></pre>
 
-<p>Dovreste ottenere l'uscita seguente.
+<p>Dovreste ottenere l&#8217;uscita seguente.
 
 <pre><samp> 1: import java.io.*;
  2:
@@ -440,7 +440,7 @@ public class FilePrinterMain {
 14:   }
 15: }</samp></pre>
 
-<p>Ora, tornando alla classe <code>FilePrinter</code>, supponete di nascondere l'annotazione <code>@throws</code> in un commento. Il file che contiene quella classe verrà ancora compilato, ma tentando di compilare <span class=file>FilePrinterMain.java</span> otterrete l'errore seguente.
+<p>Ora, tornando alla classe <code>FilePrinter</code>, supponete di nascondere l&#8217;annotazione <code>@throws</code> in un commento. Il file che contiene quella classe verrà ancora compilato, ma tentando di compilare <span class=file>FilePrinterMain.java</span> otterrete l&#8217;errore seguente.
 
 <pre><samp>annotations/FilePrinterMain.java:9: exception java.io.IOException is never
 thrown in body of corresponding try statement
@@ -450,21 +450,21 @@ thrown in body of corresponding try statement
 
 <p>Nonostante sia ancora possibile che <code>FilePrinter</code> lanci una <code>java.io.IOException</code>, il bytecode generato da <kbd>scalac</kbd> non contiene questa informazione, perciò <kbd>javac</kbd> conclude la propria analisi deducendone erroneamente che <code>IOException</code> non viene mai lanciata.
 
-<p>Lo scopo di <code>@throws</code>, quindi, è quello di inserire nel bytecode che verrà letto da <kbd>javac</kbd> l'informazione sulle eccezioni controllate che possono essere lanciate.
+<p>Lo scopo di <code>@throws</code>, quindi, è quello di inserire nel bytecode che verrà letto da <kbd>javac</kbd> l&#8217;informazione sulle eccezioni controllate che possono essere lanciate.
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>In un ambiente misto Java/Scala considerate l'ipotesi di aggiungere l'annotazione <code>@throws</code> a tutti i vostri metodi Scala che possono lanciare eccezioni controllate Java. Prima o poi qualche porzione di codice Java finirà probabilmente per invocare uno di quei metodi.
+<p><span class=u>&#x261E;</span>In un ambiente misto Java/Scala considerate l&#8217;ipotesi di aggiungere l&#8217;annotazione <code>@throws</code> a tutti i vostri metodi Scala che possono lanciare eccezioni controllate Java. Prima o poi qualche porzione di codice Java finirà probabilmente per invocare uno di quei metodi.
 </blockquote>
 
 <h2 id=EnumerationsVsPatternMatching>Un confronto tra enumerazioni e pattern matching</h2>
 
-<p>Le enumerazioni consentono di definire un insieme finito di valori costanti e rappresentano un'alternativa leggera alle classi <code>case</code>. Usando un'enumerazione potete fare riferimento direttamente ai valori, attraversarli in un'iterazione, accedervi tramite un indice intero, <span class=baa>&amp;</span>c.
+<p>Le enumerazioni consentono di definire un insieme finito di valori costanti e rappresentano un&#8217;alternativa leggera alle classi <code>case</code>. Usando un&#8217;enumerazione potete fare riferimento direttamente ai valori, attraversarli in un&#8217;iterazione, accedervi tramite un indice intero, <span class=baa>&amp;</span>c.
 
 <p>Proprio come per le annotazioni, la forma delle enumerazioni di Scala è basata sulle classi e su un particolare insieme di idiomi anziché su parole chiave speciali da applicare alla definizione, come invece accade per le enumerazioni in Java e .NET. Tuttavia, in Scala potete anche usare le enumerazioni definite su quelle due piattaforme.
 
-<p>Le enumerazioni di Scala si definiscono estendendo la classe astratta <code>scala.Enumeration</code> e si possono costruire in diversi modi. Vi mostreremo l'idioma che ricalca più da vicino le forme usate in Java e .NET che potreste già conoscere.
+<p>Le enumerazioni di Scala si definiscono estendendo la classe astratta <code>scala.Enumeration</code> e si possono costruire in diversi modi. Vi mostreremo l&#8217;idioma che ricalca più da vicino le forme usate in Java e .NET che potreste già conoscere.
 
-<p>A questo scopo riprenderemo gli script per i metodi <abbr>HTTP</abbr> che abbiamo realizzato nella sezione <a href=cap-7.html#SealedClassHierarchies>Gerarchie di classi sigillate</a> del capitolo 7. Se ricordate, avevamo definito l'insieme dei metodi di <abbr>HTTP</abbr> 1.1 usando una gerarchia sigillata di classi <code>case</code>.
+<p>A questo scopo riprenderemo gli script per i metodi <abbr>HTTP</abbr> che abbiamo realizzato nella sezione <a href=cap-7.html#SealedClassHierarchies>Gerarchie di classi sigillate</a> del capitolo 7. Se ricordate, avevamo definito l&#8217;insieme dei metodi di <abbr>HTTP</abbr> 1.1 usando una gerarchia sigillata di classi <code>case</code>.
 
 <pre><code>// <a href=esempi/cap-7/sealed/http-script.scala>esempi/cap-7/sealed/http-script.scala</a>
 
@@ -501,7 +501,7 @@ val methods = List(
 
 methods.foreach { method =&gt; handle(method) }</code></pre>
 
-<p>In quell'esempio ogni metodo aveva un attributo <code>body</code> per il corpo del messaggio. Qui ipotizzeremo che il corpo venga gestito in altri modi: ci interessa solo identificare il tipo di metodo <abbr>HTTP</abbr>. Quindi, ecco una classe <code>Enumeration</code> per i metodi di <abbr>HTTP</abbr> 1.1.
+<p>In quell&#8217;esempio ogni metodo aveva un attributo <code>body</code> per il corpo del messaggio. Qui ipotizzeremo che il corpo venga gestito in altri modi: ci interessa solo identificare il tipo di metodo <abbr>HTTP</abbr>. Quindi, ecco una classe <code>Enumeration</code> per i metodi di <abbr>HTTP</abbr> 1.1.
 
 <pre><code>// <a href=esempi/cap-13/http-enum-script.scala>esempi/cap-13/http-enum-script.scala</a>
 
@@ -526,7 +526,7 @@ def handle (method: HttpMethod.Method) = method match {
 HttpMethod foreach { method =&gt; handle(method) }
 println(HttpMethod)</code></pre>
 
-<p>Questo script produce l'uscita seguente. (Abbiamo suddiviso il testo tra parentesi graffe su più righe, per adeguarlo meglio alla larghezza della pagina.)
+<p>Questo script produce l&#8217;uscita seguente. (Abbiamo suddiviso il testo tra parentesi graffe su più righe, per adeguarlo meglio alla larghezza della pagina.)
 
 <pre><samp>Connect: 0
 Delete: 1
@@ -541,17 +541,17 @@ Main$$anon$1$HttpMethod(2), Main$$anon$1$HttpMethod(3),
 Main$$anon$1$HttpMethod(4), Main$$anon$1$HttpMethod(5),
 Main$$anon$1$HttpMethod(6), Main$$anon$1$HttpMethod(7)}</samp></pre>
 
-<p>Nella definizione di <code>HttpMethod</code>, <code>Value</code> viene usato in due modi. La prima occorrenza è un riferimento alla classe astratta <code>Enumeration.Value</code> che incapsula alcune operazioni utili per i &#8220;valori&#8221; nelle enumerazioni, usata per definire un nuovo <code>type</code> chiamato <code>Method</code> che funziona come un alias per <code>Value</code>. Per il lettore, <code>HttpMethod.Method</code> è un nome più significativo di <code>HttpMethod.Value</code>: potete verificarlo osservando il tipo dell'argomento passato al metodo <code>handle</code>, che mostra <code>HttpMethod</code> in azione. Notate che, nel metodo <code>handle</code>, abbiamo usato anche il campo <code>id</code> di <code>Enumeration.Value</code>.
+<p>Nella definizione di <code>HttpMethod</code>, <code>Value</code> viene usato in due modi. La prima occorrenza è un riferimento alla classe astratta <code>Enumeration.Value</code> che incapsula alcune operazioni utili per i &#8220;valori&#8221; nelle enumerazioni, usata per definire un nuovo <code>type</code> chiamato <code>Method</code> che funziona come un alias per <code>Value</code>. Per il lettore, <code>HttpMethod.Method</code> è un nome più significativo di <code>HttpMethod.Value</code>: potete verificarlo osservando il tipo dell&#8217;argomento passato al metodo <code>handle</code>, che mostra <code>HttpMethod</code> in azione. Notate che, nel metodo <code>handle</code>, abbiamo usato anche il campo <code>id</code> di <code>Enumeration.Value</code>.
 
-<p>La seconda occorrenza di <code>Value</code> in realtà è l'invocazione di un metodo. Non c'è alcun conflitto tra questi due nomi. La riga <code>val Connect, Delete, Get, Head, Options, Post, Put, Trace = Value</code> definisce l'insieme di valori per l'enumerazione, invocando per ognuno di essi il metodo <code>Value</code>, che di volta in volta crea una nuova istanza di <code>Enumeration.Value</code> e la aggiunge all'insieme di valori gestito dalla enumerazione.
+<p>La seconda occorrenza di <code>Value</code> in realtà è l&#8217;invocazione di un metodo. Non c&#8217;è alcun conflitto tra questi due nomi. La riga <code>val Connect, Delete, Get, Head, Options, Post, Put, Trace = Value</code> definisce l&#8217;insieme di valori per l&#8217;enumerazione, invocando per ognuno di essi il metodo <code>Value</code>, che di volta in volta crea una nuova istanza di <code>Enumeration.Value</code> e la aggiunge all&#8217;insieme di valori gestito dalla enumerazione.
 
-<p>Nella parte successiva del codice, importiamo le definizioni contenute in <code>HttpMethod</code> e implementiamo un metodo <code>handle</code> che effettua il pattern matching sugli oggetti <code>HttpMethod.Method</code>, stampando semplicemente un messaggio e il campo <code>id</code> di ogni valore. Notate che l'esempio non contiene una clausola <code>case</code> &#8220;predefinita&#8221; (per esempio <code>case _ &#8658; &#8230;</code>) perché in questo caso non è richiesta. Tuttavia, in realtà il compilatore non sa che tutti i possibili valori sono trattati, a differenza di quanto accade con una gerarchia sigillata di classi <code>case</code>. Infatti, se nascondete in un commento una delle istruzioni <code>case</code> del metodo <code>handle</code> non otterrete messaggi di avvertimento da parte del compilatore, bensì un'eccezione di tipo <code>MatchError</code> durante l'esecuzione.
+<p>Nella parte successiva del codice, importiamo le definizioni contenute in <code>HttpMethod</code> e implementiamo un metodo <code>handle</code> che effettua il pattern matching sugli oggetti <code>HttpMethod.Method</code>, stampando semplicemente un messaggio e il campo <code>id</code> di ogni valore. Notate che l&#8217;esempio non contiene una clausola <code>case</code> &#8220;predefinita&#8221; (per esempio <code>case _ &#8658; &#8230;</code>) perché in questo caso non è richiesta. Tuttavia, in realtà il compilatore non sa che tutti i possibili valori sono trattati, a differenza di quanto accade con una gerarchia sigillata di classi <code>case</code>. Infatti, se nascondete in un commento una delle istruzioni <code>case</code> del metodo <code>handle</code> non otterrete messaggi di avvertimento da parte del compilatore, bensì un&#8217;eccezione di tipo <code>MatchError</code> durante l&#8217;esecuzione.
 
 <blockquote class=warning>
-<p><span class=u>&#x2762;</span>Quando si effettua il pattern matching sui valori di un'enumerazione, il compilatore non è in grado di capire se la corrispondenza è &#8220;esaustiva&#8221;.
+<p><span class=u>&#x2762;</span>Quando si effettua il pattern matching sui valori di un&#8217;enumerazione, il compilatore non è in grado di capire se la corrispondenza è &#8220;esaustiva&#8221;.
 </blockquote>
 
-<p>Se vi state chiedendo perché abbiamo cablato le stringhe come <code>"Connect"</code> nelle istruzioni <code>println</code> contenute nelle clausole <code>case</code> invece di recuperare i nomi dagli oggetti <code>HttpMethod.Method</code>, e perché il risultato di <code>println(HttpMethod)</code> non include quei nomi al posto dei nomi illeggibili usati internamente dagli oggetti, siete probabilmente abituati alle enumerazioni Java o .NET. Sfortunatamente, non possiamo recuperare quei nomi dai valori della enumerazione Scala, almeno dato il modo in cui abbiamo dichiarato <code>HttpMethod</code>. Tuttavia, è possibile modificare l'implementazione in due modi diversi per ottenere le stringhe con i nomi. Nel primo approccio, il nome viene passato a <code>Value</code> durante la creazione dei campi.
+<p>Se vi state chiedendo perché abbiamo cablato le stringhe come <code>"Connect"</code> nelle istruzioni <code>println</code> contenute nelle clausole <code>case</code> invece di recuperare i nomi dagli oggetti <code>HttpMethod.Method</code>, e perché il risultato di <code>println(HttpMethod)</code> non include quei nomi al posto dei nomi illeggibili usati internamente dagli oggetti, siete probabilmente abituati alle enumerazioni Java o .NET. Sfortunatamente, non possiamo recuperare quei nomi dai valori della enumerazione Scala, almeno dato il modo in cui abbiamo dichiarato <code>HttpMethod</code>. Tuttavia, è possibile modificare l&#8217;implementazione in due modi diversi per ottenere le stringhe con i nomi. Nel primo approccio, il nome viene passato a <code>Value</code> durante la creazione dei campi.
 
 <pre><code>// <a href=esempi/cap-13/http-enum2-script.scala>esempi/cap-13/http-enum2-script.scala</a>
 
@@ -583,9 +583,9 @@ def handle (method: HttpMethod.Method) = method match {
 HttpMethod foreach { method =&gt; handle(method) }
 println(HttpMethod)</code></pre>
 
-<p>L'uso ripetuto della stessa parola nelle dichiarazioni come <code>val Connect = Value("Connect")</code> è ridondante.
+<p>L&#8217;uso ripetuto della stessa parola nelle dichiarazioni come <code>val Connect = Value("Connect")</code> è ridondante.
 
-<p>L'esecuzione di questo script produce un'uscita più gradevole.
+<p>L&#8217;esecuzione di questo script produce un&#8217;uscita più gradevole.
 
 <pre><samp>Connect: 0
 Delete: 1
@@ -625,19 +625,19 @@ println(HttpMethod)</code></pre>
 
 <p>Questo script produce la stessa identica uscita del precedente. Notate che in questo caso la ridondanza coinvolge due elenchi, quello di stringhe di nomi e quello di nomi di valori. <em>Sta a voi mantenere gli argomenti del costruttore in un ordine coerente con i valori dichiarati!</em> Questa versione usa meno caratteri ma è maggiormente soggetta a errori. Internamente, <code>Enumeration</code> accoppia le stringhe con le corrispondenti istanze di <code>Value</code> nel momento in cui queste vengono create.
 
-<p>Il risultato ottenuto dalla stampa dell'intero oggetto <code>HttpMethod</code> è migliore in entrambe le implementazioni alternative. Quando i valori hanno un nome, il loro metodo <code>toString</code> restituisce quel nome. In effetti, i nostri due ultimi esempi sono diventati piuttosto artificiosi perché ora tutte le clausole <code>case</code> contengono istruzioni identiche! Naturalmente, in un'implementazione reale, dovreste gestire i metodi <abbr>HTTP</abbr> in maniera differente tra loro.
+<p>Il risultato ottenuto dalla stampa dell&#8217;intero oggetto <code>HttpMethod</code> è migliore in entrambe le implementazioni alternative. Quando i valori hanno un nome, il loro metodo <code>toString</code> restituisce quel nome. In effetti, i nostri due ultimi esempi sono diventati piuttosto artificiosi perché ora tutte le clausole <code>case</code> contengono istruzioni identiche! Naturalmente, in un&#8217;implementazione reale, dovreste gestire i metodi <abbr>HTTP</abbr> in maniera differente tra loro.
 
 <h2 id=ThoughtsOnAnnotationsAndEnumerations>Considerazioni su annotazioni ed enumerazioni</h2>
 
-<p>Sia per le annotazioni sia per le enumerazioni, l'approccio di Scala, che prevede di usare gli ordinari meccanismi basati sulle classi anziché inventare parole chiave e sintassi personalizzata, presenta vantaggi e svantaggi. I vantaggi includono un minor numero di casi particolari nel linguaggio: il modo in cui si usano classi e tratti è più o meno lo stesso rispetto al codice &#8220;normale&#8221;. Gli svantaggi includono la necessità di comprendere e seguire convenzioni <em>ad hoc</em> che non sempre sono tanto convenienti quanto i meccanismi sintattici particolari richiesti da Java e .NET. Inoltre, le implementazioni di Scala non sono altrettanto complete.
+<p>Sia per le annotazioni sia per le enumerazioni, l&#8217;approccio di Scala, che prevede di usare gli ordinari meccanismi basati sulle classi anziché inventare parole chiave e sintassi personalizzata, presenta vantaggi e svantaggi. I vantaggi includono un minor numero di casi particolari nel linguaggio: il modo in cui si usano classi e tratti è più o meno lo stesso rispetto al codice &#8220;normale&#8221;. Gli svantaggi includono la necessità di comprendere e seguire convenzioni <em>ad hoc</em> che non sempre sono tanto convenienti quanto i meccanismi sintattici particolari richiesti da Java e .NET. Inoltre, le implementazioni di Scala non sono altrettanto complete.
 
 <p>Ma forse la comunità Scala dovrebbe proseguire per la propria strada anziché desistere e implementare meccanismi <em>ad hoc</em> ma più completi per le annotazioni e le enumerazioni. Scala è un linguaggio più flessibile rispetto alla maggior parte degli altri linguaggi, e in Scala molte funzionalità offerte dalle annotazioni e dalle enumerazioni di Java e .NET possono essere implementate in altri modi.
 
-<p>Alcuni &#8220;casi d'uso&#8221; per le funzionalità più avanzate delle annotazioni Java possono essere implementati più elegantemente con codice Scala &#8220;normale&#8221;, come vedremo nella sezione <a href=#DesignPatterns>Pattern di progettazione</a> più avanti. Per quanto riguarda le enumerazioni, le classi <code>case</code> sigillate e il pattern matching offrono in molti casi una soluzione più flessibile.
+<p>Alcuni &#8220;casi d&#8217;uso&#8221; per le funzionalità più avanzate delle annotazioni Java possono essere implementati più elegantemente con codice Scala &#8220;normale&#8221;, come vedremo nella sezione <a href=#DesignPatterns>Pattern di progettazione</a> più avanti. Per quanto riguarda le enumerazioni, le classi <code>case</code> sigillate e il pattern matching offrono in molti casi una soluzione più flessibile.
 
 <h3 id=EnumerationsVsCaseClassesAndPatternMatching>Le enumerazioni a confronto con le classi <code>case</code> e il pattern matching</h3>
 
-<p>Rivisitiamo lo script per i metodi <abbr>HTTP</abbr> che fa uso di una gerarchia sigillata di classi <code>case</code>, confrontandolo con la versione scritta in precedenza che sfrutta un'istanza di <code>Enumeration</code>. Dato che questa seconda versione non gestisce il corpo del messaggio, modifichiamo la versione con la gerarchia sigillata di classi <code>case</code> in modo da renderla simile: eliminiamo la gestione del corpo del messaggio e aggiungiamo i metodi <code>name</code> e <code>id</code>.
+<p>Rivisitiamo lo script per i metodi <abbr>HTTP</abbr> che fa uso di una gerarchia sigillata di classi <code>case</code>, confrontandolo con la versione scritta in precedenza che sfrutta un&#8217;istanza di <code>Enumeration</code>. Dato che questa seconda versione non gestisce il corpo del messaggio, modifichiamo la versione con la gerarchia sigillata di classi <code>case</code> in modo da renderla simile: eliminiamo la gestione del corpo del messaggio e aggiungiamo i metodi <code>name</code> e <code>id</code>.
 
 <pre><code>// <a href=esempi/cap-13/http-case-script.scala>esempi/cap-13/http-case-script.scala</a>
 
@@ -672,7 +672,7 @@ List(Connect, Delete, Get, Head, Options, Post, Put, Trace) foreach {
 
 <p>Notate che abbiamo usato un <code>case object</code> per ognuna delle sottoclassi concrete, in modo da avere un vero e proprio insieme di costanti. Per imitare il campo <code>id</code> della enumerazione abbiamo aggiunto esplicitamente un campo, ma qui è compito nostro passargli valori unici e validi. I metodi <code>handle</code> nelle due implementazioni sono quasi identici.
 
-<p>Lo script produce l'uscita seguente.
+<p>Lo script produce l&#8217;uscita seguente.
 
 <pre><samp>Main$$anon$1$Connect$: 0
 Main$$anon$1$Delete$: 1
@@ -687,7 +687,7 @@ Main$$anon$1$Trace$: 7</samp></pre>
 
 <p>Entrambi gli approcci supportano il concetto di un insieme finito e costante di valori, purché la gerarchia di classi <code>case</code> rimanga sigillata. Un ulteriore vantaggio della gerarchia sigillata di classi <code>case</code> è il fatto che il compilatore vi avvertirà se le istruzioni del pattern matching non esauriscono tutti i casi possibili, come potete verificare provando a rimuovere una delle clausole <code>case</code>. Abbiamo visto che, invece, il compilatore non è in grado di effettuare questo controllo per le enumerazioni.
 
-<p>Il formato delle enumerazioni è più conciso, nonostante la duplicazione dei nomi, e vi consente anche di iterare sull'insieme dei valori, operazione che abbiamo dovuto eseguire manualmente nella implementazione con le classi <code>case</code>. Queste ultime possono contenere altri campi, come per esempio <code>body</code> nell'implementazione originale, mentre le enumerazioni possono solo contenere oggetti <code>Value</code> costanti insieme ai nomi e agli identificatori associati.
+<p>Il formato delle enumerazioni è più conciso, nonostante la duplicazione dei nomi, e vi consente anche di iterare sull&#8217;insieme dei valori, operazione che abbiamo dovuto eseguire manualmente nella implementazione con le classi <code>case</code>. Queste ultime possono contenere altri campi, come per esempio <code>body</code> nell&#8217;implementazione originale, mentre le enumerazioni possono solo contenere oggetti <code>Value</code> costanti insieme ai nomi e agli identificatori associati.
 
 <blockquote class=note>
 <p><span class=u>&#x261E;</span>Per i casi in cui vi occorre solo una semplice lista di costanti con un nome o un identificatore numerico usate le enumerazioni, facendo attenzione a seguire gli idiomi propri di questo costrutto. Per insiemi invariabili di oggetti costanti più complessi usate una gerarchia sigillata di <code>case object</code>.
@@ -695,7 +695,7 @@ Main$$anon$1$Trace$: 7</samp></pre>
 
 <h2 id=UsingNullsVsOptions>Un confronto tra <code>null</code> e <code>Option</code></h2>
 
-<p>Quando abbiamo presentato <code>Option</code> nella sezione <a href=cap-2.html#OptionSomeNone><code>Option</code>, <code>Some</code> e <code>None</code>: evitare i valori nulli</a> del capitolo 2, abbiamo esaminato brevemente il modo in cui vi incoraggia a evitare i riferimenti nulli nel vostro codice, ricordando anche che Tony Hoare, l'inventore del concetto di <code>null</code> nel 1965, li ha definiti come il suo &#8220;errore da un miliardo di dollari&#8221;. <a href=apa.html#Hoare2009>[Hoare2009]</a>.
+<p>Quando abbiamo presentato <code>Option</code> nella sezione <a href=cap-2.html#OptionSomeNone><code>Option</code>, <code>Some</code> e <code>None</code>: evitare i valori nulli</a> del capitolo 2, abbiamo esaminato brevemente il modo in cui vi incoraggia a evitare i riferimenti nulli nel vostro codice, ricordando anche che Tony Hoare, l&#8217;inventore del concetto di <code>null</code> nel 1965, li ha definiti come il suo &#8220;errore da un miliardo di dollari&#8221;. <a href=apa.html#Hoare2009>[Hoare2009]</a>.
 
 <p>Scala deve supportare <code>null</code> perché <code>null</code> è supportato sia dalla <abbr>JVM</abbr> sia da .NET e le librerie esistenti su queste piattaforme lo usano. Di fatto, <code>null</code> viene usato anche da alcune librerie Scala. Ma proviamo a ipotizzare che <code>null</code> non sia disponibile, e cerchiamo di capire come cambierebbe il nostro modo di scrivere codice. La <abbr>API</abbr> di <code>Map</code> ci offre alcuni esempi interessanti, a partire da questi due metodi.
 
@@ -706,7 +706,7 @@ Main$$anon$1$Trace$: 7</samp></pre>
   &hellip;
 }</code></pre>
 
-<p>Nel caso in cui una mappa non contenga un valore per una particolare chiave, entrambi questi metodi evitano di restituire <code>null</code>: le implementazioni concrete di <code>get</code> nelle sottoclassi di <code>Map</code> restituiscono <code>None</code> se nessun valore è associato alla chiave, altrimenti restituiscono un'istanza di <code>Some</code> che racchiude il valore. La firma del metodo vi dice che un valore potrebbe non esistere e vi obbliga a gestire con eleganza quella situazione.
+<p>Nel caso in cui una mappa non contenga un valore per una particolare chiave, entrambi questi metodi evitano di restituire <code>null</code>: le implementazioni concrete di <code>get</code> nelle sottoclassi di <code>Map</code> restituiscono <code>None</code> se nessun valore è associato alla chiave, altrimenti restituiscono un&#8217;istanza di <code>Some</code> che racchiude il valore. La firma del metodo vi dice che un valore potrebbe non esistere e vi obbliga a gestire con eleganza quella situazione.
 
 <pre><code>val stateCapitals = Map("Alabama" -&gt; "Montgomery", &hellip;)
 &hellip;
@@ -716,11 +716,11 @@ stateCapitals.get("Nord Hinterlandia") match {
   case Some(x) =&gt; println(x)
 }</code></pre>
 
-<p>Similmente, <code>getOrElse</code> vi obbliga a scrivere codice in maniera difensiva: dovete specificare un valore predefinito da usare quando la chiave non è contenuta nella mappa. Notate che il valore predefinito può effettivamente essere un'istanza di un supertipo relativo al tipo dei valori nella mappa.
+<p>Similmente, <code>getOrElse</code> vi obbliga a scrivere codice in maniera difensiva: dovete specificare un valore predefinito da usare quando la chiave non è contenuta nella mappa. Notate che il valore predefinito può effettivamente essere un&#8217;istanza di un supertipo relativo al tipo dei valori nella mappa.
 
 <pre><code>println(stateCapitals.getOrElse("Nord Hinterlandia", "Questo stato non esiste!"))</code></pre>
 
-<p>Molte <abbr>API</abbr> di Java e .NET possono restituire valori nulli e consentono di usare <code>null</code> come argomento per i metodi, ma è possibile scrivere uno strato di codice Scala che racchiuda queste <abbr>API</abbr> e implementi una strategia appropriata per gestire i valori nulli. Come dimostrazione, rivisitiamo l'esempio relativo alla stampa di un file realizzato nella sezione <a href=#Annotations>Annotazioni</a>. Riorganizzeremo la classe <code>FilePrinter</code> e il <code>main</code> Java combinandoli in un unico script che risolva due problemi: avvolgeremo <code>LineNumberReader.readLine</code> in un metodo che restituisce <code>Option</code> anziché <code>null</code> e racchiuderemo l'eccezione controllata <code>IOException</code> in una nostra eccezione non controllata che chiameremo <code>ScalaIOException</code>.
+<p>Molte <abbr>API</abbr> di Java e .NET possono restituire valori nulli e consentono di usare <code>null</code> come argomento per i metodi, ma è possibile scrivere uno strato di codice Scala che racchiuda queste <abbr>API</abbr> e implementi una strategia appropriata per gestire i valori nulli. Come dimostrazione, rivisitiamo l&#8217;esempio relativo alla stampa di un file realizzato nella sezione <a href=#Annotations>Annotazioni</a>. Riorganizzeremo la classe <code>FilePrinter</code> e il <code>main</code> Java combinandoli in un unico script che risolva due problemi: avvolgeremo <code>LineNumberReader.readLine</code> in un metodo che restituisce <code>Option</code> anziché <code>null</code> e racchiuderemo l&#8217;eccezione controllata <code>IOException</code> in una nostra eccezione non controllata che chiameremo <code>ScalaIOException</code>.
 
 <pre><code>// <a href=esempi/cap-13/file-printer-refactored-script.scala>esempi/cap-13/file-printer-refactored-script.scala</a>
 
@@ -770,11 +770,11 @@ args.foreach { fileName =&gt;
   new FilePrinter(new File(fileName)).print();
 }</code></pre>
 
-<p>La classe <code>ScalaLineNumberReader</code> definisce un nuovo metodo <code>inputLine</code> che invoca <code>LineNumber.readLine</code> ed esegue il pattern matching sul risultato: se è <code>null</code>, allora viene restituito <code>None</code>, altrimenti viene restituita la riga racchiusa in un'istanza di <code>Some[String]</code>.
+<p>La classe <code>ScalaLineNumberReader</code> definisce un nuovo metodo <code>inputLine</code> che invoca <code>LineNumber.readLine</code> ed esegue il pattern matching sul risultato: se è <code>null</code>, allora viene restituito <code>None</code>, altrimenti viene restituita la riga racchiusa in un&#8217;istanza di <code>Some[String]</code>.
 
-<p><code>ScalaIOException</code> è un'eccezione non controllata, in quanto sottoclasse di <code>RuntimeException</code>, che usiamo per racchiudere qualsiasi <code>IOException</code> venga lanciata in <code>ScalaLineNumberReader.apply</code>.
+<p><code>ScalaIOException</code> è un&#8217;eccezione non controllata, in quanto sottoclasse di <code>RuntimeException</code>, che usiamo per racchiudere qualsiasi <code>IOException</code> venga lanciata in <code>ScalaLineNumberReader.apply</code>.
 
-<p>La classe <code>FilePrinter</code> viene riorganizzata in modo da usare <code>ScalaLineNumberReader.apply</code> nel proprio metodo <code>print</code> e <code>ScalaLineNumberReader.inputLine</code> nel proprio metodo <code>loop</code>. Mentre la versione originale gestiva in maniera appropriata il caso in cui <code>LineNumberReader.readLine</code> restituisse <code>null</code>, ora l'utente di <code>ScalaLineNumberReader</code> non ha altra scelta se non quella di gestire il valore di ritorno <code>None</code>.
+<p>La classe <code>FilePrinter</code> viene riorganizzata in modo da usare <code>ScalaLineNumberReader.apply</code> nel proprio metodo <code>print</code> e <code>ScalaLineNumberReader.inputLine</code> nel proprio metodo <code>loop</code>. Mentre la versione originale gestiva in maniera appropriata il caso in cui <code>LineNumberReader.readLine</code> restituisse <code>null</code>, ora l&#8217;utente di <code>ScalaLineNumberReader</code> non ha altra scelta se non quella di gestire il valore di ritorno <code>None</code>.
 
 <p>Lo script termina con un ciclo sugli argomenti in ingresso, che vengono memorizzati automaticamente nella variabile <code>args</code>. Ogni argomento è trattato come un nome di file da stampare. Lo script stamperà se stesso quando viene eseguito con il seguente comando.
 
@@ -838,13 +838,13 @@ validUsers.foreach (user =&gt; println(user))</code></pre>
 
 <p>Prima di rieseguire lo script potreste aspettarvi di vedere stampate cinque righe con alcuni campi vuoti o contenenti altri tipi di valori. E invece, il risultato stampato è identico al precedente.
 
-<p>Pur essendo privo delle espressioni condizionali esplicite, lo script è riuscito a eseguire il filtraggio che volevamo grazie al modo in cui sono implementate le espressioni <code>for</code>. Ecco un paio di semplici espressioni <code>for</code> seguite dalla loro traduzione secondo la specifica del linguaggio <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>. Per prima cosa, esamineremo un semplice <em>generatore</em> con un'istruzione <code>yield</code>.
+<p>Pur essendo privo delle espressioni condizionali esplicite, lo script è riuscito a eseguire il filtraggio che volevamo grazie al modo in cui sono implementate le espressioni <code>for</code>. Ecco un paio di semplici espressioni <code>for</code> seguite dalla loro traduzione secondo la specifica del linguaggio <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>. Per prima cosa, esamineremo un semplice <em>generatore</em> con un&#8217;istruzione <code>yield</code>.
 
 <pre><code>for (p1 &lt;- e1) yield e2          // espressione for
 
 e1 map ( case p1 =&gt; e2 )         // traduzione</code></pre>
 
-<p>Ecco la traduzione di un singolo <em>generatore</em> seguito da un'espressione arbitraria (che potrebbe essere un insieme di più espressioni racchiuse tra parentesi, <span class=baa>&amp;</span>c.).
+<p>Ecco la traduzione di un singolo <em>generatore</em> seguito da un&#8217;espressione arbitraria (che potrebbe essere un insieme di più espressioni racchiuse tra parentesi, <span class=baa>&amp;</span>c.).
 
 <pre><code>for (p1 &lt;- e1) e2                // espressione for
 
@@ -864,7 +864,7 @@ e1 foreach ( case p1 =&gt; for (p2 &lt;- e2 &hellip;) eN )       // traduzione</
 
 <p>Esistono traduzioni simili per le istruzioni <code>for</code> condizionali (che diventano invocazioni di <code>filter</code> e assegnamenti a valori <code>val</code>). Non le mostreremo in questa sede, dato che il nostro scopo principale è quello di descrivere un numero di dettagli di implementazione sufficiente a farvi comprendere come lavorano insieme <code>Option</code> e le espressioni <code>for</code>. Ulteriori informazioni si possono trovare in <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>, corredate di esempi.
 
-<p>Se applicate questo procedimento di traduzione sul nostro esempio, ottenete l'espansione seguente.
+<p>Se applicate questo procedimento di traduzione sul nostro esempio, ottenete l&#8217;espansione seguente.
 
 <pre><code>var validUsers = newUserProfiles flatMap {
   case user =&gt; user.get("userName") flatMap {
@@ -880,36 +880,36 @@ e1 foreach ( case p1 =&gt; for (p2 &lt;- e2 &hellip;) eN )       // traduzione</
 
 <p>Notate che <code>flatMap</code> viene invocato fino al caso più interno, dove invece viene usato <code>map</code> (ma in questo caso <code>flatMap</code> e <code>map</code> si comportano allo stesso modo).
 
-<p>Ora possiamo capire perché le espressioni condizionali erano superflue. Ricordatevi che <code>user</code> è un'istanza di <code>Map</code> e che <code>user.get(&hellip;)</code> restituisce un'istanza di <code>Option</code>, cioè <code>None</code> oppure <code>Some(valore)</code>. La chiave è il comportamento di <code>flatMap</code> definito su <code>Option</code>, che ci permette di trattare i valori di <code>Option</code> come altre collezioni. Ecco la definizione di <code>flatMap</code>.
+<p>Ora possiamo capire perché le espressioni condizionali erano superflue. Ricordatevi che <code>user</code> è un&#8217;istanza di <code>Map</code> e che <code>user.get(&hellip;)</code> restituisce un&#8217;istanza di <code>Option</code>, cioè <code>None</code> oppure <code>Some(valore)</code>. La chiave è il comportamento di <code>flatMap</code> definito su <code>Option</code>, che ci permette di trattare i valori di <code>Option</code> come altre collezioni. Ecco la definizione di <code>flatMap</code>.
 
 <pre><code>def flatMap[B](f: A =&gt; Option[B]): Option[B] =
   if (isEmpty) None else f(this.get)</code></pre>
 
-<p>Se <code>user.get(&hellip;)</code> restituisce <code>None</code>, allora <code>flatMap</code> restituisce semplicemente <code>None</code> e non valuta mai il letterale funzione. Quindi, le iterazioni annidate si fermano e l'esecuzione non arriva mai alla riga segnata con il commento <code>#1</code>, dove avviene la creazione vera e propria di <code>User</code>.
+<p>Se <code>user.get(&hellip;)</code> restituisce <code>None</code>, allora <code>flatMap</code> restituisce semplicemente <code>None</code> e non valuta mai il letterale funzione. Quindi, le iterazioni annidate si fermano e l&#8217;esecuzione non arriva mai alla riga segnata con il commento <code>#1</code>, dove avviene la creazione vera e propria di <code>User</code>.
 
-<p>L'invocazione più esterna di <code>flatMap</code> viene effettuata sull'istanza di <code>List</code> in ingresso, <code>newUserProfiles</code>. Su una collezione come questa, che contiene più elementi, <code>flatMap</code> si comporta in modo simile a <code>map</code>, ma &#8220;appiattisce&#8221; la nuova collezione e quindi, a differenza di <code>map</code>, non deve necessariamente restituire una mappa con lo stesso numero di elementi della collezione originale.
+<p>L&#8217;invocazione più esterna di <code>flatMap</code> viene effettuata sull&#8217;istanza di <code>List</code> in ingresso, <code>newUserProfiles</code>. Su una collezione come questa, che contiene più elementi, <code>flatMap</code> si comporta in modo simile a <code>map</code>, ma &#8220;appiattisce&#8221; la nuova collezione e quindi, a differenza di <code>map</code>, non deve necessariamente restituire una mappa con lo stesso numero di elementi della collezione originale.
 
-<p>Infine, ricordando quanto detto nella sezione <a href=cap-8.html#PartialFunctions>Funzioni parziali</a> del capitolo 8, le istruzioni <code>case user =&gt; &hellip;</code>, per esempio, inducono il compilatore a generare un'istanza di <code>PartialFunction</code> da passare a <code>flatMap</code> e <code>map</code>, quindi non è necessario racchiuderle all'interno di un blocco nello stile di <code>foo match {&hellip;}</code>.
+<p>Infine, ricordando quanto detto nella sezione <a href=cap-8.html#PartialFunctions>Funzioni parziali</a> del capitolo 8, le istruzioni <code>case user =&gt; &hellip;</code>, per esempio, inducono il compilatore a generare un&#8217;istanza di <code>PartialFunction</code> da passare a <code>flatMap</code> e <code>map</code>, quindi non è necessario racchiuderle all&#8217;interno di un blocco nello stile di <code>foo match {&hellip;}</code>.
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>L'uso di <code>Option</code> con le espressioni <code>for</code> elimina la necessità della maggior parte dei controlli effettuati per individuare le collezioni vuote o i valori nulli.
+<p><span class=u>&#x261E;</span>L&#8217;uso di <code>Option</code> con le espressioni <code>for</code> elimina la necessità della maggior parte dei controlli effettuati per individuare le collezioni vuote o i valori nulli.
 </blockquote>
 
 <h2 id=ExceptionsAndTheAlternatives>Le eccezioni e le alternative</h2>
 
-<p>Se <code>null</code> è l'errore &#8220;da un miliardo di dollari&#8221;, come abbiamo detto nella sezione <a href=cap-2.html#OptionSomeNone><code>Option</code>, <code>Some</code> e <code>None</code>: evitare i valori nulli</a> del capitolo 2, cosa dovremmo pensare delle eccezioni? Si può sostenere che i valori nulli non dovrebbero mai capitare e si possono progettare linguaggi e librerie che non li usano mai. Tuttavia, le eccezioni occupano un posto legittimo nella programmazione, perché <em>separano gli interessi</em> del flusso di esecuzione normale da quelli del flusso di esecuzione &#8220;eccezionale&#8221;. Questa divisione non è sempre netta: per esempio, se un utente sbaglia a digitare il proprio nome, questo avvenimento è normale o eccezionale?
+<p>Se <code>null</code> è l&#8217;errore &#8220;da un miliardo di dollari&#8221;, come abbiamo detto nella sezione <a href=cap-2.html#OptionSomeNone><code>Option</code>, <code>Some</code> e <code>None</code>: evitare i valori nulli</a> del capitolo 2, cosa dovremmo pensare delle eccezioni? Si può sostenere che i valori nulli non dovrebbero mai capitare e si possono progettare linguaggi e librerie che non li usano mai. Tuttavia, le eccezioni occupano un posto legittimo nella programmazione, perché <em>separano gli interessi</em> del flusso di esecuzione normale da quelli del flusso di esecuzione &#8220;eccezionale&#8221;. Questa divisione non è sempre netta: per esempio, se un utente sbaglia a digitare il proprio nome, questo avvenimento è normale o eccezionale?
 
-<p>Un altro problema dalla soluzione non sempre chiara riguarda il punto appropriato in cui le eccezioni dovrebbero essere catturate e gestite. Le eccezioni controllate di Java sono state progettate per indicare all'utente di una <abbr>API</abbr> quali eccezioni potrebbero essere lanciate da un metodo, ma questo ha incoraggiato i programmatori a gestire le eccezioni in maniera spesso subottimale. Se un metodo invoca un altro metodo che potrebbe lanciare un'eccezione controllata, il metodo chiamante è obbligato a gestire l'eccezione oppure a dichiarare di lanciare a sua volta quella eccezione. Di solito, il metodo chiamante è il posto sbagliato per gestire l'eccezione: accade comunemente che i metodi si &#8220;mangino&#8221; un'eccezione che dovrebbe essere rilanciata e gestita in un contesto più appropriato. Per farlo, sarebbe necessario aggiungere dichiarazioni <code>throws</code> ai metodi che compongono una catena di invocazioni, un'operazione che non solo è fastidiosa, ma inquina i contesti intermedi con nomi di eccezioni che spesso non hanno nulla a che vedere con il contesto locale.
+<p>Un altro problema dalla soluzione non sempre chiara riguarda il punto appropriato in cui le eccezioni dovrebbero essere catturate e gestite. Le eccezioni controllate di Java sono state progettate per indicare all&#8217;utente di una <abbr>API</abbr> quali eccezioni potrebbero essere lanciate da un metodo, ma questo ha incoraggiato i programmatori a gestire le eccezioni in maniera spesso subottimale. Se un metodo invoca un altro metodo che potrebbe lanciare un&#8217;eccezione controllata, il metodo chiamante è obbligato a gestire l&#8217;eccezione oppure a dichiarare di lanciare a sua volta quella eccezione. Di solito, il metodo chiamante è il posto sbagliato per gestire l&#8217;eccezione: accade comunemente che i metodi si &#8220;mangino&#8221; un&#8217;eccezione che dovrebbe essere rilanciata e gestita in un contesto più appropriato. Per farlo, sarebbe necessario aggiungere dichiarazioni <code>throws</code> ai metodi che compongono una catena di invocazioni, un&#8217;operazione che non solo è fastidiosa, ma inquina i contesti intermedi con nomi di eccezioni che spesso non hanno nulla a che vedere con il contesto locale.
 
-<p>Come abbiamo visto, Scala non dispone di eccezioni controllate: qualsiasi eccezione può propagarsi fino al punto in cui è più opportuno gestirla. Tuttavia, è necessaria una certa disciplina nella progettazione per implementare questa gestione nei punti appropriati per tutte le eccezioni dalle quali è possibile riprendere l'esecuzione!
+<p>Come abbiamo visto, Scala non dispone di eccezioni controllate: qualsiasi eccezione può propagarsi fino al punto in cui è più opportuno gestirla. Tuttavia, è necessaria una certa disciplina nella progettazione per implementare questa gestione nei punti appropriati per tutte le eccezioni dalle quali è possibile riprendere l&#8217;esecuzione!
 
-<p>Ogni tanto gli sviluppatori appartenenti alla comunità di un particolare linguaggio partecipano ad accesi dibattiti sui meriti delle eccezioni impiegate come meccanismo di controllo del flusso di esecuzione per la normale elaborazione. A volte questo uso delle eccezioni viene visto come un meccanismo simile all'istruzione <code>longjump</code> o a un <code>goto</code> non locale, utile per uscire da un ambito di visibilità profondamente annidato. Una delle ragioni per cui questo dibattito si riapre è che questo uso delle eccezioni si rivela talvolta più efficiente rispetto a un'implementazione più &#8220;convenzionale&#8221;.
+<p>Ogni tanto gli sviluppatori appartenenti alla comunità di un particolare linguaggio partecipano ad accesi dibattiti sui meriti delle eccezioni impiegate come meccanismo di controllo del flusso di esecuzione per la normale elaborazione. A volte questo uso delle eccezioni viene visto come un meccanismo simile all&#8217;istruzione <code>longjump</code> o a un <code>goto</code> non locale, utile per uscire da un ambito di visibilità profondamente annidato. Una delle ragioni per cui questo dibattito si riapre è che questo uso delle eccezioni si rivela talvolta più efficiente rispetto a un&#8217;implementazione più &#8220;convenzionale&#8221;.
 
 <p>Per esempio, sarebbe possibile implementare <code>Iterable.foreach</code> in modo da attraversare una collezione alla cieca e fermarsi quando viene catturata una qualsiasi eccezione che indica il superamento della fine della collezione.
 
-<p>Quando si tratta di progettare applicazioni comunicare l'<em>intento</em> è molto importante, ma l'uso delle eccezioni come meccanismo di <code>goto</code> rappresenta una violazione del <em>principio di minima sorpresa</em>: accadrà raramente che il guadagno sulle prestazioni possa giustificare la perdita di chiarezza, quindi vi incoraggiamo a usare le eccezioni solo per i casi davvero &#8220;eccezionali&#8221;. Notate che Ruby in effetti fornisce un meccanismo simile a un <code>goto</code> non locale: le parole chiave <code>throw</code> e <code>catch</code> sono riservate a questo scopo, mentre per sollevare un'eccezione e gestirla vengono usate <code>raise</code> e <code>rescue</code>.
+<p>Quando si tratta di progettare applicazioni comunicare l&#8217;<em>intento</em> è molto importante, ma l&#8217;uso delle eccezioni come meccanismo di <code>goto</code> rappresenta una violazione del <em>principio di minima sorpresa</em>: accadrà raramente che il guadagno sulle prestazioni possa giustificare la perdita di chiarezza, quindi vi incoraggiamo a usare le eccezioni solo per i casi davvero &#8220;eccezionali&#8221;. Notate che Ruby in effetti fornisce un meccanismo simile a un <code>goto</code> non locale: le parole chiave <code>throw</code> e <code>catch</code> sono riservate a questo scopo, mentre per sollevare un&#8217;eccezione e gestirla vengono usate <code>raise</code> e <code>rescue</code>.
 
-<p>Qualunque sia la vostra opinione sull'uso appropriato delle eccezioni, agevolerete gli utenti delle vostre <abbr>API</abbr> se durante la progettazione minimizzate la possibilità di sollevare un'eccezione. In una strategia per la gestione delle eccezioni, questo è il rovescio della medaglia: come prima regola, evitate di lanciarle. In questo caso, <code>Option</code> può esservi d'aiuto.
+<p>Qualunque sia la vostra opinione sull&#8217;uso appropriato delle eccezioni, agevolerete gli utenti delle vostre <abbr>API</abbr> se durante la progettazione minimizzate la possibilità di sollevare un&#8217;eccezione. In una strategia per la gestione delle eccezioni, questo è il rovescio della medaglia: come prima regola, evitate di lanciarle. In questo caso, <code>Option</code> può esservi d&#8217;aiuto.
 
 <p>Considerate i due metodi di <code>Seq</code> chiamati <code>first</code> e <code>firstOption</code>.
 
@@ -920,17 +920,17 @@ e1 foreach ( case p1 =&gt; for (p2 &lt;- e2 &hellip;) eN )       // traduzione</
   &hellip;
 }</code></pre>
 
-<p>Il metodo <code>first</code> lancia una <code>Predef.UnsupportedOperationException</code> se la sequenza è vuota. Restituire <code>null</code> in questo caso non è possibile, perché la sequenza potrebbe contenere elementi uguali a <code>null</code>! Al contrario, il metodo <code>firstOption</code> restituisce un'istanza di <code>Option</code>, quindi nel caso in cui la sequenza sia vuota restituisce il valore <code>None</code>, che non ha problemi di ambiguità.
+<p>Il metodo <code>first</code> lancia una <code>Predef.UnsupportedOperationException</code> se la sequenza è vuota. Restituire <code>null</code> in questo caso non è possibile, perché la sequenza potrebbe contenere elementi uguali a <code>null</code>! Al contrario, il metodo <code>firstOption</code> restituisce un&#8217;istanza di <code>Option</code>, quindi nel caso in cui la sequenza sia vuota restituisce il valore <code>None</code>, che non ha problemi di ambiguità.
 
-<p>Si può sostenere che la <abbr>API</abbr> di <code>Seq</code> sarebbe più robusta se solo avesse un metodo <code>first</code> che restituisce un'istanza di <code>Option</code>. Durante la progettazione è utile cercare di evitare all'utente qualsiasi tipo di errore, ma quando gli &#8220;errori&#8221; non possono essere prevenuti è consigliabile usare <code>Option</code> o un costrutto simile per indicare all'utente la possibilità di ritrovarsi in una condizione di errore. Ragionando in termini di trasformazioni di stato valide, il metodo <code>first</code>, pur conveniente, non rappresenta una transizione valida per una sequenza che si trova nello stato in cui è vuota. La decisione di eliminare il metodo <code>first</code> per questa ragione sarebbe probabilmente troppo drastica, ma restituendo <code>Option</code> dal metodo <code>firstOption</code> la <abbr>API</abbr> comunica all'utente che esistono circostanze nelle quali il metodo non può soddisfare la richiesta ed è compito dell'utente riprendere il flusso di esecuzione normale. In questo senso, <code>firstOption</code> considera l'assenza di elementi in una sequenza come una situazione non eccezionale.
+<p>Si può sostenere che la <abbr>API</abbr> di <code>Seq</code> sarebbe più robusta se solo avesse un metodo <code>first</code> che restituisce un&#8217;istanza di <code>Option</code>. Durante la progettazione è utile cercare di evitare all&#8217;utente qualsiasi tipo di errore, ma quando gli &#8220;errori&#8221; non possono essere prevenuti è consigliabile usare <code>Option</code> o un costrutto simile per indicare all&#8217;utente la possibilità di ritrovarsi in una condizione di errore. Ragionando in termini di trasformazioni di stato valide, il metodo <code>first</code>, pur conveniente, non rappresenta una transizione valida per una sequenza che si trova nello stato in cui è vuota. La decisione di eliminare il metodo <code>first</code> per questa ragione sarebbe probabilmente troppo drastica, ma restituendo <code>Option</code> dal metodo <code>firstOption</code> la <abbr>API</abbr> comunica all&#8217;utente che esistono circostanze nelle quali il metodo non può soddisfare la richiesta ed è compito dell&#8217;utente riprendere il flusso di esecuzione normale. In questo senso, <code>firstOption</code> considera l&#8217;assenza di elementi in una sequenza come una situazione non eccezionale.
 
-<p>Se ricordate, abbiamo visto un compromesso di questo tipo in un altro esempio della sezione <a href=cap-2.html#OptionSomeNone><code>Option</code>, <code>Some</code> e <code>None</code>: evitare i valori nulli</a> nel capitolo 2, esaminando due metodi di <code>Option</code> che servono a recuperare il valore racchiuso in un'istanza di <code>Some</code>. Il metodo <code>get</code> lancia un'eccezione se non è presente alcun valore, cioè se l'istanza di <code>Option</code> è un'istanza di <code>None</code>; l'altro metodo, <code>getOrElse</code>, accetta come secondo argomento un valore predefinito da restituire se l'istanza di <code>Option</code> è un'istanza di <code>None</code>, e in questo caso non viene lanciata nessuna eccezione.
+<p>Se ricordate, abbiamo visto un compromesso di questo tipo in un altro esempio della sezione <a href=cap-2.html#OptionSomeNone><code>Option</code>, <code>Some</code> e <code>None</code>: evitare i valori nulli</a> nel capitolo 2, esaminando due metodi di <code>Option</code> che servono a recuperare il valore racchiuso in un&#8217;istanza di <code>Some</code>. Il metodo <code>get</code> lancia un&#8217;eccezione se non è presente alcun valore, cioè se l&#8217;istanza di <code>Option</code> è un&#8217;istanza di <code>None</code>; l&#8217;altro metodo, <code>getOrElse</code>, accetta come secondo argomento un valore predefinito da restituire se l&#8217;istanza di <code>Option</code> è un&#8217;istanza di <code>None</code>, e in questo caso non viene lanciata nessuna eccezione.
 
-<p>Naturalmente, è impossibile evitare tutte le eccezioni. In parte, l'intento originale nella separazione tra eccezioni controllate e non controllate era quello di distinguere i problemi potenzialmente risolvibili da quelli catastrofici come gli errori dovuti alla mancanza di memoria. Tuttavia, i metodi alternativi di <code>Seq</code> e <code>Option</code> mostrano come &#8220;incoraggiare&#8221; l'utente di una <abbr>API</abbr> a considerare le conseguenze di un possibile errore, per esempio nel tentativo di accedere al primo elemento di una sequenza vuota, permettendogli di specificare le azioni contingenti da intraprendere nel caso in cui l'errore si verifichi. Minimizzare la possibilità di generare eccezioni renderà più robuste le vostre librerie Scala e le applicazioni che ne fanno uso.
+<p>Naturalmente, è impossibile evitare tutte le eccezioni. In parte, l&#8217;intento originale nella separazione tra eccezioni controllate e non controllate era quello di distinguere i problemi potenzialmente risolvibili da quelli catastrofici come gli errori dovuti alla mancanza di memoria. Tuttavia, i metodi alternativi di <code>Seq</code> e <code>Option</code> mostrano come &#8220;incoraggiare&#8221; l&#8217;utente di una <abbr>API</abbr> a considerare le conseguenze di un possibile errore, per esempio nel tentativo di accedere al primo elemento di una sequenza vuota, permettendogli di specificare le azioni contingenti da intraprendere nel caso in cui l&#8217;errore si verifichi. Minimizzare la possibilità di generare eccezioni renderà più robuste le vostre librerie Scala e le applicazioni che ne fanno uso.
 
 <h2 id=ScalableAbstractions>Astrazioni scalabili</h2>
 
-<p>Per qualche tempo uno degli scopi della nostra industria è stato quello di creare <em>componenti</em> riusabili. Sfortunatamente, non c'è mai stato molto accordo sul significato del termine <em>componente</em> né su quello del termine correlato <em>modulo</em> (che qualcuno considera sinonimo di componente). Di solito le definizioni proposte partono da assunzioni diverse relativamente alla piattaforma, alla granularità, agli scenari di configurazione e di produzione, alle questioni che riguardano l'assegnamento dei numeri di versione, <span class=baa>&amp;</span>c. <a href=apa.html#Szyperski1998>[Szyperski1998]</a>.
+<p>Per qualche tempo uno degli scopi della nostra industria è stato quello di creare <em>componenti</em> riusabili. Sfortunatamente, non c&#8217;è mai stato molto accordo sul significato del termine <em>componente</em> né su quello del termine correlato <em>modulo</em> (che qualcuno considera sinonimo di componente). Di solito le definizioni proposte partono da assunzioni diverse relativamente alla piattaforma, alla granularità, agli scenari di configurazione e di produzione, alle questioni che riguardano l&#8217;assegnamento dei numeri di versione, <span class=baa>&amp;</span>c. <a href=apa.html#Szyperski1998>[Szyperski1998]</a>.
 
 <p>In questa sede eviteremo tali discussioni e useremo il termine <em>componente</em> in maniera informale per fare riferimento a un gruppo di tipi e di package che espone astrazioni coerenti (preferibilmente una sola) per i servizi offerti, ha un insieme minimo di dipendenze nei confronti di altri componenti ed è internamente coesivo.
 
@@ -944,7 +944,7 @@ e1 foreach ( case p1 =&gt; for (p2 &lt;- e2 &hellip;) eN )       // traduzione</
 
 <p>Nella sezione <a href=cap-5.html#VisibilityRules>Regole di visibilità</a> del capitolo 5 abbiamo visto che Scala offre regole di visibilità a grana più fine rispetto alla maggior parte degli altri linguaggi, tramite le quali potete controllare la visibilità dei tipi e dei metodi al di fuori dei confini del tipo e del package.
 
-<p>Considerate l'esempio di un <em>componente</em> definito nel package <code>encodestring</code>, come mostrato di seguito.
+<p>Considerate l&#8217;esempio di un <em>componente</em> definito nel package <code>encodestring</code>, come mostrato di seguito.
 
 <pre><code>// <a href=esempi/cap-13/encoded-string.scala>esempi/cap-13/encoded-string.scala</a>
 
@@ -987,13 +987,13 @@ package encodedstring {
   }
 }</code></pre>
 
-<p>Il componente in questo esempio incapsula la gestione delle stringhe che codificano valori separati da virgole (<abbr>CSV</abbr>, dall'inglese <em>comma-separated values</em>) o da tabulazioni (<abbr>TSV</abbr>). Il package <code>encodestring</code> espone un tratto <code>EncodedString</code> visibile ai clienti, mentre le classi concrete che implementano i <abbr>CSV</abbr> e i <abbr>TSV</abbr> sono dichiarate come <code>private[encodestring]</code> nel package <code>encodestring.impl</code>. Il tratto definisce due campi <code>val</code> astratti: <code>string</code>, per memorizzare la stringa codificata, protetta dall'accesso da parte dei clienti, e <code>separator</code>, per mememorizzare il separatore (per esempio una virgola). Se ricordate quanto è stato detto nel <a href=cap-6.html>capitolo 6</a>, i campi astratti, al pari dei metodi e dei tipi astratti, devono essere inizializzati nelle istanze concrete. In questo caso, il valore di <code>string</code> verrà definito tramite un costruttore concreto e il valore di <code>separator</code> viene impostato esplicitamente nelle classi concrete <code>CSV</code> e <code>TSV</code>.
+<p>Il componente in questo esempio incapsula la gestione delle stringhe che codificano valori separati da virgole (<abbr>CSV</abbr>, dall&#8217;inglese <em>comma-separated values</em>) o da tabulazioni (<abbr>TSV</abbr>). Il package <code>encodestring</code> espone un tratto <code>EncodedString</code> visibile ai clienti, mentre le classi concrete che implementano i <abbr>CSV</abbr> e i <abbr>TSV</abbr> sono dichiarate come <code>private[encodestring]</code> nel package <code>encodestring.impl</code>. Il tratto definisce due campi <code>val</code> astratti: <code>string</code>, per memorizzare la stringa codificata, protetta dall&#8217;accesso da parte dei clienti, e <code>separator</code>, per mememorizzare il separatore (per esempio una virgola). Se ricordate quanto è stato detto nel <a href=cap-6.html>capitolo 6</a>, i campi astratti, al pari dei metodi e dei tipi astratti, devono essere inizializzati nelle istanze concrete. In questo caso, il valore di <code>string</code> verrà definito tramite un costruttore concreto e il valore di <code>separator</code> viene impostato esplicitamente nelle classi concrete <code>CSV</code> e <code>TSV</code>.
 
 <p>Il metodo <code>toString</code> di <code>EncodedString</code> stampa la stringa nella sua forma originale. Nascondendo il valore di <code>string</code> e le classi concrete, siamo completamente liberi di scegliere come memorizzare effettivamente la stringa. Per esempio, potremmo voler suddividere le stringhe di grandi dimensioni sulla base del delimitatore e memorizzare le sottostringhe in una struttura dati. Questo ci permetterebbe di risparmiare spazio se le stringhe fossero abbastanza lunghe e potessimo condividere le sottostringhe contenute in più di una stringa. Inoltre, potremmo scoprire che questa strategia di memorizzazione è utile per varie operazioni di ricerca, ordinamento, e altri tipi di manipolazione. Tutte queste questioni di implementazione sono trasparenti per il cliente.
 
-<p>Il package espone anche un oggetto che contiene un'enumerazione dei separatori noti, un metodo di costruzione <code>apply</code> per creare nuove stringhe codificate e un metodo di decomposizione <code>unapply</code> per estrarre dagli oggetti <code>EncodedString</code> la stringa che racchiudono e il delimitatore. In questo caso, l'implementazione del metodo <code>unapply</code> sembra banale, ma se memorizzassimo le stringhe in modo diverso questo metodo potrebbe ricostruire la stringa originale in maniera trasparente.
+<p>Il package espone anche un oggetto che contiene un&#8217;enumerazione dei separatori noti, un metodo di costruzione <code>apply</code> per creare nuove stringhe codificate e un metodo di decomposizione <code>unapply</code> per estrarre dagli oggetti <code>EncodedString</code> la stringa che racchiudono e il delimitatore. In questo caso, l&#8217;implementazione del metodo <code>unapply</code> sembra banale, ma se memorizzassimo le stringhe in modo diverso questo metodo potrebbe ricostruire la stringa originale in maniera trasparente.
 
-<p>Così, i clienti di questo <em>componente</em> conoscono solo l'astrazione <code>EncodedString</code> e l'enumerazione che rappresenta i tipi supportati di stringhe codificate, mentre tutti i tipi e i dettagli dell'implementazione reale sono privati per il package <code>encodedstring</code>.<sup id=fnn-2><a href=#fn-2>2</a></sup> Perciò, il confine tra le astrazioni esposte e i dettagli dell'implementazione interna è chiaro.
+<p>Così, i clienti di questo <em>componente</em> conoscono solo l&#8217;astrazione <code>EncodedString</code> e l&#8217;enumerazione che rappresenta i tipi supportati di stringhe codificate, mentre tutti i tipi e i dettagli dell&#8217;implementazione reale sono privati per il package <code>encodedstring</code>.<sup id=fnn-2><a href=#fn-2>2</a></sup> Perciò, il confine tra le astrazioni esposte e i dettagli dell&#8217;implementazione interna è chiaro.
 
 <p>Lo script riportato di seguito mostra il componente in azione.
 
@@ -1021,7 +1021,7 @@ List(csv, "ProgrammareInScala", tsv, 3.14159) foreach {
   case x =&gt; println("Valore sconosciuto: " + x)
 }</code></pre>
 
-<p>L'esecuzione di questo script produce l'uscita seguente.
+<p>L&#8217;esecuzione di questo script produce l&#8217;uscita seguente.
 
 <pre><samp>EncodedString: Scala,è,fantastico!
 parola: Scala
@@ -1038,7 +1038,7 @@ String: ProgrammareInScala
 EncodedString: "Scala   è      fantastico!", delimitatore: "   "
 Valore sconosciuto: 3.14159</samp></pre>
 
-<p>Tuttavia, se per esempio proviamo a usare la classe <code>CSV</code> direttamente, otteniamo l'errore seguente.
+<p>Tuttavia, se per esempio proviamo a usare la classe <code>CSV</code> direttamente, otteniamo l&#8217;errore seguente.
 
 <pre><samp>scala&gt; import encodedstring._
 import encodedstring._
@@ -1050,11 +1050,11 @@ scala&gt; val csv = impl.CSV("valori,separati,da,virgole")
 
 scala&gt;</samp></pre>
 
-<p>In questo semplice esempio non era essenziale rendere i tipi concreti privati per il componente, ma così facendo abbiamo reso davvero minimale l'interfaccia esposta ai clienti, e ci siamo garantiti la libertà di modificare l'implementazione nel modo più opportuno senza quasi correre il rischio di costringere il cliente ad alterare il proprio codice. Una causa comune della paralisi nella manutenzione di applicazioni mature è la presenza di un numero eccessivo di dipendenze tra i tipi concreti, che diventano difficili da modificare poiché le dipendenze obbligano il cliente a modificare il proprio codice. Quindi, per componenti più grandi e sofisticati, questa chiara separazione tra astrazione e implementazione può conservare a lungo la manutenibilità e la riusabilità del codice.
+<p>In questo semplice esempio non era essenziale rendere i tipi concreti privati per il componente, ma così facendo abbiamo reso davvero minimale l&#8217;interfaccia esposta ai clienti, e ci siamo garantiti la libertà di modificare l&#8217;implementazione nel modo più opportuno senza quasi correre il rischio di costringere il cliente ad alterare il proprio codice. Una causa comune della paralisi nella manutenzione di applicazioni mature è la presenza di un numero eccessivo di dipendenze tra i tipi concreti, che diventano difficili da modificare poiché le dipendenze obbligano il cliente a modificare il proprio codice. Quindi, per componenti più grandi e sofisticati, questa chiara separazione tra astrazione e implementazione può conservare a lungo la manutenibilità e la riusabilità del codice.
 
 <h3 id=MixinComposition>La composizione dei mixin</h3>
 
-<p>Nel <a href=cap-4.html>capitolo 4</a> abbiamo visto il modo in cui i tratti favoriscono la composizione dei mixin. Una classe può concentrarsi sul proprio <em>dominio principale</em> e le altre responsabilità possono essere implementate separatamente nei tratti. Poi, al momento di costruire le istanze, è possibile combinare classi e tratti per comporre l'intero insieme di comportamenti richiesti.
+<p>Nel <a href=cap-4.html>capitolo 4</a> abbiamo visto il modo in cui i tratti favoriscono la composizione dei mixin. Una classe può concentrarsi sul proprio <em>dominio principale</em> e le altre responsabilità possono essere implementate separatamente nei tratti. Poi, al momento di costruire le istanze, è possibile combinare classi e tratti per comporre l&#8217;intero insieme di comportamenti richiesti.
 
 <p>Per esempio, nella sezione <a href=cap-6.html#OverridingAbstractTypes>Ridefinire i tipi astratti</a> del capitolo 6 abbiamo esaminato la nostra seconda versione del pattern Observer.
 
@@ -1088,13 +1088,13 @@ trait SubjectForFunctionalObservers extends AbstractSubject {
 
 <h3 id=SelfTypeAnnotationsAndAbstractTypeMembers>Annotazioni self-type e membri tipo astratti</h3>
 
-<p>L'implementazione di <code>AbstractSubject</code> nella nostra seconda versione del pattern Observer ci lascia insoddisfatti solo sotto pochi aspetti. Il primo problema si trova in <code>SubjectForReceiveUpdateObservers</code>, dove il tipo <code>Observer</code> è definito come il tipo strutturale <code>{ def receiveUpdate(subject: Any) }</code>: qui sarebbe meglio restringere il tipo di <code>subject</code> a un valore più specifico rispetto ad <code>Any</code>.
+<p>L&#8217;implementazione di <code>AbstractSubject</code> nella nostra seconda versione del pattern Observer ci lascia insoddisfatti solo sotto pochi aspetti. Il primo problema si trova in <code>SubjectForReceiveUpdateObservers</code>, dove il tipo <code>Observer</code> è definito come il tipo strutturale <code>{ def receiveUpdate(subject: Any) }</code>: qui sarebbe meglio restringere il tipo di <code>subject</code> a un valore più specifico rispetto ad <code>Any</code>.
 
-<p>Il secondo problema, che in realtà è uguale al primo ma si presenta in una forma differente, si trova in <code>SubjectForFunctionalObservers</code>, dove il tipo <code>Observer</code> è definito come il tipo <code>(AbstractSubject) =&gt; Unit</code>: qui ci piacerebbe che il tipo dell'argomento della funzione fosse più specifico di <code>AbstractSubject</code>. In precedenza questo difetto non risultava così evidente, forse perché nel nostro semplice esempio l'osservatore non ha mai avuto bisogno di accedere ai metodi o allo stato di <code>Button</code>.
+<p>Il secondo problema, che in realtà è uguale al primo ma si presenta in una forma differente, si trova in <code>SubjectForFunctionalObservers</code>, dove il tipo <code>Observer</code> è definito come il tipo <code>(AbstractSubject) =&gt; Unit</code>: qui ci piacerebbe che il tipo dell&#8217;argomento della funzione fosse più specifico di <code>AbstractSubject</code>. In precedenza questo difetto non risultava così evidente, forse perché nel nostro semplice esempio l&#8217;osservatore non ha mai avuto bisogno di accedere ai metodi o allo stato di <code>Button</code>.
 
-<p>In effetti, ci aspettiamo che i tipi effettivi del soggetto e dell'osservatore vengano specializzati in maniera <em>covariante</em>. Per esempio, quando stiamo osservando un pulsante, ci aspettiamo che i nostri osservatori siano specializzati per <code>Button</code>, in modo da poter accedere allo stato e ai metodi delle istanze di <code>Button</code>. Questa specializzazione <em>covariante</em> viene talvolta chiamata <em>polimorfismo familiare</em> <a href=apa.html#Odersky2005>[Odersky2005]</a>. Ora correggeremo il nostro codice per supportare questa covarianza.
+<p>In effetti, ci aspettiamo che i tipi effettivi del soggetto e dell&#8217;osservatore vengano specializzati in maniera <em>covariante</em>. Per esempio, quando stiamo osservando un pulsante, ci aspettiamo che i nostri osservatori siano specializzati per <code>Button</code>, in modo da poter accedere allo stato e ai metodi delle istanze di <code>Button</code>. Questa specializzazione <em>covariante</em> viene talvolta chiamata <em>polimorfismo familiare</em> <a href=apa.html#Odersky2005>[Odersky2005]</a>. Ora correggeremo il nostro codice per supportare questa covarianza.
 
-<p>Per semplificare l'esempio, concentriamoci solo sulla forma <code>receiveUpdate</code> dell'osservatore, che in precedenza avevamo implementato con <code>SubjectForReceiveUpdateObservers</code>. Ecco una rielaborazione del nostro pattern che segue in maniera approssimativa un esempio contenuto in <a href=apa.html#Odersky2005>[Odersky2005]</a>. Notate che, dal momento in cui l'articolo è stato scritto, la sintassi di Scala è stata modificata.
+<p>Per semplificare l&#8217;esempio, concentriamoci solo sulla forma <code>receiveUpdate</code> dell&#8217;osservatore, che in precedenza avevamo implementato con <code>SubjectForReceiveUpdateObservers</code>. Ecco una rielaborazione del nostro pattern che segue in maniera approssimativa un esempio contenuto in <a href=apa.html#Odersky2005>[Odersky2005]</a>. Notate che, dal momento in cui l&#8217;articolo è stato scritto, la sintassi di Scala è stata modificata.
 
 <pre><code>// <a href=esempi/cap-13/observer3-wont-compile.scala>esempi/cap-13/observer3-wont-compile.scala</a>
 // Non verrà compilato!
@@ -1116,11 +1116,11 @@ abstract class SubjectObserver {
   }
 }</code></pre>
 
-<p>Spiegheremo l'errore fra un minuto, ma per ora notate la dichiarazione dei tipi <code>S</code> e <code>O</code>. Come abbiamo visto nella sezione <a href=cap-12.html#ParameterizedTypes>Capire i tipi parametrici</a> del capitolo 12, l'espressione <code>type S &lt;: Subject</code> definisce un tipo astratto <code>S</code> i cui tipi concreti permessi saranno solo i sottotipi di <code>Subject</code>. La dichiarazione di <code>O</code> è simile. Per essere chiari, <code>S</code> e <code>O</code> sono &#8220;segnaposti&#8221; a questo punto, mentre <code>Subject</code> e <code>Observer</code> sono tratti astratti definiti in <code>SubjectObserver</code>.
+<p>Spiegheremo l&#8217;errore fra un minuto, ma per ora notate la dichiarazione dei tipi <code>S</code> e <code>O</code>. Come abbiamo visto nella sezione <a href=cap-12.html#ParameterizedTypes>Capire i tipi parametrici</a> del capitolo 12, l&#8217;espressione <code>type S &lt;: Subject</code> definisce un tipo astratto <code>S</code> i cui tipi concreti permessi saranno solo i sottotipi di <code>Subject</code>. La dichiarazione di <code>O</code> è simile. Per essere chiari, <code>S</code> e <code>O</code> sono &#8220;segnaposti&#8221; a questo punto, mentre <code>Subject</code> e <code>Observer</code> sono tratti astratti definiti in <code>SubjectObserver</code>.
 
-<p>Tra l'altro, la scelta di dichiarare <code>SubjectObserver</code> come una classe astratta o come un tratto astratto è piuttosto arbitraria. Fra breve ne deriveremo oggetti concreti. <code>SubjectObserver</code> ci occorre principalmente per avere un tipo che &#8220;conservi&#8221; i nostri membri tipo astratti <code>S</code> e <code>O</code>.
+<p>Tra l&#8217;altro, la scelta di dichiarare <code>SubjectObserver</code> come una classe astratta o come un tratto astratto è piuttosto arbitraria. Fra breve ne deriveremo oggetti concreti. <code>SubjectObserver</code> ci occorre principalmente per avere un tipo che &#8220;conservi&#8221; i nostri membri tipo astratti <code>S</code> e <code>O</code>.
 
-<p>In ogni caso, se provate a compilare questo codice nel modo in cui è scritto, ottenete l'errore seguente.
+<p>In ogni caso, se provate a compilare questo codice nel modo in cui è scritto, ottenete l&#8217;errore seguente.
 
 <pre><samp>&hellip; 10: error: type mismatch;
  found   : SubjectObserver.this.Subject
@@ -1129,7 +1129,7 @@ abstract class SubjectObserver {
                                                                ^
 one error found</samp></pre>
 
-<p>Nel tratto <code>Observer</code> annidato, <code>receiveUpdate</code> si aspetta un'istanza di tipo <code>S</code>, ma qui gli viene passato <code>this</code>, che è di tipo <code>Subject</code>; in altre parole, gli viene passata un'istanza di un tipo genitore del tipo atteso. Si potrebbe risolvere il problema modificando la firma per fare in modo che il tipo atteso sia il tipo genitore <code>Subject</code>, ma questo non è ciò che desideriamo. Come abbiamo appena detto, i nostri osservatori concreti hanno bisogno del tipo più specifico, cioè l'effettivo tipo concreto che infine definiremo per <code>S</code>, in modo che possano invocare metodi su di esso: per esempio, gli osservatori che sorvegliano le caselle di controllo in un'interfaccia grafica vorranno sapere se la casella è stata spuntata o meno, senza essere obbligati a usare conversioni di tipo poco sicure.
+<p>Nel tratto <code>Observer</code> annidato, <code>receiveUpdate</code> si aspetta un&#8217;istanza di tipo <code>S</code>, ma qui gli viene passato <code>this</code>, che è di tipo <code>Subject</code>; in altre parole, gli viene passata un&#8217;istanza di un tipo genitore del tipo atteso. Si potrebbe risolvere il problema modificando la firma per fare in modo che il tipo atteso sia il tipo genitore <code>Subject</code>, ma questo non è ciò che desideriamo. Come abbiamo appena detto, i nostri osservatori concreti hanno bisogno del tipo più specifico, cioè l&#8217;effettivo tipo concreto che infine definiremo per <code>S</code>, in modo che possano invocare metodi su di esso: per esempio, gli osservatori che sorvegliano le caselle di controllo in un&#8217;interfaccia grafica vorranno sapere se la casella è stata spuntata o meno, senza essere obbligati a usare conversioni di tipo poco sicure.
 
 <p>Abbiamo esaminato la composizione tramite <em>annotazioni self-type</em> nel <a href=cap-12.html>capitolo 12</a>, e ora useremo quella funzionalità per risolvere il nostro attuale problema di compilazione. Ecco ancora lo stesso codice, ma questa volta con una annotazione self-type.
 
@@ -1153,11 +1153,11 @@ abstract class SubjectObserver {
   }
 }</code></pre>
 
-<p>Il commento <code>#1</code> mostra l'annotazione self-type <code>self: S =&gt;</code>. Ora possiamo usare <code>self</code> come alias di <code>this</code>, ma ogni volta che appare si presumerà che il suo tipo sia <code>S</code> anziché <code>Subject</code>. &Egrave; come se stessimo dicendo a <code>Subject</code> di impersonare un altro tipo, ma in modo type-safe, come vedremo.
+<p>Il commento <code>#1</code> mostra l&#8217;annotazione self-type <code>self: S =&gt;</code>. Ora possiamo usare <code>self</code> come alias di <code>this</code>, ma ogni volta che appare si presumerà che il suo tipo sia <code>S</code> anziché <code>Subject</code>. &Egrave; come se stessimo dicendo a <code>Subject</code> di impersonare un altro tipo, ma in modo type-safe, come vedremo.
 
-<p>In effetti, avremmo potuto scrivere <code>this</code> anziché <code>self</code> nell'annotazione, ma l'uso di <code>self</code> è una convenzione abbastanza radicata. Un nome differente ci ricorda anche che stiamo lavorando con un tipo differente.
+<p>In effetti, avremmo potuto scrivere <code>this</code> anziché <code>self</code> nell&#8217;annotazione, ma l&#8217;uso di <code>self</code> è una convenzione abbastanza radicata. Un nome differente ci ricorda anche che stiamo lavorando con un tipo differente.
 
-<p>Le annotazioni self-type sono una funzionalità sicura da usare? Nell'atto di definire un sottotipo concreto di <code>SubjectObserver</code>, <code>S</code> e <code>O</code> verranno specificati e verrà effettuato un controllo di tipo per garantire che i tipi concreti di <code>S</code> e <code>O</code> siano compatibili con <code>Subject</code> e <code>Observer</code>. In questo caso, avendo anche definito <code>S</code> come sottotipo di <code>Subject</code> e <code>O</code> come sottotipo di <code>Observer</code>, una qualsiasi coppia di tipi derivati rispettivamente da <code>Subject</code> e <code>Observer</code> andrà bene.
+<p>Le annotazioni self-type sono una funzionalità sicura da usare? Nell&#8217;atto di definire un sottotipo concreto di <code>SubjectObserver</code>, <code>S</code> e <code>O</code> verranno specificati e verrà effettuato un controllo di tipo per garantire che i tipi concreti di <code>S</code> e <code>O</code> siano compatibili con <code>Subject</code> e <code>Observer</code>. In questo caso, avendo anche definito <code>S</code> come sottotipo di <code>Subject</code> e <code>O</code> come sottotipo di <code>Observer</code>, una qualsiasi coppia di tipi derivati rispettivamente da <code>Subject</code> e <code>Observer</code> andrà bene.
 
 <p>Il commento <code>#2</code> mostra il passaggio di <code>self</code> a <code>receiveUpdate</code> al posto di <code>this</code>.
 
@@ -1184,11 +1184,11 @@ object ButtonSubjectObserver extends SubjectObserver {
   }
 }</code></pre>
 
-<p>Nella dichiarazione dell'oggetto <code>ButtonSubjectObserver</code>, a <code>S</code> e <code>O</code> vengono rispettivamente assegnati <code>ObservableButton</code> e <code>ButtonObserver</code>, entrambi definiti nell'oggetto. Stiamo usando un <code>object</code> ora, in modo da poter fare riferimento facilmente ai tipi annidati, come vedremo fra breve.
+<p>Nella dichiarazione dell&#8217;oggetto <code>ButtonSubjectObserver</code>, a <code>S</code> e <code>O</code> vengono rispettivamente assegnati <code>ObservableButton</code> e <code>ButtonObserver</code>, entrambi definiti nell&#8217;oggetto. Stiamo usando un <code>object</code> ora, in modo da poter fare riferimento facilmente ai tipi annidati, come vedremo fra breve.
 
 <p><code>ObservableButton</code> è una classe concreta che ridefinisce <code>click</code> per avvisare gli osservatori, in maniera simile a quanto accadeva nella precedente implementazione vista nel <a href=cap-4.html>capitolo 4</a>. Tuttavia, <code>ButtonObserver</code> è ancora un tratto astratto, perché <code>receiveUpdate</code> non è definito. Notate che ora il parametro di <code>receiveUpdate</code> è di tipo <code>ObservableButton</code>, che è il valore assegnato a <code>S</code>.
 
-<p>L'ultimo pezzo del puzzle è la definizione di un osservatore concreto, che useremo, come prima, per contare i clic sul pulsante. Tuttavia, per sottolineare quanto sia preziosa la possibilità di passare all'osservatore un tipo specifico di istanza (<code>ObservableButton</code> in questo caso), perfezioneremo l'osservatore in modo che tenga traccia dei clic su più pulsanti usando una mappa le cui chiavi siano le etichette dei pulsanti. Non ci sarà bisogno di ricorrere ad alcuna conversione di tipo.
+<p>L&#8217;ultimo pezzo del puzzle è la definizione di un osservatore concreto, che useremo, come prima, per contare i clic sul pulsante. Tuttavia, per sottolineare quanto sia preziosa la possibilità di passare all&#8217;osservatore un tipo specifico di istanza (<code>ObservableButton</code> in questo caso), perfezioneremo l&#8217;osservatore in modo che tenga traccia dei clic su più pulsanti usando una mappa le cui chiavi siano le etichette dei pulsanti. Non ci sarà bisogno di ricorrere ad alcuna conversione di tipo.
 
 <pre><code>// <a href=esempi/cap-13/button-click-observer3.scala>esempi/cap-13/button-click-observer3.scala</a>
 
@@ -1204,7 +1204,7 @@ class ButtonClickObserver extends ButtonSubjectObserver.ButtonObserver {
   }
 }</code></pre>
 
-<p>Ogni volta che <code>ButtonClickObserver.receiveUpdate</code> viene invocato, preleva il conto attuale per il pulsante, se esiste, e aggiorna la mappa incrementandolo. Notate che ora è impossibile invocare <code>receiveUpdate</code> con una normale istanza di <code>Button</code>: dobbiamo usare un'istanza di <code>ObservableButton</code>. Questa restrizione elimina quei potenziali errori che impediscono la ricezione delle notifiche attese. Inoltre, viene garantito l'accesso a tutte le funzioni &#8220;migliorate&#8221; di cui <code>ObservableButton</code> potrebbe disporre.
+<p>Ogni volta che <code>ButtonClickObserver.receiveUpdate</code> viene invocato, preleva il conto attuale per il pulsante, se esiste, e aggiorna la mappa incrementandolo. Notate che ora è impossibile invocare <code>receiveUpdate</code> con una normale istanza di <code>Button</code>: dobbiamo usare un&#8217;istanza di <code>ObservableButton</code>. Questa restrizione elimina quei potenziali errori che impediscono la ricezione delle notifiche attese. Inoltre, viene garantito l&#8217;accesso a tutte le funzioni &#8220;migliorate&#8221; di cui <code>ObservableButton</code> potrebbe disporre.
 
 <p>Infine, ecco una specifica per collaudare il codice.
 
@@ -1244,24 +1244,24 @@ object ButtonObserver3Spec extends Specification {
 
 <p>Lo stesso compilatore Scala è implementato usando questo meccanismo <a href=apa.html#Odersky2005>[Odersky2005]</a> per renderlo modulare in modo che, per esempio, sia relativamente facile implementare i plug-in.
 
-<p>Rivisiteremo questi idiomi nella sezione <a href=#DependencyInjectionInScala>L'iniezione di dipendenza in Scala: il pattern Cake</a> più avanti.
+<p>Rivisiteremo questi idiomi nella sezione <a href=#DependencyInjectionInScala>L&#8217;iniezione di dipendenza in Scala: il pattern Cake</a> più avanti.
 
 <h2 id=EffectiveTraitsDesign>La progettazione efficace dei tratti</h2>
 
-<p>I problemi causati dall'ereditarietà multipla in C++ costituiscono uno dei motivi per cui questa caratteristica è stata esclusa da molti linguaggi, tra cui Java. Uno di questi problemi è rappresentato dal cosiddetto <em>diamante della morte</em>, visibile nella <a href=#diamond-of-death>figura 13.1</a>.
+<p>I problemi causati dall&#8217;ereditarietà multipla in C++ costituiscono uno dei motivi per cui questa caratteristica è stata esclusa da molti linguaggi, tra cui Java. Uno di questi problemi è rappresentato dal cosiddetto <em>diamante della morte</em>, visibile nella <a href=#diamond-of-death>figura 13.1</a>.
 
 <div class=figure id=diamond-of-death>
 <p class=ft>Figura 13.1. Il diamante della morte nei linguaggi con ereditarietà multipla.
 <p><img src=i/diamond-of-death.png alt="" width=432>
 </div>
 
-<p>In C++, ogni costruttore di <code>C</code> invocherà un costruttore di <code>B1</code> e un costruttore di <code>B2</code> (in maniera esplicita o implicita). Ogni costruttore di <code>B1</code>, al pari di ogni costruttore di <code>B2</code>, invocherà un costruttore di <code>A</code>. Quindi, in un'implementazione ingenua dell'ereditarietà multipla, i campi <code>a1</code> e <code>a2</code> di <code>A</code> potrebbero venire inizializzati <em>due volte</em> e perfino in modo incoerente, oppure l'istanza di <code>C</code> potrebbe contenere due &#8220;pezzi&#8221; <code>A</code> differenti, uno per <code>B1</code> e uno per <code>B2</code>. Il C++ è dotato di meccanismi che chiarificano cosa dovrebbe succedere, ma tocca allo sviluppatore capirne i dettagli e usarli nella maniera corretta.
+<p>In C++, ogni costruttore di <code>C</code> invocherà un costruttore di <code>B1</code> e un costruttore di <code>B2</code> (in maniera esplicita o implicita). Ogni costruttore di <code>B1</code>, al pari di ogni costruttore di <code>B2</code>, invocherà un costruttore di <code>A</code>. Quindi, in un&#8217;implementazione ingenua dell&#8217;ereditarietà multipla, i campi <code>a1</code> e <code>a2</code> di <code>A</code> potrebbero venire inizializzati <em>due volte</em> e perfino in modo incoerente, oppure l&#8217;istanza di <code>C</code> potrebbe contenere due &#8220;pezzi&#8221; <code>A</code> differenti, uno per <code>B1</code> e uno per <code>B2</code>. Il C++ è dotato di meccanismi che chiarificano cosa dovrebbe succedere, ma tocca allo sviluppatore capirne i dettagli e usarli nella maniera corretta.
 
-<p>L'ereditarietà singola di Scala e il suo supporto per i tratti evitano questi problemi, pur conservando il beneficio più importante dell'ereditarietà multipla, cioè la composizione dei <em>mixin</em>. L'ordine di costruzione non è ambiguo (si veda la sezione <a href=cap-7.html#Linearization>Linearizzare la gerarchia di un oggetto</a> nel capitolo 7) e i tratti non possono avere liste di argomenti per il costruttore, ma Scala si assicura che i loro campi siano inizializzati in maniera appropriata quando le istanze vengono create, come abbiamo visto nella sezione <a href=cap-4.html#ConstructingTraits>Costruire i tratti</a> del capitolo 4 e nella sezione <a href=cap-6.html#OverridingFieldsInTraits>Ridefinire i campi astratti e concreti nei tratti</a> del capitolo 6. Abbiamo visto un altro esempio di inizializzazione dei valori <code>val</code> in un tratto nella sezione <a href=#FineGrainedVisibilityRules>Regole di visibilità a grana fine</a> più indietro, dove alcune classi concrete ridefinivano i due campi astratti del tratto <code>EncodedString</code>.
+<p>L&#8217;ereditarietà singola di Scala e il suo supporto per i tratti evitano questi problemi, pur conservando il beneficio più importante dell&#8217;ereditarietà multipla, cioè la composizione dei <em>mixin</em>. L&#8217;ordine di costruzione non è ambiguo (si veda la sezione <a href=cap-7.html#Linearization>Linearizzare la gerarchia di un oggetto</a> nel capitolo 7) e i tratti non possono avere liste di argomenti per il costruttore, ma Scala si assicura che i loro campi siano inizializzati in maniera appropriata quando le istanze vengono create, come abbiamo visto nella sezione <a href=cap-4.html#ConstructingTraits>Costruire i tratti</a> del capitolo 4 e nella sezione <a href=cap-6.html#OverridingFieldsInTraits>Ridefinire i campi astratti e concreti nei tratti</a> del capitolo 6. Abbiamo visto un altro esempio di inizializzazione dei valori <code>val</code> in un tratto nella sezione <a href=#FineGrainedVisibilityRules>Regole di visibilità a grana fine</a> più indietro, dove alcune classi concrete ridefinivano i due campi astratti del tratto <code>EncodedString</code>.
 
-<p>Quindi, Scala è in grado di gestire molti problemi che possono sorgere quando si mescolano i contributi di tratti diversi nell'insieme dei possibili stati di un'istanza. Rimane comunque importante esaminare il modo in cui questi contributi interagiscono tra loro.
+<p>Quindi, Scala è in grado di gestire molti problemi che possono sorgere quando si mescolano i contributi di tratti diversi nell&#8217;insieme dei possibili stati di un&#8217;istanza. Rimane comunque importante esaminare il modo in cui questi contributi interagiscono tra loro.
 
-<p>Nel considerarne lo stato, è utile immaginare un'istanza come una <em>macchina a stati</em> in cui un <em>evento</em> (per esempio, l'invocazione di un metodo e la scrittura di un campo) causa la transizione da uno stato a un altro. L'insieme di tutti gli stati possibili forma uno <em>spazio</em>. Potete pensare che ogni <em>campo</em> rappresenti una <em>dimensione</em> di questo spazio.
+<p>Nel considerarne lo stato, è utile immaginare un&#8217;istanza come una <em>macchina a stati</em> in cui un <em>evento</em> (per esempio, l&#8217;invocazione di un metodo e la scrittura di un campo) causa la transizione da uno stato a un altro. L&#8217;insieme di tutti gli stati possibili forma uno <em>spazio</em>. Potete pensare che ogni <em>campo</em> rappresenti una <em>dimensione</em> di questo spazio.
 
 <p>Prendiamo come esempio il tratto <code>VetoableClicks</code> usato nella sezione <a href=cap-4.html#StackableTraits>Tratti impilabili</a> del capitolo 4, dove i clic su un pulsante venivano rifiutati dopo che il loro numero aveva raggiunto una certa soglia. La nostra semplice classe <code>Button</code> contribuiva allo spazio degli stati solo con una <em>dimensione</em> <code>label</code>, mentre <code>VetoableClicks</code> contribuiva con una <em>dimensione</em> <code>count</code> e una costante <code>maxAllowed</code>. Ecco uno script che raccoglie questi tipi ed effettua una breve prova del codice.
 
@@ -1304,11 +1304,11 @@ clic!
 new Button(...) with VetoableClicks
 clic!</samp></pre>
 
-<p>Notate che <code>maxAllowed</code> è una costante, ma può essere ridefinita nell'atto di creare una qualsiasi istanza. Quindi, due istanze possono differire solo nel valore di <code>maxAllowed</code>, perciò anche <code>maxAllowed</code> rappresenta una dimensione dello stato, ma con un solo valore per ogni istanza.
+<p>Notate che <code>maxAllowed</code> è una costante, ma può essere ridefinita nell&#8217;atto di creare una qualsiasi istanza. Quindi, due istanze possono differire solo nel valore di <code>maxAllowed</code>, perciò anche <code>maxAllowed</code> rappresenta una dimensione dello stato, ma con un solo valore per ogni istanza.
 
 <p>Quindi, per un pulsante etichettato &#8220;Invia&#8221;, con <code>maxAllowed</code> impostato a 3, e su cui sono stati effettuati due clic (in modo che <code>count</code> sia uguale a 2), lo stato può essere rappresentato dalla tupla <code>("Invia", 2, 3)</code>.
 
-<p>In generale, un singolo tratto può essere privo di stato, cioè senza dimensioni da aggiungere allo stato dell'istanza, o può portare come contributo dimensioni <em>ortogonali</em> che sono indipendenti da quelle che provengono da altri tratti e dalla classe genitore. Nello script, <code>Clickable</code> è chiaramente privo di stato (se ignoriamo l'etichetta del pulsante) mentre <code>VetoableClicks</code> contribuisce con <code>maxAllowed</code> e <code>count</code>. I tratti con stato ortogonale spesso contengono anche metodi ortogonali: per esempio, i tratti del pattern Observer che abbiamo usato nel <a href=cap-4.html>capitolo 4</a> disponevano di metodi per gestire la propria lista di osservatori.
+<p>In generale, un singolo tratto può essere privo di stato, cioè senza dimensioni da aggiungere allo stato dell&#8217;istanza, o può portare come contributo dimensioni <em>ortogonali</em> che sono indipendenti da quelle che provengono da altri tratti e dalla classe genitore. Nello script, <code>Clickable</code> è chiaramente privo di stato (se ignoriamo l&#8217;etichetta del pulsante) mentre <code>VetoableClicks</code> contribuisce con <code>maxAllowed</code> e <code>count</code>. I tratti con stato ortogonale spesso contengono anche metodi ortogonali: per esempio, i tratti del pattern Observer che abbiamo usato nel <a href=cap-4.html>capitolo 4</a> disponevano di metodi per gestire la propria lista di osservatori.
 
 <p>Indipendentemente dal fatto di aggiungere o meno dimensioni allo stato, un tratto può anche modificare i valori possibili per una dimensione proveniente da un altro tratto o dalla classe genitore. Per vedere un esempio, riorganizziamo lo script in modo da spostare <code>count</code> nel tratto <code>Clickable</code>.
 
@@ -1345,11 +1345,11 @@ val button2 = new Button("cliccami!") with VetoableClicks
 println("new Button(...) with VetoableClicks")
 for (i &lt;- 1 to 3 ) button2.click()</code></pre>
 
-<p>Questo script stampa la stesso testo del precedente, ma ora <code>Clickable</code> aggiunge una dimensione per <code>count</code> (che qui è un metodo usato per restituire il valore del campo privato <code>clicks</code>). <code>VetoableClicks</code> <em>modifica</em> questa dimensione riducendo l'intervallo infinito di possibili valori positivi per <code>count</code> ai soli <code>0</code> e <code>1</code>. Possiamo dire che un tratto è <em>invasivo</em> quando influenza il <em>comportamento</em> di un altro tratto, come nel caso di <code>VetoableClicks</code>, che modifica il comportamento di altri mixin.
+<p>Questo script stampa la stesso testo del precedente, ma ora <code>Clickable</code> aggiunge una dimensione per <code>count</code> (che qui è un metodo usato per restituire il valore del campo privato <code>clicks</code>). <code>VetoableClicks</code> <em>modifica</em> questa dimensione riducendo l&#8217;intervallo infinito di possibili valori positivi per <code>count</code> ai soli <code>0</code> e <code>1</code>. Possiamo dire che un tratto è <em>invasivo</em> quando influenza il <em>comportamento</em> di un altro tratto, come nel caso di <code>VetoableClicks</code>, che modifica il comportamento di altri mixin.
 
-<p>Questi ragionamenti sono importanti perché, sebbene i problemi derivanti dall'ereditarietà multipla siano assenti nel modello a ereditarietà singola e tratti di Scala, è necessario fare attenzione quando si mescolano i contributi in termini di stato e comportamento se si vogliono creare applicazioni prive di malfunzionamenti. Per esempio, un'istanza di <code>Button with VetoableClicks</code> non passerà la stessa serie di test che <code>Button</code> passa con successo se i test presumono che voi possiate cliccare sui pulsanti tutte le volte che volete, in quanto questi due tipi di pulsanti hanno &#8220;specifiche&#8221; differenti. Questa differenza viene espressa dal <em>principio di sostituzione di Liskov</em> <a href=apa.html#Martin2003>[Martin2003]</a>: un'istanza di <code>Button with VetoableClicks</code> non sarà <em>sostituibile</em> in tutte le situazioni in cui viene usata una semplice istanza di <code>Button</code>. Questa è una conseguenza della natura invasiva di <code>VetoableClicks</code>.
+<p>Questi ragionamenti sono importanti perché, sebbene i problemi derivanti dall&#8217;ereditarietà multipla siano assenti nel modello a ereditarietà singola e tratti di Scala, è necessario fare attenzione quando si mescolano i contributi in termini di stato e comportamento se si vogliono creare applicazioni prive di malfunzionamenti. Per esempio, un&#8217;istanza di <code>Button with VetoableClicks</code> non passerà la stessa serie di test che <code>Button</code> passa con successo se i test presumono che voi possiate cliccare sui pulsanti tutte le volte che volete, in quanto questi due tipi di pulsanti hanno &#8220;specifiche&#8221; differenti. Questa differenza viene espressa dal <em>principio di sostituzione di Liskov</em> <a href=apa.html#Martin2003>[Martin2003]</a>: un&#8217;istanza di <code>Button with VetoableClicks</code> non sarà <em>sostituibile</em> in tutte le situazioni in cui viene usata una semplice istanza di <code>Button</code>. Questa è una conseguenza della natura invasiva di <code>VetoableClicks</code>.
 
-<p>I tratti che aggiungono solo elementi ortogonali senza influenzare il resto dello stato e del comportamento dell'istanza rendono molto più semplici il riuso e la composizione e riducono le possibilità di errore. Le implementazioni del pattern Observer che abbiamo visto sono piuttosto riusabili: l'unico requisito per poterle riutilizzare consiste nel fornire un po' di &#8220;colla&#8221; per adattare i tratti generici del soggetto e dell'osservatore alle particolari circostanze.
+<p>I tratti che aggiungono solo elementi ortogonali senza influenzare il resto dello stato e del comportamento dell&#8217;istanza rendono molto più semplici il riuso e la composizione e riducono le possibilità di errore. Le implementazioni del pattern Observer che abbiamo visto sono piuttosto riusabili: l&#8217;unico requisito per poterle riutilizzare consiste nel fornire un po&#8217; di &#8220;colla&#8221; per adattare i tratti generici del soggetto e dell&#8217;osservatore alle particolari circostanze.
 
 <p>Questo non significa che i mixin invasivi siano da evitare, ma solo che dovrebbero essere usati a ragion veduta. Il pattern degli &#8220;eventi vietabili&#8221; può rivelarsi molto utile.
 
@@ -1357,7 +1357,7 @@ for (i &lt;- 1 to 3 ) button2.click()</code></pre>
 
 <p>Ultimamente i pattern di progettazione sono stati criticati da chi vorrebbe accantonarli perché li considera un surrogato delle caratteristiche mancanti di un linguaggio. In effetti, alcuni dei pattern catalogati dalla <em>Gang of Four</em> <a href=apa.html#GOF1995>[GOF1995]</a> non sono davvero necessari in Scala, dato che le caratteristiche native offrono soluzioni migliori, e altri pattern sono parte integrante del linguaggio, quindi non è necessario organizzare il codice in un modo particolare. Naturalmente, non è colpa dei pattern se di loro si fa spesso un cattivo uso.
 
-<p>Riteniamo che le critiche abbiano spesso trascurato un punto importante: la distinzione tra un'idea e il modo in cui viene implementata e usata in una certa situazione. I pattern di progettazione descrivono idee ricorrenti e assai utili che fanno parte del <em>vocabolario</em> usato dagli sviluppatori di software per illustrare i loro progetti.
+<p>Riteniamo che le critiche abbiano spesso trascurato un punto importante: la distinzione tra un&#8217;idea e il modo in cui viene implementata e usata in una certa situazione. I pattern di progettazione descrivono idee ricorrenti e assai utili che fanno parte del <em>vocabolario</em> usato dagli sviluppatori di software per illustrare i loro progetti.
 
 <p>In Scala alcuni pattern comuni corrispondono a caratteristiche native del linguaggio, come accade per gli oggetti <em>singleton</em>, che eliminano il bisogno di implementare il pattern <em>Singleton</em> <a href=apa.html#GOF1995>[GOF1995]</a> nello stile a cui fanno spesso ricorso gli sviluppatori Java.
 
@@ -1365,15 +1365,15 @@ for (i &lt;- 1 to 3 ) button2.click()</code></pre>
 
 <pre><code>"Programmare in Scala" foreach {c =&gt; println(c)}</code></pre>
 
-<p>In effetti, in questo caso viene invocata una conversione implicita per convertire l'istanza di <code>java.lang.String</code> in un'istanza di <code>RichString</code> dotata del metodo <code>foreach</code>. Questo è un esempio del pattern chiamato <em>Decora la mia libreria</em> che abbiamo menzionato nella sezione <a href=cap-8.html#ImplicitConversions>Conversioni implicite</a> del capitolo 8.
+<p>In effetti, in questo caso viene invocata una conversione implicita per convertire l&#8217;istanza di <code>java.lang.String</code> in un&#8217;istanza di <code>RichString</code> dotata del metodo <code>foreach</code>. Questo è un esempio del pattern chiamato <em>Decora la mia libreria</em> che abbiamo menzionato nella sezione <a href=cap-8.html#ImplicitConversions>Conversioni implicite</a> del capitolo 8.
 
 <p>Scala dispone di alternative migliori ad altri pattern comuni. Ne esamineremo una per il pattern <em>Visitor</em> <a href=apa.html#GOF1995>[GOF1995]</a> fra un momento.
 
 <p>Infine, altri pattern ancora possono essere implementati in Scala e la loro utilità resta indiscutibile. Per esempio, il pattern <em>Observer</em> che abbiamo esaminato in precedenza sia in questo capitolo sia nel <a href=cap-4.html>capitolo 4</a> è un pattern molto comodo per risolvere numerosi problemi di progettazione e può essere implementato in maniera molto elegante usando la composizione dei mixin.
 
-<p>Eviteremo di esaminare tutti i pattern più noti, come quelli catalogati in <a href=apa.html#GOF1995>[GOF1995]</a>, una parte dei quali vengono analizzati in <a href=apa.html#ScalaWikiPatterns>[ScalaWiki:Patterns]</a> insieme ad altri pattern piuttosto specifici per Scala. Invece esamineremo alcuni esempi degni di nota, cominciando da un'alternativa al pattern <em>Visitor</em> che sfrutta idiomi funzionali e conversioni implicite, e concludendo con l'analisi di una potente tecnica per implementare la <em>iniezione di dipendenza</em> in Scala attraverso il pattern <em>Cake</em>.
+<p>Eviteremo di esaminare tutti i pattern più noti, come quelli catalogati in <a href=apa.html#GOF1995>[GOF1995]</a>, una parte dei quali vengono analizzati in <a href=apa.html#ScalaWikiPatterns>[ScalaWiki:Patterns]</a> insieme ad altri pattern piuttosto specifici per Scala. Invece esamineremo alcuni esempi degni di nota, cominciando da un&#8217;alternativa al pattern <em>Visitor</em> che sfrutta idiomi funzionali e conversioni implicite, e concludendo con l&#8217;analisi di una potente tecnica per implementare la <em>iniezione di dipendenza</em> in Scala attraverso il pattern <em>Cake</em>.
 
-<h3 id=VisitorAlternativeInScala>Il pattern Visitor: un'alternativa migliore</h3>
+<h3 id=VisitorAlternativeInScala>Il pattern Visitor: un&#8217;alternativa migliore</h3>
 
 <p>Il pattern <em>Visitor</em> <a href=apa.html#GOF1995>[GOF1995]</a> risolve il problema di aggiungere una nuova operazione a una gerarchia di classi senza modificarne il codice sorgente nel caso in cui, per un certo numero di ragioni pratiche, queste modifiche non siano possibili o desiderabili.
 
@@ -1403,9 +1403,9 @@ package shapes {
   }
 }</code></pre>
 
-<p>Potreste desiderare che il metodo <code>draw</code> non sia presente nelle classi: questa è una decisione di progetto ragionevole, poiché il metodo di disegno dipenderà notevolmente dal particolare contesto d'uso, che per esempio comprende i dettagli delle librerie grafiche della piattaforma sulla quale l'applicazione verrà eseguita. Per garantire un'elevata riusabilità, vorremmo che il disegno fosse un'operazione disaccoppiata dalle forme geometriche.
+<p>Potreste desiderare che il metodo <code>draw</code> non sia presente nelle classi: questa è una decisione di progetto ragionevole, poiché il metodo di disegno dipenderà notevolmente dal particolare contesto d&#8217;uso, che per esempio comprende i dettagli delle librerie grafiche della piattaforma sulla quale l&#8217;applicazione verrà eseguita. Per garantire un&#8217;elevata riusabilità, vorremmo che il disegno fosse un&#8217;operazione disaccoppiata dalle forme geometriche.
 
-<p>Prima di tutto, riorganizziamo la gerarchia di <code>Shape</code> per supportare il pattern <em>Visitor</em>, seguendo l'esempio contenuto in <a href=apa.html#GOF1995>[GOF1995]</a>.
+<p>Prima di tutto, riorganizziamo la gerarchia di <code>Shape</code> per supportare il pattern <em>Visitor</em>, seguendo l&#8217;esempio contenuto in <a href=apa.html#GOF1995>[GOF1995]</a>.
 
 <pre><code>// <a href=esempi/cap-13/shapes-visitor.scala>esempi/cap-13/shapes-visitor.scala</a>
 
@@ -1437,9 +1437,9 @@ package shapes {
   }
 }</code></pre>
 
-<p>Abbiamo definito un tratto <code>ShapeVisitor</code> dotato di un metodo per ogni classe concreta nella gerarchia, per esempio <code>visit(circle: Circle)</code>, che accetta un parametro del corrispondente tipo da visitare. Le classi concrete derivate implementeranno ognuno di questi metodi per effettuare l'operazione appropriata sull'oggetto di quel particolare tipo passato come argomento.
+<p>Abbiamo definito un tratto <code>ShapeVisitor</code> dotato di un metodo per ogni classe concreta nella gerarchia, per esempio <code>visit(circle: Circle)</code>, che accetta un parametro del corrispondente tipo da visitare. Le classi concrete derivate implementeranno ognuno di questi metodi per effettuare l&#8217;operazione appropriata sull&#8217;oggetto di quel particolare tipo passato come argomento.
 
-<p>Il pattern richiede una singola modifica alla gerarchia delle classi: è necessario aggiungere un metodo chiamato <code>accept</code>, che prende un <code>Visitor</code> come parametro. Questo metodo deve essere ridefinito in ogni classe in modo da invocare il metodo corrispondente definito nell'istanza del visitatore, passandogli <code>this</code> come argomento.
+<p>Il pattern richiede una singola modifica alla gerarchia delle classi: è necessario aggiungere un metodo chiamato <code>accept</code>, che prende un <code>Visitor</code> come parametro. Questo metodo deve essere ridefinito in ogni classe in modo da invocare il metodo corrispondente definito nell&#8217;istanza del visitatore, passandogli <code>this</code> come argomento.
 
 <p>Infine, notate che abbiamo dichiarato <code>Shape</code> come <code>sealed</code>. Questa scelta non ci aiuterà a evitare alcuni errori nella implementazione del pattern, ma si dimostrerà utile fra breve.
 
@@ -1460,7 +1460,7 @@ package shapes {
   }
 }</code></pre>
 
-<p>Per ogni metodo <code>visit</code>, la classe &#8220;disegna&#8221; l'istanza di <code>Shape</code> in maniera appropriata. Infine, ecco uno script che mette in azione il codice.
+<p>Per ogni metodo <code>visit</code>, la classe &#8220;disegna&#8221; l&#8217;istanza di <code>Shape</code> in maniera appropriata. Infine, ecco uno script che mette in azione il codice.
 
 <pre><code>// <a href=esempi/cap-13/shapes-drawing-visitor-script.scala>esempi/cap-13/shapes-drawing-visitor-script.scala</a>
 
@@ -1477,15 +1477,15 @@ val list = List(Circle(p00, 5.0),
 val shapesDrawer = new ShapeDrawingVisitor
 list foreach { _.accept(shapesDrawer) }</code></pre>
 
-<p>L'esecuzione di questo script produce il risultato seguente.
+<p>L&#8217;esecuzione di questo script produce il risultato seguente.
 
 <pre><samp>draw: Circle(Point(0.0,0.0),5.0)
 Rectangle.draw: Rectangle(Point(0.0,0.0),2.0,3.0)
 Triangle.draw: Triangle(Point(0.0,0.0),Point(1.0,0.0),Point(0.0,1.0))</samp></pre>
 
-<p>Il pattern Visitor è stato criticato per la sua scarsa eleganza e per la violazione del <em>principio aperto-chiuso</em> (anche noto come <abbr>OCP</abbr>, dall'inglese <em>Open-Closed Principle</em>) <a href=apa.html#Martin2003>[Martin2003]</a> determinata dalla necessità di modificare (nonché collaudare e rendere nuovamente disponibili) <em>tutti</em> i visitatori di una gerarchia qualora quella gerarchia venga cambiata. Si noti infatti che tutti i tratti <code>ShapeVisitor</code> contengono metodi in cui sono cablate informazioni su ogni tipo derivato da <code>Shape</code>. Va anche rilevato come l'applicazione di questo genere di modifiche sia spesso soggetta a errori.
+<p>Il pattern Visitor è stato criticato per la sua scarsa eleganza e per la violazione del <em>principio aperto-chiuso</em> (anche noto come <abbr>OCP</abbr>, dall&#8217;inglese <em>Open-Closed Principle</em>) <a href=apa.html#Martin2003>[Martin2003]</a> determinata dalla necessità di modificare (nonché collaudare e rendere nuovamente disponibili) <em>tutti</em> i visitatori di una gerarchia qualora quella gerarchia venga cambiata. Si noti infatti che tutti i tratti <code>ShapeVisitor</code> contengono metodi in cui sono cablate informazioni su ogni tipo derivato da <code>Shape</code>. Va anche rilevato come l&#8217;applicazione di questo genere di modifiche sia spesso soggetta a errori.
 
-<p>In linguaggi dotati di &#8220;tipi aperti&#8221; come Ruby l'alternativa al pattern Visitor consiste nel creare un nuovo file sorgente che riapre le definizioni di tutti i tipi della gerarchia e inserisce in ognuna l'implementazione di un metodo appropriato.
+<p>In linguaggi dotati di &#8220;tipi aperti&#8221; come Ruby l&#8217;alternativa al pattern Visitor consiste nel creare un nuovo file sorgente che riapre le definizioni di tutti i tipi della gerarchia e inserisce in ognuna l&#8217;implementazione di un metodo appropriato.
 
 <p>Scala non supporta i tipi aperti, naturalmente, ma offre alcune alternative. Il primo approccio che esamineremo combina il pattern matching con le conversioni implicite. Cominciamo col riorganizzare il codice di <code>ShapeVisitor</code> per rimuovere la logica del pattern Visitor.
 
@@ -1525,7 +1525,7 @@ package shapes2 {
 
 <p>Le istanze di <code>ShapeDrawer</code> racchiudono un oggetto <code>Shape</code>. Quando <code>draw</code> viene invocato, il pattern matching determina il modo appropriato di disegnare la forma geometrica sulla base del tipo della forma.
 
-<p>Un oggetto associato dichiara una conversione implcita che avvolge un'istanza di <code>Shape</code> in un'istanza di <code>ShapeDrawer</code>.
+<p>Un oggetto associato dichiara una conversione implcita che avvolge un&#8217;istanza di <code>Shape</code> in un&#8217;istanza di <code>ShapeDrawer</code>.
 
 <p>Lo script seguente mette in azione il codice.
 
@@ -1545,15 +1545,15 @@ import shapes2.ShapeDrawer._
 
 list foreach { _.draw }</code></pre>
 
-<p>Questo script produce lo stesso risultato dell'esempio che usava il pattern Visitor.
+<p>Questo script produce lo stesso risultato dell&#8217;esempio che usava il pattern Visitor.
 
 <p>Questa implementazione di <code>ShapeDrawer</code> ha alcune analogie con il pattern Visitor, ma è più concisa ed elegante e non richiede modifiche al codice originale della gerarchia di <code>Shape</code>.
 
-<p>Tecnicamente, questa implementazione ha gli stessi problemi di <abbr>OCP</abbr> del pattern Visitor: una modifica alla gerarchia di <code>Shape</code> comporta una modifica all'espressione di pattern matching. Tuttavia, i cambiamenti richiesti sono isolati in un unico punto e sono meno estesi. In effetti, tutta la logica per il disegno ora è concentrata in un unico luogo anziché essere distribuita nei metodi <code>draw</code> di ogni classe derivata da <code>Shape</code> e potenzialmente suddivisa in file differenti. Notate che, avendo sigillato la gerarchia, otterremo un errore di compilazione in <code>draw</code> se ci dimentichiamo di modificarlo quando la gerarchia cambia.
+<p>Tecnicamente, questa implementazione ha gli stessi problemi di <abbr>OCP</abbr> del pattern Visitor: una modifica alla gerarchia di <code>Shape</code> comporta una modifica all&#8217;espressione di pattern matching. Tuttavia, i cambiamenti richiesti sono isolati in un unico punto e sono meno estesi. In effetti, tutta la logica per il disegno ora è concentrata in un unico luogo anziché essere distribuita nei metodi <code>draw</code> di ogni classe derivata da <code>Shape</code> e potenzialmente suddivisa in file differenti. Notate che, avendo sigillato la gerarchia, otterremo un errore di compilazione in <code>draw</code> se ci dimentichiamo di modificarlo quando la gerarchia cambia.
 
 <p>Se si preferisce evitare di usare il pattern matching nel metodo di disegno, è possibile implementare una classe &#8220;disegnatrice&#8221; e una conversione implicita separata per ogni classe derivata da <code>Shape</code>, mantenendo così ogni operazione di disegno in un file separato in modo da favorire la modularità a discapito della quantità di codice e del numero di file da gestire.
 
-<p>Se, d'altra parte, l'uso della sintassi orientata agli oggetti nella invocazione di <code>shape.draw</code> è accettabile, si può eliminare la conversione implicita ed eseguire lo stesso pattern matching impiegato nel metodo <code>ShapeDrawer.draw</code>. Questo approccio può risultare più semplice, in particolare quando è possibile isolare il comportamento aggiuntivo in un unico punto, e in effetti ricalca le convenzioni di programmazione adottate nello stile funzionale, come illustrato dallo script seguente.
+<p>Se, d&#8217;altra parte, l&#8217;uso della sintassi orientata agli oggetti nella invocazione di <code>shape.draw</code> è accettabile, si può eliminare la conversione implicita ed eseguire lo stesso pattern matching impiegato nel metodo <code>ShapeDrawer.draw</code>. Questo approccio può risultare più semplice, in particolare quando è possibile isolare il comportamento aggiuntivo in un unico punto, e in effetti ricalca le convenzioni di programmazione adottate nello stile funzionale, come illustrato dallo script seguente.
 
 <pre><code>// <a href=esempi/cap-13/shapes-drawing-pattern-script.scala>esempi/cap-13/shapes-drawing-pattern-script.scala</a>
 
@@ -1603,9 +1603,9 @@ list foreach (drawText)
 println("")
 list foreach (drawXML)</code></pre>
 
-<p>Abbiamo definito due <em>valori funzione</em>, assegnandoli rispettivamente alle variabili <code>drawText</code> e <code>drawXML</code>. Ogni funzione <code>drawX</code> accetta in ingresso un'istanza di <code>Shape</code>, ne esegue il pattern matching sul tipo e la &#8220;disegna&#8221; correttamente. Abbiamo anche definito un metodo di utilità per convertire un'istanza di <code>Point</code> nel formato <abbr>XML</abbr> desiderato.
+<p>Abbiamo definito due <em>valori funzione</em>, assegnandoli rispettivamente alle variabili <code>drawText</code> e <code>drawXML</code>. Ogni funzione <code>drawX</code> accetta in ingresso un&#8217;istanza di <code>Shape</code>, ne esegue il pattern matching sul tipo e la &#8220;disegna&#8221; correttamente. Abbiamo anche definito un metodo di utilità per convertire un&#8217;istanza di <code>Point</code> nel formato <abbr>XML</abbr> desiderato.
 
-<p>Infine, scorriamo due volte la lista delle forme geometriche, passando come argomento a <code>foreach</code> prima <code>drawText</code> e poi <code>drawXML</code>. L'esecuzione di questo script riproduce il risultato precedente per il disegno &#8220;testuale&#8221;, seguito dal nuovo risultato in formato <abbr>XML</abbr>.
+<p>Infine, scorriamo due volte la lista delle forme geometriche, passando come argomento a <code>foreach</code> prima <code>drawText</code> e poi <code>drawXML</code>. L&#8217;esecuzione di questo script riproduce il risultato precedente per il disegno &#8220;testuale&#8221;, seguito dal nuovo risultato in formato <abbr>XML</abbr>.
 
 <pre><samp>Circle.draw: Circle(Point(0.0,0.0),5.0)
 Rectangle.draw: Rectangle(Point(0.0,0.0),2.0,3.0)
@@ -1626,11 +1626,11 @@ Triangle.draw: Triangle(Point(0.0,0.0),Point(1.0,0.0),Point(0.0,1.0))
   &lt;point3&gt;&lt;point&gt;&lt;x&gt;0.0&lt;/x&gt;&lt;y&gt;1.0&lt;/y&gt;&lt;/point&gt;&lt;/point3&gt;
 &lt;/triangle&gt;</samp></pre>
 
-<p>Ognuno di questi idiomi offre una tecnica potente per aggiungere ulteriori funzionalità particolari che potrebbero non essere indispensabili &#8220;ovunque&#8221; nell'applicazione, molto efficace per rimuovere metodi la cui presenza negli oggetti non <em>è assolutamente necessaria</em>.
+<p>Ognuno di questi idiomi offre una tecnica potente per aggiungere ulteriori funzionalità particolari che potrebbero non essere indispensabili &#8220;ovunque&#8221; nell&#8217;applicazione, molto efficace per rimuovere metodi la cui presenza negli oggetti non <em>è assolutamente necessaria</em>.
 
-<p>Un'applicazione per il disegno dovrebbe codificare in un unico punto i procedimenti di lettura e scrittura delle forme geometriche, sia che le serializzi in un formato di testo per memorizzarle su disco sia che le rappresenti come figure su uno schermo. &Egrave; possibile separare l'&#8220;interesse&#8221; del disegno dalle restanti funzioni sulle forme geometriche e isolarne la logica, il tutto senza modificare la gerarchia di <code>Shape</code> o i punti in cui viene usata all'interno dell'applicazione. Il pattern Visitor soddisfa parzialmente questa necessità di separazione e isolamento, ma richiede di aggiungere codice alle implementazioni dei visitatori per ogni sottotipo di <code>Shape</code>.
+<p>Un&#8217;applicazione per il disegno dovrebbe codificare in un unico punto i procedimenti di lettura e scrittura delle forme geometriche, sia che le serializzi in un formato di testo per memorizzarle su disco sia che le rappresenti come figure su uno schermo. &Egrave; possibile separare l&#8217;&#8220;interesse&#8221; del disegno dalle restanti funzioni sulle forme geometriche e isolarne la logica, il tutto senza modificare la gerarchia di <code>Shape</code> o i punti in cui viene usata all&#8217;interno dell&#8217;applicazione. Il pattern Visitor soddisfa parzialmente questa necessità di separazione e isolamento, ma richiede di aggiungere codice alle implementazioni dei visitatori per ogni sottotipo di <code>Shape</code>.
 
-<p>Per concludere, esaminiamo un'altra opzione di progettazione da adottare quando si possiede il controllo completo sul processo di costruzione delle forme geometriche. Supponendo che una singola factory si occupi di creare le forme, è possibile modificarla per mescolare tratti che aggiungono nuovi comportamenti a seconda delle esigenze.
+<p>Per concludere, esaminiamo un&#8217;altra opzione di progettazione da adottare quando si possiede il controllo completo sul processo di costruzione delle forme geometriche. Supponendo che una singola factory si occupi di creare le forme, è possibile modificarla per mescolare tratti che aggiungono nuovi comportamenti a seconda delle esigenze.
 
 <pre><code>// <a href=esempi/cap-13/shapes-drawing-factory.scala>esempi/cap-13/shapes-drawing-factory.scala</a>
 
@@ -1673,7 +1673,7 @@ package shapes2 {
   }
 }</code></pre>
 
-<p>Abbiamo definito un tratto <code>Drawing</code>, derivandone un tratto concreto per ognuna delle classi nella gerarchia di <code>Shape</code>, e un oggetto <code>ShapeFactory</code> con un metodo factory <code>makeShape</code> che accetta una lista di argomenti a lunghezza variabile. Questo metodo esegue il pattern matching sul primo argomento per determinare quale forma geometrica creare, poi effettua una conversione di tipo sugli altri argomenti, appropriata alla costruzione della forma, mescolando il corrispondente tratto per il disegno. Una factory simile potrebbe essere usata per aggiungere metodi di disegno che generano codice <abbr>XML</abbr>. Si noti che la lista di valori <code>Any</code> a lunghezza variabile, le numerose conversioni di tipo e il ridotto controllo degli errori sono stati impiegati per convenienza, mentre un'implementazione reale potrebbe moderare il ricorso a questi espedienti.
+<p>Abbiamo definito un tratto <code>Drawing</code>, derivandone un tratto concreto per ognuna delle classi nella gerarchia di <code>Shape</code>, e un oggetto <code>ShapeFactory</code> con un metodo factory <code>makeShape</code> che accetta una lista di argomenti a lunghezza variabile. Questo metodo esegue il pattern matching sul primo argomento per determinare quale forma geometrica creare, poi effettua una conversione di tipo sugli altri argomenti, appropriata alla costruzione della forma, mescolando il corrispondente tratto per il disegno. Una factory simile potrebbe essere usata per aggiungere metodi di disegno che generano codice <abbr>XML</abbr>. Si noti che la lista di valori <code>Any</code> a lunghezza variabile, le numerose conversioni di tipo e il ridotto controllo degli errori sono stati impiegati per convenienza, mentre un&#8217;implementazione reale potrebbe moderare il ricorso a questi espedienti.
 
 <p>Lo script seguente mette in azione la factory.
 
@@ -1692,15 +1692,15 @@ val list = List(
 
 list foreach { _.draw }</code></pre>
 
-<p>Rispetto agli script precedenti, ora la lista di forme geometriche viene costruita usando la factory e per disegnare le forme nell'istruzione <code>foreach</code> si invoca semplicemente <code>draw</code> su ognuna. Il risultato ottenuto è identico a quello già visto.
+<p>Rispetto agli script precedenti, ora la lista di forme geometriche viene costruita usando la factory e per disegnare le forme nell&#8217;istruzione <code>foreach</code> si invoca semplicemente <code>draw</code> su ognuna. Il risultato ottenuto è identico a quello già visto.
 
 <pre><samp>Circle.draw Circle(Point(0.0,0.0),5.0)
 Rectangle.draw: Rectangle(Point(0.0,0.0),2.0,3.0)
 Triangle.draw: Triangle(Point(0.0,0.0),Point(1.0,0.0),Point(0.0,1.0))</samp></pre>
 
-<p>La sottigliezza di questo script consiste nell'evitare di assegnare il risultato della invocazione di <code>ShapeFactory.makeShape</code> a una variabile di tipo <code>Shape</code>. Se questo assegnamento avesse luogo, non sarebbe possibile invocare il metodo <code>draw</code> sull'istanza!
+<p>La sottigliezza di questo script consiste nell&#8217;evitare di assegnare il risultato della invocazione di <code>ShapeFactory.makeShape</code> a una variabile di tipo <code>Shape</code>. Se questo assegnamento avesse luogo, non sarebbe possibile invocare il metodo <code>draw</code> sull&#8217;istanza!
 
-<p>Infatti, in questo script, Scala ha inferito un supertipo comune per la lista parametrica leggermente diverso da quello che potreste aspettarvi. Questo tipo è visibile dall'interno dell'interprete interattivo <kbd>scala</kbd>, se usate il comando <code>:load</code> per caricare lo script come nella sessione seguente.
+<p>Infatti, in questo script, Scala ha inferito un supertipo comune per la lista parametrica leggermente diverso da quello che potreste aspettarvi. Questo tipo è visibile dall&#8217;interno dell&#8217;interprete interattivo <kbd>scala</kbd>, se usate il comando <code>:load</code> per caricare lo script come nella sessione seguente.
 
 <pre><samp>$ scala -cp &hellip;
 Welcome to Scala version 2.8.0.final (Java &hellip;).
@@ -1720,7 +1720,7 @@ Triangle.draw: Triangle(Point(0.0,0.0),Point(1.0,0.0),Point(0.0,1.0))
 
 scala&gt;</samp></pre>
 
-<p>Fate attenzione alla riga che comincia con <code>list: List[Product with shapes2.Shape with shapes2.Drawing]</code>, stampata dopo che la lista di forme geometriche è stata riconosciuta: da qui si nota che il supertipo comune inferito è <code>Product with shapes2.Shape with shapes2.Drawing</code>. <code>Product</code> è un tratto mescolato in tutte le classi <code>case</code>, quindi anche nelle nostre sottoclassi concrete di <code>Shape</code>. Non dimenticate che, per evitare i problemi con l'ereditarietà tra le classi <code>case</code>, la classe <code>Shape</code> alla radice della gerarchia non è una classe <code>case</code> (si veda la sezione <a href=cap-6.html#CaseClasses>Classi <code>case</code></a> del capitolo 6 per una motivazione dettagliata sulla necessità di evitare l'ereditarietà tra classi <code>case</code>). Quindi, il nostro supertipo comune è una classe anonima che incorpora <code>Shape</code>, <code>Product</code> e il tratto <code>Drawing</code>.
+<p>Fate attenzione alla riga che comincia con <code>list: List[Product with shapes2.Shape with shapes2.Drawing]</code>, stampata dopo che la lista di forme geometriche è stata riconosciuta: da qui si nota che il supertipo comune inferito è <code>Product with shapes2.Shape with shapes2.Drawing</code>. <code>Product</code> è un tratto mescolato in tutte le classi <code>case</code>, quindi anche nelle nostre sottoclassi concrete di <code>Shape</code>. Non dimenticate che, per evitare i problemi con l&#8217;ereditarietà tra le classi <code>case</code>, la classe <code>Shape</code> alla radice della gerarchia non è una classe <code>case</code> (si veda la sezione <a href=cap-6.html#CaseClasses>Classi <code>case</code></a> del capitolo 6 per una motivazione dettagliata sulla necessità di evitare l&#8217;ereditarietà tra classi <code>case</code>). Quindi, il nostro supertipo comune è una classe anonima che incorpora <code>Shape</code>, <code>Product</code> e il tratto <code>Drawing</code>.
 
 <p>Se si vuole assegnare una di queste forme geometriche disegnabili a una varibile e allo stesso tempo essere in grado di invocare <code>draw</code>, è possibile usare una dichiarazione come quella riportata di seguito (mostrata nel contesto della stessa sessione interattiva di <kbd>scala</kbd>).
 
@@ -1732,23 +1732,23 @@ Circle.draw Circle(Point(0.0,0.0),5.0)
 
 scala&gt;</code></pre>
 
-<h3 id=DependencyInjectionInScala>L'iniezione di dipendenza in Scala: il pattern Cake</h3>
+<h3 id=DependencyInjectionInScala>L&#8217;iniezione di dipendenza in Scala: il pattern Cake</h3>
 
-<p>La <em>iniezione di dipendenza</em> (anche nota come <abbr>DI</abbr>, dall'inglese <em>Dependency Injection</em>) è una potente tecnica di <em>inversione del controllo</em> (<abbr>IoC</abbr>) usata per risolvere le dipendenze tra i &#8220;componenti&#8221; di applicazioni di grandi dimensioni. Uno dei benefici della <abbr>DI</abbr> è la minimizzazione delle dipendenze tra questi componenti, in modo che sia relativamente facile sostituirli a seconda delle particolari circostanze.
+<p>La <em>iniezione di dipendenza</em> (anche nota come <abbr>DI</abbr>, dall&#8217;inglese <em>Dependency Injection</em>) è una potente tecnica di <em>inversione del controllo</em> (<abbr>IoC</abbr>) usata per risolvere le dipendenze tra i &#8220;componenti&#8221; di applicazioni di grandi dimensioni. Uno dei benefici della <abbr>DI</abbr> è la minimizzazione delle dipendenze tra questi componenti, in modo che sia relativamente facile sostituirli a seconda delle particolari circostanze.
 
-<p>Di solito, un oggetto cliente che ha bisogno di un oggetto per accedere a un database ne crea una propria istanza. Pur conveniente, questo approccio rende il collaudo di unità molto difficile, perché vi obbliga a effettuare i test su un vero database, e compromette la riusabilità nelle situazioni in cui è necessario un altro meccanismo di persistenza (o in cui la persistenza non è richiesta). L'inversione del controllo risolve questo problema ribaltando la responsabilità di soddisfare le dipendenze tra l'oggetto e la connessione al database.
+<p>Di solito, un oggetto cliente che ha bisogno di un oggetto per accedere a un database ne crea una propria istanza. Pur conveniente, questo approccio rende il collaudo di unità molto difficile, perché vi obbliga a effettuare i test su un vero database, e compromette la riusabilità nelle situazioni in cui è necessario un altro meccanismo di persistenza (o in cui la persistenza non è richiesta). L&#8217;inversione del controllo risolve questo problema ribaltando la responsabilità di soddisfare le dipendenze tra l&#8217;oggetto e la connessione al database.
 
-<p><abbr>JNDI</abbr> è un esempio di inversione del controllo: anziché istanziare un oggetto per l'accesso, l'oggetto cliente chiede a <abbr>JNDI</abbr> di fornirgliene uno. Al cliente non interessa qual è il tipo dell'oggetto che gli viene fornito, perciò non è più legato a una implementazione concreta della dipendenza, ma dipende solo da un'opportuna <em>astrazione</em> per l'accesso alla persistenza, come una interfaccia Java o un tratto Scala.
+<p><abbr>JNDI</abbr> è un esempio di inversione del controllo: anziché istanziare un oggetto per l&#8217;accesso, l&#8217;oggetto cliente chiede a <abbr>JNDI</abbr> di fornirgliene uno. Al cliente non interessa qual è il tipo dell&#8217;oggetto che gli viene fornito, perciò non è più legato a una implementazione concreta della dipendenza, ma dipende solo da un&#8217;opportuna <em>astrazione</em> per l&#8217;accesso alla persistenza, come una interfaccia Java o un tratto Scala.
 
-<p>L'iniezione di dipendenza porta l'inversione del controllo alla sua logica conclusione. Ora il cliente non fa nulla per risolvere la dipendenza, ma è un meccanismo esterno che conosce l'intero sistema a &#8220;iniettare&#8221; l'oggetto appropriato usando un argomento del costruttore o un metodo di scrittura di un valore. Questo procedimento avviene durante la creazione del cliente. La <abbr>DI</abbr> elimina le dipendenze dai meccanismi di <abbr>IoC</abbr> nel codice (per esempio, non ci sono più le invocazioni a <abbr>JNDI</abbr>) e mantiene gli oggetti relativamente semplici, con legami minimali nei confronti degli altri oggetti.
+<p>L&#8217;iniezione di dipendenza porta l&#8217;inversione del controllo alla sua logica conclusione. Ora il cliente non fa nulla per risolvere la dipendenza, ma è un meccanismo esterno che conosce l&#8217;intero sistema a &#8220;iniettare&#8221; l&#8217;oggetto appropriato usando un argomento del costruttore o un metodo di scrittura di un valore. Questo procedimento avviene durante la creazione del cliente. La <abbr>DI</abbr> elimina le dipendenze dai meccanismi di <abbr>IoC</abbr> nel codice (per esempio, non ci sono più le invocazioni a <abbr>JNDI</abbr>) e mantiene gli oggetti relativamente semplici, con legami minimali nei confronti degli altri oggetti.
 
-<p>Tornando ai test di unità, è preferibile usare una controfigura per sostituire le dipendenze più pesanti, in modo da minimizzare il costo aggiuntivo e le ulteriori complicazioni del collaudo. Il caso del nostro oggetto cliente che dipende da un oggetto per accedere al database è un esempio classico. Nel collaudare il cliente, il costo aggiuntivo e gli inconvenienti dovuti all'uso di un vero database sono proibitivi. La sostituzione del database con una controfigura leggera in cui sono stati cablati alcuni dati campione vi permette di semplificare i metodi di preparazione e ripulitura eseguiti all'inizio e alla fine di ogni test, oltre a garantirvi un'esecuzione più veloce e un comportamento predicibile da parte dell'oggetto per l'accesso ai dati da cui dipende il cliente.
+<p>Tornando ai test di unità, è preferibile usare una controfigura per sostituire le dipendenze più pesanti, in modo da minimizzare il costo aggiuntivo e le ulteriori complicazioni del collaudo. Il caso del nostro oggetto cliente che dipende da un oggetto per accedere al database è un esempio classico. Nel collaudare il cliente, il costo aggiuntivo e gli inconvenienti dovuti all&#8217;uso di un vero database sono proibitivi. La sostituzione del database con una controfigura leggera in cui sono stati cablati alcuni dati campione vi permette di semplificare i metodi di preparazione e ripulitura eseguiti all&#8217;inizio e alla fine di ogni test, oltre a garantirvi un&#8217;esecuzione più veloce e un comportamento predicibile da parte dell&#8217;oggetto per l&#8217;accesso ai dati da cui dipende il cliente.
 
-<p>In Java, di solito la <abbr>DI</abbr> viene realizzata usando un contenitore per l'inversione del controllo, come il framework Spring <a href=apa.html#SpringFramework>[SpringFramework]</a>, o una <abbr>API</abbr> Java equivalente, come la <abbr>API</abbr> Guice di Google <a href=apa.html#Guice>[Guice]</a>. In entrambi i casi è possibile usare il software insieme al codice Scala, in particolare quando si introduce Scala in un ambiente di produzione Java già maturo.
+<p>In Java, di solito la <abbr>DI</abbr> viene realizzata usando un contenitore per l&#8217;inversione del controllo, come il framework Spring <a href=apa.html#SpringFramework>[SpringFramework]</a>, o una <abbr>API</abbr> Java equivalente, come la <abbr>API</abbr> Guice di Google <a href=apa.html#Guice>[Guice]</a>. In entrambi i casi è possibile usare il software insieme al codice Scala, in particolare quando si introduce Scala in un ambiente di produzione Java già maturo.
 
-<p>Tuttavia, Scala vi offre alcune soluzioni uniche per implementare la <abbr>DI</abbr> nel codice Scala, esaminate in <a href=apa.html#Boner2008b>[Bon&#233;r2008b]</a>. Tra queste, ci concentreremo sul pattern <em>Cake</em>, che può sostituire o integrare questi altri meccanismi di iniezione di dipendenza, e che è simile, come vedremo, all'implementazione del pattern Observer esaminata verso l'inizio di questo capitolo, nella sezione <a href=#SelfTypeAnnotationsAndAbstractTypeMembers>Annotazioni self-type e membri tipo astratti</a>. Il pattern Cake è stato descritto in <a href=apa.html#Odersky2005>[Odersky2005]</a>, anche se gli è stato dato questo nome dopo la pubblicazione dell'articolo. <a href=apa.html#Boner2008b>[Bon&#233;r2008b]</a> ne analizza anche alcune alternative.
+<p>Tuttavia, Scala vi offre alcune soluzioni uniche per implementare la <abbr>DI</abbr> nel codice Scala, esaminate in <a href=apa.html#Boner2008b>[Bon&#233;r2008b]</a>. Tra queste, ci concentreremo sul pattern <em>Cake</em>, che può sostituire o integrare questi altri meccanismi di iniezione di dipendenza, e che è simile, come vedremo, all&#8217;implementazione del pattern Observer esaminata verso l&#8217;inizio di questo capitolo, nella sezione <a href=#SelfTypeAnnotationsAndAbstractTypeMembers>Annotazioni self-type e membri tipo astratti</a>. Il pattern Cake è stato descritto in <a href=apa.html#Odersky2005>[Odersky2005]</a>, anche se gli è stato dato questo nome dopo la pubblicazione dell&#8217;articolo. <a href=apa.html#Boner2008b>[Bon&#233;r2008b]</a> ne analizza anche alcune alternative.
 
-<p>Per esemplificare il pattern costruiremo un elementare modello a componenti per un client Twitter estremamente semplificato, che comprenda una interfaccia utente, una memoria locale per i messaggi inviati e una connessione al servizio offerto da Twitter. Ognuno di questi &#8220;componenti&#8221; sarà configurabile e verrà specificato separatamente, insieme a un client che funzionerà come &#8220;middleware&#8221; per legare insieme le parti dell'applicazione. Il client sarà a sua volta un componente che dipenderà dagli altri componenti: nel crearne un'istanza concreta, la configureremo tramite i componenti di cui avrà bisogno.
+<p>Per esemplificare il pattern costruiremo un elementare modello a componenti per un client Twitter estremamente semplificato, che comprenda una interfaccia utente, una memoria locale per i messaggi inviati e una connessione al servizio offerto da Twitter. Ognuno di questi &#8220;componenti&#8221; sarà configurabile e verrà specificato separatamente, insieme a un client che funzionerà come &#8220;middleware&#8221; per legare insieme le parti dell&#8217;applicazione. Il client sarà a sua volta un componente che dipenderà dagli altri componenti: nel crearne un&#8217;istanza concreta, la configureremo tramite i componenti di cui avrà bisogno.
 
 <pre><code>// <a href=esempi/cap-13/twitter-client.scala>esempi/cap-13/twitter-client.scala</a>
 
@@ -1819,32 +1819,32 @@ trait TwitterClientComponent {
   }
 }</code></pre>
 
-<p>La prima classe, chiamata <code>TwitterUserProfile</code>, incapsula il profilo di un utente, limitato al solo nome. La seconda classe, chiamata <code>Tweet</code>, è una classe <code>case</code> che incapsula un singolo &#8220;cinguettìo&#8221; (un messaggio di Twitter, che il servizio limita a 140 caratteri), l'utente che lo ha inviato e la data e l'ora di invio. Abbiamo scelto di definire questa classe come una classe <code>case</code> per la facilità con cui le classi <code>case</code> permettono di creare oggetti ed eseguire su di loro il pattern matching. La classe che rappresenta il profilo non è stata definita in questo modo perché è più probabile che venga usata come genitore di classi di profilo più dettagliate.
+<p>La prima classe, chiamata <code>TwitterUserProfile</code>, incapsula il profilo di un utente, limitato al solo nome. La seconda classe, chiamata <code>Tweet</code>, è una classe <code>case</code> che incapsula un singolo &#8220;cinguettìo&#8221; (un messaggio di Twitter, che il servizio limita a 140 caratteri), l&#8217;utente che lo ha inviato e la data e l&#8217;ora di invio. Abbiamo scelto di definire questa classe come una classe <code>case</code> per la facilità con cui le classi <code>case</code> permettono di creare oggetti ed eseguire su di loro il pattern matching. La classe che rappresenta il profilo non è stata definita in questo modo perché è più probabile che venga usata come genitore di classi di profilo più dettagliate.
 
 <p>Subito dopo troviamo il tratto <code>Tweeter</code>, che dichiara un singolo metodo chiamato <code>tweet</code>. Questo tratto è stato definito unicamente per eliminare una possibile dipendenza circolare tra i due componenti <code>TwitterClientComponent</code> e <code>TwitterClientUIComponent</code>, definiti insieme agli altri componenti nella parte rimanente del file.
 
 <p>In totale, i &#8220;componenti&#8221; sono quattro. Si noti che sono implementati come tratti.
 
 <ul>
-<li><code>TwitterClientUIComponent</code>, per l'interfaccia utente.
+<li><code>TwitterClientUIComponent</code>, per l&#8217;interfaccia utente.
 <li><code>TwitterLocalCacheComponent</code>, per la memorizzazione locale dei messaggi inviati.
 <li><code>TwitterServiceComponent</code>, per accedere al servizio di Twitter.
-<li><code>TwitterClientComponent</code>, il client che mette insieme le parti dell'applicazione.
+<li><code>TwitterClientComponent</code>, il client che mette insieme le parti dell&#8217;applicazione.
 </ul>
 
-<p>Tutti i componenti hanno una struttura simile: ognuno dichiara un tratto o una classe annidata che incapsula il comportamento del componente, e un valore <code>val</code> a cui è assegnata un'istanza del tipo annidato.
+<p>Tutti i componenti hanno una struttura simile: ognuno dichiara un tratto o una classe annidata che incapsula il comportamento del componente, e un valore <code>val</code> a cui è assegnata un&#8217;istanza del tipo annidato.
 
 <p>In Java i package vengono spesso associati informalmente con i componenti, come capita in altri linguaggi con il loro equivalente per i package, per esempio i moduli o gli spazi di nomi. Qui stiamo definendo una nozione più precisa di componente e i tratti sono il miglior mezzo per veicolarla perché sono progettati per essere composti tra loro.
 
-<p><code>TwitterClientUIComponent</code> dichiara un campo <code>val</code> chiamato <code>ui</code> che contiene un'istanza del tipo annidato <code>TwitterClientUI</code>. Questa classe dispone di un campo <code>client</code> che deve essere inizializzato con un'istanza di <code>Tweeter</code>. In effetti, questa sarà un'istanza di <code>TwitterClient</code> (definita in <code>TwitterClientComponent</code>), che estende <code>Tweeter</code>.
+<p><code>TwitterClientUIComponent</code> dichiara un campo <code>val</code> chiamato <code>ui</code> che contiene un&#8217;istanza del tipo annidato <code>TwitterClientUI</code>. Questa classe dispone di un campo <code>client</code> che deve essere inizializzato con un&#8217;istanza di <code>Tweeter</code>. In effetti, questa sarà un&#8217;istanza di <code>TwitterClient</code> (definita in <code>TwitterClientComponent</code>), che estende <code>Tweeter</code>.
 
-<p><code>TwitterClientUI</code> definisce due metodi: il primo è <code>sendTweet</code>, che l'interfaccia userà per invocare l'oggetto <code>client</code> quando l'utente invia un nuovo messaggio; il secondo è <code>showTweet</code>, speculare al primo metodo e invocato ogni volta che un nuovo messaggio (inviato da un altro utente, per esempio) deve essere mostrato. Questo secondo metodo è astratto, in attesa della &#8220;decisione&#8221; sul tipo di interfaccia da usare.
+<p><code>TwitterClientUI</code> definisce due metodi: il primo è <code>sendTweet</code>, che l&#8217;interfaccia userà per invocare l&#8217;oggetto <code>client</code> quando l&#8217;utente invia un nuovo messaggio; il secondo è <code>showTweet</code>, speculare al primo metodo e invocato ogni volta che un nuovo messaggio (inviato da un altro utente, per esempio) deve essere mostrato. Questo secondo metodo è astratto, in attesa della &#8220;decisione&#8221; sul tipo di interfaccia da usare.
 
 <p>Similmente, <code>TwitterLocalCacheComponent</code> contiene la dichiarazione di <code>TwitterLocalCache</code> e una sua istanza. Le istanze con questo tratto salvano i messaggi nella memoria persistente locale quando <code>saveTweet</code> viene invocato. I messaggi salvati si possono recuperare invocando <code>history</code>.
 
-<p>Anche <code>TwitterServiceComponent</code> è molto simile. Il suo tipo annidato dispone di un metodo <code>sendTweet</code> per inviare un messaggio a Twitter e di un metodo <code>history</code> per recuperare tutti i messaggi dell'utente corrente.
+<p>Anche <code>TwitterServiceComponent</code> è molto simile. Il suo tipo annidato dispone di un metodo <code>sendTweet</code> per inviare un messaggio a Twitter e di un metodo <code>history</code> per recuperare tutti i messaggi dell&#8217;utente corrente.
 
-<p>Infine, <code>TwitterClientComponent</code> contiene una classe concreta, chiamata <code>TwitterClient</code>, che integra i componenti tra loro. Il suo metodo <code>tweet</code> invia un nuovo messaggio al servizio di Twitter e, se la spedizione ha successo, lo inoltra anche all'interfaccia e alla memoria persistente locale.
+<p>Infine, <code>TwitterClientComponent</code> contiene una classe concreta, chiamata <code>TwitterClient</code>, che integra i componenti tra loro. Il suo metodo <code>tweet</code> invia un nuovo messaggio al servizio di Twitter e, se la spedizione ha successo, lo inoltra anche all&#8217;interfaccia e alla memoria persistente locale.
 
 <p><code>TwitterClientComponent</code> contiene anche la seguente <em>annotazione self-type</em>.
 
@@ -1852,13 +1852,13 @@ trait TwitterClientComponent {
       TwitterLocalCacheComponent with
       TwitterServiceComponent =&gt;</code></pre>
 
-<p>Questa dichiarazione ha l'effetto di indicare che ogni <code>TwitterClientComponent</code> concreto deve assumere anche il comportamento di quegli altri tre componenti, combinando quindi tutti i componenti in una singola istanza dell'applicazione. Questa composizione verrà realizzata mescolando i componenti, che sono tratti, al momento di creare i client concreti, come vedremo fra breve.
+<p>Questa dichiarazione ha l&#8217;effetto di indicare che ogni <code>TwitterClientComponent</code> concreto deve assumere anche il comportamento di quegli altri tre componenti, combinando quindi tutti i componenti in una singola istanza dell&#8217;applicazione. Questa composizione verrà realizzata mescolando i componenti, che sono tratti, al momento di creare i client concreti, come vedremo fra breve.
 
-<p>L'annotazione self-type significa anche che possiamo fare riferimento ai campi <code>val</code> dichiarati in quei componenti. Si noti che <code>TwitterClient.tweet</code> usa <code>service</code>, <code>localCache</code> e <code>ui</code> come se fossero variabili visibili nel proprio ambito. E, in effetti, <em>sono</em> visibili, grazie all'annotazione self-type.
+<p>L&#8217;annotazione self-type significa anche che possiamo fare riferimento ai campi <code>val</code> dichiarati in quei componenti. Si noti che <code>TwitterClient.tweet</code> usa <code>service</code>, <code>localCache</code> e <code>ui</code> come se fossero variabili visibili nel proprio ambito. E, in effetti, <em>sono</em> visibili, grazie all&#8217;annotazione self-type.
 
-<p>Si noti anche che tutti i metodi che invocano altri componenti sono concreti: quelle relazioni di invocazione tra i componenti sono completamente specificate. Le astrazioni sono dirette &#8220;all'esterno&#8221;, verso l'interfaccia utente, il meccanismo di persistenza, <span class=baa>&amp;</span>c.
+<p>Si noti anche che tutti i metodi che invocano altri componenti sono concreti: quelle relazioni di invocazione tra i componenti sono completamente specificate. Le astrazioni sono dirette &#8220;all&#8217;esterno&#8221;, verso l&#8217;interfaccia utente, il meccanismo di persistenza, <span class=baa>&amp;</span>c.
 
-<p>Ora definiamo un client Twitter concreto che usa un'interfaccia testuale a riga di comando e una cache locale in memoria, e che finge di interagire con il servizio Twitter.
+<p>Ora definiamo un client Twitter concreto che usa un&#8217;interfaccia testuale a riga di comando e una cache locale in memoria, e che finge di interagire con il servizio Twitter.
 
 <pre><code>// <a href=esempi/cap-13/twitter-text-client.scala>esempi/cap-13/twitter-text-client.scala</a>
 
@@ -1920,7 +1920,7 @@ client.ui.sendTweet("Vado in bagno...")
 println("Cronologia dei messaggi:")
 client.localCache.history.foreach {t =&gt; println(t)}</code></pre>
 
-<p>Abbiamo creato un'istanza di <code>TextClient</code> per l'utente <code>"BuckTrends"</code>. Il vecchio Buck invia tre messaggi perspicaci tramite l'interfaccia. Concludiamo stampando in ordine inverso la cronologia dei messaggi memorizzati localmente. L'esecuzione di questo script produce in uscita il testo seguente.
+<p>Abbiamo creato un&#8217;istanza di <code>TextClient</code> per l&#8217;utente <code>"BuckTrends"</code>. Il vecchio Buck invia tre messaggi perspicaci tramite l&#8217;interfaccia. Concludiamo stampando in ordine inverso la cronologia dei messaggi memorizzati localmente. L&#8217;esecuzione di questo script produce in uscita il testo seguente.
 
 <pre><samp>Invio il messaggio al quartier generale di Twitter
 (Sunday, May 3, 2009) @BuckTrends: Il mio primo messaggio. Come funziona questo aggeggio?
@@ -1935,23 +1935,23 @@ Cronologia dei messaggi:
 
 <p>Le date varieranno, naturalmente. Ricordatevi che la riga <code>Invio il messaggio al quartier generale di Twitter</code> viene stampata dal servizio finto.
 
-<p>Per riassumere, ogni componente principale del client Twitter è stato dichiarato nel proprio tratto, con un tipo annidato che contiene le dichiarazioni dei campi e dei metodi del componente. Il componente client ha dichiarato le proprie dipendenze nei confronti degli altri componenti usando un'annotazione self-type. La classe client concreta ha mescolato questi componenti e definito il campo <code>val</code> di ogni componente come un sottotipo appropriato delle classi astratte e dei tratti corrispondenti che erano stati dichiarati nel componente.
+<p>Per riassumere, ogni componente principale del client Twitter è stato dichiarato nel proprio tratto, con un tipo annidato che contiene le dichiarazioni dei campi e dei metodi del componente. Il componente client ha dichiarato le proprie dipendenze nei confronti degli altri componenti usando un&#8217;annotazione self-type. La classe client concreta ha mescolato questi componenti e definito il campo <code>val</code> di ogni componente come un sottotipo appropriato delle classi astratte e dei tratti corrispondenti che erano stati dichiarati nel componente.
 
-<p>Abbiamo ottenuto un &#8220;collegamento&#8221; type-safe tra i componenti e un modello a componenti flessibile, realizzando tutto quanto in codice Scala! Esistono alcune alternative al pattern Cake per implementare l'iniezione di dipendenza in Scala: si veda <a href=apa.html#Boner2008b>[Bon&#233;r2008b]</a> per ulteriori esempi.
+<p>Abbiamo ottenuto un &#8220;collegamento&#8221; type-safe tra i componenti e un modello a componenti flessibile, realizzando tutto quanto in codice Scala! Esistono alcune alternative al pattern Cake per implementare l&#8217;iniezione di dipendenza in Scala: si veda <a href=apa.html#Boner2008b>[Bon&#233;r2008b]</a> per ulteriori esempi.
 
 <h2 id=DesignByContractExample>Una progettazione migliore con la progettazione per contratto</h2>
 
-<p>Concluderemo questo capitolo con una breve disamina di una metodologia di programmazione chiamata <em>progettazione per contratto</em> <a href=apa.html#DesignByContract>[DesignByContract]</a>, sviluppata da Bertrand Meyer per il linguaggio Eiffel <a href=apa.html#Eiffel>[Eiffel]</a>. (Si veda anche il capitolo 4 di <a href=apa.html#Hunt2000>[Hunt2000]</a>.) La progettazione per contratto ha almeno vent'anni di vita, e anche se ora è caduta piuttosto in disgrazia è ancora molto utile per ragionare sulla progettazione del software.
+<p>Concluderemo questo capitolo con una breve disamina di una metodologia di programmazione chiamata <em>progettazione per contratto</em> <a href=apa.html#DesignByContract>[DesignByContract]</a>, sviluppata da Bertrand Meyer per il linguaggio Eiffel <a href=apa.html#Eiffel>[Eiffel]</a>. (Si veda anche il capitolo 4 di <a href=apa.html#Hunt2000>[Hunt2000]</a>.) La progettazione per contratto ha almeno vent&#8217;anni di vita, e anche se ora è caduta piuttosto in disgrazia è ancora molto utile per ragionare sulla progettazione del software.
 
 <p>Quando considerate il &#8220;contratto&#8221; di un modulo, è possibile specificare tre tipi di condizioni. Per iniziare, si possono specificare gli ingressi richiesti affinché un modulo esegua un servizio con successo, come nel caso della invocazione di un metodo. Questi vincoli vengono chiamati <em>precondizioni</em>, e possono anche includere requisiti di sistema, per esempio su variabili globali (che però normalmente dovreste evitare).
 
 <p>Poi, è possibile anche specificare i risultati che il modulo garantisce di restituire, cioè le <em>postcondizioni</em>, se le precondizioni sono state soddisfatte.
 
-<p>Infine, si possono specificare le <em>invarianti</em> che devono essere vere prima e dopo l'invocazione di un servizio.
+<p>Infine, si possono specificare le <em>invarianti</em> che devono essere vere prima e dopo l&#8217;invocazione di un servizio.
 
-<p>Il particolare contributo portato dalla progettazione per contratto è l'idea che questi vincoli contrattuali dovrebbero essere specificati come codice eseguibile, in modo da poter essere fatti rispettare automaticamente a tempo di esecuzione, anche se, di solito, solo durante la fase di collaudo. La violazione di un vincolo dovrebbe portare alla terminazione immediata dell'esecuzione, obbligandovi a correggere il problema anziché ignorarlo.
+<p>Il particolare contributo portato dalla progettazione per contratto è l&#8217;idea che questi vincoli contrattuali dovrebbero essere specificati come codice eseguibile, in modo da poter essere fatti rispettare automaticamente a tempo di esecuzione, anche se, di solito, solo durante la fase di collaudo. La violazione di un vincolo dovrebbe portare alla terminazione immediata dell&#8217;esecuzione, obbligandovi a correggere il problema anziché ignorarlo.
 
-<p>Scala non supporta esplicitamente la progettazione per contratto, ma <code>Predef</code> dispone di diversi metodi che possono essere usati a questo scopo. L'esempio seguente mostra come sfruttare <code>require</code> e <code>assume</code> per far rispettare un contratto.
+<p>Scala non supporta esplicitamente la progettazione per contratto, ma <code>Predef</code> dispone di diversi metodi che possono essere usati a questo scopo. L&#8217;esempio seguente mostra come sfruttare <code>require</code> e <code>assume</code> per far rispettare un contratto.
 
 <pre><code>// <a href=esempi/cap-13/bank-account.scala>esempi/cap-13/bank-account.scala</a>
 
@@ -1968,7 +1968,7 @@ class BankAccount(val balance: Double) {
   }
 }</code></pre>
 
-<p>La classe <code>BankAccount</code> usa <code>require</code> per garantire che un saldo non negativo venga specificato come argomento del costruttore. Similmente, i metodi <code>debit</code> e <code>credit</code> usano <code>require</code> per garantire che l'argomento <code>amount</code> specificato sia positivo.
+<p>La classe <code>BankAccount</code> usa <code>require</code> per garantire che un saldo non negativo venga specificato come argomento del costruttore. Similmente, i metodi <code>debit</code> e <code>credit</code> usano <code>require</code> per garantire che l&#8217;argomento <code>amount</code> specificato sia positivo.
 
 <p>La specifica seguente conferma che il &#8220;contratto&#8221; viene rispettato.
 
@@ -1998,7 +1998,7 @@ object BankAccountSpec extends Specification {
   }
 }</code></pre>
 
-<p>Se si tenta di creare un'istanza di <code>BankAccount</code> con un saldo negativo, verrà lanciata un'eccezione di tipo <code>IllegalArgumentException</code>, come nel caso in cui l'addebito sia inferiore a zero. Entrambe le condizioni vengono imposte usando <code>require</code>, che lancia una <code>IllegalArgumentException</code> quando la condizione specificata è falsa.
+<p>Se si tenta di creare un&#8217;istanza di <code>BankAccount</code> con un saldo negativo, verrà lanciata un&#8217;eccezione di tipo <code>IllegalArgumentException</code>, come nel caso in cui l&#8217;addebito sia inferiore a zero. Entrambe le condizioni vengono imposte usando <code>require</code>, che lancia una <code>IllegalArgumentException</code> quando la condizione specificata è falsa.
 
 <p>Il metodo <code>assume</code>, usato per garantire che non siano ammessi conti scoperti, funziona in maniera quasi identica a <code>require</code>, ma lancia un <code>AssertionError</code> anziché una <code>IllegalArgumentException</code>.
 
@@ -2006,9 +2006,9 @@ object BankAccountSpec extends Specification {
 
 <p>Esiste anche una coppia di metodi <code>assert</code> che si comporta in maniera identica ad <code>assume</code>, tranne per un leggero cambiamento nel messaggio di errore generato. La scelta tra <code>assert</code> o <code>assume</code> dipende da quali di questi due &#8220;nomi&#8221; è più adatto a un certo contesto dal punto di vista concettuale.
 
-<p>L'oggetto <code>Predef</code> definisce anche una classe <code>Ensuring</code> che può essere usata per generalizzare le funzionalità di questi metodi. Essa dispone solo di un metodo <code>ensure</code> sovraccaricato in diverse versioni, alcune delle quali accettano un letterale funzione come &#8220;predicato&#8221;.
+<p>L&#8217;oggetto <code>Predef</code> definisce anche una classe <code>Ensuring</code> che può essere usata per generalizzare le funzionalità di questi metodi. Essa dispone solo di un metodo <code>ensure</code> sovraccaricato in diverse versioni, alcune delle quali accettano un letterale funzione come &#8220;predicato&#8221;.
 
-<p><code>Ensuring</code> e i suoi metodi hanno lo svantaggio di non poter essere disabilitati nel codice di produzione. Potrebbe <em>non</em> essere accettabile terminare bruscamente l'esecuzione se una condizione non viene rispettata, anche se, nel caso in cui gli venga permesso di procedere &#8220;zoppicando&#8221;, il sistema potrebbe bloccarsi più tardi rendendo più difficile scoprire e correggere il problema. Il costo aggiuntivo imposto alle prestazioni potrebbe costituire un ulteriore motivo per disabilitare i controlli sul contratto durante l'esecuzione.
+<p><code>Ensuring</code> e i suoi metodi hanno lo svantaggio di non poter essere disabilitati nel codice di produzione. Potrebbe <em>non</em> essere accettabile terminare bruscamente l&#8217;esecuzione se una condizione non viene rispettata, anche se, nel caso in cui gli venga permesso di procedere &#8220;zoppicando&#8221;, il sistema potrebbe bloccarsi più tardi rendendo più difficile scoprire e correggere il problema. Il costo aggiuntivo imposto alle prestazioni potrebbe costituire un ulteriore motivo per disabilitare i controlli sul contratto durante l&#8217;esecuzione.
 
 <p>Di questi tempi, gli obiettivi della progettazione per contratto sono ampiamente raggiunti dallo sviluppo guidato dal collaudo (noto come <em>Test-Driven Development</em>, o <abbr>TDD</abbr>). Tuttavia, la <em>forma mentis</em> necessaria a ragionare in termini di progettazione per contratto può essere adottata come utile complemento dei benefici offerti dal <abbr>TDD</abbr>. Se decidete di usare la progettazione per contratto per le vostre applicazioni, considerate la possibilità di creare un modulo personalizzato che vi permetta di disabilitare i controlli nel codice di produzione.
 
@@ -2019,7 +2019,7 @@ object BankAccountSpec extends Specification {
 <hr style="border-color: black; height: 1px; width: 8em; margin-left: 0px; margin-top: 2em;">
 
 <ol id=fns>
-<li id=fn-1>[NdT] <abbr>ORM</abbr> è l'acronimo dell'inglese Object-Relational Mapping, una tecnica di programmazione che favorisce l'integrazione di sistemi software orientati agli oggetti con sistemi di database relazionali. <a href=#fnn-1>&#8617;</a>
+<li id=fn-1>[NdT] <abbr>ORM</abbr> è l&#8217;acronimo dell&#8217;inglese Object-Relational Mapping, una tecnica di programmazione che favorisce l&#8217;integrazione di sistemi software orientati agli oggetti con sistemi di database relazionali. <a href=#fnn-1>&#8617;</a>
 <li id=fn-2>Qui abbiamo inserito tutto in un unico file per motivi di convenienza, ma di solito dovreste tenere separate queste due parti. <a href=#fnn-2>&#8617;</a>
 </ol>
 
