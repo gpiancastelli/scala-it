@@ -121,7 +121,7 @@ List(5, 10, 15, 20, 25)</samp></pre>
 
 <p>Tuttavia, <var>factor</var> non è un parametro formale, ma un riferimento a una variabile nell&#8217;ambito esterno. Quindi, il compilatore crea una <em>chiusura</em> che racchiude (o si &#8220;chiude sopra&#8221;) <code>multiplier</code> e il contesto esterno delle variabili non legate a cui <code>multiplier</code> fa riferimento, legando in questo modo anche quelle variabili.
 
-<p>Questo è il motivo per cui il comportamento di <code>multiplier</code> è cambiato dopo la modifica di <var>factor</var>. La funzione fa riferimento a <var>factor</var> e legge il suo valore corrente ogni volta. Se una funzione non ha riferimenti esterni, allora è banalmente chiusa su sé stessa e non richiede nessun contesto esterno.
+<p>Questo è il motivo per cui il comportamento di <code>multiplier</code> è cambiato dopo la modifica di <var>factor</var>. La funzione fa riferimento a <var>factor</var> e legge il suo valore corrente ogni volta. Se una funzione non ha riferimenti esterni, allora è banalmente chiusa su se stessa e non richiede nessun contesto esterno.
 
 <h3 id=PurityInsideVsOutside>Purezza interna ed esterna</h3>
 
@@ -184,7 +184,7 @@ for (i &lt;- 1 to 10)
 
 <h2 id=TailCalls>La ricorsione in coda e la sua ottimizzazione</h2>
 
-<p>La <em>ricorsione in coda</em> è un tipo particolare di ricorsione che avviene quando la funzione richiama sé stessa come sua ultima operazione. La ricorsione in coda è molto importante, perché è il tipo di ricorsione più facile da ottimizzare con la conversione in un ciclo. I cicli eliminano il potenziale stack overflow e migliorano le prestazioni eliminando il costo aggiuntivo della chiamata ricorsiva di funzione. Nonostante l&#8217;ottimizzazione della ricorsione in coda non sia ancora supportata nativamente dalla <abbr>JVM</abbr>, <kbd>scalac</kbd> può effettuarla.
+<p>La <em>ricorsione in coda</em> è un tipo particolare di ricorsione che avviene quando la funzione richiama se stessa come sua ultima operazione. La ricorsione in coda è molto importante, perché è il tipo di ricorsione più facile da ottimizzare con la conversione in un ciclo. I cicli eliminano il potenziale stack overflow e migliorano le prestazioni eliminando il costo aggiuntivo della chiamata ricorsiva di funzione. Nonostante l&#8217;ottimizzazione della ricorsione in coda non sia ancora supportata nativamente dalla <abbr>JVM</abbr>, <kbd>scalac</kbd> può effettuarla.
 
 <p>Tuttavia, il nostro esempio del fattoriale non è una ricorsione in coda, perché <code>factorial</code> si richiama e <em>poi</em> opera una moltiplicazione tra i risultati. &Egrave; possibile implementare <code>factorial</code> in modo da usare la ricorsione in coda. In effetti, ne abbiamo vista un&#8217;implementazione nella sezione <a href=cap-2.html#NestingMethodDefinitions>Annidare le definizioni di metodo</a> del capitolo 2. Tuttavia, quell&#8217;esempio non usava alcuni costrutti che abbiamo imparato nel frattempo, come le espressioni <code>for</code> e il pattern matching. Quindi, ecco una nuova implementazione di <code>factorial</code> che effettua i calcoli con la ricorsione in coda.
 
@@ -208,7 +208,7 @@ for (i &lt;- 1 to 10)
 <p>L&#8217;annidamento di una funzione ricorsiva in coda che usa un accumulatore è una tecnica idiomatica molto utile per convertire molti algoritmi ricorsivi in ricorsioni in coda che possono essere ottimizzate da <kbd>scalac</kbd> sotto forma di cicli.
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>L&#8217;ottimizzazione della ricorsione in coda non verrà applicata quando un metodo che chiama sé stesso può essere ridefinito in un tipo derivato. Il metodo deve essere dichiarato <code>private</code> o <code>final</code>, definito in un <code>object</code>, o annidato in un altro metodo (come <code>fact</code> nel nostro esempio). La nuova annotazione <code>@tailrec</code> introdotta nella versione 2.8 genererà un errore se il compilatore non riesce a ottimizzare il metodo annotato. (Si veda la sezione <a href=cap-13.html#Annotations>Annotazioni</a> nel capitolo 13.)
+<p><span class=u>&#x261E;</span>L&#8217;ottimizzazione della ricorsione in coda non verrà applicata quando un metodo che chiama se stesso può essere ridefinito in un tipo derivato. Il metodo deve essere dichiarato <code>private</code> o <code>final</code>, definito in un <code>object</code>, o annidato in un altro metodo (come <code>fact</code> nel nostro esempio). La nuova annotazione <code>@tailrec</code> introdotta nella versione 2.8 genererà un errore se il compilatore non riesce a ottimizzare il metodo annotato. (Si veda la sezione <a href=cap-13.html#Annotations>Annotazioni</a> nel capitolo 13.)
 </blockquote>
 
 <h3 id=TrampolineTailCalls>Trampolino per le ricorsioni in coda</h3>

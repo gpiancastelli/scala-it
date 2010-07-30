@@ -211,7 +211,7 @@ println(factorial(3))
 println(factorial(4))
 println(factorial(5))</code></pre>
 
-<p>Il secondo metodo invoca sé stesso ricorsivamente, passando un parametro <var>accumulator</var> in cui viene &#8220;accumulato&#8221; il risultato del calcolo. Notate che, quando il contatore <var>i</var> raggiunge 1, restituiamo il valore accumulato. (Stiamo ignorando gli interi negativi non validi. La funzione in realtà restituisce 1 per <code>i &lt; 0</code>.) Dopo aver definito il metodo annidato, <code>factorial</code> lo invoca con il valore <var>i</var> che gli viene passato e con il valore iniziale 1 per l&#8217;accumulatore.
+<p>Il secondo metodo invoca se stesso ricorsivamente, passando un parametro <var>accumulator</var> in cui viene &#8220;accumulato&#8221; il risultato del calcolo. Notate che, quando il contatore <var>i</var> raggiunge 1, restituiamo il valore accumulato. (Stiamo ignorando gli interi negativi non validi. La funzione in realtà restituisce 1 per <code>i &lt; 0</code>.) Dopo aver definito il metodo annidato, <code>factorial</code> lo invoca con il valore <var>i</var> che gli viene passato e con il valore iniziale 1 per l&#8217;accumulatore.
 
 <p>Come accade per le dichiarazioni di variabili locali in molti linguaggi, un metodo annidato è visibile solamente all&#8217;interno del metodo che lo include. Se provate a invocare <code>fact</code> al di fuori di <code>factorial</code>, otterrete un errore di compilazione.
 
@@ -1201,7 +1201,7 @@ class FileBulkReader(val source: File) extends BulkReader[File] {&hellip;}</code
 <td align=left valign=top><p>la sezione <a href=cap-6.html#OverridingMethods>Ridefinire i metodi astratti e concreti</a> nel <a href=cap-6.html>capitolo 6</a>
 <tr>
 <td align=left valign=top><p><code>this</code>
-<td align=left valign=top><p>Il modo in cui un oggetto fa riferimento a sé stesso. Il nome del metodo per i <em>costruttori ausiliari</em>.
+<td align=left valign=top><p>Il modo in cui un oggetto fa riferimento a se stesso. Il nome del metodo per i <em>costruttori ausiliari</em>.
 <td align=left valign=top><p>la sezione <a href=cap-5.html#ClassBasics>I concetti di base per classi e oggetti</a> nel <a href=cap-5.html>capitolo 5</a>
 <tr>
 <td align=left valign=top><p><code>throw</code>
