@@ -617,7 +617,7 @@ res1: bounds.abbrevlist.AbbrevList[Int] = ::(1,::(2,::(3,AbbrevNil)))</samp></pr
 
 <h3 id=ViewsAndViewBounds>Viste e limiti sulle viste</h3>
 
-<p>Abbiamo visto molti casi in cui un metodo implicito viene usato per una conversione di tipo, per esempio allo scopo di far sembrare che si siano aggiunti nuovi metodi a un tipo esistente, come nel pattern cosiddetto &#8220;Decora la mia libreria&#8221; ampiamente sfruttato nel capitolo 11. Per effettuare una conversione si possono anche usare valori funzione accompagnati dalla parola chiave <code>implicit</code>. Vedremo un esempio di entrambe le soluzioni tra breve.
+<p>Abbiamo visto molti casi in cui un metodo implicito viene usato per una conversione di tipo, per esempio allo scopo di far sembrare che si siano aggiunti nuovi metodi a un tipo esistente, come nel pattern cosiddetto <em>Pimp my library</em> ampiamente sfruttato nel capitolo 11. Per effettuare una conversione si possono anche usare valori funzione accompagnati dalla parola chiave <code>implicit</code>. Vedremo un esempio di entrambe le soluzioni tra breve.
 
 <p>Una <em>vista</em> è un valore implicito di tipo funzione che converte un tipo <code>A</code> in un tipo <code>B</code>. La funzione è di tipo <code>A =&gt; B</code> oppure <code>(=&gt; A) =&gt; B</code> (dove <code>(=&gt; A)</code> è un <em>parametro con nome</em>). Si può usare come vista un metodo implicito con la stessa firma visibile nell&#8217;ambito corrente, cioè un metodo implicito importato da un <code>object</code>. Il termine <em>vista</em> esprime l&#8217;idea che da un tipo (<code>A</code>) sia possibile vedere un altro tipo (<code>B</code>).
 
