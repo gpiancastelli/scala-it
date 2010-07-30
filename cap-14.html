@@ -17,7 +17,7 @@ body{counter-reset:h1 14}
 
 <h2 id=CommandLineTools>Strumenti a riga di comando</h2>
 
-<p>Anche se svolgete la maggior parte del vostro lavoro in un <abbr>IDE</abbr>, la comprensione del funzionamento degli strumenti a riga di comando vi rende più versatili e vi permette di ripiegare su di essi nel caso in cui gli strumenti grafici dovessero venir meno. In questo capitolo, vi daremo alcuni consigli pratici per interagire con gli strumenti a riga di comando, anche se non ne descriveremo tutte le opzioni. Per approfondire nel dettaglio la conoscenza di questi strumenti, vi raccomandiamo di scaricare e consultare il pacchetto di documentazione chiamato <code>scala-devel-docs</code>, come descritto nella sezione <a href=cap-1.html#ForMoreInformation>Per maggiori informazioni</a> del capitolo 1 e nella sezione <a href=#CommandLineToolSbaz>Lo strumento <kbd>sbaz</kbd> a riga di comando</a> più avanti in questo capitolo.
+<p>Anche se svolgete la maggior parte del vostro lavoro in un <abbr>IDE</abbr>, la comprensione del funzionamento degli strumenti a riga di comando vi rende più versatili e vi permette di ripiegare su di essi nel caso in cui gli strumenti grafici dovessero abbandonarvi. In questo capitolo, vi daremo alcuni consigli pratici per interagire con gli strumenti a riga di comando, anche se non ne descriveremo tutte le opzioni. Per approfondire nel dettaglio la conoscenza di questi strumenti, vi raccomandiamo di scaricare e consultare il pacchetto di documentazione chiamato <code>scala-devel-docs</code>, come descritto nella sezione <a href=cap-1.html#ForMoreInformation>Per maggiori informazioni</a> del capitolo 1 e nella sezione <a href=#CommandLineToolSbaz>Lo strumento <kbd>sbaz</kbd> a riga di comando</a> più avanti in questo capitolo.
 
 <p>Tutti gli strumenti a riga di comando vengono installati nella directory <code class=var>scala-home</code><span class=file>/bin</span> (si veda la sezione <a href=cap-1.html#InstallingScala>Installare Scala</a> nel capitolo 1).
 
@@ -83,7 +83,7 @@ body{counter-reset:h1 14}
 <td align=left valign=top><p>Stampa una sinossi delle opzioni standard.
 <tr>
 <td align=left valign=top><p><code>-make:</code><code class=var>strategia</code>
-<td align=left valign=top><p>Specifica la strategia usata per individuare i file da ricompilare (versione 2.8): <code>all</code>, <code>changed</code>, <code>immediate</code>, <code>transitive</code>.
+<td align=left valign=top><p>Specifica la <code class=var>strategia</code> usata per individuare i file da ricompilare (versione 2.8): <code>all</code>, <code>changed</code>, <code>immediate</code>, <code>transitive</code>.
 <tr>
 <td align=left valign=top><p><code>-nowarn</code>
 <td align=left valign=top><p>Evita di generare messaggi di warning.
@@ -163,7 +163,7 @@ body{counter-reset:h1 14}
 args.map(_.toUpperCase()).foreach(printf("%s ",_))
 println("")</code></pre>
 
-<p>Se eseguiamo questo script con il comando <kbd>scala upper.scala Ciao Mondo!</kbd>, otteniamo la stessa uscita di prima, <code>HELLO WORLD!</code>.
+<p>Se eseguiamo questo script con il comando <kbd>scala upper.scala Ciao Mondo!</kbd>, otteniamo la stessa uscita di prima, <code>CIAO MONDO!</code>.
 
 <p>Infine, se invocate <kbd>scala</kbd> senza un file di script o il nome di un oggetto come argomento, <kbd>scala</kbd> viene eseguito in modalità interattiva. Ecco un esempio di una sessione interattiva.
 
@@ -235,7 +235,7 @@ g
 <tbody valign=top>
 <tr>
 <td align=left valign=top><p><code>:help</code>
-<td align=left valign=top><p>Stampa un messaggio di aiuto a proposito di questi comandi.
+<td align=left valign=top><p>Stampa un messaggio di aiuto riguardante questi comandi.
 <tr>
 <td align=left valign=top><p><code>:load</code>
 <td align=left valign=top><p>Seguito dal nome di un file, carica un file Scala.
@@ -259,12 +259,12 @@ g
 <pre><code>#!/usr/bin/env bash
 # <a href=esempi/cap-14/pipe-example.sh>esempi/cap-14/pipe-example.sh</a>
 
-h=Hello
-w=World
+c=Ciao
+m=Mondo
 function commands {
 cat &lt;&lt;-EOF
-println("$h")
-println("$w")
+println("$c")
+println("$m")
 EOF
 }
 
@@ -283,8 +283,8 @@ println</code></pre>
 
 <p>Ecco come potreste usarlo.
 
-<pre><samp>$ secho Hello World
-Hai digitato: Hello World</samp></pre>
+<pre><samp>$ secho Ciao Mondo
+Hai digitato: Ciao Mondo</samp></pre>
 
 <p>Similmente, ecco un esempio di comando <code>.bat</code> in Windows.
 
@@ -376,7 +376,7 @@ MessagePrinter.class</samp></pre>
 
 <p>Esistono diversi decompilatori che possono aiutarvi a capire come i costrutti del linguaggio Scala vengono ricondotti alla macchina virtuale sottostante. I decompilatori sono particolarmente utili quando avete bisogno di invocare codice Scala da Java e volete sapere come i nomi Scala vengono <em>trasformati</em> in nomi compatibili con la <abbr>JVM</abbr> o volete capire come fa il compilatore Scala a tradurre le caratteristiche del linguaggio in bytecode valido.
 
-<p>Esamineremo tre decompilatori e i vantaggi offerti da ognuno. Dato che i file di classe generati da <kbd>scalac</kbd> cotengono bytecode valido per la <abbr>JVM</abbr>, è possibile usare gli strumenti di decompilazione offerti da Java.
+<p>Esamineremo tre decompilatori e i vantaggi offerti da ognuno. Dato che i file di classe generati da <kbd>scalac</kbd> contengono bytecode valido per la <abbr>JVM</abbr>, è possibile usare gli strumenti di decompilazione offerti da Java.
 
 <ul>
 <li><kbd>scalap</kbd> è incluso nella distribuzione Scala. Mostra le dichiarazioni come apparirebbero nel codice sorgente Scala.
@@ -434,7 +434,7 @@ case class Complex(real: Double, imaginary: Double) {
 
 <h3 id=CommandLineToolScaladoc>Lo strumento <kbd>scaladoc</kbd> a riga di comando</h3>
 
-<p>Il comando <kbd>scaladoc</kbd> è analogo a <kbd>javadoc</kbd>. Viene usato per generare documentazione a partire dai file sorgente Scala; questa documentazione viene chiamata <em>Scaladoc</em>. Il riconoscitore di <kbd>scaladoc</kbd> supporta le stesse annotazioni (indicate dal simbolo <code>@</code>) di <kbd>javadoc</kbd>, come <code>@author</code>, <code>@param</code>, <i class=baa>&amp;</i>c.
+<p>Il comando <kbd>scaladoc</kbd> è analogo a <kbd>javadoc</kbd>: viene usato per generare documentazione a partire dai file sorgente Scala; questa documentazione viene chiamata <em>Scaladoc</em>. Il riconoscitore di <kbd>scaladoc</kbd> supporta le stesse annotazioni (indicate dal simbolo <code>@</code>) di <kbd>javadoc</kbd>, come <code>@author</code>, <code>@param</code>, <i class=baa>&amp;</i>c.
 
 <p>Se usate <kbd>scaladoc</kbd> per la vostra documentazione, potreste voler considerare l'impiego di <kbd>vscaladoc</kbd>, uno strumento <kbd>scaladoc</kbd> migliorato che è disponibile all'indirizzo <a class=url href=http://code.google.com/p/vscaladoc/>http://code.google.com/p/vscaladoc/</a>. La documentazione di <kbd>vscaladoc</kbd> si può anche trovare su <a href=apa.html#ScalaTools>[ScalaTools]</a>.
 
@@ -485,9 +485,9 @@ case class Complex(real: Double, imaginary: Double) {
 
 <h2 id=BuildTools>Strumenti di assemblaggio</h2>
 
-<p>Sono stati implementati plug-in Scala per diversi strumenti di assemblaggio comunemente usati, compresi <em>Ant</em> (<a class=url href=http://ant.apache.org/>http://ant.apache.org/</a>), <em>Maven</em> (<a class=url href=http://maven.apache.org/>http://maven.apache.org/</a>) e <em>Buildr</em> (<a class=url href=http://buildr.apache.org/>http://buildr.apache.org/</a>). Esistono anche diversi strumenti di assemblaggio scritti in Scala e destinati specificamente allo sviluppo con Scala. Forse l'esempio più noto di questi strumenti è <em>sbt</em> (&#8220;Simple Build Tool&#8221; <a href=apa.html#SBT>[SBT]</a>). Questi plug-in e strumenti sono documentati molto bene sui rispettivi siti web, quindi vi rimandiamo a quei siti per i dettagli.
+<p>Sono stati implementati plug-in Scala per diversi strumenti di assemblaggio comunemente usati, compresi <em>Ant</em> (<a class=url href=http://ant.apache.org/>http://ant.apache.org/</a>), <em>Maven</em> (<a class=url href=http://maven.apache.org/>http://maven.apache.org/</a>) e <em>Buildr</em> (<a class=url href=http://buildr.apache.org/>http://buildr.apache.org/</a>). Esistono anche diversi strumenti di assemblaggio scritti in Scala e destinati specificamente allo sviluppo con Scala; forse l'esempio più noto di questi strumenti è <em>sbt</em> (&#8220;Simple Build Tool&#8221; <a href=apa.html#SBT>[SBT]</a>). Questi plug-in e strumenti sono documentati molto bene sui rispettivi siti web, quindi vi rimandiamo a quei siti per i dettagli.
 
-<p>La distribuzione Scala include alcune <em>attività</em> di <em>Ant</em> per <kbd>scalac</kbd>, <kbd>fsc</kbd> e <kbd>scaladoc</kbd>, utilizzabili in modo molto simile ai loro corrispondenti Java; essi sono descritti all'indirizzo <a class=url href=http://scala-lang.org/node/98>http://scala-lang.org/node/98</a>.
+<p>La distribuzione Scala include alcune <em>attività</em> di <em>Ant</em> per <kbd>scalac</kbd>, <kbd>fsc</kbd> e <kbd>scaladoc</kbd>, utilizzabili in modo molto simile ai loro corrispondenti Java; esse sono descritte all'indirizzo <a class=url href=http://scala-lang.org/node/98>http://scala-lang.org/node/98</a>.
 
 <p>Il plug-in Scala per <em>Maven</em> è disponibile all'indirizzo <a class=url href=http://scala-tools.org/mvnsites/maven-scala-plugin/>http://scala-tools.org/mvnsites/maven-scala-plugin/</a>. Non richiede che Scala sia installato, dato che lo scaricherà per voi. Diversi progetti Scala di terze parti usano <em>Maven</em>, come per esempio Lift (si veda la sezione <a href=#Lift>Lift</a> più avanti in questo capitolo).
 
@@ -497,7 +497,7 @@ case class Complex(real: Double, imaginary: Double) {
 
 <h2 id=IntegrationWithIDEs>Integrazione con gli <abbr>IDE</abbr></h2>
 
-<p>Se avete una certa esperienza di programmazione in Java, probabilmente siete stati viziati dalle ricche funzionalità degli attuali <abbr>IDE</abbr> per Java. Il supporto degli <abbr>IDE</abbr> per Scala non è ancora così avanzato, ma si sta evolvendo rapidamente in Eclipse, IntelliJ IDEA e NetBeans. Al momento della scrittura, i plug-in Scala per questi tre <abbr>IDE</abbr> supportano tutti la colorazione della sintassi, la gestione dei progetti, un numero limitato di refactoring automatici, <i class=baa>&amp;</i>c. Sebbene ogni plug-in abbia particolari vantaggi rispetto agli altri, le loro funzionalità sono abbastanza simili da permettervi di adottare il plug-in per il vostro <abbr>IDE</abbr> preferito senza essere costretti a rinunce inaccettabili.
+<p>Se avete una certa esperienza di programmazione in Java, probabilmente siete stati viziati dalle ricche funzionalità degli attuali <abbr>IDE</abbr> per quel linguaggio. Il supporto degli <abbr>IDE</abbr> per Scala non è ancora così avanzato, ma si sta evolvendo rapidamente in Eclipse, IntelliJ IDEA e NetBeans. Al momento della scrittura, i plug-in Scala per questi tre <abbr>IDE</abbr> supportano tutti la colorazione della sintassi, la gestione dei progetti, un numero limitato di <em>refactoring</em> automatici, <i class=baa>&amp;</i>c. Sebbene ogni plug-in abbia particolari vantaggi rispetto agli altri, le loro funzionalità sono abbastanza simili da permettervi di adottare il plug-in per il vostro <abbr>IDE</abbr> preferito senza essere costretti a rinunce inaccettabili.
 
 <p>In questa sezione descriveremo come usare il supporto per Scala disponibile in Eclipse, IntelliJ IDEA e NetBeans, supponendo che sappiate già come usare questi <abbr>IDE</abbr> per lo sviluppo in altri linguaggi, come Java.
 
@@ -509,16 +509,16 @@ case class Complex(real: Double, imaginary: Double) {
 
 <p>Il plug-in richiede il <abbr>JDK</abbr> versione 5 o superiore (viene raccomandata la 6) ed Eclipse 3.3 o superiore (viene raccomandata la versione 3.4). Il plug-in installa autonomamente lo <abbr>SDK</abbr> per Scala. Per installare il plug-in, invocate il comando <em>Software Updates</em> nel menu <em>Help</em>.
 
-<p>Selezionate la scheda <em>Available Software</em> e cliccate il pulsante &#8220;Add Site&hellip;&#8221; sul lato destro. Vedrete la finestra di dialogo mostrata in <a href=#eclipse-add-site>figura 14.1</a>.
+<p>Selezionate la scheda <em>Available Software</em> e cliccate sul pulsante &#8220;Add Site&hellip;&#8221; situato a destra. Vedrete la finestra di dialogo mostrata in <a href=#eclipse-add-site>figura 14.1</a>.
 
 <div class=figure id=eclipse-add-site>
 <p class=ft>Figura 14.1. La finestra di dialogo <em>Add site</em> di Eclipse.
 <p><img src=i/eclipse-add-site.png alt="" width=432>
 </div>
 
-<p>Digitate l'<abbr>URL</abbr> mostrato in figura, <a class=url href=http://www.scala-lang.org/scala-eclipse-plugin>http://www.scala-lang.org/scala-eclipse-plugin</a>. Alcune persone preferiscono lavorare con i rilasci <em>notturni</em> che si trovano all'indirizzo <a class=url href=http://www.scala-lang.org/scala-eclipse-plugin-nightly>http://www.scala-lang.org/scala-eclipse-plugin-nightly</a>, ma dovreste essere consapevoli di non avere alcuna garanzia sul loro funzionamento!
+<p>Digitate l'<abbr>URL</abbr> mostrato in figura, <a class=url href=http://www.scala-lang.org/scala-eclipse-plugin>http://www.scala-lang.org/scala-eclipse-plugin</a>. Alcune persone preferiscono lavorare con i rilasci <em>notturni</em> che si trovano all'indirizzo <a class=url href=http://www.scala-lang.org/scala-eclipse-plugin-nightly>http://www.scala-lang.org/scala-eclipse-plugin-nightly</a>, ma sappiate che non viene data alcuna garanzia sul loro funzionamento!
 
-<p>Selezionate la casella di controllo vicino al sito di aggiornamento appena aggiunto e cliccate il pulsante <em>Install</em>, come indicato nella <a href=#eclipse-install-scala2>figura 14.2</a>. <b>Non</b> cliccate il pulsante &#8220;predefinito&#8221; <em>Close</em>!
+<p>Selezionate la casella di controllo vicino al sito di aggiornamento appena aggiunto e cliccate sul pulsante <em>Install</em>, come indicato nella <a href=#eclipse-install-scala2>figura 14.2</a>. <b>Non</b> cliccate sul pulsante &#8220;predefinito&#8221; <em>Close</em>!
 
 <div class=figure id=eclipse-install-scala2>
 <p class=ft>La finestra di dialogo <em>Software Updates and Add-ons</em>.
@@ -529,7 +529,7 @@ case class Complex(real: Double, imaginary: Double) {
 <p><span class=u>&#x2762;</span>Fate attenzione: la scarsa usabilità della finestra di dialogo <em>Software Updates</em> potrebbe confondervi facilmente.
 </blockquote>
 
-<p>Dopo che il plug-in è stato trovato sul sito di aggiornamento, vi verrà presentata una finestra di dialogo <em>Install</em>. Superate a colpi di mouse la sequenza di schermate per completare l'installazione. Vi sarà chiesto di riavviare Eclipse per completare l'installazione.
+<p>Dopo che il plug-in è stato trovato sul sito di aggiornamento, vi verrà presentata una finestra di dialogo <em>Install</em>. Superate a colpi di mouse la sequenza di schermate per completare l'installazione. Vi verrà chiesto di riavviare Eclipse quando l'installazione sarà completata.
 
 <h4 id=_developing_scala_applications>Sviluppare applicazioni in Scala</h4>
 
@@ -537,7 +537,7 @@ case class Complex(real: Double, imaginary: Double) {
 
 <p>Potete lavorare sul vostro progetto Scala usando la maggior parte degli stessi comandi che usereste con un tipico progetto Java. Per esempio, potete creare un nuovo tratto, una nuova classe o un nuovo oggetto usando il menu contestuale.
 
-<p>Il plug-in Eclipse per Scala ha ancora alcuni &#8220;tratti grossolani&#8221;, ma gli sviluppatori Scala che usano Eclipse dovrebbero trovarlo accettabile per le loro necessità quotidiane.
+<p>Il plug-in Eclipse per Scala presenta ancora alcuni &#8220;spigoli&#8221;, ma gli sviluppatori Scala che usano Eclipse dovrebbero trovarlo accettabile per le loro necessità quotidiane.
 
 <h3 id=_intellij>IntelliJ</h3>
 
@@ -547,7 +547,7 @@ case class Complex(real: Double, imaginary: Double) {
 
 <p>Per usare il plug-in, dovete usare le versioni 8.0.X di IntelliJ o una versione successiva. Considerate la possibilità di usare il rilascio &#8220;EAP&#8221; più recente per avvalervi degli ultimi aggiornamenti alle funzionalità di IDEA. Dovete anche avere lo <abbr>SDK</abbr> Scala a riga di comando già installato, come descritto nella sezione <a href=cap-1.html#InstallingScala>Installare Scala</a> del capitolo 1.
 
-<p>Per installare il plug-in Scala, avviate IDEA. Aprite il pannello <em>Settings</em>, per esempio usando la voce di menu <em>File &rarr; Settings</em>. Scorrete l'elenco sul lato sinistro e cliccate l'elemento <em>Plugins</em>, come mostrato nella <a href=#idea-settings-plugins>figura 14.3</a>.
+<p>Per installare il plug-in Scala, avviate IDEA. Aprite il pannello <em>Settings</em>, per esempio usando la voce di menu <em>File &rarr; Settings</em>. Scorrete l'elenco sul lato sinistro e cliccate sull'elemento <em>Plugins</em>, come mostrato nella <a href=#idea-settings-plugins>figura 14.3</a>.
 
 <div class=figure id=idea-settings-plugins>
 <p class=tt>Figura 14.3. La voce per le impostazioni dei plug-in in IntelliJ IDEA.
@@ -561,7 +561,7 @@ case class Complex(real: Double, imaginary: Double) {
 <p><img src=i/idea-settings-plugins1b.png alt="" width=432>
 </div>
 
-<p>Cliccate con il tasto destro il nome del plug-in <em>Scala</em> e selezionate <em>Download and Install</em> dal menu. Ripetete l'operazione per il plug-in <em>Scala Application</em>. Dovrete riavviare IDEA per abilitare i plug-in.
+<p>Cliccate con il tasto destro sul nome del plug-in <em>Scala</em> e selezionate <em>Download and Install</em> dal menu. Ripetete l'operazione per il plug-in <em>Scala Application</em>. Dovrete riavviare IDEA per abilitare i plug-in.
 
 <p>Dopo aver riavviato IDEA, verificate che i due plug-in siano stati installati correttamente riaprendo il <em>Plugin Manager</em>. Selezionate la scheda <em>Installed</em> e scorrete l'elenco per trovare i due plug-in per Scala. Dovrebbero essere visualizzati in nero e le caselle di controllo al loro fianco dovrebbero essere spuntate, come mostrato in <a href=#idea-settings-plugins-confirm>figura 14.5</a>.
 
@@ -583,14 +583,14 @@ case class Complex(real: Double, imaginary: Double) {
 <p><img src=i/idea-new-project1a.png alt="" width=432>
 </div>
 
-<p>Passate attraverso la schermata intitolata <em>Please Select Desired Technology</em>. Spuntate le caselle di controllo <em>Scala</em> e <em>New Scala <abbr>SDK</abbr></em>. Cliccate il pulsante etichettato &#8220;&hellip;&#8221; per raggiungere l'ubicazione in cui si trova la vostra installazione dello <abbr>SDK</abbr> Scala, come mostrato in <a href=#idea-new-project1b>figura 14.7</a>. Sarà necessario specificare lo <abbr>SDK</abbr> solo la prima volta che create un progetto o quando installate un nuovo <abbr>SDK</abbr> in una posizione differente.
+<p>Passate attraverso la schermata intitolata <em>Please Select Desired Technology</em>. Spuntate le caselle di controllo <em>Scala</em> e <em>New Scala <abbr>SDK</abbr></em>. Cliccate sul pulsante etichettato &#8220;&hellip;&#8221; per raggiungere l'ubicazione in cui si trova la vostra installazione dello <abbr>SDK</abbr> Scala, come mostrato in <a href=#idea-new-project1b>figura 14.7</a>. Sarà necessario specificare lo <abbr>SDK</abbr> solo la prima volta che create un progetto o quando installate un nuovo <abbr>SDK</abbr> in una posizione differente.
 
 <div class=figure id=idea-new-project1b>
 <p class=ft>Figura 14.7. Aggiungere Scala a un progetto IntelliJ IDEA.
 <p><img src=i/idea-new-project1b.png alt="" width=432>
 </div>
 
-<p>Cliccate <em>Finish</em>. Vi verrà chiesto se volete creare un <em>Project</em> o una <em>Application</em>. Selezionate <em>Application</em> se volete condividere questo progetto con altri progetti Scala sullo stesso computer.
+<p>Cliccate su <em>Finish</em>. Vi verrà chiesto se volete creare un <em>Project</em> o una <em>Application</em>. Selezionate <em>Application</em> se volete condividere questo progetto con altri progetti Scala sullo stesso computer.
 
 <p>Ora potete lavorare sul vostro progetto Scala usando la maggior parte degli stessi comandi che usereste con un tipico progetto Java. Per esempio, potete creare un nuovo tratto, una nuova classe o un nuovo oggetto usando il menu contestuale, come per i progetti Java.
 
@@ -604,7 +604,7 @@ case class Complex(real: Double, imaginary: Double) {
 
 <p>Per installare il plug-in scaricate l'archivio compresso che lo contiene da  <a class=url href="http://sourceforge.net/project/showfiles.php?group_id=192439&amp;package_id=256544">http://sourceforge.net/project/showfiles.php?group_id=192439&amp;package_id=256544</a>. Estraetene i contenuti in una directory di vostra scelta.
 
-<p>Avviate NetBeans e invocate la voce di menu <em>Tools &rarr; Plugins</em>. Selezionate la scheda <em>Downloaded</em> e cliccate il pulsante <em>Add Plugins&hellip;</em>; poi scegliete la directory dove avete estratto il plug-in Scala e selezionate tutti i file <span class=file>.nbm</span> elencati, come mostrato nella <a href=#netbeans-add-plugins>figura 14.8</a>. Infine cliccate il pulsante <em>Open</em>.
+<p>Avviate NetBeans e invocate la voce di menu <em>Tools &rarr; Plugins</em>. Selezionate la scheda <em>Downloaded</em> e cliccate sul pulsante <em>Add Plugins&hellip;</em>; poi scegliete la directory dove avete estratto il plug-in Scala e selezionate tutti i file <span class=file>.nbm</span> elencati, come mostrato nella <a href=#netbeans-add-plugins>figura 14.8</a>. Infine cliccate sul pulsante <em>Open</em>.
 
 <div class=figure id=netbeans-add-plugins>
 <p class=ft>Figura 14.8. Aggiungere il plug-in Scala per l'installazione.
@@ -617,16 +617,16 @@ case class Complex(real: Double, imaginary: Double) {
 
 <h4 id=_developing_scala_applications_3>Sviluppare applicazioni in Scala</h4>
 
-<p>Per creare un progetto Scala in NetBeans cominciate col selezionare la voce di menu <em>File &rarr; New Project</em> o cliccate il pulsante <em>New Project</em>. Nella finestra di dialogo, selezionate <em>Scala</em> sotto <em>Categories</em> e <em>Scala Application</em> sotto <em>Projects</em>, come mostrato in <a href=#netbeans-new-project1>figura 14.9</a>. Cliccate <em>Next</em>.
+<p>Per creare un progetto Scala in NetBeans cominciate col selezionare la voce di menu <em>File &rarr; New Project</em> o cliccate sul pulsante <em>New Project</em>. Nella finestra di dialogo, selezionate <em>Scala</em> sotto <em>Categories</em> e <em>Scala Application</em> sotto <em>Projects</em>, come mostrato in <a href=#netbeans-new-project1>figura 14.9</a>. Cliccate su <em>Next</em>.
 
 <div class=figure id=netbeans-new-project1>
 <p class=ft>Figura 14.9. Creare un progetto Scala in NetBeans.
 <p><img src=i/netbeans-new-project1.png alt="" width=432>
 </div>
 
-<p>Fornite il nome del progetto, l'ubicazione, <i class=baa>&amp;</i>c. e cliccate <em>Finish</em>.
+<p>Fornite il nome del progetto, l'ubicazione, <i class=baa>&amp;</i>c. e cliccate su <em>Finish</em>.
 
-<p>Una volta che il progetto è stato creato, potete lavorare su di esso usando la maggior parte degli stessi comandi che usereste con un tipico progetto Java. Ci sono alcune differenze. Per esempio, quando invocate l'elemento <em>New</em> nel menu contestuale, il sottomenu non mostra le voci per creare nuovi tipi Scala; invece, dovete invocare la voce di menu <em>Other&hellip;</em> e passare attraverso una finestra di dialogo. Questo verrà cambiato in una futura versione.
+<p>Una volta che il progetto è stato creato, potete lavorare su di esso usando la maggior parte degli stessi comandi che usereste con un tipico progetto Java. Ci sono alcune differenze. Per esempio, quando invocate l'elemento <em>New</em> nel menu contestuale, il sottomenu non mostra le voci per creare nuovi tipi Scala; invece, dovete invocare la voce di menu <em>Other&hellip;</em> e passare attraverso una finestra di dialogo. Questa discrepanza verrà risolta in una futura versione.
 
 <p>Nonostante alcuni problemi di minore importanza come questo, il plug-in NetBeans per Scala è abbastanza maturo per essere usato regolarmente.
 
@@ -634,10 +634,10 @@ case class Complex(real: Double, imaginary: Double) {
 
 <p>Lo strumento <kbd>sbaz</kbd> gestisce il pacchetto <code>scala-tool-support</code> che include plug-in Scala per diversi editor, compresi <em>Emacs</em>, <em>Vim</em>, <em>TextMate</em> e altri. Come <kbd>sbaz</kbd>, anche il pacchetto <code>scala-tool-support</code> viene distribuito insieme a Scala. Per sapere quali sono gli editor supportati, potete esaminare le directory presenti in <code class=var>scala-home</code><span class=file>/misc/scala-tool-support</span>. La maggior parte delle directory specifiche per un editor contiene istruzioni per installare il plug-in; negli altri casi, consultate le istruzioni del vostro editor per installare plug-in di terze parti.
 
-<p>Alcuni pacchetti sono piuttosto acerbi. Se volete offrire il vostro contributo alla comunità Scala, vi preghiamo di considerare la possibilità di migliorare la qualità dei plug-in esistenti o di sviluppare nuovi plug-in.
+<p>Alcuni pacchetti sono piuttosto immaturi. Se volete offrire il vostro contributo alla comunità Scala, vi preghiamo di considerare la possibilità di migliorare la qualità dei plug-in esistenti o di sviluppare nuovi plug-in.
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>Al momento della scrittura, esistono diverse variazioni di un &#8220;bundle&#8221; Scala per l'editor <em>TextMate</em>, che è un popolare editor di testi per Mac OS X. Attualmente, questi bundle sono gestiti da Paul Phillips su GitHub all'indirizzo <a class=url href=http://github.com/paulp/scala-textmate/>http://github.com/paulp/scala-textmate/</a>. &Egrave; lecito sperare che le migliori caratteristiche di ogni bundle verranno unificate in un bundle &#8220;autoritativo&#8221; e integrate nel pacchetto <code>scala-tool-support</code>.
+<p><span class=u>&#x261E;</span>Al momento della scrittura, esistono diverse variazioni di un &#8220;bundle&#8221; Scala per l'editor <em>TextMate</em>, che è un popolare editor di testi per Mac OS X. Attualmente, questi bundle sono gestiti da Paul Phillips su GitHub all'indirizzo <a class=url href=http://github.com/paulp/scala-textmate>http://github.com/paulp/scala-textmate</a>.<sup id=fnn-1><a href=#fn-1>1</a></sup> &Egrave; lecito sperare che le migliori caratteristiche di ogni bundle verranno unificate in un bundle &#8220;autoritativo&#8221; e integrate nel pacchetto <code>scala-tool-support</code>.
 </blockquote>
 
 <h2 id=_test_driven_development_in_scala>Sviluppo guidato dai test in Scala</h2>
@@ -756,11 +756,11 @@ object ComplexSpec extends Specification {
 
 <p>Un <code>object</code> che estende <code>Specification</code> è l'analogo di una serie di test. Il livello successivo di raggruppamento, per esempio la clausola <code>"L'addizione tra un numero complesso e (0.0, 0.0)" should {&hellip;}</code>, incapsula le informazioni al livello del tipo soggetto al collaudo, spesso nella forma di un &#8220;insieme&#8221; di comportamenti legati tra loro.
 
-<p>La clausola al livello successivo, per esempio <code>"restituire un numero N' che è identico al numero originale N" in {&hellip;}</code>, viene chiamata &#8220;esempio&#8221; nella terminologia <abbr>BDD</abbr> ed è analoga a un singolo test. Come nei tipici framework <em>XUnit</em>, il collaudo viene effettuato usando &#8220;esempi rappresentativi&#8221; piuttosto che tramite l'esplorazione esaustiva dell'intero &#8220;spazio&#8221; degli stati possibili, da cui il termine &#8220;esempio&#8221;. (Tuttavia, si veda la discussione di <em>ScalaCheck</em> più avanti.)
+<p>La clausola al livello successivo, per esempio <code>"restituire un numero N' che è identico al numero originale N" in {&hellip;}</code>, viene chiamata <em>esempio</em> nella terminologia <abbr>BDD</abbr> ed è analoga a un singolo test. Come nei tipici framework <em>XUnit</em>, il collaudo viene effettuato usando &#8220;esempi rappresentativi&#8221; piuttosto che tramite l'esplorazione esaustiva dell'intero &#8220;spazio&#8221; degli stati possibili, da cui il termine &#8220;esempio&#8221;. (Tuttavia, si veda la discussione di <em>ScalaCheck</em> più avanti.)
 
-<p>Istruzioni come <code>(c1 + Complex(0.0, 0.0)) mustEqual c1</code> vengono chiamate &#8220;aspettative&#8221; e verificano che le condizioni siano effettivamente soddisfatte. Quindi, le &#8220;aspettative&#8221; sono analoghe alle asserzioni negli strumenti <em>XUnit</em>.
+<p>Istruzioni come <code>(c1 + Complex(0.0, 0.0)) mustEqual c1</code> vengono chiamate <em>aspettative</em> e verificano che le condizioni siano effettivamente soddisfatte. Quindi, le aspettative sono analoghe alle asserzioni negli strumenti <em>XUnit</em>.
 
-<p>Esistono diversi modi per eseguire le vostre &#8220;specifiche&#8221;. Dopo aver compilato il file <span class=file>complex-spec.scala</span> appena mostrato, possiamo eseguire la &#8220;specifica&#8221; nel modo seguente.
+<p>Esistono diversi modi per eseguire le vostre <em>specifiche</em>. Dopo aver compilato il file <span class=file>complex-spec.scala</span> appena mostrato, possiamo eseguire la specifica nel modo seguente.
 
 <pre><samp>scala -classpath ../lib/specs-1.4.3.jar:build ComplexSpec</samp></pre>
 
@@ -803,11 +803,11 @@ Total for specification "ComplexSpec":
 Finished in 0 second, 37 ms
 4 examples, 6 expectations, 0 failure, 0 error</samp></pre>
 
-<p>Notate che le stringhe nelle clausole sono scritte in una forma che si può leggere come una specifica dei requisiti.<sup id=fnn-1><a href=#fn-1>1</a></sup>
+<p>Notate che le stringhe nelle clausole sono scritte in una forma che si può leggere come una specifica dei requisiti.<sup id=fnn-2><a href=#fn-2>2</a></sup>
 
 <pre><samp>&hellip;
 L'addizione tra un numero complesso e (0.0, 0.0) should
-  + restituire un numero N' che è identico al numero originale N
++ restituire un numero N' che è identico al numero originale N
 &hellip;</samp></pre>
 
 <p>Le specifiche si possono eseguire anche tramite un'attività di <em>Ant</em> o sfruttando l'integrazione predefinita con <em>ScalaTest</em> o <em>JUnit</em>. Vi consigliamo di usare <em>JUnit</em> se volete eseguire le specifiche in un <abbr>IDE</abbr>. Queste e altre opzioni sono descritte nella <em>Guida per l'utente</em> di <em>Specs</em>, disponibile all'indirizzo <a class=url href=http://code.google.com/p/specs/wiki/RunningSpecs>http://code.google.com/p/specs/wiki/RunningSpecs</a>.
@@ -857,11 +857,11 @@ object ComplexSpecification extends Properties("Complex") {
 }
 ComplexSpecification.check</code></pre>
 
-<p>La funzione <code>toD</code> converte semplicemente un <code>Int</code> in un <code>Double</code> dividendo per <code>0.1</code>. Serve per convertire un indice intero fornito da <em>ScalaCheck</em> in valori reali che verranno usati per costruire istanze di <code>Complex</code>.
+<p>La funzione <code>toD</code> converte semplicemente un <code>Int</code> in un <code>Double</code> moltiplicando per <code>0.1</code>. Serve per convertire un indice intero fornito da <em>ScalaCheck</em> in valori reali che verranno usati per costruire istanze di <code>Complex</code>.
 
 <p>Abbiamo anche bisogno di una conversione implicita, visibile nell'ambito del test, che generi nuovi valori di <code>Complex</code>. La funzione <code>arbitraryComplex</code> ci fornisce questo generatore, restituendo un oggetto <code>Arbitrary[Complex]</code> che fa parte della <abbr>API</abbr> di <em>ScalaCheck</em>. Nel metodo di conversione, <em>ScalaCheck</em> invoca un altro metodo della propria <abbr>API</abbr>, <code>Gen[Complex].sized</code>, a cui forniamo un <em>letterale funzione</em> che assegna a una variabile <var>s</var> un valore intero passato dal sistema. Poi, il metodo di conversione usa un'espressione <code>for</code> per restituire numeri complessi con parti reale e immaginaria che vanno da <code>-toD(s)</code> a <code>toD(s)</code> (cioè da <code>-(s * .1)</code> a <code>(s * .1)</code>). Fortunatamente, non dovete definire conversioni implicite o generatori per la maggior parte dei tipi Scala e Java comunemente usati.
 
-<p>La parte più interessante è la definizione e l'uso di <code>ComplexSpecification</code>. Questo oggetto contiene alcuni metodi di utilità, <code>additionTest</code> e <code>subtractionTest</code>, che restituiscono <code>true</code> se la condizione da loro definita è vera. Per quanto riguarda <code>additionTest</code>, se un nuovo numero complesso è la somma di altri due numeri complessi, allora la parte reale di questo numero deve essere uguale alla somma delle parti reali degi due numeri originali; allo stesso modo, una condizione simile deve verificarsi per la parte immaginaria dei numeri. Per quanto riguarda <code>subtractionTest</code>, le stesse condizioni devono verificarsi quando si opera una sottrazione anziché una somma.
+<p>La parte più interessante è la definizione e l'uso di <code>ComplexSpecification</code>. Questo oggetto contiene alcuni metodi di utilità, <code>additionTest</code> e <code>subtractionTest</code>, che restituiscono <code>true</code> se la condizione da loro definita è vera. Per quanto riguarda <code>additionTest</code>, se un nuovo numero complesso è la somma di altri due numeri complessi allora la parte reale di questo numero deve essere uguale alla somma delle parti reali dei due numeri originali; allo stesso modo, una condizione simile deve verificarsi per la parte immaginaria dei numeri. Per quanto riguarda <code>subtractionTest</code>, le stesse condizioni devono verificarsi quando si opera una sottrazione anziché un'addizione.
 
 <p>Poi, due clausole <code>specify</code> asseriscono che le condizioni per l'addizione e la sottrazione dovrebbero verificarsi per ogni numero complesso quando <code>Complex(0.0, 0.0)</code> viene rispettivamente sommato o sottratto da quel numero. Due ulteriori clausole <code>specify</code> asseriscono che le condizioni devono anche verificarsi per qualsiasi coppia di numeri complessi.
 
@@ -961,7 +961,7 @@ ComplexSpecification.check</code></pre>
 
 <h3 id=_java_and_scala_generics>I generici in Java e Scala</h3>
 
-<p>Abbiamo visto numerosi esempi di codice Scala che usa tipi Java come <code>java.lang.String</code> e varie classi di collezione. Instanziare tipi generici Java in Scala è semplice (a partire da Scala 2.7.0). Considerate la classe generica Java molto semplice riportata di seguito.
+<p>Abbiamo visto numerosi esempi di codice Scala che usa tipi Java come <code>java.lang.String</code> e varie classi di collezione. Instanziare tipi generici Java in Scala è facile (a partire da Scala 2.7.0). Considerate la classe generica Java molto semplice riportata di seguito.
 
 <pre><code>// <a href=esempi/cap-14/JStack.java>esempi/cap-14/JStack.java</a>
 
@@ -999,7 +999,7 @@ object JStackSpec extends Specification {
   }
 }</code></pre>
 
-<p>A partire da Scala 2.7.2, potete anche usare i generici Scala da Java. Il seguente test per JUnit 4 mostra alcune idiosincrasie che potreste incontrare.
+<p>A partire da Scala 2.7.2 potete anche usare i generici Scala da Java. Il seguente test per JUnit 4 mostra alcune idiosincrasie che potreste incontrare.
 
 <pre><code>// <a href=esempi/cap-14/SMapTest.java>esempi/cap-14/SMapTest.java</a>
 
@@ -1059,7 +1059,7 @@ public class SMapTest {
 
 <p>La classe <code>SMapTest</code> definisce una classe <code>Name</code> annidata che viene usata come tipo &#8220;valore&#8221; in un'istanza di <code>scala.collection.mutable.LinkedHashMap</code>. Per semplicità, <code>Name</code> è dotata di campi <code>firstName</code> e <code>lastName</code> pubblici e di un costruttore.
 
-<p>Il metodo <code>setup</code> crea una nuova istanza di <code>LinkedHashMap&lt;Integer,Name&gt;</code> e vi inserisce due coppie chiave-valore. I due test, <code>usingMapGetWithWarnings</code> e <code>usingMapGetWithoutWarnings</code>, esercitano l'interoperabilità tra Java e Scala nello stesso modo. Tuttavia, il primo test genera due messaggi di avvertimento a tempo di compilazione, indicati dai commenti, mentre il secondo test viene compilato senza problemi.
+<p>Il metodo <code>setup</code> crea una nuova istanza di <code>LinkedHashMap&lt;Integer,Name&gt;</code> e vi inserisce due coppie chiave-valore. I due test, <code>usingMapGetWithWarnings</code> e <code>usingMapGetWithoutWarnings</code>, esercitano l'interoperabilità tra Java e Scala nello stesso modo. Tuttavia, il primo test genera due messaggi di warning a tempo di compilazione, indicati dai commenti, mentre il secondo test viene compilato senza problemi.
 
 <pre><samp>SMapTest.java:29: warning: [unchecked] unchecked conversion
 found   : scala.Option
@@ -1205,7 +1205,7 @@ case class ComplexBean(
   public double getReal();
 }</code></pre>
 
-<p>Ora confrontate questa risultato con la decompilazione del file <span class=file>Complex.class</span> originale.
+<p>Ora confrontate questo risultato con la decompilazione del file <span class=file>Complex.class</span> originale.
 
 <pre><code>public class Complex extends java.lang.Object
   implements scala.ScalaObject,scala.Product,java.io.Serializable {
@@ -1231,7 +1231,7 @@ case class ComplexBean(
 
 <h3 id=AnyValTypesAndJavaPrimitives>I tipi <code>AnyVal</code> e i tipi primitivi in Java</h3>
 
-<p>Avrete notato che, nell'esempio precedente, le istanze di <code>Double</code> presenti in <code>Complex</code> sono state convertite in valori primitivi <code>double</code> di Java. In effetti, tutti i tipi <code>AnyVal</code> vengono convertiti nei loro corrispondenti tipi Java primitivi, come abbiamo visto nella <a href=cap-7.html#AnyVal-value-types>tabella 7.3</a>, dove, in particolare, abbiamo constatato che <code>Unit</code> corrisponde a <code>void</code>.
+<p>Avrete notato che, nell'esempio precedente, le istanze di <code>Double</code> presenti in <code>Complex</code> sono state convertite in valori primitivi <code>double</code> di Java. In effetti, tutti i tipi <code>AnyVal</code> vengono convertiti nei loro corrispondenti tipi Java primitivi, come illustrato nella <a href=cap-7.html#AnyVal-value-types>tabella 7.3</a>, dove, in particolare, abbiamo constatato che <code>Unit</code> corrisponde a <code>void</code>.
 
 <h3 id=ScalaNamesInJavaCode>Nomi Scala nel codice Java</h3>
 
@@ -1331,7 +1331,7 @@ trait AllOpChars {
   def ~  : Unit   // $tilde
 }</code></pre>
 
-<p>Notate che abbiamo raddoppiato alcuni caratteri per consentirne la compilazione come nomi di metodo, laddove usare un singolo carattere sarebbe risultato ambiguo. Se compilate questo file e poi decompilate il file di classe risultante con <kbd>javap AllOpChars</kbd> otterrete la seguente interfaccia Java. (Abbiamo riarrangiato l'ordine dei metodi per farlo combaciare con l'ordine dei metodi nel file Scala originale.)
+<p>Notate che abbiamo raddoppiato alcuni caratteri per consentirne la compilazione come nomi di metodo, nei casi in cui usare un singolo carattere sarebbe risultato ambiguo. Se compilate questo file e poi decompilate il file di classe risultante con <kbd>javap AllOpChars</kbd> otterrete la seguente interfaccia Java. (Abbiamo riarrangiato l'ordine dei metodi per farlo combaciare con l'ordine dei metodi nel file Scala originale.)
 
 <pre><code>Compiled from "all-op-chars.scala"
 public interface AllOpChars{
@@ -1365,7 +1365,7 @@ public interface AllOpChars{
 
 <p>AspectJ <a href=apa.html#AspectJ>[AspectJ]</a> è un'estensione di Java che supporta la <em>programmazione orientata agli aspetti</em> (<abbr>AOP</abbr>), nota anche come <em>sviluppo del software orientato agli aspetti</em> <a href=apa.html#AOSD>[AOSD]</a>. La <abbr>AOP</abbr> ha lo scopo di abilitare modifiche sistemiche dello stesso genere attraverso molti moduli, evitando nel contempo di copiare e incollare lo stesso codice più volte in ogni modulo. Evitare questa duplicazione significa incrementare la produttività e ridurre enormemente il numero di difetti nel software.
 
-<p>Per esempio, se volete che tutte le modifiche ai campi di tutti gli oggetti appartenenti al &#8220;modello del dominio&#8221; siano rese automaticamente persistenti dopo che i cambiamenti si verificano, potete programmare un aspetto che osserva quei cambiamenti e innesca una scrittura persistente dopo ogni modifica.
+<p>Per esempio, se volete che tutte le modifiche ai campi di tutti gli oggetti appartenenti al &#8220;modello del dominio&#8221; siano rese automaticamente persistenti dopo che i cambiamenti si sono verificati, potete programmare un aspetto che osserva quei cambiamenti e innesca una scrittura persistente dopo ogni modifica.
 
 <p>AspectJ supporta la <abbr>AOP</abbr> offrendo un linguaggio a <em>punti di taglio</em> (in inglese, <em>pointcut</em>) per specificare in maniera dichiarativa tutti i &#8220;punti di esecuzione&#8221; per i quali viene richiesta una particolare modifica (chiamata <em>consiglio</em>, dal termine inglese <em>advice</em>) nel comportamento di un programma. Nella terminologia di AspectJ, ogni punto di esecuzione viene chiamato <em>punto di unione</em> e una particolare interrogazione sui punti di unione è un <em>punto di taglio</em>. Quindi, il linguaggio di AspectJ è una specie di linguaggio di interrogazione. Per un dato punto di taglio, AspectJ incorpora le modifiche comportamentali desiderate in ogni punto di unione individuato dal punto di taglio, rendendo facoltativo l'inserimento manuale di queste modifiche. Un <em>aspetto</em> incapsula i punti di taglio e i consigli, in modo simile a come una classe incapsula campi e metodi.
 
@@ -1430,15 +1430,15 @@ public aspect LogComplex {
 
 <p>Eviteremo di spiegare la sintassi AspectJ in maniera esaustiva, rimandandovi ai documenti <a href=apa.html#AspectJ>[AspectJ]</a> e <a href=apa.html#Laddad2009>[Laddad2009]</a> se siete interessati ai dettagli; in questa sede ci limiteremo a presentare questo aspetto dal punto di vista &#8220;concettuale&#8221;.
 
-<p>Il primo <code>pointcut</code>, chiamato <code>newInstance</code>, corrisponde alle &#8220;esecuzioni&#8221; del costruttore, usando la sintassi <code>Complex.new</code> per fare riferimento al costruttore. Ci aspettiamo che ogni invocazione del costruttore riceva argomenti di tipo <code>double</code> poiché, come abbiamo visto in precedenza, le occorrenze di <code>scala.Double</code> vengono convertite al tipo primitivo <code>double</code> di Java durante la generazione del bytecode. La clausola <code>args</code> &#8220;lega&#8221; i valori degli argomenti passati in modo da permetterci di fare riferimento a essi nel consiglio.
+<p>Il primo <code>pointcut</code>, chiamato <code>newInstances</code>, corrisponde alle &#8220;esecuzioni&#8221; del costruttore, usando la sintassi <code>Complex.new</code> per fare riferimento al costruttore. Ci aspettiamo che ogni invocazione del costruttore riceva argomenti di tipo <code>double</code> poiché, come abbiamo visto in precedenza, le occorrenze di <code>scala.Double</code> vengono convertite al tipo primitivo <code>double</code> di Java durante la generazione del bytecode. La clausola <code>args</code> &#8220;lega&#8221; i valori degli argomenti passati in modo da permetterci di fare riferimento a essi nel consiglio.
 
-<p>Il secondo <code>pointcut</code>, chiamato <code>plusInvocation</code>, corrisponde alle &#8220;esecuzioni&#8221; del metodo <code>+</code>, che in effetti si chiama <code>$plus</code> nel bytecode. I parametri <var>self</var> e <var>other</var> vengono legati all'oggetto su cui il metodo <code>+</code> è stato invocato (usando la clausola <code>this</code>) e all'argomento passato (usando la clausola <code>args</code>), rispettivamente.
+<p>Il secondo <code>pointcut</code>, chiamato <code>plusInvocations</code>, corrisponde alle &#8220;esecuzioni&#8221; del metodo <code>+</code>, che in effetti si chiama <code>$plus</code> nel bytecode. I parametri <var>self</var> e <var>other</var> vengono rispettivamente legati all'oggetto su cui il metodo <code>+</code> è stato invocato (usando la clausola <code>this</code>) e all'argomento passato (usando la clausola <code>args</code>).
 
 <p>Il primo <em>consiglio</em> <code>before</code> viene eseguito per il punto di taglio <code>newInstances</code>, cioè prima di entrare effettivamente nel costruttore. Registriamo l'invocazione mostrando i valori reale e immaginario passati come argomenti.
 
-<p>Il <em>consiglio</em> <code>before</code> successivo viene eseguito per il punto di taglio <code>plusInvocation</code>, cioè prima che il metodo <code>+</code> venga eseguito. Registriamo il valore di <code>self</code> (cioè l'istanza <code>this</code>) e l'altro numero.
+<p>Il <em>consiglio</em> <code>before</code> successivo viene eseguito per il punto di taglio <code>plusInvocations</code>, cioè prima che il metodo <code>+</code> venga eseguito. Registriamo il valore di <code>self</code> (cioè l'istanza <code>this</code>) e l'altro numero.
 
-<p>Infine, viene eseguito anche un <em>consiglio</em> <code>after returning</code> per il punto di taglio <code>plusInvocation</code>, cioè dopo che il metodo <code>+</code> si è concluso. Catturiamo il valore di ritorno nella variabile <var>c</var> e lo registriamo.
+<p>Infine, viene eseguito anche un <em>consiglio</em> <code>after returning</code> per il punto di taglio <code>plusInvocations</code>, cioè dopo che il metodo <code>+</code> si è concluso. Catturiamo il valore di ritorno nella variabile <var>c</var> e lo registriamo.
 
 <p>Se avete installato AspectJ nella directory <code class=var>aspectj-home</code>, potete compilare questo file come segue.
 
@@ -1487,9 +1487,9 @@ Complex(4.0,6.0)</samp></pre>
 
 <p>Qui ci concentreremo sulla iniezione di dipendenza, in quanto i problemi di interoperabilità con le altre parti di Spring si riducono a problemi riguardanti Java o AspectJ, di cui abbiamo già parlato.
 
-<p>Abbiamo esaminato il concetto di <abbr>DI</abbr> nella sezione <a href=cap-13.html#DependencyInjectionInScala>L'iniezione di dipendenza in Scala: il pattern torta</a> del capitolo 13, dove abbiamo usato lo stesso linguaggio Scala per illustrare alcuni pattern eleganti per l'iniezione di dipendenza. Tuttavia, se vi trovate in un ambiente misto Java/Scala, potrebbe essere necessario gestire le dipendenze usando un framework <abbr>DI</abbr> come quello fornito da Spring.
+<p>Abbiamo esaminato il concetto di <abbr>DI</abbr> nella sezione <a href=cap-13.html#DependencyInjectionInScala>L'iniezione di dipendenza in Scala: il pattern Cake</a> del capitolo 13, dove abbiamo usato lo stesso linguaggio Scala per illustrare alcuni pattern eleganti per l'iniezione di dipendenza. Tuttavia, se vi trovate in un ambiente misto Java/Scala, potrebbe essere necessario gestire le dipendenze usando un framework <abbr>DI</abbr> come quello fornito da Spring.
 
-<p>Nella <abbr>DI</abbr> di Spring, le dipendenze vengono specificate usando una combinazione di file di configurazione <abbr>XML</abbr> e annotazioni nel codice sorgente. La <abbr>API</abbr> di Spring risolve queste dipendenze nel momento in cui le classi vengono istanziate. Spring si aspetta che queste classi seguano le convenzioni <em>JavaBeans</em> (si veda <a href=apa.html#JavaBeansSpec>[JavaBeansSpec]</a>). Le classi ben progettate dipenderanno solamente dalle astrazioni, cioè da interfacce Java o tratti Scala, e le istanze concrete che soddisfano quelle dipendenze verranno passate ai componenti <em>JavaBeans</em> come argomenti di un costruttore o attraverso i metodi per impostare i valori. Quindi, quando usate la <abbr>DI</abbr> di Spring con le classi Scala, dovrete fare ricorso all'annotazione <code>@scala.reflect.BeanProperty</code> se l'iniezione avviene tramite i metodi per impostare i valori. L'annotazione non è necessaria se l'iniezione avviene tramite i costruttori.
+<p>Nella <abbr>DI</abbr> di Spring le dipendenze vengono specificate usando una combinazione di file di configurazione <abbr>XML</abbr> e annotazioni nel codice sorgente. La <abbr>API</abbr> di Spring risolve queste dipendenze nel momento in cui le classi vengono istanziate. Spring si aspetta che queste classi seguano le convenzioni <em>JavaBeans</em> (si veda <a href=apa.html#JavaBeansSpec>[JavaBeansSpec]</a>). Le classi ben progettate dipenderanno solamente dalle astrazioni, cioè da interfacce Java o tratti Scala, e le istanze concrete che soddisfano quelle dipendenze verranno passate ai componenti <em>JavaBeans</em> come argomenti di un costruttore o attraverso i metodi per impostare i valori. Quindi, quando usate la <abbr>DI</abbr> di Spring con le classi Scala, dovrete fare ricorso all'annotazione <code>@scala.reflect.BeanProperty</code> se l'iniezione avviene tramite i metodi per impostare i valori. L'annotazione non è necessaria se l'iniezione avviene tramite i costruttori.
 
 <blockquote class=note>
 <p><span class=u>&#x261E;</span>Privilegiate l'iniezione attraverso i costruttori, quando è possibile. Questa scelta non solo elimina il bisogno di usare l'annotazione <code>@BeanProperty</code>, ma lascia ogni istanza in uno stato noto e valido quando il processo di costruzione termina.
@@ -1548,13 +1548,13 @@ case class FactoryUsingBean(factory: Factory)</code></pre>
   &lt;/bean&gt;
 &lt;/beans&gt;</code></pre>
 
-<p>Definiamo due componenti <code>bean</code>. Il primo è la nostra factory, che dotiamo di un idenfiticatore <code>factory</code>. La &#8220;classe&#8221; del componente in realtà è l'<code>object</code> <code>NamedObjectFactory</code>. Notate che dobbiamo aggiungere <code>$</code> in coda al nome, per identificare il nome reale dell'oggetto nel bytecode.
+<p>Definiamo due componenti <code>bean</code>. Il primo è la nostra factory, che dotiamo di un identificatore <code>factory</code>. La &#8220;classe&#8221; del componente in realtà è l'<code>object</code> <code>NamedObjectFactory</code>. Notate che dobbiamo aggiungere <code>$</code> in coda al nome, per identificare il nome reale dell'oggetto nel bytecode.
 
 <p>Il tag <code>property</code> imposta il valore di <code>nameOfFactory</code>. Non possiamo controllare la creazione dell'istanza di un <code>object</code>, quindi dobbiamo iniettare la dipendenza corretta dopo che il processo di costruzione è terminato.
 
-<p>Il secondo componente è il nostro semplice <code>FactoryUsingBean</code>. Dato che questa è una classe, possiamo usare l'iniezione attraverso il costruttore. Il tag <code>constructor</code> specifica che il componente <code>factory</code> viene usato per soddisfare la dipendenza al momento della costruzione.
+<p>Il secondo componente è il nostro semplice <code>FactoryUsingBean</code>. Dato che questa è una classe, possiamo usare l'iniezione attraverso il costruttore. Il tag <code>constructor-arg</code> specifica che il componente <code>factory</code> viene usato per soddisfare la dipendenza al momento della costruzione.
 
-<p>Infine, ecco uno script che usa questi tipi per fare una dimostrazione di come si usa la <abbr>DI</abbr> di Spring in Scala.
+<p>Infine, ecco uno script che sfrutta questi tipi per fare una dimostrazione di come si usa la <abbr>DI</abbr> di Spring in Scala.
 
 <pre><code>// <a href=esempi/cap-14/spring/object-bean-script.scala>esempi/cap-14/spring/object-bean-script.scala</a>
 
@@ -1573,11 +1573,11 @@ println("Oggetto: " + obj)</code></pre>
 
 <p>Poi chiediamo alla factory di costruire &#8220;qualcosa&#8221; con la stringa <code>"Dean Wampler"</code>. Quando stampiamo l'oggetto restituito, dovremmo vedere un'istanza di <code>NamedObject</code>.
 
-<p>Se avete installato Spring nella directory <code class=var>spring-home</code>, potete eseguire questo script con il comando seguente.
+<p>Se avete installato Spring nella directory <code class=var>spring-home</code>, potete eseguire questo script con il comando seguente. (Notate che è necessario includere la directory di lavoro corrente <code>.</code> nel percorso di ricerca delle classi per trovare il file <abbr>XML</abbr>.)
 
 <pre><samp>scala -cp spring-home/dist/spring.jar:spring-home/.../commons-logging.jar:. spring/object-bean-script.scala</samp></pre>
 
-<p>(&Egrave; necessario includere la directory di lavoro corrente <code>.</code> nel percorso di ricerca delle classi per trovare il file <abbr>XML</abbr>.) Le informazioni che riceverete in uscita sono molte, ma a noi interessano solo le ultime due righe.
+<p>Le informazioni che riceverete in uscita sono molte, ma a noi interessano solo le ultime due righe.
 
 <pre><samp>&hellip;
 Nome della factory: Factory per istanze di NamedObject
@@ -1589,17 +1589,17 @@ Oggetto: NamedObject(Dean Wampler)</samp></pre>
 
 <p>Terracotta <a href=apa.html#Terracotta>[Terracotta]</a> è un prodotto open source che distribuisce un'applicazione su diversi server effettuando il <em>clustering</em> (letteralmente, raggruppamento) delle <abbr>JVM</abbr> su cui l'applicazione viene eseguita. Per ragioni di efficienza, non tutti gli oggetti dell'applicazione mantenuti in memoria vengono distribuiti; invece, è il programmatore che specifica nei file di configurazione quali sono le strutture dati da distribuire. Terracotta offre il vantaggio di non imporre modifiche al codice dell'applicazione per supportare questa distribuzione (almeno in linea di principio, poiché alcune personalizzazioni limitate possono essere utili a migliorare le prestazioni); invece, il supporto viene predisposto direttamente nel bytecode. Terracotta rappresenta un'alternativa alle cache distribuite che richiedono di modificare il codice dell'applicazione.
 
-<p><a href=apa.html#Boner2008a>[Bonér2008a]</a> offre un resoconto dettagliato di come usare Terracotta con gli attori Scala. Come prima cosa, è necessario installare un modulo di integrazione con Terracotta (<abbr>TIM</abbr>) specifico per Scala. Quando configurate gli oggetti da distribuire, dovete usare i nomi codificati per indicare gli oggetti associati, i metodi, <i class=baa>&amp;</i>c. nella forma in cui esistono a livello di bytecode. Abbiamo parlato di queste codifiche nella sezione <a href=#ScalaNamesInJavaCode>I nomi Scala nel codice Java</a> più indietro in questo capitolo. Infine, dovete aggiungere alcuni parametri ulteriori all'invocazione del comando <kbd>java</kbd> contenuta nello script <kbd>scala</kbd>. Per il resto, il <em>clustering</em> di applicazioni Scala con Terracotta funziona esattamente come per le applicazioni Java.
+<p><a href=apa.html#Boner2008a>[Bonér2008a]</a> offre un resoconto dettagliato di come usare Terracotta con gli attori Scala. Come prima cosa, è necessario installare un modulo di integrazione con Terracotta (<abbr>TIM</abbr>) specifico per Scala. Quando configurate gli oggetti da distribuire, dovete usare i nomi codificati per indicare gli oggetti associati, i metodi, <i class=baa>&amp;</i>c. nella forma in cui esistono a livello di bytecode. Abbiamo parlato di queste codifiche nella sezione <a href=#ScalaNamesInJavaCode>Nomi Scala nel codice Java</a> più indietro in questo capitolo. Infine, dovete aggiungere alcuni parametri ulteriori all'invocazione del comando <kbd>java</kbd> contenuta nello script <kbd>scala</kbd>. Per il resto, il <em>clustering</em> di applicazioni Scala con Terracotta funziona esattamente come per le applicazioni Java.
 
 <h3 id=HadoopInterop>Hadoop</h3>
 
-<p><em>MapReduce</em> è un modello di programmazione dividi-e-conquista per elaborare grandi quantità di dati in parallelo. Nella fase di &#8220;mappatura&#8221;, un insieme di dati viene diviso in N sottoinsiemi di dimensioni approssimativamente uguali, dove N viene scelto per ottimizzare la quantità di lavoro che può essere compiuta in parallelo. Per esempio, N potrebbe essere vicino al numero totale di processori disponibili. (Alcuni processori potrebbero essere lasciati inattivi come &#8220;riserve&#8221; o dedicati a effettuare altre elaborazioni.) La computazione desiderata viene eseguita su ogni sottoinsieme. La fase di &#8220;riduzione&#8221; combina i risultati dei calcoli eseguiti sui sottoinsiemi in un risultato finale.
+<p><em>MapReduce</em> è un modello di programmazione dividi-e-conquista per elaborare grandi quantità di dati in parallelo. Nella fase di &#8220;mappatura&#8221;, un insieme di dati viene diviso in N sottoinsiemi di dimensioni approssimativamente uguali, dove N viene scelto per ottimizzare la quantità di lavoro che può essere compiuta in parallelo. Per esempio, N potrebbe essere vicino al numero totale di processori disponibili. (Alcuni processori potrebbero essere lasciati inattivi come &#8220;riserve&#8221; o dedicati ad altre elaborazioni.) La computazione desiderata viene eseguita su ogni sottoinsieme. La fase di &#8220;riduzione&#8221; combina i risultati dei calcoli eseguiti sui sottoinsiemi in un risultato finale.
 
 <p>Notate che la mappatura e la riduzione sono sostanzialmente operazioni funzionali. Quindi un linguaggio funzionale come Scala è l'ideale per scrivere applicazioni basate sul modello MapReduce.
 
 <p>I framework che implementano il modello MapReduce offrono strumenti per mappare e ridurre insiemi di dati, gestire i nodi di elaborazione e tutte le fasi della computazione, riavviare le operazioni che falliscono per qualche ragione, <i class=baa>&amp;</i>c. L'utente di un framework basato su MapReduce deve solo scrivere gli algoritmi per la mappatura (suddivisione) dei dati in ingresso, per le computazioni con i sottoinsiemi di dati e per la riduzione dei risultati. Si veda <a href=apa.html#MapReduceTutorial>[MapReduceTutorial]</a> per una breve introduzione e <a href=apa.html#MapReduce>[MapReduce]</a> per una descrizione del framework <em>MapReduce</em> di Google, il cui nome è diventato lo standard <em>de facto</em> per questi framework.
 
-<p>Hadoop <a href=apa.html#Hadoop>[Hadoop]</a> è un framework open source creato e mantenuto da Yahoo! che si basa sul modello MapReduce. Esistono due librerie Scala che racchiudono la <abbr>API</abbr> di Hadoop: <em>SHadoop</em> <a href=apa.html#SHadoop>[SHadoop]</a> e <em>SMR</em> <a href=apa.html#SMRa>[SMRa]</a> e <a href=apa.html#SMRb>[SMRb]</a>. Entrambi gli esempi mostrano una grande riduzione nelle dimensioni del codice quando si usa Scala. <a href=apa.html#SMRa>[SMRa]</a> attribuisce questa diminuzione al supporto di Scala per le funzioni di ordine superiore e per le funzioni anonime, al suo sofisticato sistema di tipi e all'inferenza di tipo, e alla capacità delle espressioni <code>for</code> di generare mappature in modo elegante e conciso.
+<p>Hadoop <a href=apa.html#Hadoop>[Hadoop]</a> è un framework open source creato e mantenuto da Yahoo! che si basa sul modello MapReduce. Esistono due librerie Scala che racchiudono la <abbr>API</abbr> di Hadoop: <em>SHadoop</em> (si veda <a href=apa.html#SHadoop>[SHadoop]</a>) e <em>SMR</em> (si vedano <a href=apa.html#SMRa>[SMRa]</a> e <a href=apa.html#SMRb>[SMRb]</a>). Entrambi gli esempi mostrano una grande riduzione nelle dimensioni del codice quando si usa Scala. <a href=apa.html#SMRa>[SMRa]</a> attribuisce questa diminuzione al supporto di Scala per le funzioni di ordine superiore e per le funzioni anonime, al suo sofisticato sistema di tipi e all'inferenza di tipo, e alla capacità delle espressioni <code>for</code> di generare mappe in modo elegante e conciso.
 
 <h2 id=_recap_and_what_s_next_5>Riepilogo, e poi?</h2>
 
@@ -1610,7 +1610,8 @@ Oggetto: NamedObject(Dean Wampler)</samp></pre>
 <hr style="border-color: black; height: 1px; width: 8em; margin-left: 0px; margin-top: 2em;">
 
 <ol id=fns>
-<li id=fn-1>[NdT] Ma, a questo proposito, si veda la <a href=cap-3.html#fn-1>nota 1</a> del capitolo 3. <a href=#fnn-1>&#8617;</a>
+<li id=fn-1>[NdT] Questo repository non esiste più. Nel giugno 2010, Phillips ha cominciato a lavorare su un nuovo bundle, i cui sorgenti sono disponibili pubblicamente all'indirizzo <a class=url href=http://github.com/paulp/scala.tmbundle>http://github.com/paulp/scala.tmbundle</a>. <a href=#fnn-1>&#8617;</a>
+<li id=fn-2>[NdT] Ma, a questo proposito, si veda la <a href=cap-3.html#fn-1>nota 1</a> del capitolo 3. <a href=#fnn-2>&#8617;</a>
 </ol>
 
 <p class=v><a rel=prev href=cap-13.html title='indietro a &#8220;La progettazione di applicazioni&#8221;'><span class=u>&#x261C;</span></a> <a rel=next href=glossario.html title='avanti a &#8220;Glossario&#8221;'><span class=u>&#x261E;</span></a>
