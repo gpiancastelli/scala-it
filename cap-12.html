@@ -14,13 +14,13 @@ body{counter-reset:h1 12}
 
 <p>Scala è un linguaggio staticamente tipato con un sistema di tipi annoverabile tra i più sofisticati, in parte grazie alla combinazione di concetti essenziali provenienti dalla programmazione funzionale e da quella orientata agli oggetti. Il sistema di tipi di Scala cerca di essere logicamente esaustivo, completo e coerente, superando le limitazioni di Java e allo stesso tempo presentando innovazioni mai apparse prima in un linguaggio di programmazione.
 
-<p>Tuttavia, il sistema di tipi può intimidire alla prima occhiata, in particolare chi è abituato a programmare in un linguaggio dinamicamente tipato come Ruby o Python. Per fortuna, l'inferenza di tipo nasconde la maggior parte della complessità in modo che non sia necessario conoscere i particolari, quindi è possibile usare Scala in maniera efficace anche senza padroneggiare il sistema di tipi. I lettori alla prima esperienza con Scala possono decidere di scorrere rapidamente questo capitolo, in modo da sapere almeno dove guardare nell'eventualità che in futuro incontrino problemi relativi ai tipi.
+<p>Tuttavia, il sistema di tipi può intimidire alla prima occhiata, in particolare chi è abituato a programmare in un linguaggio dinamicamente tipato come Ruby o Python. Per fortuna, l&#8217;inferenza di tipo nasconde la maggior parte della complessità in modo che non sia necessario conoscere i particolari, quindi è possibile usare Scala in maniera efficace anche senza padroneggiare il sistema di tipi. I lettori alla prima esperienza con Scala possono decidere di scorrere rapidamente questo capitolo, in modo da sapere almeno dove guardare nell&#8217;eventualità che in futuro incontrino problemi relativi ai tipi.
 
 <p>In ogni caso, maggiore è la conoscenza del sistema di tipi, maggiori saranno le capacità di sfruttarne le caratteristiche nella scrittura di un programma. Questa considerazione è valida soprattutto per gli sviluppatori di librerie, ai quali tornerà utile sapere quando usare i tipi parametrici anziché i tipi astratti, quali parametri di tipo dovrebbero essere covarianti, controvarianti o invarianti in caso di ereditarietà, e così via. In generale, una certa comprensione del sistema di tipi si rivelerà un aiuto prezioso nel capire e correggere gli occasionali errori di compilazione relativi ai tipi e nel dare un senso alle informazioni di tipo incluse nei sorgenti e nella documentazione <em>Scaladoc</em> delle librerie Scala.
 
 <p>Se ignorate il significato di alcuni dei termini usati nei paragrafi precedenti, non preoccupatevi: li spiegheremo, e spiegheremo perché sono utili. Anziché esaminare nei dettagli il sistema di tipi di Scala ci concentreremo sui suoi aspetti pratici, puntando a farvi acquisire la conoscenza delle caratteristiche disponibili e dello scopo per cui sono state progettate, nonché la capacità di leggere e capire le dichiarazioni di tipo.
 
-<p>Metteremo anche in evidenza le somiglianze con il sistema di tipi di Java, che potrebbe essere un punto di riferimento familiare per buona parte dei lettori, in modo che la comprensione delle differenze tra i due sistemi faciliti l'interazione con le librerie di quella piattaforma. Circoscriveremo la discussione evitando di parlare del sistema di tipi di .NET, tranne che per mettere in rilievo alcune discrepanze degne di nota che i programmatori .NET vorranno conoscere.
+<p>Metteremo anche in evidenza le somiglianze con il sistema di tipi di Java, che potrebbe essere un punto di riferimento familiare per buona parte dei lettori, in modo che la comprensione delle differenze tra i due sistemi faciliti l&#8217;interazione con le librerie di quella piattaforma. Circoscriveremo la discussione evitando di parlare del sistema di tipi di .NET, tranne che per mettere in rilievo alcune discrepanze degne di nota che i programmatori .NET vorranno conoscere.
 
 <h2 id=ReflectingOnTypes>La riflessione sui tipi</h2>
 
@@ -58,7 +58,7 @@ val typeParams = clazz.getTypeParameters</code></pre>
 
 <p>Si noti che questi metodi sono disponibili solo per i sottotipi di <code>AnyRef</code>.
 
-<p>Il metodo <code>classOf[T]</code> restituisce la rappresentazione di un tipo Scala a tempo di esecuzione, analogamente alla espressione Java <code>T.class</code>. L'uso di <code>classOf[T]</code> si rivela conveniente quando si desidera estrarre informazioni su un tipo a partire dal tipo stesso, mentre <code>getClass</code> è comodo per recuperare le stesse informazioni da un'istanza di quel tipo.
+<p>Il metodo <code>classOf[T]</code> restituisce la rappresentazione di un tipo Scala a tempo di esecuzione, analogamente alla espressione Java <code>T.class</code>. L&#8217;uso di <code>classOf[T]</code> si rivela conveniente quando si desidera estrarre informazioni su un tipo a partire dal tipo stesso, mentre <code>getClass</code> è comodo per recuperare le stesse informazioni da un&#8217;istanza di quel tipo.
 
 <p>Tuttavia <code>classOf[T]</code> e <code>getClass</code> restituiscono valori leggermente differenti, a causa della <em>cancellazione di tipo</em> operata dalla <abbr>JVM</abbr> nel caso di <code>getClass</code>.
 
@@ -76,14 +76,14 @@ res1: java.lang.Class[_] = class C</samp></pre>
 
 <p>Scala fornisce anche metodi per verificare che un oggetto corrisponda a un certo tipo e anche per convertire un oggetto in un certo tipo.
 
-<p><code>x.isInstanceOf[T]</code> restituirà <code>true</code> se l'istanza <var>x</var> è di tipo <code>T</code>. Tuttavia, questa verifica è soggetta alla cancellazione di tipo: per esempio, <code>List(3.14159).isInstanceOf[List[String]]</code> restituirà <code>true</code> perché il parametro di tipo di <code>List</code> non viene conservato a livello di bytecode; in questo caso, otterrete comunque un messaggio di avvertimento sull'operazione &#8220;non controllata&#8221; (in inglese, <em>unchecked</em>) da parte del compilatore.
+<p><code>x.isInstanceOf[T]</code> restituirà <code>true</code> se l&#8217;istanza <var>x</var> è di tipo <code>T</code>. Tuttavia, questa verifica è soggetta alla cancellazione di tipo: per esempio, <code>List(3.14159).isInstanceOf[List[String]]</code> restituirà <code>true</code> perché il parametro di tipo di <code>List</code> non viene conservato a livello di bytecode; in questo caso, otterrete comunque un messaggio di avvertimento sull&#8217;operazione &#8220;non controllata&#8221; (in inglese, <em>unchecked</em>) da parte del compilatore.
 
 <p><code>x.asInstanceOf[T]</code> convertirà <var>x</var> nel tipo <code>T</code> o lancerà una <code>ClassCastException</code> se <code>T</code> e il tipo di <var>x</var> sono incompatibili. Ancora una volta è necessario considerare la cancellazione di tipo per i tipi parametrici: infatti, la conversione <code>List(3.14159).asInstanceOf[List[String]]</code> avrà successo.
 
 <p>Si noti che queste due operazioni coinvolgono metodi anziché parole chiave del linguaggio, e i loro nomi sono deliberatamente piuttosto prolissi. Di solito, i controlli sui tipi e le conversioni come queste dovrebbero essere evitate: al posto dei primi è possibile usare il pattern matching; per quanto riguarda le seconde, è consigliabile considerare i motivi che le rendono necessarie e determinare se possono essere eliminate tramite una riorganizzazione del codice.
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>Al momento della scrittura, Scala contiene alcune funzionalità sperimentali nella versione 2.8 del package <code>scala.reflect</code>, progettate per semplificare l'ispezione e l'invocazione di codice tramite riflessione rispetto ai metodi Java corrispondenti.
+<p><span class=u>&#x261E;</span>Al momento della scrittura, Scala contiene alcune funzionalità sperimentali nella versione 2.8 del package <code>scala.reflect</code>, progettate per semplificare l&#8217;ispezione e l&#8217;invocazione di codice tramite riflessione rispetto ai metodi Java corrispondenti.
 </blockquote>
 
 <h2 id=ParameterizedTypes>Capire i tipi parametrici</h2>
@@ -102,9 +102,9 @@ res1: java.lang.Class[_] = class C</samp></pre>
 
 <h3 id=Manifests>Manifesti</h3>
 
-<p>A partire dalla versione 2.7.2, Scala è dotato di una funzione sperimentale chiamata <em>Manifest</em> che cattura le informazioni di tipo cancellate nel bytecode. Questa funzione non è documentata nelle pagine <em>Scaladoc</em>, ma potete esaminare il codice sorgente del tratto <code>scala.reflect.Manifest</code> per saperne di più. <a href=apa.html#Ortiz2008>[Ortiz2008]</a> analizza i manifesti e ne offre alcuni esempi d'uso.
+<p>A partire dalla versione 2.7.2, Scala è dotato di una funzione sperimentale chiamata <em>Manifest</em> che cattura le informazioni di tipo cancellate nel bytecode. Questa funzione non è documentata nelle pagine <em>Scaladoc</em>, ma potete esaminare il codice sorgente del tratto <code>scala.reflect.Manifest</code> per saperne di più. <a href=apa.html#Ortiz2008>[Ortiz2008]</a> analizza i manifesti e ne offre alcuni esempi d&#8217;uso.
 
-<p>Un <code>Manifest</code> va dichiarato come un argomento implicito di un metodo o di un tipo di cui si vogliono catturare le informazioni di tipo cancellate. A differenza della maggior parte degli argomenti impliciti, l'utente non ha bisogno di implementare un valore o un metodo <code>Manifest</code> che sia visibile nell'ambito in cui viene usato, perché il compilatore ne genera uno automaticamente. Ecco un esempio che illustra alcuni punti di forza e di debolezza dei manifesti.
+<p>Un <code>Manifest</code> va dichiarato come un argomento implicito di un metodo o di un tipo di cui si vogliono catturare le informazioni di tipo cancellate. A differenza della maggior parte degli argomenti impliciti, l&#8217;utente non ha bisogno di implementare un valore o un metodo <code>Manifest</code> che sia visibile nell&#8217;ambito in cui viene usato, perché il compilatore ne genera uno automaticamente. Ecco un esempio che illustra alcuni punti di forza e di debolezza dei manifesti.
 
 <pre><code>// <a href=esempi/cap-12/manifest-script.scala>esempi/cap-12/manifest-script.scala</a>
 
@@ -127,7 +127,7 @@ List(List(1, 2, 3), List(1.1, 2.2, 3.3), List("uno", "due", "tre")) foreach {
   WhichList(_)
 }</code></pre>
 
-<p><code>WhichList</code> cerca di determinare il tipo della lista passata come argomento sfruttando il valore restituito dal metodo <code>toString</code> del manifesto. Si noti che questo uso del manifesto funziona quando la lista viene costruita all'interno della invocazione di <code>WhichList.apply</code>, ma <em>non</em> funziona quando quel metodo riceve una lista precedentemente costruita. Nel primo caso, il compilatore sfrutta le informazioni di tipo che conosce per costruire il <code>Manifest</code> implicito con il tipo <code>B</code> corretto. Tuttavia, quando il metodo <code>WhichList</code> riceve liste precostruite, le informazioni di tipo cruciali sono già andate perse.
+<p><code>WhichList</code> cerca di determinare il tipo della lista passata come argomento sfruttando il valore restituito dal metodo <code>toString</code> del manifesto. Si noti che questo uso del manifesto funziona quando la lista viene costruita all&#8217;interno della invocazione di <code>WhichList.apply</code>, ma <em>non</em> funziona quando quel metodo riceve una lista precedentemente costruita. Nel primo caso, il compilatore sfrutta le informazioni di tipo che conosce per costruire il <code>Manifest</code> implicito con il tipo <code>B</code> corretto. Tuttavia, quando il metodo <code>WhichList</code> riceve liste precostruite, le informazioni di tipo cruciali sono già andate perse.
 
 <p>Perciò, i manifesti non possono &#8220;riesumare&#8221; le informazioni di tipo dal bytecode, ma possono essere usati per catturare e sfruttare le informazioni di tipo prima che vengano cancellate.
 
@@ -135,7 +135,7 @@ List(List(1, 2, 3), List(1.1, 2.2, 3.3), List("uno", "due", "tre")) foreach {
 
 <p>Anche i singoli metodi possono essere parametrici. Un buon esempio di metodo parametrico è il metodo <code>apply</code> degli oggetti associati a classi parametriche. Se ricordate, gli oggetti associati sono oggetti singleton con una classe associata. Esiste una sola istanza di un oggetto singleton, come indica il nome, quindi i parametri sul tipo non avrebbero senso.
 
-<p>Consideriamo <code>object List</code>, l'oggetto associato a <code>class List[+A]</code>. Ecco la definizione del metodo <code>apply</code> di <code>object List</code>.
+<p>Consideriamo <code>object List</code>, l&#8217;oggetto associato a <code>class List[+A]</code>. Ecco la definizione del metodo <code>apply</code> di <code>object List</code>.
 
 <pre><code>def apply[A](xs: A*): List[A] = xs.toList</code></pre>
 
@@ -186,17 +186,17 @@ val positiveInts = List(1, 2, 3, 4, 5, 6, 7, &hellip;)</code></pre>
 
 <p>La colonna &#8220;Equivalente Java&#8221; è leggermente fuorviante; spiegheremo il perché più avanti, approfondendo il confronto tra Java e Scala.
 
-<p>La classe <code>List</code> è dichiarata come <code>List[+A]</code>, indicando che <code>List[String]</code> è una sottoclasse di <code>List[AnyRef]</code> e quindi che le liste sono covarianti nel parametro di tipo <code>A</code>. Quando un tipo come <code>List</code> ha un solo parametro di tipo covariante, si sente spesso usare l'espressione abbreviata &#8220;le liste sono covarianti&#8221;, così come per i tipi con un singolo parametro di tipo controvariante.
+<p>La classe <code>List</code> è dichiarata come <code>List[+A]</code>, indicando che <code>List[String]</code> è una sottoclasse di <code>List[AnyRef]</code> e quindi che le liste sono covarianti nel parametro di tipo <code>A</code>. Quando un tipo come <code>List</code> ha un solo parametro di tipo covariante, si sente spesso usare l&#8217;espressione abbreviata &#8220;le liste sono covarianti&#8221;, così come per i tipi con un singolo parametro di tipo controvariante.
 
 <p>I tratti <code>FunctionN</code> per <code>N</code> che va da <code>0</code> a <code>22</code> vengono usati da Scala per implementare i valori funzione come veri oggetti. Consideriamo <code>Function1</code> come esempio rappresentativo: è dichiarato come <code>trait Function1[-T, +R]</code>.
 
-<p><code>+R</code> è il tipo di ritorno e presenta l'annotazione covariante <code>+</code>. Il tipo del singolo argomento presenta l'annotazione <em>controvariante</em> <code>-</code>. Per le funzioni con più di un argomento, tutti i tipi degli argomenti presentano l'annotazione controvariante. Quindi, per esempio, usando i nostri tipi <code>T</code>, <code>T<sup>sup</sup></code> e <code>T<sub>sub</sub></code>, la definizione seguente sarebbe legale.
+<p><code>+R</code> è il tipo di ritorno e presenta l&#8217;annotazione covariante <code>+</code>. Il tipo del singolo argomento presenta l&#8217;annotazione <em>controvariante</em> <code>-</code>. Per le funzioni con più di un argomento, tutti i tipi degli argomenti presentano l&#8217;annotazione controvariante. Quindi, per esempio, usando i nostri tipi <code>T</code>, <code>T<sup>sup</sup></code> e <code>T<sub>sub</sub></code>, la definizione seguente sarebbe legale.
 
 <p><code>val f: Function1[T, T] = new Function1[T<sup>sup</sup>, T<sub>sub</sub>] { &hellip; }</code>
 
 <p>Perciò, i tratti funzione sono covarianti nel parametro del tipo di ritorno <code>R</code> e controvarianti nei parametri degli argomenti <code>T<sub>1</sub></code>, <code>T<sub>2</sub></code>, &hellip;, <code>T<sub>N</sub></code>.
 
-<p>Per capire il reale comportamento della varianza, esaminiamo un esempio completo. Se avete già esperienza nella <em>progettazione per contratto</em> <a href=apa.html#DesignByContract>[DesignByContract]</a>, di cui parleremo brevemente nella sezione <a href=cap-13.html#DesignByContractExample>Una progettazione migliore con la progettazione per contratto</a> del capitolo 13, potrebbe esservi d'aiuto ricordarne i principi di funzionamento, che sono molto simili a quelli su cui si basa il meccanismo della varianza. Questo script illustra il comportamento della varianza in caso di ereditarietà.
+<p>Per capire il reale comportamento della varianza, esaminiamo un esempio completo. Se avete già esperienza nella <em>progettazione per contratto</em> <a href=apa.html#DesignByContract>[DesignByContract]</a>, di cui parleremo brevemente nella sezione <a href=cap-13.html#DesignByContractExample>Una progettazione migliore con la progettazione per contratto</a> del capitolo 13, potrebbe esservi d&#8217;aiuto ricordarne i principi di funzionamento, che sono molto simili a quelli su cui si basa il meccanismo della varianza. Questo script illustra il comportamento della varianza in caso di ereditarietà.
 
 <pre><code>// <a href=esempi/cap-12/func-script.scala>esempi/cap-12/func-script.scala</a>
 // Non verrà compilato!
@@ -211,7 +211,7 @@ var f: C =&gt; C = (c: C)      =&gt; new C       // #1
     f         = (c: C)      =&gt; new CSub    // #4
     f         = (c: CSub)   =&gt; new CSuper  // #5: ERRORE!</code></pre>
 
-<p>Lo script non produce alcuna uscita: se provate a eseguirlo, genererà un errore di compilazione relativo all'ultima riga.
+<p>Lo script non produce alcuna uscita: se provate a eseguirlo, genererà un errore di compilazione relativo all&#8217;ultima riga.
 
 <p>Cominciamo definendo una gerarchia molto semplice di tre classi: <code>C</code>, la sua superclasse <code>CSuper</code> e il suo sottotipo <code>CSub</code>. Ognuna di esse definisce un metodo, che sfrutteremo tra breve.
 
@@ -219,11 +219,11 @@ var f: C =&gt; C = (c: C)      =&gt; new C       // #1
 
 <p>Ora assegniamo differenti valori funzione anonimi a <code>f</code>, usando gli spazi per sottolineare le somiglianze e le differenze nel confrontare la dichiarazione originale di <code>f</code> e i riassegnamenti successivi. Stiamo continuando a riassegnare valori a <code>f</code> perché desideriamo semplicemente verificare cosa verrà o non verrà compilato a questo punto. In particolare, desideriamo sapere quali valori funzione possiamo assegnare legalmente a <code>f: (C) =&gt; C</code>.
 
-<p>L'assegnamento sulla riga con il commento <code>#2</code> usa <code>(x:CSuper) =&gt; new CSub</code> come valore funzione. Anche questo è accettabile, perché l'argomento di <code>Function1</code> è <em>controvariante</em>, quindi possiamo sostituirlo con il <em>supertipo</em>, mentre il tipo di ritorno di <code>Function1</code> è <em>covariante</em>, quindi il nostro valore funzione può restituire un'istanza del <em>sottotipo</em>.
+<p>L&#8217;assegnamento sulla riga con il commento <code>#2</code> usa <code>(x:CSuper) =&gt; new CSub</code> come valore funzione. Anche questo è accettabile, perché l&#8217;argomento di <code>Function1</code> è <em>controvariante</em>, quindi possiamo sostituirlo con il <em>supertipo</em>, mentre il tipo di ritorno di <code>Function1</code> è <em>covariante</em>, quindi il nostro valore funzione può restituire un&#8217;istanza del <em>sottotipo</em>.
 
-<p>Anche gli assegnamenti nelle due righe successive sono validi. Sulla terza riga, usiamo <code>CSuper</code> come argomento, che viene accettato come è accaduto nella seconda riga, e restituiamo un'istanza di <code>C</code>, che non crea problemi, proprio come ci aspettiamo. Similmente, sulla quarta riga usiamo <code>C</code> come argomento e <code>CSub</code> come tipo di ritorno, entrambi già convalidati dal loro impiego nelle righe precedenti.
+<p>Anche gli assegnamenti nelle due righe successive sono validi. Sulla terza riga, usiamo <code>CSuper</code> come argomento, che viene accettato come è accaduto nella seconda riga, e restituiamo un&#8217;istanza di <code>C</code>, che non crea problemi, proprio come ci aspettiamo. Similmente, sulla quarta riga usiamo <code>C</code> come argomento e <code>CSub</code> come tipo di ritorno, entrambi già convalidati dal loro impiego nelle righe precedenti.
 
-<p>L'ultima riga, con il commento <code>#5</code>, non viene compilata perché stiamo tentando di usare un argomento covariante in una posizione controvariante, e stiamo anche tentando di usare un valore di ritorno controvariante dove sono permessi solo valori covarianti.
+<p>L&#8217;ultima riga, con il commento <code>#5</code>, non viene compilata perché stiamo tentando di usare un argomento covariante in una posizione controvariante, e stiamo anche tentando di usare un valore di ritorno controvariante dove sono permessi solo valori covarianti.
 
 <p>Per capire qual è il comportamento corretto in questo caso, possiamo ricorrere a un ragionamento in termini di <em>progettazione per contratto</em>. Analizziamo il modo in cui un cliente potrebbe usare alcune di queste definizioni di <code>f</code>.
 
@@ -245,27 +245,27 @@ useF((c: C)      =&gt; new C)        // #5
 useF((c: CSuper) =&gt; new CSub)     // #6
 useF((c: CSub)   =&gt; {println(c.msub); new CSuper})   // #7: ERRORE!</code></pre>
 
-<p>Il metodo <code>useF</code> accetta una funzione <code>C =&gt; C</code> come argomento; ora stiamo semplicemente passando letterali funzione anziché assegnarli a <code>f</code>. Il metodo crea un'istanza di <code>C</code> (riga con il commento <code>#1</code>) e la passa alla funzione in ingresso per creare una nuova istanza di <code>C</code> (riga <code>#2</code>) su cui poi usa le operazioni di <code>C</code>, invocando i metodi <code>msuper</code> e <code>m</code> (righe con i commenti <code>#3</code> e <code>#4</code>, rispettivamente).
+<p>Il metodo <code>useF</code> accetta una funzione <code>C =&gt; C</code> come argomento; ora stiamo semplicemente passando letterali funzione anziché assegnarli a <code>f</code>. Il metodo crea un&#8217;istanza di <code>C</code> (riga con il commento <code>#1</code>) e la passa alla funzione in ingresso per creare una nuova istanza di <code>C</code> (riga <code>#2</code>) su cui poi usa le operazioni di <code>C</code>, invocando i metodi <code>msuper</code> e <code>m</code> (righe con i commenti <code>#3</code> e <code>#4</code>, rispettivamente).
 
-<p>Si potrebbe dire che il metodo <code>useF</code> specifica un <em>contratto</em> di comportamento: si aspetta che gli venga passata una funzione capace di accettare un'istanza di <code>C</code> come argomento e di restituire un'altra istanza di <code>C</code>. Perciò, il metodo invocherà la funzione che gli viene passata, passandole un'istanza di <code>C</code>, e si aspetterà di ricevere come valore di ritorno un'istanza di <code>C</code>.
+<p>Si potrebbe dire che il metodo <code>useF</code> specifica un <em>contratto</em> di comportamento: si aspetta che gli venga passata una funzione capace di accettare un&#8217;istanza di <code>C</code> come argomento e di restituire un&#8217;altra istanza di <code>C</code>. Perciò, il metodo invocherà la funzione che gli viene passata, passandole un&#8217;istanza di <code>C</code>, e si aspetterà di ricevere come valore di ritorno un&#8217;istanza di <code>C</code>.
 
-<p>Sulla riga con il commento <code>#5</code>, a <code>useF</code> viene passata una funzione che accetta un'istanza di <code>C</code> e restituisce un'istanza di <code>C</code>. L'istanza di <code>C</code> restituita non avrà problemi a funzionare con le righe <code>#3</code> e <code>#4</code>, per definizione. Non ci sono intoppi.
+<p>Sulla riga con il commento <code>#5</code>, a <code>useF</code> viene passata una funzione che accetta un&#8217;istanza di <code>C</code> e restituisce un&#8217;istanza di <code>C</code>. L&#8217;istanza di <code>C</code> restituita non avrà problemi a funzionare con le righe <code>#3</code> e <code>#4</code>, per definizione. Non ci sono intoppi.
 
-<p>Infine, arriviamo al punto cruciale di questo esempio. Sulla riga <code>#6</code> viene passata una funzione che è &#8220;disposta&#8221; ad accettare un'istanza di <code>CSuper</code> e &#8220;promette&#8221; di restituire un'istanza di <code>CSub</code>, in altre parole una funzione il cui tipo inferito è <code>Function1[CSuper,CSub]</code>. In effetti, questa funzione allarga il ventaglio delle istanze permesse accettando un supertipo. Si noti che <code>useF</code> non le passerà mai un'istanza di <code>CSuper</code>, ma solo un'istanza di <code>C</code>; tuttavia, dato che la funzione accetta un insieme più ampio di valori, opera altrettanto bene anche se le vengono passate solo istanze di <code>C</code>.
+<p>Infine, arriviamo al punto cruciale di questo esempio. Sulla riga <code>#6</code> viene passata una funzione che è &#8220;disposta&#8221; ad accettare un&#8217;istanza di <code>CSuper</code> e &#8220;promette&#8221; di restituire un&#8217;istanza di <code>CSub</code>, in altre parole una funzione il cui tipo inferito è <code>Function1[CSuper,CSub]</code>. In effetti, questa funzione allarga il ventaglio delle istanze permesse accettando un supertipo. Si noti che <code>useF</code> non le passerà mai un&#8217;istanza di <code>CSuper</code>, ma solo un&#8217;istanza di <code>C</code>; tuttavia, dato che la funzione accetta un insieme più ampio di valori, opera altrettanto bene anche se le vengono passate solo istanze di <code>C</code>.
 
-<p>Similmente, &#8220;promettendo&#8221; di restituire un'istanza di <code>CSub</code>, questa funzione anonima restringe i valori possibili restituiti a <code>useF</code>. Ma anche questo è un comportamento ancora valido, perché <code>useF</code> accetterà qualsiasi istanza di <code>C</code> come valore di ritorno e il suo contratto sarà soddisfatto pure ottenendo solo un'istanza di <code>CSub</code>. Le righe <code>#3</code> e <code>#4</code> continueranno a fare il loro dovere.
+<p>Similmente, &#8220;promettendo&#8221; di restituire un&#8217;istanza di <code>CSub</code>, questa funzione anonima restringe i valori possibili restituiti a <code>useF</code>. Ma anche questo è un comportamento ancora valido, perché <code>useF</code> accetterà qualsiasi istanza di <code>C</code> come valore di ritorno e il suo contratto sarà soddisfatto pure ottenendo solo un&#8217;istanza di <code>CSub</code>. Le righe <code>#3</code> e <code>#4</code> continueranno a fare il loro dovere.
 
-<p>Seguendo la stessa linea di ragionamento, è possibile capire perché l'ultima riga dello script, indicata dal commento <code>#7</code>, genera un errore di compilazione. Ora la funzione anonima può solo accettare un'istanza di <code>CSub</code>, ma <code>useF</code> le passerà un'istanza di <code>C</code>: il corpo della funzione anonima invocherebbe il metodo <code>c.msub</code> che non esiste in <code>C</code>. Similmente, la restituzione di un'istanza di <code>CSuper</code> al posto di un'istanza di <code>C</code> provocherebbe un problema nella riga <code>#4</code> in <code>useF</code>, perché <code>CSuper</code> non dispone del metodo <code>m</code>.
+<p>Seguendo la stessa linea di ragionamento, è possibile capire perché l&#8217;ultima riga dello script, indicata dal commento <code>#7</code>, genera un errore di compilazione. Ora la funzione anonima può solo accettare un&#8217;istanza di <code>CSub</code>, ma <code>useF</code> le passerà un&#8217;istanza di <code>C</code>: il corpo della funzione anonima invocherebbe il metodo <code>c.msub</code> che non esiste in <code>C</code>. Similmente, la restituzione di un&#8217;istanza di <code>CSuper</code> al posto di un&#8217;istanza di <code>C</code> provocherebbe un problema nella riga <code>#4</code> in <code>useF</code>, perché <code>CSuper</code> non dispone del metodo <code>m</code>.
 
 <p>Argomentazioni identiche a queste vengono usate per spiegare come i contratti possono cambiare in caso di ereditarietà nella <em>progettazione per contratto</em>.
 
 <p>Si noti che le annotazioni di varianza hanno senso solamente sui parametri di tipo per i tipi parametrici ma non per i metodi parametrici, perché le annotazioni influenzano il comportamento dei sottotipi e i metodi non possono essere estesi, a differenza dei tipi che li contengono.
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>L'annotazione di varianza <code>+</code> significa che il tipo parametrico è <em>covariante</em> nel parametro di tipo. L'annotazione di varianza <code>-</code> significa che il tipo parametrico è <em>controvariante</em> nel parametro di tipo. L'assenza di qualsiasi annotazione di varianza significa che il tipo parametrico è <em>invariante</em> nel parametro di tipo.
+<p><span class=u>&#x261E;</span>L&#8217;annotazione di varianza <code>+</code> significa che il tipo parametrico è <em>covariante</em> nel parametro di tipo. L&#8217;annotazione di varianza <code>-</code> significa che il tipo parametrico è <em>controvariante</em> nel parametro di tipo. L&#8217;assenza di qualsiasi annotazione di varianza significa che il tipo parametrico è <em>invariante</em> nel parametro di tipo.
 </blockquote>
 
-<p>Infine, il compilatore controlla l'uso effettuato delle annotazioni di varianza per evitare problemi come quello che abbiamo appena descritto nelle ultime righe degli esempi. Supponete di provare a definire un vostro tipo funzione in questo modo.
+<p>Infine, il compilatore controlla l&#8217;uso effettuato delle annotazioni di varianza per evitare problemi come quello che abbiamo appena descritto nelle ultime righe degli esempi. Supponete di provare a definire un vostro tipo funzione in questo modo.
 
 <pre><code>trait MyFunction2[+T1, +T2, -R] {
   def apply(v1:T1, v2:T2): R = { &hellip; }
@@ -298,7 +298,7 @@ class ContainerMinus[-A](var value: A)     // ERRORE
 println(new ContainerPlus("Ciao mondo!"))
 println(new ContainerMinus("Ciao mondo!"))</code></pre>
 
-<p>L'esecuzione di questo script provoca i seguenti errori.
+<p>L&#8217;esecuzione di questo script provoca i seguenti errori.
 
 <pre><samp>&hellip; 4: error: covariant type A occurs in contravariant position in type A of parameter of setter value_=
 class ContainerPlus[+A](var value: A)      // ERRORE
@@ -310,21 +310,21 @@ two errors found</samp></pre>
 
 <p>Questi errori si possono comprendere ricordando la discussione sulla varianza di tipo in caso di ereditarietà per i tratti <code>FunctionN</code>, dove i tipi degli argomenti della funzione sono <em>controvarianti</em> (cioè, <code>-T1</code>) e il tipo del valore di ritorno è <em>covariante</em> (cioè, <code>+R</code>).
 
-<p>Il problema con un tipo mutabile è che almeno uno dei suoi campi è dotato dell'equivalente delle operazioni di lettura <em>e</em> scrittura, tramite l'accesso diretto o attraverso metodi per impostare e restituire il valore.
+<p>Il problema con un tipo mutabile è che almeno uno dei suoi campi è dotato dell&#8217;equivalente delle operazioni di lettura <em>e</em> scrittura, tramite l&#8217;accesso diretto o attraverso metodi per impostare e restituire il valore.
 
 <p>Il primo errore è dovuto al tentativo di usare un tipo covariante come argomento di un metodo di scrittura, ma dalla discussione sui tipi funzione si è visto che i tipi degli argomenti di un metodo devono essere controvarianti. Un tipo covariante può essere utilizzato per un metodo di lettura.
 
 <p>Similmente, il secondo errore è dovuto al tentativo di usare un tipo controvariante come tipo di ritorno per un metodo di lettura, che deve essere covariante. Un tipo controvariante può essere utilizzato per un metodo di scrittura.
 
-<p>Perciò, il compilatore non ci permetterà di usare un'annotazione di varianza su un tipo usato per un campo mutabile. Per questo motivo, tutti i tipi parametrici mutabili nella libreria Scala sono <em>invarianti</em> nei loro parametri di tipo. Alcuni hanno un tipo immutabile corrispondente che possiede parametri covarianti o controvarianti.
+<p>Perciò, il compilatore non ci permetterà di usare un&#8217;annotazione di varianza su un tipo usato per un campo mutabile. Per questo motivo, tutti i tipi parametrici mutabili nella libreria Scala sono <em>invarianti</em> nei loro parametri di tipo. Alcuni hanno un tipo immutabile corrispondente che possiede parametri covarianti o controvarianti.
 
 <h3 id=VarianceInScalaVsJava>Un confronto tra la varianza in Scala e in Java</h3>
 
-<p>Come è già stato detto, in Scala il comportamento di varianza è definito nel <em>punto di dichiarazione</em>. In Java, al contrario, è definito nel <em>punto di invocazione</em>: è il <em>cliente</em> di un tipo a definire il comportamento di varianza desiderato <a href=apa.html#Naftalin2006>[Naftalin2006]</a>. In altre parole, quando si usa un tipo generico Java e si specifica il parametro di tipo, si indica anche il comportamento di varianza (compresa l'invarianza, che è il comportamento predefinito). Non è possibile specificare il comportamento di varianza nel punto della dichiarazione in Java, sebbene sia consentito usare espressioni simili, che però definiscono i <em>limiti del tipo</em>, come vedremo più avanti.
+<p>Come è già stato detto, in Scala il comportamento di varianza è definito nel <em>punto di dichiarazione</em>. In Java, al contrario, è definito nel <em>punto di invocazione</em>: è il <em>cliente</em> di un tipo a definire il comportamento di varianza desiderato <a href=apa.html#Naftalin2006>[Naftalin2006]</a>. In altre parole, quando si usa un tipo generico Java e si specifica il parametro di tipo, si indica anche il comportamento di varianza (compresa l&#8217;invarianza, che è il comportamento predefinito). Non è possibile specificare il comportamento di varianza nel punto della dichiarazione in Java, sebbene sia consentito usare espressioni simili, che però definiscono i <em>limiti del tipo</em>, come vedremo più avanti.
 
-<p>Nelle specifiche di varianza in Java, compare sempre una wildcard <code>?</code> prima delle parole chiave <code>super</code> o <code>extend</code>, come mostrato nella tabella precedente. Quando abbiamo affermato, dopo la tabella, che la colonna &#8220;Equivalente Java&#8221; era leggermente fuorviante, ci stavamo riferendo alla differenza tra le specifiche nel punto di dichiarazione o nel punto di invocazione. Esiste un'ulteriore differenza tra il comportamento di Scala e quello di Java che illustreremo più avanti nella sezione <a href=#ExistentialTypes>Tipi esistenziali</a>.
+<p>Nelle specifiche di varianza in Java, compare sempre una wildcard <code>?</code> prima delle parole chiave <code>super</code> o <code>extend</code>, come mostrato nella tabella precedente. Quando abbiamo affermato, dopo la tabella, che la colonna &#8220;Equivalente Java&#8221; era leggermente fuorviante, ci stavamo riferendo alla differenza tra le specifiche nel punto di dichiarazione o nel punto di invocazione. Esiste un&#8217;ulteriore differenza tra il comportamento di Scala e quello di Java che illustreremo più avanti nella sezione <a href=#ExistentialTypes>Tipi esistenziali</a>.
 
-<p>Le specifiche di varianza nel punto di invocazione hanno lo svantaggio di obbligare chi usa i generici Java a una comprensione più completa del sistema di tipi rispetto a quanto è necessario per chi usa i tipi parametrici di Scala, che non ha bisogno di indicare questo comportamento nei punti in cui li impiega. I programmatori Scala vengono anche grandemente avvantaggiati dall'inferenza di tipo.
+<p>Le specifiche di varianza nel punto di invocazione hanno lo svantaggio di obbligare chi usa i generici Java a una comprensione più completa del sistema di tipi rispetto a quanto è necessario per chi usa i tipi parametrici di Scala, che non ha bisogno di indicare questo comportamento nei punti in cui li impiega. I programmatori Scala vengono anche grandemente avvantaggiati dall&#8217;inferenza di tipo.
 
 <p>Esaminiamo un esempio Java di una versione semplificata dei tipi Scala <code>Option</code>, <code>Some</code> e <code>None</code>.
 
@@ -452,26 +452,26 @@ package shapes {
   }
 }</code></pre>
 
-<p>L'esecuzione di <code>OptionExample</code> tramite il comando <kbd>scala -cp &hellip; variances.OptionExample</kbd> produce il risultato seguente.
+<p>L&#8217;esecuzione di <code>OptionExample</code> tramite il comando <kbd>scala -cp &hellip; variances.OptionExample</kbd> produce il risultato seguente.
 
 <pre><samp>Rettangolo? Option(Rectangle(Point(0.0,0.0),2.0,5.0))
 Cerchio? Option(Circle(Point(0.0,0.0),2.0))
 Triangolo? Option(Triangle(Point(0.0,0.0),Point(2.0,0.0),Point(0.0,2.0)))
 Sconosciuto? None</samp></pre>
 
-<p>Tra le altre cose, questo esempio illustra anche l'interoperabilità tra Scala e Java, di cui riparleremo nella sezione <a href=cap-14.html#JavaInterop>Interoperabilità con Java</a> del capitolo 14.
+<p>Tra le altre cose, questo esempio illustra anche l&#8217;interoperabilità tra Scala e Java, di cui riparleremo nella sezione <a href=cap-14.html#JavaInterop>Interoperabilità con Java</a> del capitolo 14.
 
 <p><code>OptionExample.main</code> invoca il metodo factory statico <code>makeShape</code>, i cui argomenti sono il nome di una forma geometrica e una lista a lunghezza variabile di parametri da passare ai costruttori di <code>Shape</code>.
 
-<p>Si noti che <code>makeShape</code> restituisce <code>Option&lt;? extends Shape&gt;</code> e che, quando <code>Shape</code> viene istanziata, <code>makeShape</code> restituisce un'istanza di <code>Some</code> parametrizzata con il sottotipo di <code>Shape</code> che racchiude. Se il metodo factory riceve un nome di forma geometrica sconosciuto, allora restituisce un'istanza di <code>None&lt;Shape&gt;</code>. Qui è necessario parametrizzare un'istanza di <code>None</code> con <code>Shape</code>, laddove Scala, che definisce un sottotipo di <em>tutti</em> i tipi, chiamato <code>Nothing</code>, può permettersi di definire <code>None</code> come <code>case object None extends Option[Nothing]</code>.
+<p>Si noti che <code>makeShape</code> restituisce <code>Option&lt;? extends Shape&gt;</code> e che, quando <code>Shape</code> viene istanziata, <code>makeShape</code> restituisce un&#8217;istanza di <code>Some</code> parametrizzata con il sottotipo di <code>Shape</code> che racchiude. Se il metodo factory riceve un nome di forma geometrica sconosciuto, allora restituisce un&#8217;istanza di <code>None&lt;Shape&gt;</code>. Qui è necessario parametrizzare un&#8217;istanza di <code>None</code> con <code>Shape</code>, laddove Scala, che definisce un sottotipo di <em>tutti</em> i tipi, chiamato <code>Nothing</code>, può permettersi di definire <code>None</code> come <code>case object None extends Option[Nothing]</code>.
 
-<p>Il sistema di tipi di Java non offre alcun idioma per implementare l'equivalente di <code>None</code> in modo simile. La possibilità di definire <code>None</code> come oggetto singleton ha un certo numero di vantaggi, compresa una maggior efficienza, perché evita la creazione di una moltitudine di piccoli oggetti, e un comportamento non ambiguo di <code>equals</code>, perché rende superfluo definire la semantica di uguaglianza tra diverse istanziazioni del tipo Java <code>None&lt;?&gt;</code>, per esempio per confrontare <code>None&lt;String&gt;</code> e <code>None&lt;Shape&gt;</code>.
+<p>Il sistema di tipi di Java non offre alcun idioma per implementare l&#8217;equivalente di <code>None</code> in modo simile. La possibilità di definire <code>None</code> come oggetto singleton ha un certo numero di vantaggi, compresa una maggior efficienza, perché evita la creazione di una moltitudine di piccoli oggetti, e un comportamento non ambiguo di <code>equals</code>, perché rende superfluo definire la semantica di uguaglianza tra diverse istanziazioni del tipo Java <code>None&lt;?&gt;</code>, per esempio per confrontare <code>None&lt;String&gt;</code> e <code>None&lt;Shape&gt;</code>.
 
 <p>Infine, si noti che <code>OptionExample</code>, in quanto cliente di <code>Option</code>, deve specificare la varianza di tipo <code>Option&lt;? extends Shape&gt;</code> in diversi punti. In Scala, invece, il cliente non deve assumersi questo onere.
 
 <h3 id=ImplementationNotes>Note di implementazione</h3>
 
-<p>L'implementazione dei tipi e dei metodi parametrici merita alcune considerazioni. Le diverse implementazioni sono generate quando il file sorgente che contiene le definizioni viene compilato. Per ogni parametro di tipo, l'implementazione presume che possano essere specificati i sottotipi di <code>Any</code> (nei generici Java viene usato <code>Object</code>). Questi aspetti hanno implicazioni sulle prestazioni di cui riparleremo esaminando l'annotazione <code>@specialized</code> nella sezione <a href=cap-13.html#Annotations>Annotazioni</a> del capitolo 13.
+<p>L&#8217;implementazione dei tipi e dei metodi parametrici merita alcune considerazioni. Le diverse implementazioni sono generate quando il file sorgente che contiene le definizioni viene compilato. Per ogni parametro di tipo, l&#8217;implementazione presume che possano essere specificati i sottotipi di <code>Any</code> (nei generici Java viene usato <code>Object</code>). Questi aspetti hanno implicazioni sulle prestazioni di cui riparleremo esaminando l&#8217;annotazione <code>@specialized</code> nella sezione <a href=cap-13.html#Annotations>Annotazioni</a> del capitolo 13.
 
 <h2 id=TypeBounds>Limiti sui tipi</h2>
 
@@ -479,7 +479,7 @@ Sconosciuto? None</samp></pre>
 
 <h3 id=UpperTypeBounds>Limiti superiori sui tipi</h3>
 
-<p>Considerate i metodi <code>apply</code> sovraccaricati di <code>object.scala.Array</code> usati per creare nuovi array. Ne esistono implementazioni ottimizzate per ogni tipo derivato da <code>AnyVal</code>, ma esiste un'altra implementazione di <code>apply</code> parametrizzata per qualsiasi sottotipo di <code>AnyRef</code>. Ecco come si presenta questa implementazione in Scala 2.7.5.
+<p>Considerate i metodi <code>apply</code> sovraccaricati di <code>object.scala.Array</code> usati per creare nuovi array. Ne esistono implementazioni ottimizzate per ogni tipo derivato da <code>AnyVal</code>, ma esiste un&#8217;altra implementazione di <code>apply</code> parametrizzata per qualsiasi sottotipo di <code>AnyRef</code>. Ecco come si presenta questa implementazione in Scala 2.7.5.
 
 <pre><code>object Array {
   &hellip;
@@ -492,7 +492,7 @@ Sconosciuto? None</samp></pre>
   &hellip;
 }</code></pre>
 
-<p>Il parametro di tipo <code>A &lt;: AnyRef</code> significa &#8220;qualsiasi tipo <code>A</code> che sia un <em>sottotipo</em> di <code>AnyRef</code>&#8221;. Si noti che un tipo è sempre sottotipo e supertipo di se stesso, quindi <code>A</code> potrebbe anche essere uguale ad <code>AnyRef</code>. L'operatore <code>&lt;:</code> indica che il tipo alla sua sinistra deve essere derivato dal tipo alla sua destra, o che i due tipi devono essere uguali. Come abbiamo detto nella sezione <a href=cap-2.html#ReservedWords>Parole riservate</a> del capitolo 2, in realtà questo operatore è una parola riservata del linguaggio.
+<p>Il parametro di tipo <code>A &lt;: AnyRef</code> significa &#8220;qualsiasi tipo <code>A</code> che sia un <em>sottotipo</em> di <code>AnyRef</code>&#8221;. Si noti che un tipo è sempre sottotipo e supertipo di se stesso, quindi <code>A</code> potrebbe anche essere uguale ad <code>AnyRef</code>. L&#8217;operatore <code>&lt;:</code> indica che il tipo alla sua sinistra deve essere derivato dal tipo alla sua destra, o che i due tipi devono essere uguali. Come abbiamo detto nella sezione <a href=cap-2.html#ReservedWords>Parole riservate</a> del capitolo 2, in realtà questo operatore è una parola riservata del linguaggio.
 
 <p>Questi limiti sono chiamati <em>limiti superiori sul tipo</em>, seguendo la convenzione <em>de facto</em> per cui i diagrammi delle gerarchie di tipi collocano i sottotipi al di sotto dei loro supertipi. Abbiamo seguito questa convenzione nel diagramma mostrato nella sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> del capitolo 7.
 
@@ -532,15 +532,15 @@ println(list)</code></pre>
 
 <pre><samp>List(3.14, Scala, Java, Ruby, C#, C++, Python)</samp></pre>
 
-<p>La nuova lista è di tipo <code>List[Any]</code>, dato che <code>Any</code> è il supertipo comune più vicino di <code>String</code> e <code>Double</code>. La lista di partenza era una lista di stringhe, con <code>A</code> uguale a <code>String</code>; in seguito all'aggiunta di un numero di tipo <code>Double</code> in testa alla lista, il compilatore ha inferito <code>Any</code> come valore di <code>B</code>, cioè il supertipo comune più vicino (e, in realtà, l'unico).
+<p>La nuova lista è di tipo <code>List[Any]</code>, dato che <code>Any</code> è il supertipo comune più vicino di <code>String</code> e <code>Double</code>. La lista di partenza era una lista di stringhe, con <code>A</code> uguale a <code>String</code>; in seguito all&#8217;aggiunta di un numero di tipo <code>Double</code> in testa alla lista, il compilatore ha inferito <code>Any</code> come valore di <code>B</code>, cioè il supertipo comune più vicino (e, in realtà, l&#8217;unico).
 
 <blockquote class=note>
-<p><span class=u>&#x261E;</span>La firma di tipo <code>B &gt;: A</code> dice che <code>B</code> deve essere un <em>supertipo</em> di <code>A</code>. Non esiste caso analogo in Java: l'espressione <code>B super A</code> non è valida.
+<p><span class=u>&#x261E;</span>La firma di tipo <code>B &gt;: A</code> dice che <code>B</code> deve essere un <em>supertipo</em> di <code>A</code>. Non esiste caso analogo in Java: l&#8217;espressione <code>B super A</code> non è valida.
 </blockquote>
 
-<h3 id=ACloserLookAtLists>Un'occhiata ravvicinata alle liste</h3>
+<h3 id=ACloserLookAtLists>Un&#8217;occhiata ravvicinata alle liste</h3>
 
-<p>L'implementazione della classe <code>List</code> nella libreria Scala merita di essere analizzata nel dettaglio, dato che combina tutte le caratteristiche appena viste e illustra diversi idiomi utili per realizzare strutture dati immutabili in stile funzionale pienamente type-safe e comunque flessibili. Non mostreremo l'implementazione completa, omettendo <code>object List</code>, numerosi metodi della classe <code>List</code> e i commenti usati per generare la documentazione <em>Scaladoc</em>, ma incoraggiamo il lettore a esaminarla per proprio conto, scaricando la distribuzione del codice sorgente dal sito web del linguaggio <a href=apa.html#Scala>[Scala]</a> oppure visitando la pagina <em>Scaladoc</em> di <code>List</code>. Per evitare confusione con <code>scala.List</code>, useremo nomi diversi per la classe (che chiameremo <code>AbbrevList</code>) e per il package.
+<p>L&#8217;implementazione della classe <code>List</code> nella libreria Scala merita di essere analizzata nel dettaglio, dato che combina tutte le caratteristiche appena viste e illustra diversi idiomi utili per realizzare strutture dati immutabili in stile funzionale pienamente type-safe e comunque flessibili. Non mostreremo l&#8217;implementazione completa, omettendo <code>object List</code>, numerosi metodi della classe <code>List</code> e i commenti usati per generare la documentazione <em>Scaladoc</em>, ma incoraggiamo il lettore a esaminarla per proprio conto, scaricando la distribuzione del codice sorgente dal sito web del linguaggio <a href=apa.html#Scala>[Scala]</a> oppure visitando la pagina <em>Scaladoc</em> di <code>List</code>. Per evitare confusione con <code>scala.List</code>, useremo nomi diversi per la classe (che chiameremo <code>AbbrevList</code>) e per il package.
 
 <pre><code>// <a href=esempi/cap-12/abbrev-list.scala>esempi/cap-12/abbrev-list.scala</a>
 // Adattato da scala/List.scala nella distribuzione di Scala 2.7.5
@@ -586,17 +586,17 @@ final case class ::[B](private var hd: B,
   def tail : AbbrevList[B] = tl
 }</code></pre>
 
-<p>Si noti che, sebbene <code>AbbrevList</code> sia immutabile, l'implementazione interna usa variabili mutabili, per esempio nel metodo <code>foreach</code>.
+<p>Si noti che, sebbene <code>AbbrevList</code> sia immutabile, l&#8217;implementazione interna usa variabili mutabili, per esempio nel metodo <code>foreach</code>.
 
-<p>Il package contiene le definizioni di tre tipi che formano una gerarchia sigillata. Il primo è <code>AbbrevList</code> (l'analogo di <code>List</code>), un tratto astratto che dichiara i tre metodi astratti <code>isEmpty</code>, <code>head</code> e <code>tail</code> e definisce anche l'operatore <code>::</code> e un metodo <code>foreach</code>. Sarebbe possibile implementare tutti gli altri metodi di <code>List</code> a partire da questi metodi, sebbene alcuni (come <code>List.length</code>) siano realizzati in maniera differente per ragioni di efficienza.
+<p>Il package contiene le definizioni di tre tipi che formano una gerarchia sigillata. Il primo è <code>AbbrevList</code> (l&#8217;analogo di <code>List</code>), un tratto astratto che dichiara i tre metodi astratti <code>isEmpty</code>, <code>head</code> e <code>tail</code> e definisce anche l&#8217;operatore <code>::</code> e un metodo <code>foreach</code>. Sarebbe possibile implementare tutti gli altri metodi di <code>List</code> a partire da questi metodi, sebbene alcuni (come <code>List.length</code>) siano realizzati in maniera differente per ragioni di efficienza.
 
-<p><code>AbbrevNil</code>, l'analogo di <code>Nil</code>, è un <code>object case</code> che estende <code>AbbrevList[Nothing]</code> restituendo <code>true</code> da <code>isEmpty</code> e lanciando un'eccezione dai metodi <code>head</code> e <code>tail</code>. Dato che <code>AbbrevNil</code> (come <code>Nil</code>) essenzialmente non ha stato né comportamento, implementarlo sotto forma di un oggetto anziché di una classe elimina le copie non necessarie, rende <code>equals</code> veloce e semplice, <i class=baa>&amp;</i>c.
+<p><code>AbbrevNil</code>, l&#8217;analogo di <code>Nil</code>, è un <code>object case</code> che estende <code>AbbrevList[Nothing]</code> restituendo <code>true</code> da <code>isEmpty</code> e lanciando un&#8217;eccezione dai metodi <code>head</code> e <code>tail</code>. Dato che <code>AbbrevNil</code> (come <code>Nil</code>) essenzialmente non ha stato né comportamento, implementarlo sotto forma di un oggetto anziché di una classe elimina le copie non necessarie, rende <code>equals</code> veloce e semplice, <i class=baa>&amp;</i>c.
 
-<p>La classe <code>::</code>, dichiarata <code>final</code>, è l'analogo di <code>scala.::</code> derivata da <code>List</code>. I suoi argomenti sono l'elemento che diventerà la testa della nuova lista e una lista esistente che diventerà la coda della nuova lista. Si noti che questi valori vengono memorizzati direttamente come campi. I metodi <code>head</code> e <code>tail</code> definiti in <code>AbbrevList</code> sono semplicemente metodi di lettura per questi campi. Non sono richieste altre strutture dati per rappresentare la lista.
+<p>La classe <code>::</code>, dichiarata <code>final</code>, è l&#8217;analogo di <code>scala.::</code> derivata da <code>List</code>. I suoi argomenti sono l&#8217;elemento che diventerà la testa della nuova lista e una lista esistente che diventerà la coda della nuova lista. Si noti che questi valori vengono memorizzati direttamente come campi. I metodi <code>head</code> e <code>tail</code> definiti in <code>AbbrevList</code> sono semplicemente metodi di lettura per questi campi. Non sono richieste altre strutture dati per rappresentare la lista.
 
-<p>Questo è il motivo per cui aggiungere in testa un nuovo elemento per creare una nuova lista è un'operazione di complessità temporale O(1). La classe <code>List</code> possiede anche un metodo <code>+</code> deprecato che crea una nuova lista aggiungendo un elemento in coda a una lista esistente: questa operazione è di complessità O(N), dove N è la lunghezza della lista.
+<p>Questo è il motivo per cui aggiungere in testa un nuovo elemento per creare una nuova lista è un&#8217;operazione di complessità temporale O(1). La classe <code>List</code> possiede anche un metodo <code>+</code> deprecato che crea una nuova lista aggiungendo un elemento in coda a una lista esistente: questa operazione è di complessità O(N), dove N è la lunghezza della lista.
 
-<p>Man mano che vengono costruite nuove liste aggiungendo elementi in testa ad altre liste, si forma una gerarchia annidata di istanze di <code>::</code>. Dato che le liste sono immutabili, non è necessario premunirsi contro l'alterazione accidentale di questa catena nel caso in cui una delle istanze di <code>::</code> venisse modificata in qualche modo.
+<p>Man mano che vengono costruite nuove liste aggiungendo elementi in testa ad altre liste, si forma una gerarchia annidata di istanze di <code>::</code>. Dato che le liste sono immutabili, non è necessario premunirsi contro l&#8217;alterazione accidentale di questa catena nel caso in cui una delle istanze di <code>::</code> venisse modificata in qualche modo.
 
 <p>&Egrave; possibile vedere questa struttura annidata stampando una lista tramite il metodo <code>toString</code> che viene generato automaticamente a causa della parola chiave <code>case</code>. Ecco una sessione <kbd>scala</kbd> di esempio.
 
@@ -611,7 +611,7 @@ import bounds.abbrevlist._
 scala&gt; 1 :: 2 :: 3 :: AbbrevNil
 res1: bounds.abbrevlist.AbbrevList[Int] = ::(1,::(2,::(3,AbbrevNil)))</samp></pre>
 
-<p>Si noti il risultato sull'ultima riga, che mostra gli elementi <code>(head,tail)</code> annidati.
+<p>Si noti il risultato sull&#8217;ultima riga, che mostra gli elementi <code>(head,tail)</code> annidati.
 
 <p>Si veda <a class=url href="http://www.scala-lang.org/node/129">http://www.scala-lang.org/node/129</a> per un altro esempio che definisce in modo simile una struttura dati a pila.
 
@@ -619,18 +619,18 @@ res1: bounds.abbrevlist.AbbrevList[Int] = ::(1,::(2,::(3,AbbrevNil)))</samp></pr
 
 <p>Abbiamo visto molti casi in cui un metodo implicito viene usato per una conversione di tipo, per esempio allo scopo di far sembrare che si siano aggiunti nuovi metodi a un tipo esistente, come nel pattern cosiddetto &#8220;Decora la mia libreria&#8221; ampiamente sfruttato nel capitolo 11. Per effettuare una conversione si possono anche usare valori funzione accompagnati dalla parola chiave <code>implicit</code>. Vedremo un esempio di entrambe le soluzioni tra breve.
 
-<p>Una <em>vista</em> è un valore implicito di tipo funzione che converte un tipo <code>A</code> in un tipo <code>B</code>. La funzione è di tipo <code>A =&gt; B</code> oppure <code>(=&gt; A) =&gt; B</code> (dove <code>(=&gt; A)</code> è un <em>parametro con nome</em>). Si può usare come vista un metodo implicito con la stessa firma visibile nell'ambito corrente, cioè un metodo implicito importato da un <code>object</code>. Il termine <em>vista</em> esprime l'idea che da un tipo (<code>A</code>) sia possibile vedere un altro tipo (<code>B</code>).
+<p>Una <em>vista</em> è un valore implicito di tipo funzione che converte un tipo <code>A</code> in un tipo <code>B</code>. La funzione è di tipo <code>A =&gt; B</code> oppure <code>(=&gt; A) =&gt; B</code> (dove <code>(=&gt; A)</code> è un <em>parametro con nome</em>). Si può usare come vista un metodo implicito con la stessa firma visibile nell&#8217;ambito corrente, cioè un metodo implicito importato da un <code>object</code>. Il termine <em>vista</em> esprime l&#8217;idea che da un tipo (<code>A</code>) sia possibile vedere un altro tipo (<code>B</code>).
 
 <p>Una vista viene applicata in due circostanze.
 
 <ol>
-<li>Quando un tipo <code>A</code> viene usato in un contesto dove è richiesto un altro tipo <code>B</code> e l'ambito di visibilità contiene una vista in grado di convertire <code>A</code> in <code>B</code>.
-<li>Quando si fa riferimento a un membro inesistente <code>m</code> di un tipo <code>A</code> ma l'ambito di visibilità contiene una vista in grado di convertire <code>A</code> in un tipo <code>B</code> dotato del membro <code>m</code>.
+<li>Quando un tipo <code>A</code> viene usato in un contesto dove è richiesto un altro tipo <code>B</code> e l&#8217;ambito di visibilità contiene una vista in grado di convertire <code>A</code> in <code>B</code>.
+<li>Quando si fa riferimento a un membro inesistente <code>m</code> di un tipo <code>A</code> ma l&#8217;ambito di visibilità contiene una vista in grado di convertire <code>A</code> in un tipo <code>B</code> dotato del membro <code>m</code>.
 </ol>
 
-<p>Un esempio comune della seconda circostanza è la sintassi di inizializzazione <code>x -&gt; y</code> delle mappe, che innesca l'invocazione di <code>Predef.anyToArrowAssoc(x)</code> come abbiamo detto nella sezione <a href=cap-7.html#PredefObject>L'oggetto <code>Predef</code></a> del capitolo 7.
+<p>Un esempio comune della seconda circostanza è la sintassi di inizializzazione <code>x -&gt; y</code> delle mappe, che innesca l&#8217;invocazione di <code>Predef.anyToArrowAssoc(x)</code> come abbiamo detto nella sezione <a href=cap-7.html#PredefObject>L&#8217;oggetto <code>Predef</code></a> del capitolo 7.
 
-<p>Come esempio della prima circostanza, si possono considerare le viste definite da <code>Predef</code> per convertire i tipi <code>AnyVal</code> tra loro e per convertire un tipo <code>AnyVal</code> nel tipo corrispondente del package <code>java.lang</code>. Per esempio, <code>double2Double</code> converte un numero <code>scala.Double</code> in un'istanza di <code>java.lang.Double</code>.
+<p>Come esempio della prima circostanza, si possono considerare le viste definite da <code>Predef</code> per convertire i tipi <code>AnyVal</code> tra loro e per convertire un tipo <code>AnyVal</code> nel tipo corrispondente del package <code>java.lang</code>. Per esempio, <code>double2Double</code> converte un numero <code>scala.Double</code> in un&#8217;istanza di <code>java.lang.Double</code>.
 
 <p>Un <em>limite di vista</em> in una dichiarazione di tipo viene indicato con la parola chiave <code>&lt;%</code>, per esempio <code>A &lt;% B</code>. Il limite consente di usare come valore di <code>A</code> qualsiasi tipo che possa essere convertito in <code>B</code> usando una vista.
 
@@ -644,7 +644,7 @@ res1: bounds.abbrevlist.AbbrevList[Int] = ::(1,::(2,::(3,AbbrevNil)))</samp></pr
 
 <p>Si noti che abbiamo una lista di parametri aggiuntiva anziché un parametro aggiuntivo nella lista di parametri esistente.
 
-<p>Questa trasformazione ha l'effetto voluto perché l'argomento implicito <code>viewAB</code>, posto che l'ambito di visibilità contenga una vista del tipo corretto che lo soddisfi, verrà invocato all'interno di <code>m</code> per convertire tutte le istanze di <code>A</code> in istanze di <code>B</code> ove sia necessario. &Egrave; anche possibile passare esplicitamente una funzione con la firma corretta in una seconda lista di argomenti quando si invoca <code>m</code>, sebbene in alcune situazioni particolari, che descriveremo dopo il nostro prossimo esempio, questo modo di operare non funzioni.
+<p>Questa trasformazione ha l&#8217;effetto voluto perché l&#8217;argomento implicito <code>viewAB</code>, posto che l&#8217;ambito di visibilità contenga una vista del tipo corretto che lo soddisfi, verrà invocato all&#8217;interno di <code>m</code> per convertire tutte le istanze di <code>A</code> in istanze di <code>B</code> ove sia necessario. &Egrave; anche possibile passare esplicitamente una funzione con la firma corretta in una seconda lista di argomenti quando si invoca <code>m</code>, sebbene in alcune situazioni particolari, che descriveremo dopo il nostro prossimo esempio, questo modo di operare non funzioni.
 
 <p>Per i limiti di vista sui tipi, la lista di parametri contenente la vista implicita viene aggiunta al costruttore principale.
 
@@ -652,7 +652,7 @@ res1: bounds.abbrevlist.AbbrevList[Int] = ::(1,::(2,::(3,AbbrevNil)))</samp></pr
 <p><span class=u>&#x261E;</span>I tratti non possono avere limiti di vista per i loro parametri di tipo, poiché i loro costruttori non possono accettare argomenti.
 </blockquote>
 
-<p>Per concretizzare quanto è stato detto in un esempio pratico, useremo i limiti di vista per implementare una classe <code>LinkedList</code> dove la lista sia formata da nodi e ogni istanza di <code>Node</code> sia dotata di un campo <code>payload</code> che rappresenta il valore dell'elemento nella lista e di un riferimento all'istanza di <code>Node</code> successiva. Per prima cosa, ecco la gerarchia di nodi.
+<p>Per concretizzare quanto è stato detto in un esempio pratico, useremo i limiti di vista per implementare una classe <code>LinkedList</code> dove la lista sia formata da nodi e ogni istanza di <code>Node</code> sia dotata di un campo <code>payload</code> che rappresenta il valore dell&#8217;elemento nella lista e di un riferimento all&#8217;istanza di <code>Node</code> successiva. Per prima cosa, ecco la gerarchia di nodi.
 
 <pre><code>// <a href=esempi/cap-12/node.scala>esempi/cap-12/node.scala</a>
 
@@ -675,7 +675,7 @@ object NilNode extends Node[Nothing] {
   override def toString = "*"
 }</code></pre>
 
-<p>Questa gerarchia di tipi è modellata sulla falsariga di <code>List</code> e <code>AbbrevList</code>. Il tipo <code>::</code> rappresenta i nodi intermedi e <code>NilNode</code> è l'analogo di <code>Nil</code> per <code>List</code>. Il metodo <code>toString</code> è stato ridefinito per fornire una rappresentazione conveniente dei nodi, che esamineremo tra breve.
+<p>Questa gerarchia di tipi è modellata sulla falsariga di <code>List</code> e <code>AbbrevList</code>. Il tipo <code>::</code> rappresenta i nodi intermedi e <code>NilNode</code> è l&#8217;analogo di <code>Nil</code> per <code>List</code>. Il metodo <code>toString</code> è stato ridefinito per fornire una rappresentazione conveniente dei nodi, che esamineremo tra breve.
 
 <p>Lo script seguente definisce un tipo <code>LinkedList</code> che usa istanze di <code>Node</code>.
 
@@ -711,21 +711,21 @@ println(list4)</code></pre>
 
 <p>In questo caso, lo script verrebbe eseguito allo stesso modo, a parte il fatto che alcune liste temporanee userebbero <code>Node[Any]</code> anziché <code>Node[Int]</code>.
 
-<p>La dichiarazione di <code>LinkedList</code> definisce un limite di vista su <code>A</code> e accetta come singolo argomento l'istanza di <code>Node</code> che fa da testa alla lista (che potrebbe essere la testa di una catena di nodi).
+<p>La dichiarazione di <code>LinkedList</code> definisce un limite di vista su <code>A</code> e accetta come singolo argomento l&#8217;istanza di <code>Node</code> che fa da testa alla lista (che potrebbe essere la testa di una catena di nodi).
 
 <pre><code>case class LinkedList[A &lt;% Node[A]](val head: Node[A]) { &hellip; }</code></pre>
 
-<p>Come si vede più avanti nello script, anche se il costruttore richiede un argomento di tipo <code>Node[A]</code>, è possibile passargli un'istanza di <code>A</code> e aspettarsi l'invocazione della vista implicita <code>any2Node</code>. Il vantaggio di questo approccio è che il cliente non deve mai preoccuparsi di costruire opportunamente le istanze di <code>Node</code> perché il meccanismo gestisce questo processo in maniera automatica.
+<p>Come si vede più avanti nello script, anche se il costruttore richiede un argomento di tipo <code>Node[A]</code>, è possibile passargli un&#8217;istanza di <code>A</code> e aspettarsi l&#8217;invocazione della vista implicita <code>any2Node</code>. Il vantaggio di questo approccio è che il cliente non deve mai preoccuparsi di costruire opportunamente le istanze di <code>Node</code> perché il meccanismo gestisce questo processo in maniera automatica.
 
 <p>La classe è anche dotata di un operatore <code>::</code>.
 
 <pre><code>def ::[B &gt;: A &lt;% Node[B]](x: Node[B]) = &hellip;</code></pre>
 
-<p>Il parametro di tipo significa che &#8220;<code>B</code> è limitato inferiormente da (cioè è un supertipo di) <code>A</code> e ha un limite di vista uguale a <code>B &lt;% Node[B]</code>.&#8221; Come abbiamo visto per <code>List</code> e <code>AbbrevList</code>, il limite inferiore consente di aggiungere in testa alla lista elementi di tipi differenti rispetto al tipo <code>A</code> originale. Il compilatore aggiungerà a questo metodo un argomento implicito per la vista, ma il nostro metodo implicito parametrico <code>any2Node</code> verrà usato anche per quell'argomento.
+<p>Il parametro di tipo significa che &#8220;<code>B</code> è limitato inferiormente da (cioè è un supertipo di) <code>A</code> e ha un limite di vista uguale a <code>B &lt;% Node[B]</code>.&#8221; Come abbiamo visto per <code>List</code> e <code>AbbrevList</code>, il limite inferiore consente di aggiungere in testa alla lista elementi di tipi differenti rispetto al tipo <code>A</code> originale. Il compilatore aggiungerà a questo metodo un argomento implicito per la vista, ma il nostro metodo implicito parametrico <code>any2Node</code> verrà usato anche per quell&#8217;argomento.
 
-<p>In precedenza abbiamo affermato che, se l'ambito corrente non contiene una vista adatta, è possibile passare esplicitamente un convertitore &#8220;non implicito&#8221; in una seconda lista di argomenti. Nel nostro esempio, in realtà, questo espediente non funzionerebbe, perché il costruttore e il metodo <code>::</code> di <code>LinkedList</code> accettano argomenti di tipo <code>Node[A]</code>, ma noi li invochiamo con istanze di <code>Int</code> e <code>String</code>. Per poter passare manualmente il convertitore dovremmo invocare entrambi usando argomenti di tipo <code>Node[Int]</code> e <code>Node[String]</code>, e l'invocazione di <code>::</code> risulterebbe anche piuttosto inelegante, come in <code>val list2 = list1.::(2)(convertitore)</code>.
+<p>In precedenza abbiamo affermato che, se l&#8217;ambito corrente non contiene una vista adatta, è possibile passare esplicitamente un convertitore &#8220;non implicito&#8221; in una seconda lista di argomenti. Nel nostro esempio, in realtà, questo espediente non funzionerebbe, perché il costruttore e il metodo <code>::</code> di <code>LinkedList</code> accettano argomenti di tipo <code>Node[A]</code>, ma noi li invochiamo con istanze di <code>Int</code> e <code>String</code>. Per poter passare manualmente il convertitore dovremmo invocare entrambi usando argomenti di tipo <code>Node[Int]</code> e <code>Node[String]</code>, e l&#8217;invocazione di <code>::</code> risulterebbe anche piuttosto inelegante, come in <code>val list2 = list1.::(2)(convertitore)</code>.
 
-<p>Si noti la particolare sintassi usata per il parametro di tipo, che a prima vista potrebbe creare confusione. Leggendo <code>B &gt;: A &lt;% Node[B]</code> si potrebbe essere tentati di assumere che, in questa espressione, l'operatore <code>&lt;%</code> vada applicato ad <code>A</code>, ma in realtà deve essere applicato a <code>B</code>. La grammatica per i parametri di tipo, compresi i limiti di vista, è la seguente <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>.
+<p>Si noti la particolare sintassi usata per il parametro di tipo, che a prima vista potrebbe creare confusione. Leggendo <code>B &gt;: A &lt;% Node[B]</code> si potrebbe essere tentati di assumere che, in questa espressione, l&#8217;operatore <code>&lt;%</code> vada applicato ad <code>A</code>, ma in realtà deve essere applicato a <code>B</code>. La grammatica per i parametri di tipo, compresi i limiti di vista, è la seguente <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>.
 
 <pre><code>TypeParam ::= (id | &#8216;_&#8217;) [TypeParamClause] [&#8216;&gt;:&#8217; Type] [&#8216;&lt;:&#8217; Type] [&#8216;&lt;%&#8217; Type]
 TypeParamClause ::= &#8216;[&#8217; VariantTypeParam {&#8216;,&#8217; VariantTypeParam} &#8216;]&#8217;
@@ -733,14 +733,14 @@ VariantTypeParam ::= [&#8216;+&#8217; | &#8216;&#8217;] TypeParam</code></pre>
 
 <p>Come vedete, è possibile costruire espressioni per rappresentare tipi gerarchici molto complessi. Nel metodo <code>::</code> definito per <code>LinkedList</code>, <code>id</code> è <code>B</code>, <code>TypeParamClause</code> è vuota e sulla destra abbiamo le espressioni <code>&gt;: A</code> e <code>&lt;% Node[B]</code>. Ancora una volta, tutte le espressioni dei limiti si applicano al primo <code>id</code> (cioè <code>B</code>) o alla variabile indicata dal trattino basso <code>_</code> usato per i <em>tipi esistenziali</em>, di cui parleremo più avanti in una sezione a loro dedicata.
 
-<p>Infine, in fondo allo script creiamo un'istanza di <code>LinkedList</code> e vi aggiungiamo in testa alcuni valori per creare nuove liste che poi verranno stampate.
+<p>Infine, in fondo allo script creiamo un&#8217;istanza di <code>LinkedList</code> e vi aggiungiamo in testa alcuni valori per creare nuove liste che poi verranno stampate.
 
 <pre><samp>1 :: *
 2 :: 1 :: *
 3 :: 2 :: 1 :: *
 QUATTRO! :: 3 :: 2 :: 1 :: *</samp></pre>
 
-<p>Per ricapitolare, i limiti di vista ci permettono di lavorare con &#8220;valori utili&#8221; di tipo intero e stringa mentre l'implementazione gestisce le conversioni necessarie per ottenere le istanze di <code>Node</code>.
+<p>Per ricapitolare, i limiti di vista ci permettono di lavorare con &#8220;valori utili&#8221; di tipo intero e stringa mentre l&#8217;implementazione gestisce le conversioni necessarie per ottenere le istanze di <code>Node</code>.
 
 <p>I limiti di vista non vengono usati con la stessa frequenza dei limiti inferiore e superiore sui tipi, ma offrono un meccanismo elegante da adoperare nelle situazioni in cui si desidera sfruttare la conversione automatica tra due tipi. Come sempre, gli impliciti devono essere usati con cautela: le conversioni implicite non risultano assolutamente chiare dalla lettura del codice e durante le attività di debug.
 
@@ -750,9 +750,9 @@ QUATTRO! :: 3 :: 2 :: 1 :: *</samp></pre>
 
 <p><code>Null</code> è un tratto dichiarato come <code>final</code> (in modo che non possa essere esteso) di cui esiste una sola istanza, <code>null</code>. Dato che <code>Null</code> è un sottotipo di tutti i tipi <code>AnyRef</code>, è sempre possibile usare <code>null</code> come istanza di qualsiasi altro tipo. Java, al contrario, tratta semplicemente <code>null</code> come una parola chiave gestita in modo particolare dal compilatore. Tuttavia, il <code>null</code> di Java in realtà si comporta come se fosse un sottotipo di tutti i tipi riferimento, proprio come il <code>Null</code> di Scala.
 
-<p>D'altra parte, dato che <code>Null</code> non è un sottotipo di <code>AnyVal</code>, non è possibile usare <code>null</code> come istanza di <code>Int</code>, per esempio, coerentemente con la semantica dei tipi primitivi in Java.
+<p>D&#8217;altra parte, dato che <code>Null</code> non è un sottotipo di <code>AnyVal</code>, non è possibile usare <code>null</code> come istanza di <code>Int</code>, per esempio, coerentemente con la semantica dei tipi primitivi in Java.
 
-<p>Anche <code>Nothing</code> è un tratto dichiarato come <code>final</code>, ma dato che non ne esiste alcuna istanza viene utilizzato per definire altri tipi. Il miglior esempio è <code>Nil</code>, che rappresenta la lista vuota come un <code>case object</code> di tipo <code>List[Nothing]</code>. Dato che, come abbiamo visto, le liste in Scala sono covarianti, <code>Nil</code> è a tutti gli effetti un'istanza di <code>List[T]</code> per qualsiasi tipo <code>T</code>. Questa caratteristica è stata anche sfruttata nelle precedenti implementazioni di <code>AbbrevList</code> e <code>LinkedList</code>.
+<p>Anche <code>Nothing</code> è un tratto dichiarato come <code>final</code>, ma dato che non ne esiste alcuna istanza viene utilizzato per definire altri tipi. Il miglior esempio è <code>Nil</code>, che rappresenta la lista vuota come un <code>case object</code> di tipo <code>List[Nothing]</code>. Dato che, come abbiamo visto, le liste in Scala sono covarianti, <code>Nil</code> è a tutti gli effetti un&#8217;istanza di <code>List[T]</code> per qualsiasi tipo <code>T</code>. Questa caratteristica è stata anche sfruttata nelle precedenti implementazioni di <code>AbbrevList</code> e <code>LinkedList</code>.
 
 <h2 id=_understanding_abstract_types>Capire i tipi astratti</h2>
 
@@ -866,9 +866,9 @@ trait T {
 
 <p>Il tipo del campo <code>x</code> rimane indefinito. Non è possibile usare <code>A</code> perché non è visibile dai parametri del costruttore. Si potrebbe usare <code>Any</code>, perdendo però il valore aggiunto di una dichiarazione che usi i tipi nel modo più opportuno.
 
-<p>Se si corre il rischio di dichiarare i parametri di un costruttore usando un tipo &#8220;segnaposto&#8221; che non è ancora stato definito, allora i tipi parametrici sono l'unica soluzione valida (a meno di usare <code>Any</code> o <code>AnyRef</code>).
+<p>Se si corre il rischio di dichiarare i parametri di un costruttore usando un tipo &#8220;segnaposto&#8221; che non è ancora stato definito, allora i tipi parametrici sono l&#8217;unica soluzione valida (a meno di usare <code>Any</code> o <code>AnyRef</code>).
 
-<p>I tipi astratti si possono usare nei parametri di un metodo e come valori di ritorno all'interno di una funzione. Tuttavia, possono sorgere due problemi: primo, nel caso si usino tipi dipendenti dal percorso (esaminati più avanti nella sezione <a href=#PathDependentTypes>Tipi dipendenti dal percorso</a>) il compilatore potrebbe confondersi, ritenendo incompatibile l'uso di un tipo in un particolare contesto quando in effetti il percorso conduce a un tipo compatibile; secondo, è insolito esprimere metodi come <code>List.::</code> usando tipi astratti là dove possono avvenire cambiamenti di tipo (espansioni, in questo caso).
+<p>I tipi astratti si possono usare nei parametri di un metodo e come valori di ritorno all&#8217;interno di una funzione. Tuttavia, possono sorgere due problemi: primo, nel caso si usino tipi dipendenti dal percorso (esaminati più avanti nella sezione <a href=#PathDependentTypes>Tipi dipendenti dal percorso</a>) il compilatore potrebbe confondersi, ritenendo incompatibile l&#8217;uso di un tipo in un particolare contesto quando in effetti il percorso conduce a un tipo compatibile; secondo, è insolito esprimere metodi come <code>List.::</code> usando tipi astratti là dove possono avvenire cambiamenti di tipo (espansioni, in questo caso).
 
 <pre><code>class List[+A] {
   &hellip;
@@ -878,9 +878,9 @@ trait T {
 
 <p>Inoltre, se si desidera esprimere la varianza in caso di ereditarietà che è legata alle astrazioni di tipo, allora i tipi parametrici sono in grado di chiarire ed esplicitare questi comportamenti usando le annotazioni di varianza.
 
-<p>Queste limitazioni sui tipi astratti in realtà riflettono la tensione tra l'ereditarietà orientata agli oggetti e le origini funzionali dei tipi astratti, introdotti nei sistemi di tipi adottati nella programmazione funzionale pura, che non possiede il concetto di ereditarietà. I tipi parametrici sono più popolari nei linguaggi orientati agli oggetti perché gestiscono l'ereditarietà in maniera più naturale nella maggior parte delle situazioni.
+<p>Queste limitazioni sui tipi astratti in realtà riflettono la tensione tra l&#8217;ereditarietà orientata agli oggetti e le origini funzionali dei tipi astratti, introdotti nei sistemi di tipi adottati nella programmazione funzionale pura, che non possiede il concetto di ereditarietà. I tipi parametrici sono più popolari nei linguaggi orientati agli oggetti perché gestiscono l&#8217;ereditarietà in maniera più naturale nella maggior parte delle situazioni.
 
-<p>D'altra parte, talvolta è utile fare riferimento a un'astrazione di tipo come a un membro di un altro tipo anziché come a un parametro usato per costruire nuovi tipi a partire da un tipo parametrico. Una dichiarazione di tipo astratto che viene perfezionata attraverso una serie di raffinamenti del tipo che la racchude può rivelarsi piuttosto elegante.
+<p>D&#8217;altra parte, talvolta è utile fare riferimento a un&#8217;astrazione di tipo come a un membro di un altro tipo anziché come a un parametro usato per costruire nuovi tipi a partire da un tipo parametrico. Una dichiarazione di tipo astratto che viene perfezionata attraverso una serie di raffinamenti del tipo che la racchude può rivelarsi piuttosto elegante.
 
 <pre><code>trait T1 {
   type t
@@ -900,9 +900,9 @@ class C extends T3 {
 
 <p>In più, questo esempio mostra che i tipi astratti vengono spesso usati per dichiarare variabili astratte dello stesso tipo. Vengono usati, meno frequentemente, anche per le dichiarazioni di metodo.
 
-<p>Per rendere finalmente concrete le variabili astratte è possibile definirle all'interno del corpo del tipo, in maniera molto simile a come sono state dichiarate in origine, oppure inizializzarle tramite gli argomenti del costruttore. Questa seconda tecnica permette a chi usa il tipo di scegliere l'effettivo valore, mentre la prima lascia questa decisione al progettista del tipo.
+<p>Per rendere finalmente concrete le variabili astratte è possibile definirle all&#8217;interno del corpo del tipo, in maniera molto simile a come sono state dichiarate in origine, oppure inizializzarle tramite gli argomenti del costruttore. Questa seconda tecnica permette a chi usa il tipo di scegliere l&#8217;effettivo valore, mentre la prima lascia questa decisione al progettista del tipo.
 
-<p>Abbiamo effettuato l'inizializzazione sfruttando gli argomenti del costruttore nella classe <code>BulkReader</code>, parte del breve esempio presentato nella sezione <a href=cap-2.html#AbstractTypesAndParameterizedTypes>Tipi astratti e tipi parametrici</a> del capitolo 2.
+<p>Abbiamo effettuato l&#8217;inizializzazione sfruttando gli argomenti del costruttore nella classe <code>BulkReader</code>, parte del breve esempio presentato nella sezione <a href=cap-2.html#AbstractTypesAndParameterizedTypes>Tipi astratti e tipi parametrici</a> del capitolo 2.
 
 <pre><code>// <a href=esempi/cap-2/abstract-types-script.scala>esempi/cap-2/abstract-types-script.scala</a>
 
@@ -933,13 +933,13 @@ class FileBulkReader(val source: File) extends BulkReader {
 println(new StringBulkReader("Ciao Scala!").read)
 println(new FileBulkReader(new File("abstract-types-script.scala")).read)</code></pre>
 
-<p>Chi si è formato sulla programmazione orientata agli oggetti tenderà naturalmente a usare i tipi parametrici più spesso dei tipi astratti. Anche la libreria standard di Scala tende a enfatizzare l'uso dei tipi parametrici. In ogni caso, è consigliabile riconoscere i meriti dei tipi astratti e imparare a usarli quando ha senso farlo.
+<p>Chi si è formato sulla programmazione orientata agli oggetti tenderà naturalmente a usare i tipi parametrici più spesso dei tipi astratti. Anche la libreria standard di Scala tende a enfatizzare l&#8217;uso dei tipi parametrici. In ogni caso, è consigliabile riconoscere i meriti dei tipi astratti e imparare a usarli quando ha senso farlo.
 
 <h2 id=PathDependentTypes>Tipi dipendenti dal percorso</h2>
 
 <p>I linguaggi che consentono di annidare i tipi mettono anche a disposizione alcuni modi di fare riferimento al <em>percorso</em> di quei tipi. Scala è dotato di una ricca sintassi per i tipi dipendenti dal percorso, di cui è utile comprendere i concetti principali anche se viene usata raramente, in quanto i messaggi di errore del compilatore contengono spesso percorsi di tipo.
 
-<p>Si consideri l'esempio seguente.
+<p>Si consideri l&#8217;esempio seguente.
 
 <pre><code>// <a href=esempi/cap-12/type-path-wont-compile.scala>esempi/cap-12/type-path-wont-compile.scala</a>
 // Non verrà compilato!
@@ -971,7 +971,7 @@ object MyService2 extends Service {
   def doRun = true  // fai qualcosa di concreto...
 }</code></pre>
 
-<p>Compilando questo file si ottiene l'errore seguente.
+<p>Compilando questo file si ottiene l&#8217;errore seguente.
 
 <pre><samp>&hellip;:27: error: error overriding value logger in trait Service of type MyService2.Logger;
  value logger has incompatible type MyService1.MyService1Logger
@@ -989,7 +989,7 @@ one error found</samp></pre>
 
 <h3 id=_c_this>Il percorso <code>C.this</code></h3>
 
-<p>All'interno del corpo di una qualsiasi classe <code>C</code> potete usare <code>C.this</code> o <code>this</code> per fare riferimento all'istanza corrente.
+<p>All&#8217;interno del corpo di una qualsiasi classe <code>C</code> potete usare <code>C.this</code> o <code>this</code> per fare riferimento all&#8217;istanza corrente.
 
 <pre><code>class C1 {
   var x = "1"
@@ -999,7 +999,7 @@ one error found</samp></pre>
 
 <p>Sia <code>setX1</code> sia <code>setX2</code> hanno lo stesso effetto, perché <code>C1.this</code> è equivalente a <code>this</code>.
 
-<p>All'interno del corpo di un tipo e al di fuori della definizione di un metodo <code>this</code> fa riferimento al tipo stesso.
+<p>All&#8217;interno del corpo di un tipo e al di fuori della definizione di un metodo <code>this</code> fa riferimento al tipo stesso.
 
 <pre><code>trait T1 {
   class C
@@ -1007,7 +1007,7 @@ one error found</samp></pre>
   val c2 = new this.C
 }</code></pre>
 
-<p>I valori <code>c1</code> e <code>c2</code> sono dello stesso tipo. L'occorrenza di <code>this</code> nell'espressione <code>this.C</code> fa riferimento al tratto <code>T1</code>.
+<p>I valori <code>c1</code> e <code>c2</code> sono dello stesso tipo. L&#8217;occorrenza di <code>this</code> nell&#8217;espressione <code>this.C</code> fa riferimento al tratto <code>T1</code>.
 
 <h3 id=_c_super>Il percorso <code>C.super</code></h3>
 
@@ -1022,7 +1022,7 @@ class C3 extends C2 {
 
 <p><code>C3.super</code> è equivalente a <code>super</code> in questo esempio. Se volete fare riferimento a uno specifico genitore tra tutti quelli di un tipo, potete qualificare <code>super</code> con il tipo, come mostrato in <code>setX5</code>. Questo è particolarmente utile nel caso in cui un tipo mescoli diversi tratti, ognuno dei quali ridefinisca lo stesso metodo: se avete bisogno di accedere al metodo di un tratto specifico, potete qualificare <code>super</code>. Tuttavia, questa qualifica non può spingersi oltre il livello immediatamente superiore nella gerarchia, cioè non può fare riferimento ai tipi genitore del tipo genitore, e così via.
 
-<p>Se invocate <code>super</code> in una classe dotata di numerosi mixin e che estende un altro tipo, nel caso in cui il riferimento non sia qualificato sono le regole di <em>linearizzazione</em> a determinare l'obiettivo di <code>super</code> (si veda la sezione <a href=cap-7.html#Linearization>Linearizzare la gerarchia di un oggetto</a> nel capitolo 7).
+<p>Se invocate <code>super</code> in una classe dotata di numerosi mixin e che estende un altro tipo, nel caso in cui il riferimento non sia qualificato sono le regole di <em>linearizzazione</em> a determinare l&#8217;obiettivo di <code>super</code> (si veda la sezione <a href=cap-7.html#Linearization>Linearizzare la gerarchia di un oggetto</a> nel capitolo 7).
 
 <p>Proprio come accade per <code>this</code>, potete usare <code>super</code> per fare riferimento al tipo genitore nel corpo di un tipo al di fuori di un metodo.
 
@@ -1051,7 +1051,7 @@ class C7 {
   val name = P1.O1.O2.name
 }</code></pre>
 
-<p><code>C7.name</code> usa un percorso verso il valore <code>name</code> in <code>O2</code>. Gli elementi di un percorso di tipo devono essere <em>stabili</em>, il che a grandi linee comprende package e oggetti singleton, e dichiarazioni di tipo usate come alias di queste due entità. L'ultimo elemento di un percorso può essere una classe o un tratto. Si veda <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a> per i dettagli.
+<p><code>C7.name</code> usa un percorso verso il valore <code>name</code> in <code>O2</code>. Gli elementi di un percorso di tipo devono essere <em>stabili</em>, il che a grandi linee comprende package e oggetti singleton, e dichiarazioni di tipo usate come alias di queste due entità. L&#8217;ultimo elemento di un percorso può essere una classe o un tratto. Si veda <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a> per i dettagli.
 
 <pre><code>object O3 {
   object O4 {
@@ -1075,7 +1075,7 @@ class C8 {
 <p>Dato che Scala è tipato in modo forte e statico, ogni valore è dotato di tipo. Il termine <em>tipi valore</em> si riferisce a tutte le forme differenti che questi tipi possono assumere, quindi comprende molte forme che ora ci sono familiari, più alcune nuove forme che finora non abbiamo incontrato.
 
 <blockquote class=warning>
-<p><span class=u>&#x2762;</span>Qui stiamo usando il termine <em>tipi valore</em> nello stesso modo in cui viene usato in <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>. Tuttavia, in altri punti del libro abbiamo anche seguito l'uso sovraccaricato del termine adottato dalla specifica per fare riferimento a tutti i sottotipi di <code>AnyVal</code>.
+<p><span class=u>&#x2762;</span>Qui stiamo usando il termine <em>tipi valore</em> nello stesso modo in cui viene usato in <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a>. Tuttavia, in altri punti del libro abbiamo anche seguito l&#8217;uso sovraccaricato del termine adottato dalla specifica per fare riferimento a tutti i sottotipi di <code>AnyVal</code>.
 </blockquote>
 
 <h3 id=_type_designators>Designatori di tipo</h3>
@@ -1094,7 +1094,7 @@ object O { type t }       // "O" e "t" sono designatori di tipo
 
 <h3 id=_parameterized_types>Tipi parametrici</h3>
 
-<p>I tipi creati a partire da un tipo parametrico, come <code>List[Int]</code> e <code>List[String]</code>, creati a partire da <code>List[A]</code>, sono tipi valore perché vengono associati alla dichiarazione di valori, come nell'espressione <code>val names = List[String]()</code>.
+<p>I tipi creati a partire da un tipo parametrico, come <code>List[Int]</code> e <code>List[String]</code>, creati a partire da <code>List[A]</code>, sono tipi valore perché vengono associati alla dichiarazione di valori, come nell&#8217;espressione <code>val names = List[String]()</code>.
 
 <h3 id=_annotated_types>Tipi annotati</h3>
 
@@ -1110,13 +1110,13 @@ object O { type t }       // "O" e "t" sono designatori di tipo
 }
 x: java.lang.Object with T1 with T2{type z = String; def v: this.z} = $anon$1@9d9347d</samp></pre>
 
-<p>Si noti il tipo dipendente dal percorso <code>this.z</code> nell'ultima riga.
+<p>Si noti il tipo dipendente dal percorso <code>this.z</code> nell&#8217;ultima riga.
 
 <p>Particolarmente interessante è il caso di una dichiarazione della forma <code>val x = new { R }</code>, priva di qualsiasi identificatore di tipo. Questa dichiarazione è equivalente a <code>val x = new AnyRef { R }</code>.
 
 <h3 id=_infix_types>Tipi infissi</h3>
 
-<p>Alcuni tipi parametrici possono accettare due argomenti di tipo, per esempio <code>scala.Either[+A,+B]</code>. Scala vi consente di dichiarare istanze di questi tipi usando una notazione infissa, come in <code>a Either b</code>. Si consideri l'uso che viene fatto di <code>Either</code> nello script seguente.
+<p>Alcuni tipi parametrici possono accettare due argomenti di tipo, per esempio <code>scala.Either[+A,+B]</code>. Scala vi consente di dichiarare istanze di questi tipi usando una notazione infissa, come in <code>a Either b</code>. Si consideri l&#8217;uso che viene fatto di <code>Either</code> nello script seguente.
 
 <pre><code>// <a href=esempi/cap-12/infix-types-script.scala>esempi/cap-12/infix-types-script.scala</a>
 
@@ -1130,19 +1130,19 @@ println(attempt { throw new RuntimeException("Bu!") })
 println(attempt { true })
 println(attempt { false })</code></pre>
 
-<p>Il metodo <code>attempt</code> valuterà il parametro <code>operation</code> <em>invocato per nome</em> e restituirà il suo risultato di tipo <code>Boolean</code>, racchiuso in un'istanza di <code>Right</code>, <em>oppure</em> una qualsiasi istanza di <code>Throwable</code> che sia stata catturata, racchiusa in un'istanza di <code>Left</code>. Lo script stampa il testo seguente.
+<p>Il metodo <code>attempt</code> valuterà il parametro <code>operation</code> <em>invocato per nome</em> e restituirà il suo risultato di tipo <code>Boolean</code>, racchiuso in un&#8217;istanza di <code>Right</code>, <em>oppure</em> una qualsiasi istanza di <code>Throwable</code> che sia stata catturata, racchiusa in un&#8217;istanza di <code>Left</code>. Lo script stampa il testo seguente.
 
 <pre><samp>Left(java.lang.RuntimeException: Bu!)
 Right(true)
 Right(false)</samp></pre>
 
-<p>Si noti la dichiarazione del valore di ritorno, <code>Throwable Either Boolean</code>, che è identica a <code>Either[Throwable, Boolean]</code>. Ricordatevi che, come abbiamo visto nella sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> del capitolo 7, quando si sfrutta questo idioma per gestire le eccezioni con <code>Either</code> la convenzione vuole che <code>Left</code> venga usato per l'eccezione e <code>Right</code> per il valore di ritorno ordinario.
+<p>Si noti la dichiarazione del valore di ritorno, <code>Throwable Either Boolean</code>, che è identica a <code>Either[Throwable, Boolean]</code>. Ricordatevi che, come abbiamo visto nella sezione <a href=cap-7.html#ScalaTypeHierarchy>La gerarchia di tipi di Scala</a> del capitolo 7, quando si sfrutta questo idioma per gestire le eccezioni con <code>Either</code> la convenzione vuole che <code>Left</code> venga usato per l&#8217;eccezione e <code>Right</code> per il valore di ritorno ordinario.
 
 <h3 id=FunctionTypes>Tipi funzione</h3>
 
 <p>Anche le funzioni che abbiamo scritto finora sono tipate. <code>(T<sub>1</sub>, T<sub>2</sub>, &hellip; T<sub>N</sub>) =&gt; R</code> è il tipo di tutte le funzioni che accettano <code>N</code> argomenti e restituiscono un valore di tipo <code>R</code>.
 
-<p>Quando c'è un solo argomento, è possibile tralasciare le parentesi, come in <code>T =&gt; R</code>. Una funzione che accetta un parametro <em>invocato per nome</em> (come discusso nel <a href=cap-8.html>capitolo 8</a>) è di tipo <code>(=&gt;T) =&gt; R</code>. Abbiamo usato un argomento invocato per nome nell'esempio con la funzione <code>attempt</code> della sezione precedente.
+<p>Quando c&#8217;è un solo argomento, è possibile tralasciare le parentesi, come in <code>T =&gt; R</code>. Una funzione che accetta un parametro <em>invocato per nome</em> (come discusso nel <a href=cap-8.html>capitolo 8</a>) è di tipo <code>(=&gt;T) =&gt; R</code>. Abbiamo usato un argomento invocato per nome nell&#8217;esempio con la funzione <code>attempt</code> della sezione precedente.
 
 <p>Ricordatevi che in Scala ogni cosa è un oggetto, persino le funzioni. La libreria Scala definisce i tratti <code>FunctionN</code>, per <code>N</code> che va da <code>0</code> a <code>22</code>, estremi inclusi. Ecco, per esempio, il codice sorgente di <code>scala.Function3</code> incluso nella versione 2.7.5 di Scala, privo della maggior parte dei commenti e di alcuni ulteriori dettagli a cui per ora non siamo interessati.
 
@@ -1162,9 +1162,9 @@ trait Function3[-T1, -T2, -T3, +R] extends AnyRef {
 
 <p>Come abbiamo detto nella sezione <a href=#VarianceUnderInheritance>Varianza in caso di ereditarietà</a>, i tratti <code>FunctionN</code> sono <em>controvarianti</em> nei parametri di tipo per gli argomenti e <em>covarianti</em> nel parametro di tipo per il tipo di ritorno.
 
-<p>Se ricordate, quando si usa il riferimento a un oggetto qualsiasi seguito da una lista di argomenti, Scala invoca il metodo <code>apply</code> su quell'oggetto. In questo modo, anche qualsiasi oggetto dotato di un metodo <code>apply</code> può essere considerato una funzione, offrendo una gradevole visione simmetrica della doppia natura di Scala, funzionale e orientata agli oggetti.
+<p>Se ricordate, quando si usa il riferimento a un oggetto qualsiasi seguito da una lista di argomenti, Scala invoca il metodo <code>apply</code> su quell&#8217;oggetto. In questo modo, anche qualsiasi oggetto dotato di un metodo <code>apply</code> può essere considerato una funzione, offrendo una gradevole visione simmetrica della doppia natura di Scala, funzionale e orientata agli oggetti.
 
-<p>Quando si definisce un valore funzione, il compilatore istanzia l'oggetto <code>FunctionN</code> appropriato e usa la definizione di funzione come corpo di <code>apply</code>.
+<p>Quando si definisce un valore funzione, il compilatore istanzia l&#8217;oggetto <code>FunctionN</code> appropriato e usa la definizione di funzione come corpo di <code>apply</code>.
 
 <pre><code>// <a href=esempi/cap-12/function-types-script.scala>esempi/cap-12/function-types-script.scala</a>
 
@@ -1202,9 +1202,9 @@ println(answer3 + " == " + answer2 + "? " + (answer3 == answer2))</code></pre>
 
 <p>Nella prima parte dello script, definiamo un valore <code>f</code> di tipo <code>Function3</code> che esegue operazioni aritmetiche sui numeri <code>Double</code>. Creiamo un nuovo valore funzione <code>fc</code> applicando il currying a <code>f</code>. Poi invochiamo entrambe le funzioni con gli stessi argomenti e stampiamo i risultati che, come previsto, sono uguali. Si noti che, in questo caso, non ci sono problemi per quanto riguarda eventuali errori di arrotondamento nei confronti di uguaglianza: entrambe le funzioni invocano lo stesso metodo <code>apply</code>, quindi devono restituire lo stesso valore.
 
-<p>Nella seconda parte dello script sfruttiamo la possibilità di <em>applicare parzialmente</em> gli argomenti delle funzioni curry, creando nuove funzioni fino a quando non li abbiamo applicati tutti. L'esempio ci aiuta anche a capire la dichiarazione di <code>curry</code> in <code>Function3</code>.
+<p>Nella seconda parte dello script sfruttiamo la possibilità di <em>applicare parzialmente</em> gli argomenti delle funzioni curry, creando nuove funzioni fino a quando non li abbiamo applicati tutti. L&#8217;esempio ci aiuta anche a capire la dichiarazione di <code>curry</code> in <code>Function3</code>.
 
-<p>Le funzioni sono associative a destra, quindi un tipo <code>T1 =&gt; T2 =&gt; T3 =&gt; R</code> è equivalente a <code>T1 =&gt; (T2 =&gt; (T3 =&gt; R))</code>, come possiamo vedere nello script. Infatti l'istruzione <code>val fc1 = fc(2.)</code> invoca <code>fc</code> solo con la prima lista di argomenti (in questo caso, <code>T1</code> corrisponde a <code>Double</code>) e restituisce una <em>nuova</em> funzione di tipo <code>T2 =&gt; (T3 =&gt; R)</code>, nel nostro caso <code>Double =&gt; (Double =&gt; Double)</code>. Successivamente, in <code>val fc2 = fc1(5.)</code>, passiamo il secondo argomento (<code>T2</code>) e otteniamo una nuova funzione di tipo <code>T3 =&gt; R</code>, cioè <code>Double =&gt; Double</code>. Infine, in <code>val answer3 = fc2(4.)</code> passiamo l'ultimo argomento per calcolare il valore del tipo <code>R</code>, cioè <code>Double</code>.
+<p>Le funzioni sono associative a destra, quindi un tipo <code>T1 =&gt; T2 =&gt; T3 =&gt; R</code> è equivalente a <code>T1 =&gt; (T2 =&gt; (T3 =&gt; R))</code>, come possiamo vedere nello script. Infatti l&#8217;istruzione <code>val fc1 = fc(2.)</code> invoca <code>fc</code> solo con la prima lista di argomenti (in questo caso, <code>T1</code> corrisponde a <code>Double</code>) e restituisce una <em>nuova</em> funzione di tipo <code>T2 =&gt; (T3 =&gt; R)</code>, nel nostro caso <code>Double =&gt; (Double =&gt; Double)</code>. Successivamente, in <code>val fc2 = fc1(5.)</code>, passiamo il secondo argomento (<code>T2</code>) e otteniamo una nuova funzione di tipo <code>T3 =&gt; R</code>, cioè <code>Double =&gt; Double</code>. Infine, in <code>val answer3 = fc2(4.)</code> passiamo l&#8217;ultimo argomento per calcolare il valore del tipo <code>R</code>, cioè <code>Double</code>.
 
 <blockquote class=note>
 <p><span class=u>&#x261E;</span>Un tipo <code>T1 =&gt; T2 =&gt; T3 =&gt; R</code> è equivalente a <code>T1 =&gt; (T2 =&gt; (T3 =&gt; R))</code>. Quando si invoca una funzione di questo tipo con un valore per <code>T1</code>, essa restituisce una nuova funzione di tipo <code>T2 =&gt; (T3 =&gt; R)</code>, e così via.
@@ -1235,7 +1235,7 @@ println(ic2)</code></pre>
 
 <h3 id=_singleton_types>Tipi singleton</h3>
 
-<p>Dato un valore <code>v</code> di un sottotipo di <code>AnyRef</code>, compreso <code>null</code>, è possibile ottenere il suo <em>tipo singleton</em> tramite l'espressione <code>v.type</code>, utilizzabile anche come tipo nelle dichiarazioni. Questa proprietà si rivela utile in rare occasioni per aggirare i problemi dovuti ai tipi dipendenti dal percorso visti nella sezione <a href=#PathDependentTypes>Tipi dipendenti dal percorso</a>. In questi casi il tipo dipendente dal percorso di un oggetto potrebbe sembrare incompatibile con un altro tipo dipendente dal percorso, mentre in effetti i due tipi sono compatibili. Tramite l'espressione <code>v.type</code> si recupera il tipo singleton, un tipo &#8220;unico&#8221; che elimina la dipendenza dal percorso. I tipi dipendenti dal percorso di due valori <code>v1</code> e <code>v2</code> potrebbero essere diversi, ma il loro tipo singleton può essere lo stesso.
+<p>Dato un valore <code>v</code> di un sottotipo di <code>AnyRef</code>, compreso <code>null</code>, è possibile ottenere il suo <em>tipo singleton</em> tramite l&#8217;espressione <code>v.type</code>, utilizzabile anche come tipo nelle dichiarazioni. Questa proprietà si rivela utile in rare occasioni per aggirare i problemi dovuti ai tipi dipendenti dal percorso visti nella sezione <a href=#PathDependentTypes>Tipi dipendenti dal percorso</a>. In questi casi il tipo dipendente dal percorso di un oggetto potrebbe sembrare incompatibile con un altro tipo dipendente dal percorso, mentre in effetti i due tipi sono compatibili. Tramite l&#8217;espressione <code>v.type</code> si recupera il tipo singleton, un tipo &#8220;unico&#8221; che elimina la dipendenza dal percorso. I tipi dipendenti dal percorso di due valori <code>v1</code> e <code>v2</code> potrebbero essere diversi, ma il loro tipo singleton può essere lo stesso.
 
 <p>Questo esempio usa il tipo singleton di un valore nella dichiarazione di un altro valore.
 
@@ -1247,9 +1247,9 @@ val x: c.x.type = c.x</code></pre>
 
 <h2 id=SelfTypeAnnotations>Annotazioni self-type</h2>
 
-<p>All'interno di un metodo è possibile usare <code>this</code> per fare riferimento al tipo che ne contiene la definizione, e attraverso il riferimento al tipo accedere a uno dei suoi membri. In quest'ultimo caso, di solito l'uso di <code>this</code> non è necessario, ma in alcune occasioni può rivelarsi utile per evitare riferimenti ambigui quando in un determinato ambito sono visibili più valori con lo stesso nome. Per default, il tipo di <code>this</code> è uguale al tipo all'interno del quale viene usato, ma questa è una condizione niente affatto necessaria.
+<p>All&#8217;interno di un metodo è possibile usare <code>this</code> per fare riferimento al tipo che ne contiene la definizione, e attraverso il riferimento al tipo accedere a uno dei suoi membri. In quest&#8217;ultimo caso, di solito l&#8217;uso di <code>this</code> non è necessario, ma in alcune occasioni può rivelarsi utile per evitare riferimenti ambigui quando in un determinato ambito sono visibili più valori con lo stesso nome. Per default, il tipo di <code>this</code> è uguale al tipo all&#8217;interno del quale viene usato, ma questa è una condizione niente affatto necessaria.
 
-<p>Le <em>annotazioni self-type</em> permettono di specificare vincoli aggiuntivi sul tipo di <code>this</code> e possono essere usate per creare alias di <code>this</code>. Si consideri per primo quest'ultimo caso.
+<p>Le <em>annotazioni self-type</em> permettono di specificare vincoli aggiuntivi sul tipo di <code>this</code> e possono essere usate per creare alias di <code>this</code>. Si consideri per primo quest&#8217;ultimo caso.
 
 <pre><code>// <a href=esempi/cap-12/this-alias-script.scala>esempi/cap-12/this-alias-script.scala</a>
 
@@ -1272,9 +1272,9 @@ c1.c2.c3.talk("Mondo")</code></pre>
 <pre><samp>C1.talk: Ciao
 C1.talk: C3.talk: Mondo</samp></pre>
 
-<p>Al <code>this</code> dell'ambito più esterno (<code>C1</code>) viene dato l'alias <code>self</code> per potervi fare riferimento facilmente in <code>C3</code>. Sarebbe possibile usare <code>self</code> in qualsiasi metodo all'interno del corpo di <code>C1</code> o nei suoi tipi annidati. Si noti che il nome <code>self</code> è arbitrario, ma piuttosto convenzionale; in effetti si potrebbe scrivere <code>this =&gt;</code>, pur essendo assolutamente ridondante.
+<p>Al <code>this</code> dell&#8217;ambito più esterno (<code>C1</code>) viene dato l&#8217;alias <code>self</code> per potervi fare riferimento facilmente in <code>C3</code>. Sarebbe possibile usare <code>self</code> in qualsiasi metodo all&#8217;interno del corpo di <code>C1</code> o nei suoi tipi annidati. Si noti che il nome <code>self</code> è arbitrario, ma piuttosto convenzionale; in effetti si potrebbe scrivere <code>this =&gt;</code>, pur essendo assolutamente ridondante.
 
-<p>Se l'annotazione self-type contiene un tipo, i benefici che ne derivano sono molto diversi.
+<p>Se l&#8217;annotazione self-type contiene un tipo, i benefici che ne derivano sono molto diversi.
 
 <pre><code>// <a href=esempi/cap-12/selftype-script.scala>esempi/cap-12/selftype-script.scala</a>
 
@@ -1316,32 +1316,32 @@ object MyApp extends App with Database with ComputeCluster with WebUI
 
 MyApp.run</code></pre>
 
-<p>Questo script illustra la struttura schematica di un'infrastruttura in grado di supportare diversi livelli applicativi sotto forma di componenti per la memorizzazione persistente, l'elaborazione dei dati e l'interfaccia utente. Esploreremo in maniera approfondita questa metodologia di progettazione dei componenti nel <a href=cap-13.html>capitolo 13</a>. Per ora, ci interessa semplicemente il ruolo delle annotazioni self-type.
+<p>Questo script illustra la struttura schematica di un&#8217;infrastruttura in grado di supportare diversi livelli applicativi sotto forma di componenti per la memorizzazione persistente, l&#8217;elaborazione dei dati e l&#8217;interfaccia utente. Esploreremo in maniera approfondita questa metodologia di progettazione dei componenti nel <a href=cap-13.html>capitolo 13</a>. Per ora, ci interessa semplicemente il ruolo delle annotazioni self-type.
 
-<p>Ogni tratto astratto dichiara un metodo di avvio che effettua l'inizializzazione del componente, ignorando tutte le possibili condizioni di errore. Ogni componente astratto è implementato da un tratto concreto corrispondente anziché da una classe, in modo da poterli usare come mixin. I tratti definiti nello script rappresentano un meccanismo per la persistenza in un database, una sorta di cluster di elaborazione per effettuare le operazioni di logica applicativa e una interfaccia web per l'utente.
+<p>Ogni tratto astratto dichiara un metodo di avvio che effettua l&#8217;inizializzazione del componente, ignorando tutte le possibili condizioni di errore. Ogni componente astratto è implementato da un tratto concreto corrispondente anziché da una classe, in modo da poterli usare come mixin. I tratti definiti nello script rappresentano un meccanismo per la persistenza in un database, una sorta di cluster di elaborazione per effettuare le operazioni di logica applicativa e una interfaccia web per l&#8217;utente.
 
 <p>Il tratto <code>App</code> collega i componenti tra loro, avviandoli uno per uno nel metodo <code>run</code>.
 
 <p>La particolare annotazione self-type <code>self: Persistence with Midtier with UI =&gt;</code> ha due effetti pratici.
 
 <ol>
-<li>Consente al corpo del tratto di considerare se stesso come un'istanza di <code>Persistence</code>, <code>Midtier</code> e <code>UI</code>, e quindi di invocare i metodi definiti in quei tipi, proprio come succede nel metodo <code>run</code>, a prescindere dal fatto che, a questo punto, siano effettivamente legati a una definizione.
+<li>Consente al corpo del tratto di considerare se stesso come un&#8217;istanza di <code>Persistence</code>, <code>Midtier</code> e <code>UI</code>, e quindi di invocare i metodi definiti in quei tipi, proprio come succede nel metodo <code>run</code>, a prescindere dal fatto che, a questo punto, siano effettivamente legati a una definizione.
 <li>Obbliga il tipo concreto che mescola questo tratto a mescolare quegli altri tre tratti o i loro discendenti.
 </ol>
 
 <p>In altre parole, il tipo <code>self</code> di <code>App</code> specifica le dipendenze dagli altri componenti, che vengono successivamente soddisfatte in <code>MyApp</code> mescolando i tratti concreti per i tre livelli applicativi.
 
-<p>Alternativamente, avremmo potuto definire <code>App</code> sfruttando l'ereditarietà.
+<p>Alternativamente, avremmo potuto definire <code>App</code> sfruttando l&#8217;ereditarietà.
 
 <pre><code>trait App with Persistence with Midtier with UI {
   def run = { &hellip; }
 }</code></pre>
 
-<p>In effetti, non ci sarebbero state differenze. Come abbiamo detto, l'annotazione self-type permette ad <code>App</code> di considerarsi come un tipo <code>Persistence</code>, <i class=baa>&amp;</i>c., e questo è proprio ciò che succede anche quando mescolate un tratto.
+<p>In effetti, non ci sarebbero state differenze. Come abbiamo detto, l&#8217;annotazione self-type permette ad <code>App</code> di considerarsi come un tipo <code>Persistence</code>, <i class=baa>&amp;</i>c., e questo è proprio ciò che succede anche quando mescolate un tratto.
 
-<p>Anche se sembrano equivalenti all'ereditarietà, esistono alcuni casi particolari in cui le annotazioni self-type, per ragioni teoriche, offrono vantaggi unici. In pratica sarebbe possibile usare l'ereditarietà in quasi tutti i casi, ma per convenzione la si usa quando si desidera indicare che un tipo <em>si comporta come</em> (eredita da) un altro tipo, e si usano le annotazioni self-type quando si vuole esprimere una dipendenza tra un tipo e altri tipi <a href=apa.html#McIver2009>[McIver2009]</a>.
+<p>Anche se sembrano equivalenti all&#8217;ereditarietà, esistono alcuni casi particolari in cui le annotazioni self-type, per ragioni teoriche, offrono vantaggi unici. In pratica sarebbe possibile usare l&#8217;ereditarietà in quasi tutti i casi, ma per convenzione la si usa quando si desidera indicare che un tipo <em>si comporta come</em> (eredita da) un altro tipo, e si usano le annotazioni self-type quando si vuole esprimere una dipendenza tra un tipo e altri tipi <a href=apa.html#McIver2009>[McIver2009]</a>.
 
-<p>Nel nostro esempio, l'applicazione non viene considerata come se <em>fosse</em> un'interfaccia utente, un database, <i class=baa>&amp;</i>c., bensì come una composizione di questi elementi. Si noti che nella maggior parte dei linguaggi orientati agli oggetti questa dipendenza tra componenti verrebbe espressa attraverso i campi, in particolare se il linguaggio non supporta la composizione dei mixin, come Java. Per esempio, si potrebbe scrivere <code>App</code> in Java nel modo che segue (dove, incidentalmente, le interfacce dei componenti sono annidate per evitare di dover creare file separati per ognuna).
+<p>Nel nostro esempio, l&#8217;applicazione non viene considerata come se <em>fosse</em> un&#8217;interfaccia utente, un database, <i class=baa>&amp;</i>c., bensì come una composizione di questi elementi. Si noti che nella maggior parte dei linguaggi orientati agli oggetti questa dipendenza tra componenti verrebbe espressa attraverso i campi, in particolare se il linguaggio non supporta la composizione dei mixin, come Java. Per esempio, si potrebbe scrivere <code>App</code> in Java nel modo che segue (dove, incidentalmente, le interfacce dei componenti sono annidate per evitare di dover creare file separati per ognuna).
 
 <pre><code>// <a href=esempi/cap-12/selftype/JavaApp.java>esempi/cap-12/selftype/JavaApp.java</a>
 
@@ -1377,15 +1377,15 @@ public abstract class JavaApp {
   }
 }</code></pre>
 
-<p>&Egrave; certamente possibile scrivere applicazioni in questo modo anche in Scala. Tuttavia, l'esplicitazione del tipo per la classe corrente trasforma la risoluzione imperativa delle dipendenze, che avviene a tempo di esecuzione tramite il passaggio di oggetti ai costruttori o ai metodi di scrittura dei valori, in una risoluzione dichiarativa che avviene a tempo di compilazione e cattura prima gli eventuali errori. Il paradigma dichiarativo, da cui deriva la programmazione funzionale, permette di esprimere codice più robusto, conciso e chiaro rispetto al paradigma imperativo.
+<p>&Egrave; certamente possibile scrivere applicazioni in questo modo anche in Scala. Tuttavia, l&#8217;esplicitazione del tipo per la classe corrente trasforma la risoluzione imperativa delle dipendenze, che avviene a tempo di esecuzione tramite il passaggio di oggetti ai costruttori o ai metodi di scrittura dei valori, in una risoluzione dichiarativa che avviene a tempo di compilazione e cattura prima gli eventuali errori. Il paradigma dichiarativo, da cui deriva la programmazione funzionale, permette di esprimere codice più robusto, conciso e chiaro rispetto al paradigma imperativo.
 
-<p>Riprenderemo le annotazioni self-type come modello per la composizione di componenti nel <a href=cap-13.html>capitolo 13</a>, in particolare nelle sezioni <a href=cap-13.html#SelfTypeAnnotationsAndAbstractTypeMembers>Annotazioni self-type e membri tipo astratti</a> e <a href=cap-13.html#DependencyInjectionInScala>L'iniezione di dipendenza in Scala: il pattern Cake</a>.
+<p>Riprenderemo le annotazioni self-type come modello per la composizione di componenti nel <a href=cap-13.html>capitolo 13</a>, in particolare nelle sezioni <a href=cap-13.html#SelfTypeAnnotationsAndAbstractTypeMembers>Annotazioni self-type e membri tipo astratti</a> e <a href=cap-13.html#DependencyInjectionInScala>L&#8217;iniezione di dipendenza in Scala: il pattern Cake</a>.
 
 <h2 id=StructuralTypes>Tipi strutturali</h2>
 
-<p>I <em>tipi strutturali</em> si possono considerare come un meccanismo type-safe di <em>duck typing</em>, termine usato per indicare il modo in cui funziona la risoluzione dei metodi nei linguaggi dinamicamente tipati. L'interprete Ruby, per esempio, esegue l'espressione <code>starFighter.shootWeapons</code> cercando un metodo <code>shootWeapons</code> nell'oggetto a cui <code>starFighter</code> fa riferimento. Questo metodo, se trovato, potrebbe essere stato definito nella classe usata per istanziare <code>starFighter</code> o in una delle classi genitore o in uno dei moduli &#8220;inclusi&#8221;, oppure potrebbe anche essere stato aggiunto all'oggetto usando le funzionalità di metaprogrammazione di Ruby. In alternativa, l'oggetto potrebbe ridefinire il metodo <code>method_missing</code> ed eseguire una particolare operazione quando l'oggetto riceve il &#8220;messaggio&#8221; <code>shootWeapons</code>.
+<p>I <em>tipi strutturali</em> si possono considerare come un meccanismo type-safe di <em>duck typing</em>, termine usato per indicare il modo in cui funziona la risoluzione dei metodi nei linguaggi dinamicamente tipati. L&#8217;interprete Ruby, per esempio, esegue l&#8217;espressione <code>starFighter.shootWeapons</code> cercando un metodo <code>shootWeapons</code> nell&#8217;oggetto a cui <code>starFighter</code> fa riferimento. Questo metodo, se trovato, potrebbe essere stato definito nella classe usata per istanziare <code>starFighter</code> o in una delle classi genitore o in uno dei moduli &#8220;inclusi&#8221;, oppure potrebbe anche essere stato aggiunto all&#8217;oggetto usando le funzionalità di metaprogrammazione di Ruby. In alternativa, l&#8217;oggetto potrebbe ridefinire il metodo <code>method_missing</code> ed eseguire una particolare operazione quando l&#8217;oggetto riceve il &#8220;messaggio&#8221; <code>shootWeapons</code>.
 
-<p>Scala non supporta questo genere di risoluzione dei metodi, ma vi consente di specificare che un oggetto deve aderire a una certa <em>struttura</em>, cioè contenere certi tipi, campi, o metodi, a prescindere dal suo tipo effettivo. Abbiamo incontrato i tipi strutturali per la prima volta all'inizio del <a href=cap-4.html>capitolo 4</a>, analizzando una variazione del pattern Observer come esempio.
+<p>Scala non supporta questo genere di risoluzione dei metodi, ma vi consente di specificare che un oggetto deve aderire a una certa <em>struttura</em>, cioè contenere certi tipi, campi, o metodi, a prescindere dal suo tipo effettivo. Abbiamo incontrato i tipi strutturali per la prima volta all&#8217;inizio del <a href=cap-4.html>capitolo 4</a>, analizzando una variazione del pattern Observer come esempio.
 
 <pre><code>// <a href=esempi/cap-4/observer/observer.scala>esempi/cap-4/observer/observer.scala</a>
 
@@ -1401,23 +1401,23 @@ trait Subject {
 
 <p>La dichiarazione <code>type Observer = { def receiveUpdate(subject: Any) }</code> richiede che qualsiasi osservatore valido sia dotato del metodo <code>receiveUpdate</code>. Il vero tipo del particolare osservatore non è importante.
 
-<p>I tipi strutturali hanno il pregio di minimizzare l'interfaccia tra due entità. Nel nostro esempio, l'accoppiamento consiste solo nella firma di un singolo metodo anziché in un tipo come nel caso di un tratto condiviso. Purtroppo i tipi strutturali non riescono a eliminare le dipendenze da <em>nomi</em> particolari. Se un nome è arbitrario, ci interessa solo l'intento che nasconde. Nel nostro esempio, è possibile evitare la dipendenza dal nome di un singolo metodo usando un oggetto funzione al posto del tipo strutturale, proprio come è stato fatto nella sezione <a href=cap-6.html#OverridingAbstractTypes>Ridefinire i tipi astratti</a> del capitolo 6.
+<p>I tipi strutturali hanno il pregio di minimizzare l&#8217;interfaccia tra due entità. Nel nostro esempio, l&#8217;accoppiamento consiste solo nella firma di un singolo metodo anziché in un tipo come nel caso di un tratto condiviso. Purtroppo i tipi strutturali non riescono a eliminare le dipendenze da <em>nomi</em> particolari. Se un nome è arbitrario, ci interessa solo l&#8217;intento che nasconde. Nel nostro esempio, è possibile evitare la dipendenza dal nome di un singolo metodo usando un oggetto funzione al posto del tipo strutturale, proprio come è stato fatto nella sezione <a href=cap-6.html#OverridingAbstractTypes>Ridefinire i tipi astratti</a> del capitolo 6.
 
-<p>D'altra parte, se il nome viene adottato come una specie di convenzione universale, la dipendenza ha maggior valore. Per esempio, <code>foreach</code> è un nome molto comune nella libreria Scala e ha un particolare significato, quindi definire un tipo strutturale sulla base di <code>foreach</code> anziché usare una funzione anonima di qualche genere potrebbe essere vantaggioso per comunicarne l'intento al programmatore.
+<p>D&#8217;altra parte, se il nome viene adottato come una specie di convenzione universale, la dipendenza ha maggior valore. Per esempio, <code>foreach</code> è un nome molto comune nella libreria Scala e ha un particolare significato, quindi definire un tipo strutturale sulla base di <code>foreach</code> anziché usare una funzione anonima di qualche genere potrebbe essere vantaggioso per comunicarne l&#8217;intento al programmatore.
 
 <h2 id=ExistentialTypes>Tipi esistenziali</h2>
 
-<p>I <em>tipi esistenziali</em> sono astrazioni usate per individuare un tipo disinteressandosi della sua reale identità: permettono di &#8220;indicare&#8221; la presenza di un tipo senza specificare estattamente quale sia, di solito perché non lo si conosce e non è necessario conoscerlo nel contesto in cui viene usata l'espressione che lo contiene.
+<p>I <em>tipi esistenziali</em> sono astrazioni usate per individuare un tipo disinteressandosi della sua reale identità: permettono di &#8220;indicare&#8221; la presenza di un tipo senza specificare estattamente quale sia, di solito perché non lo si conosce e non è necessario conoscerlo nel contesto in cui viene usata l&#8217;espressione che lo contiene.
 
 <p>I tipi esistenziali sono particolarmente utili per interfacciarsi al sistema di tipi di Java in tre casi.
 
 <ol>
-<li>Quando si usano i generici, poiché i loro parametri di tipo vengono &#8220;cancellati&#8221; a livello di bytecode (tramite un procedimento chiamato <em>cancellazione di tipo</em>), come nel caso in cui si crea un'istanza di <code>List[Int]</code> e il tipo <code>Int</code> non è disponibile nel bytecode.
+<li>Quando si usano i generici, poiché i loro parametri di tipo vengono &#8220;cancellati&#8221; a livello di bytecode (tramite un procedimento chiamato <em>cancellazione di tipo</em>), come nel caso in cui si crea un&#8217;istanza di <code>List[Int]</code> e il tipo <code>Int</code> non è disponibile nel bytecode.
 <li>Quando si incontra un tipo &#8220;grezzo&#8221; (in inglese, <em>raw type</em>), come nelle librerie precedenti a Java 5 dove le collezioni non avevano parametri di tipo. In questo caso, tutti i parametri di tipo sono effettivamente <code>Object</code>.
-<li>Quando Java usa le wildcard per esprimere il comportamento di varianza nel punto in cui i generici vengono <em>usati</em>, poiché l'effettivo tipo rappresentato dalla wildcard è sconosciuto. (Ne abbiamo già parlato nella sezione <a href=#VarianceUnderInheritance>Varianza in caso di ereditarietà</a> di questo capitolo.)
+<li>Quando Java usa le wildcard per esprimere il comportamento di varianza nel punto in cui i generici vengono <em>usati</em>, poiché l&#8217;effettivo tipo rappresentato dalla wildcard è sconosciuto. (Ne abbiamo già parlato nella sezione <a href=#VarianceUnderInheritance>Varianza in caso di ereditarietà</a> di questo capitolo.)
 </ol>
 
-<p>Si consideri il caso del pattern matching su oggetti di tipo <code>List[A]</code>. L'idea di scrivere codice come quello riportato di seguito potrebbe essere seducente.
+<p>Si consideri il caso del pattern matching su oggetti di tipo <code>List[A]</code>. L&#8217;idea di scrivere codice come quello riportato di seguito potrebbe essere seducente.
 
 <pre><code>// <a href=esempi/cap-12/type-erasure-wont-work.scala>esempi/cap-12/type-erasure-wont-work.scala</a>
 // Attenzione: non funziona come potreste aspettarvi
@@ -1431,9 +1431,9 @@ object ProcessList {
   }
 }</code></pre>
 
-<p>Se però provate a compilare lo script con l'opzione <code>-unchecked</code> sulla <abbr>JVM</abbr> otterrete alcuni messaggi di avvertimento sul mancato controllo di tipo per parametri come <code>Int</code>, a causa della cancellazione che impedisce al compilatore di distinguere tra loro i tipi di lista elencati. Nemmeno i <em>manifest</em> esaminati in precedenza possono essere d'aiuto in questo caso, perché non sono in grado di recuperare il tipo cancellato di <code>B</code>.
+<p>Se però provate a compilare lo script con l&#8217;opzione <code>-unchecked</code> sulla <abbr>JVM</abbr> otterrete alcuni messaggi di avvertimento sul mancato controllo di tipo per parametri come <code>Int</code>, a causa della cancellazione che impedisce al compilatore di distinguere tra loro i tipi di lista elencati. Nemmeno i <em>manifest</em> esaminati in precedenza possono essere d&#8217;aiuto in questo caso, perché non sono in grado di recuperare il tipo cancellato di <code>B</code>.
 
-<p>Abbiamo già visto che la soluzione migliore da adottare con il pattern matching consiste nel concentrarsi sul fatto di avere una lista ed evitare di provare a determinare il parametro di tipo &#8220;perduto&#8221; per l'istanza di lista. Allo scopo di salvaguardare la sicurezza dei tipi, è necessario specificare che la lista ha un parametro, il quale però, essendo ignoto, verrà indicato con il carattere <code>_</code> usato come wildcard per il parametro di tipo, nel modo illustrato dall'esempio seguente.
+<p>Abbiamo già visto che la soluzione migliore da adottare con il pattern matching consiste nel concentrarsi sul fatto di avere una lista ed evitare di provare a determinare il parametro di tipo &#8220;perduto&#8221; per l&#8217;istanza di lista. Allo scopo di salvaguardare la sicurezza dei tipi, è necessario specificare che la lista ha un parametro, il quale però, essendo ignoto, verrà indicato con il carattere <code>_</code> usato come wildcard per il parametro di tipo, nel modo illustrato dall&#8217;esempio seguente.
 
 <pre><code>case l: List[_] =&gt; // fai qualcosa di "generico" con la lista</code></pre>
 
@@ -1469,9 +1469,9 @@ object ProcessList {
 </table>
 </div>
 
-<p>Se si considerano le somiglianze tra Scala e Java nella sintassi usata per i generici, è possibile notare che la struttura di un'espressione come <code>java.util.List[_ &lt;: scala.actors.AbstractActor]</code> corrisponde a quella dell'espressione di varianza Java <code>java.util.List&lt;? extends scala.actors.AbstractActor&gt;</code>. In effetti, le due dichiarazioni hanno lo stesso effetto. Anche se abbiamo detto che in Scala il comportamento di varianza viene definito nella dichiarazione, si possono usare le espressioni di tipo esistenziale per definire il comportamento di varianza nella invocazione. Questa pratica, tuttavia, viene sconsigliata per le ragioni discusse in precedenza.
+<p>Se si considerano le somiglianze tra Scala e Java nella sintassi usata per i generici, è possibile notare che la struttura di un&#8217;espressione come <code>java.util.List[_ &lt;: scala.actors.AbstractActor]</code> corrisponde a quella dell&#8217;espressione di varianza Java <code>java.util.List&lt;? extends scala.actors.AbstractActor&gt;</code>. In effetti, le due dichiarazioni hanno lo stesso effetto. Anche se abbiamo detto che in Scala il comportamento di varianza viene definito nella dichiarazione, si possono usare le espressioni di tipo esistenziale per definire il comportamento di varianza nella invocazione. Questa pratica, tuttavia, viene sconsigliata per le ragioni discusse in precedenza.
 
-<p>La sintassi completa con <code>forSome</code> non viene usata molto spesso nel codice Scala, perché i tipi esistenziali esistono principalmente per supportare i generici Java preservando nel contempo la correttezza nel sistema di tipi di Scala. L'inferenza di tipo nasconde i dettagli nella maggior parte dei contesti. Quando si lavora con i tipi di Scala, è preferibile usare gli altri costrutti di tipo visti in questo capitolo anziché ricorrere ai tipi esistenziali.
+<p>La sintassi completa con <code>forSome</code> non viene usata molto spesso nel codice Scala, perché i tipi esistenziali esistono principalmente per supportare i generici Java preservando nel contempo la correttezza nel sistema di tipi di Scala. L&#8217;inferenza di tipo nasconde i dettagli nella maggior parte dei contesti. Quando si lavora con i tipi di Scala, è preferibile usare gli altri costrutti di tipo visti in questo capitolo anziché ricorrere ai tipi esistenziali.
 
 <h2 id=InfiniteDataStructuresAndLaziness>Strutture dati infinite ed esecuzione ritardata</h2>
 
@@ -1488,7 +1488,7 @@ object ProcessList {
 
 <pre><code>fibonacci_sequence = for (i &lt;- 0 to infinity) yield fib(i)</code></pre>
 
-<p>L'esecuzione di Scala non è ritardata per default (né esiste alcun valore o parola chiave <code>infinity</code>) ma la libreria contiene una classe <code>Stream</code> che supporta la valutazione ritardata e quindi può supportare strutture dati infinite; la sfrutteremo tra un momento per presentarvi una nuova implementazione della sequenza di Fibonacci. Prima, però, ecco un esempio più semplice che usa quella classe per rappresentare tutti gli interi positivi, tutti gli interi dispari positivi e tutti gli interi pari positivi.
+<p>L&#8217;esecuzione di Scala non è ritardata per default (né esiste alcun valore o parola chiave <code>infinity</code>) ma la libreria contiene una classe <code>Stream</code> che supporta la valutazione ritardata e quindi può supportare strutture dati infinite; la sfrutteremo tra un momento per presentarvi una nuova implementazione della sequenza di Fibonacci. Prima, però, ecco un esempio più semplice che usa quella classe per rappresentare tutti gli interi positivi, tutti gli interi dispari positivi e tutti gli interi pari positivi.
 
 <pre><code>// <a href=esempi/cap-12/lazy-ints-script.scala>esempi/cap-12/lazy-ints-script.scala</a>
 
@@ -1506,11 +1506,11 @@ evens.take(10).print</code></pre>
 <pre><samp>1, 3, 5, 7, 9, 11, 13, 15, 17, 19, Stream.empty
 0, 2, 4, 6, 8, 10, 12, 14, 16, 18, Stream.empty</samp></pre>
 
-<p>Si noti che il metodo <code>from</code>, utilizzato per definire <code>ints</code>, è ricorsivo e non termina mai. <code>Stream.cons</code> è un oggetto dotato di un metodo <code>apply</code> che è analogo al metodo <code>::</code> (chiamato &#8220;cons&#8221;) di <code>List</code>: restituisce un nuovo flusso, cioè una nuova istanza di <code>Stream</code>, con il primo argomento come testa e con il secondo argomento, un'altra istanza di <code>Stream</code>, come coda. I valori ritardati <code>odds</code> e <code>evens</code> vengono calcolati filtrando <code>ints</code>.
+<p>Si noti che il metodo <code>from</code>, utilizzato per definire <code>ints</code>, è ricorsivo e non termina mai. <code>Stream.cons</code> è un oggetto dotato di un metodo <code>apply</code> che è analogo al metodo <code>::</code> (chiamato &#8220;cons&#8221;) di <code>List</code>: restituisce un nuovo flusso, cioè una nuova istanza di <code>Stream</code>, con il primo argomento come testa e con il secondo argomento, un&#8217;altra istanza di <code>Stream</code>, come coda. I valori ritardati <code>odds</code> e <code>evens</code> vengono calcolati filtrando <code>ints</code>.
 
 <p>Una volta definiti gli insiemi di numeri, usiamo il metodo <code>take</code> per recuperare una nuova istanza di <code>Stream</code> della dimensione fissa specificata, <code>10</code> in questo caso, e poi la stampiamo con il metodo <code>print</code>, generando i primi dieci elementi seguiti da <code>Stream.empty</code> quando si arriva al termine del flusso.
 
-<p>Tornando alla sequenza di Fibonacci, ne esiste una famosa definizione basata su sequenze infinite ritardate che sfruttano l'operazione <code>zip</code> (si veda per esempio <a href=apa.html#Abelson1996>[Abelson1996]</a>). La nostra analisi di questa definizione in Scala è adattata da <a href=apa.html#Ortiz2007>[Ortiz2007]</a>.
+<p>Tornando alla sequenza di Fibonacci, ne esiste una famosa definizione basata su sequenze infinite ritardate che sfruttano l&#8217;operazione <code>zip</code> (si veda per esempio <a href=apa.html#Abelson1996>[Abelson1996]</a>). La nostra analisi di questa definizione in Scala è adattata da <a href=apa.html#Ortiz2007>[Ortiz2007]</a>.
 
 <pre><code>// <a href=esempi/cap-12/lazy-fibonacci-script.scala>esempi/cap-12/lazy-fibonacci-script.scala</a>
 
@@ -1523,9 +1523,9 @@ fib.take(10).print</code></pre>
 
 <pre><samp>0, 1, 1, 2, 3, 5, 8, 13, 21, 34, Stream.empty</samp></pre>
 
-<p>Come nella nostra definizione iterativa all'inizio di questa sezione, abbiamo esplicitamente specificato i primi due valori, <code>0</code> e <code>1</code>. Il resto dei numeri viene calcolato usando <code>zip</code> e sfruttando il fatto che <code>fib(n) = fib(n-1) + fib(n-2)</code> per <code>n &gt; 1</code>.
+<p>Come nella nostra definizione iterativa all&#8217;inizio di questa sezione, abbiamo esplicitamente specificato i primi due valori, <code>0</code> e <code>1</code>. Il resto dei numeri viene calcolato usando <code>zip</code> e sfruttando il fatto che <code>fib(n) = fib(n-1) + fib(n-2)</code> per <code>n &gt; 1</code>.
 
-<p>L'invocazione <code>fib.zip(fib.tail)</code> crea un nuovo flusso di tuple che contengono gli elementi di <code>fib</code> in prima posizione e gli elementi di <code>fib.tail</code> in seconda posizione. Per ottenere un flusso di singoli numeri interi, mappiamo il flusso di tuple in un flusso di <code>Int</code> sommando tra loro gli elementi di ogni tupla. Ecco le tuple calcolate.
+<p>L&#8217;invocazione <code>fib.zip(fib.tail)</code> crea un nuovo flusso di tuple che contengono gli elementi di <code>fib</code> in prima posizione e gli elementi di <code>fib.tail</code> in seconda posizione. Per ottenere un flusso di singoli numeri interi, mappiamo il flusso di tuple in un flusso di <code>Int</code> sommando tra loro gli elementi di ogni tupla. Ecco le tuple calcolate.
 
 <pre><samp>(0,1), (1,1), (1,2), (2,3), (3,5), (5,8), (8,13), (13,21), (21,34), &hellip;</samp></pre>
 
@@ -1572,9 +1572,9 @@ Invoco first sulla lista creata dall'istanza di Seq:
 -1537171498
 -1537171498</samp></pre>
 
-<p>Si noti che l'invocazione di <code>first</code> sulla sequenza non restituisce sempre lo stesso valore. Il motivo è che l'intervallo all'inizio dell'espressione <code>for</code> obbliga l'intera sequenza a essere ritardata, e quindi ne innesca una nuova valutazione a <em>ogni</em> invocazione di <code>first</code>: così, il primo valore nella sequenza effettivamente cambia, dato che <code>Random</code> restituisce un numero differente ogni volta (almeno lo farà se tra un'invocazione e l'altra trascorre un intervallo di tempo sufficiente).
+<p>Si noti che l&#8217;invocazione di <code>first</code> sulla sequenza non restituisce sempre lo stesso valore. Il motivo è che l&#8217;intervallo all&#8217;inizio dell&#8217;espressione <code>for</code> obbliga l&#8217;intera sequenza a essere ritardata, e quindi ne innesca una nuova valutazione a <em>ogni</em> invocazione di <code>first</code>: così, il primo valore nella sequenza effettivamente cambia, dato che <code>Random</code> restituisce un numero differente ogni volta (almeno lo farà se tra un&#8217;invocazione e l&#8217;altra trascorre un intervallo di tempo sufficiente).
 
-<p>Tuttavia, l'invocazione di <code>toList</code> sulla sequenza innesca la valutazione dell'intero intervallo e crea una lista <em>rigorosa</em>, in cui tutti gli elementi sono calcolati.
+<p>Tuttavia, l&#8217;invocazione di <code>toList</code> sulla sequenza innesca la valutazione dell&#8217;intero intervallo e crea una lista <em>rigorosa</em>, in cui tutti gli elementi sono calcolati.
 
 <blockquote class=warning>
 <p><span class=u>&#x2762;</span>Evitate di usare gli intervalli in costrutti del tipo <code>for (&hellip;) yield x</code>, mentre potete usarli in quelli del tipo <code>for (&hellip;) {&hellip;}</code>.
@@ -1586,7 +1586,7 @@ Invoco first sulla lista creata dall'istanza di Seq:
 
 <p>Va ricordato che non è necessario padroneggiare le complessità del ricco sistema di tipi di Scala per usare efficacemente il linguaggio. Man mano che prenderete confidenza, comincerete a creare librerie potenti e sofisticate che incrementeranno la vostra produttività.
 
-<p>La specifica del linguaggio <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a> descrive i dettagli formali del sistema di tipi. Come qualsiasi specifica, può risultare difficile da leggere, ma vale la pena farlo se desiderate conoscere il sistema di tipi in profondità. Esiste anche una lunga serie di articoli sul sistema di tipi di Scala, che potete rintracciare a partire dal sito ufficiale del linguaggio all'indirizzo <a class=url href=http://scala-lang.org>http://scala-lang.org</a>.
+<p>La specifica del linguaggio <a href=apa.html#ScalaSpec2009>[ScalaSpec2009]</a> descrive i dettagli formali del sistema di tipi. Come qualsiasi specifica, può risultare difficile da leggere, ma vale la pena farlo se desiderate conoscere il sistema di tipi in profondità. Esiste anche una lunga serie di articoli sul sistema di tipi di Scala, che potete rintracciare a partire dal sito ufficiale del linguaggio all&#8217;indirizzo <a class=url href=http://scala-lang.org>http://scala-lang.org</a>.
 
 <p>Nei prossimi due capitoli ci occuperemo di analizzare gli aspetti pratici della progettazione di software e gli strumenti e le librerie per sviluppare applicazioni in Scala.
 
