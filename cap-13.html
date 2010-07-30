@@ -458,7 +458,7 @@ thrown in body of corresponding try statement
 
 <h2 id=EnumerationsVsPatternMatching>Un confronto tra enumerazioni e pattern matching</h2>
 
-<p>Le enumerazioni consentono di definire un insieme finito di valori costanti e rappresentano un&#8217;alternativa leggera alle classi <code>case</code>. Usando un&#8217;enumerazione potete fare riferimento direttamente ai valori, attraversarli in un&#8217;iterazione, accedervi tramite un indice intero, <span class=baa>&amp;</span>c.
+<p>Le enumerazioni consentono di definire un insieme finito di valori costanti e rappresentano un&#8217;alternativa leggera alle classi <code>case</code>. Usando un&#8217;enumerazione potete fare riferimento direttamente ai valori, attraversarli in un&#8217;iterazione, accedervi tramite un indice intero, <i class=baa>&amp;</i>c.
 
 <p>Proprio come per le annotazioni, la forma delle enumerazioni di Scala è basata sulle classi e su un particolare insieme di idiomi anziché su parole chiave speciali da applicare alla definizione, come invece accade per le enumerazioni in Java e .NET. Tuttavia, in Scala potete anche usare le enumerazioni definite su quelle due piattaforme.
 
@@ -844,7 +844,7 @@ validUsers.foreach (user =&gt; println(user))</code></pre>
 
 e1 map ( case p1 =&gt; e2 )         // traduzione</code></pre>
 
-<p>Ecco la traduzione di un singolo <em>generatore</em> seguito da un&#8217;espressione arbitraria (che potrebbe essere un insieme di più espressioni racchiuse tra parentesi, <span class=baa>&amp;</span>c.).
+<p>Ecco la traduzione di un singolo <em>generatore</em> seguito da un&#8217;espressione arbitraria (che potrebbe essere un insieme di più espressioni racchiuse tra parentesi, <i class=baa>&amp;</i>c.).
 
 <pre><code>for (p1 &lt;- e1) e2                // espressione for
 
@@ -930,7 +930,7 @@ e1 foreach ( case p1 =&gt; for (p2 &lt;- e2 &hellip;) eN )       // traduzione</
 
 <h2 id=ScalableAbstractions>Astrazioni scalabili</h2>
 
-<p>Per qualche tempo uno degli scopi della nostra industria è stato quello di creare <em>componenti</em> riusabili. Sfortunatamente, non c&#8217;è mai stato molto accordo sul significato del termine <em>componente</em> né su quello del termine correlato <em>modulo</em> (che qualcuno considera sinonimo di componente). Di solito le definizioni proposte partono da assunzioni diverse relativamente alla piattaforma, alla granularità, agli scenari di configurazione e di produzione, alle questioni che riguardano l&#8217;assegnamento dei numeri di versione, <span class=baa>&amp;</span>c. <a href=apa.html#Szyperski1998>[Szyperski1998]</a>.
+<p>Per qualche tempo uno degli scopi della nostra industria è stato quello di creare <em>componenti</em> riusabili. Sfortunatamente, non c&#8217;è mai stato molto accordo sul significato del termine <em>componente</em> né su quello del termine correlato <em>modulo</em> (che qualcuno considera sinonimo di componente). Di solito le definizioni proposte partono da assunzioni diverse relativamente alla piattaforma, alla granularità, agli scenari di configurazione e di produzione, alle questioni che riguardano l&#8217;assegnamento dei numeri di versione, <i class=baa>&amp;</i>c. <a href=apa.html#Szyperski1998>[Szyperski1998]</a>.
 
 <p>In questa sede eviteremo tali discussioni e useremo il termine <em>componente</em> in maniera informale per fare riferimento a un gruppo di tipi e di package che espone astrazioni coerenti (preferibilmente una sola) per i servizi offerti, ha un insieme minimo di dipendenze nei confronti di altri componenti ed è internamente coesivo.
 
@@ -1856,7 +1856,7 @@ trait TwitterClientComponent {
 
 <p>L&#8217;annotazione self-type significa anche che possiamo fare riferimento ai campi <code>val</code> dichiarati in quei componenti. Si noti che <code>TwitterClient.tweet</code> usa <code>service</code>, <code>localCache</code> e <code>ui</code> come se fossero variabili visibili nel proprio ambito. E, in effetti, <em>sono</em> visibili, grazie all&#8217;annotazione self-type.
 
-<p>Si noti anche che tutti i metodi che invocano altri componenti sono concreti: quelle relazioni di invocazione tra i componenti sono completamente specificate. Le astrazioni sono dirette &#8220;all&#8217;esterno&#8221;, verso l&#8217;interfaccia utente, il meccanismo di persistenza, <span class=baa>&amp;</span>c.
+<p>Si noti anche che tutti i metodi che invocano altri componenti sono concreti: quelle relazioni di invocazione tra i componenti sono completamente specificate. Le astrazioni sono dirette &#8220;all&#8217;esterno&#8221;, verso l&#8217;interfaccia utente, il meccanismo di persistenza, <i class=baa>&amp;</i>c.
 
 <p>Ora definiamo un client Twitter concreto che usa un&#8217;interfaccia testuale a riga di comando e una cache locale in memoria, e che finge di interagire con il servizio Twitter.
 
