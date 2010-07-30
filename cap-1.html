@@ -453,7 +453,7 @@ package shapes {
 
 <p><code>Triangle</code> segue lo stesso schema. Prende tre istanze di <code>Point</code> come argomenti del proprio costruttore.
 
-<p>Tutti i metodi <code>draw</code> nelle classi <code>Circle</code>, <code>Rectangle</code> e <code>Triangle</code> usano <code>this</code>. Come in Java e C#, <code>this</code> è il modo in cui un&#8217;istanza fa riferimento a sé stessa. In questo contesto, dove <code>this</code> è la parte destra di un&#8217;espressione che concatena stringhe (usando il segno più), <code>this.toString</code> viene invocato implicitamente.
+<p>Tutti i metodi <code>draw</code> nelle classi <code>Circle</code>, <code>Rectangle</code> e <code>Triangle</code> usano <code>this</code>. Come in Java e C#, <code>this</code> è il modo in cui un&#8217;istanza fa riferimento a se stessa. In questo contesto, dove <code>this</code> è la parte destra di un&#8217;espressione che concatena stringhe (usando il segno più), <code>this.toString</code> viene invocato implicitamente.
 
 <blockquote class=note>
 <p><span class=u>&#x261E;</span>Naturalmente, in un&#8217;applicazione reale non implementereste le operazioni di disegno nelle classi che fanno parte del &#8220;modello del dominio&#8221; in questo modo, dato che l&#8217;implementazione dipenderebbe da dettagli come la piattaforma del sistema operativo, le <abbr>API</abbr> grafiche, <i class=baa>&amp;</i>c. Vedremo un approccio di progettazione migliore quando discuteremo i <em>tratti</em> nel <a href=cap-4.html>capitolo 4</a>.
