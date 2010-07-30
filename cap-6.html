@@ -957,7 +957,7 @@ object PersonTest {
 
 <pre><samp>java.lang.NoSuchMethodException: objects.Person.main([Ljava.lang.String;)</samp></pre>
 
-<p>Se decompilate il file <tt>objects/Person.class</tt> con <kbd>javap -classpath &hellip; objects.Person</kbd> (si veda la sezione <a href=cap-14.html#CommandLineToolDecompilers>Gli strumenti a riga di comando <kbd>scalap</kbd>, <kbd>javap</kbd> e <kbd>jad</kbd></a> nel capitolo 14), potete vedere che non contiene un metodo <code>main</code>. Se decompilate <tt>objects/Person$.class</tt>, che contiene il bytecode dell&#8217;oggetto associato, trovate un metodo <code>main</code> che però non è stato dichiarato <code>static</code>. Quindi, anche il tentativo di invocare <kbd>scala -cp &hellip; objects.Person$</kbd> non riuscirà a trovare il metodo <code>main</code> &#8220;statico&#8221;.
+<p>Se decompilate il file <tt>objects/Person.class</tt> con <kbd>javap -classpath &hellip; objects.Person</kbd> (si veda la sezione <a href=cap-14.html#CommandLineToolDecompilers>Gli strumenti <kbd>scalap</kbd>, <kbd>javap</kbd> e <kbd>jad</kbd> a riga di comando</a> nel capitolo 14), potete vedere che non contiene un metodo <code>main</code>. Se decompilate <tt>objects/Person$.class</tt>, che contiene il bytecode dell&#8217;oggetto associato, trovate un metodo <code>main</code> che però non è stato dichiarato <code>static</code>. Quindi, anche il tentativo di invocare <kbd>scala -cp &hellip; objects.Person$</kbd> non riuscirà a trovare il metodo <code>main</code> &#8220;statico&#8221;.
 
 <pre><samp>java.lang.NoSuchMethodException: objects.Person$.main is not static</samp></pre>
 
