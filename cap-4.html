@@ -199,7 +199,7 @@ import observer._
 
 object ButtonObserverSpec extends Specification {
   "Un osservatore di un pulsante" should {
-    "osservare i click sul pulsante" in {
+    "osservare i clic sul pulsante" in {
       val observableButton = new ObservableButton("Okay")
       val buttonObserver = new ButtonCountObserver
       observableButton.addObserver(buttonObserver)
